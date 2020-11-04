@@ -1,14 +1,10 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text } from 'react-native'
 
-export default function FriendHistoryPage({ history }) {
+export default function FriendHistoryPage() {
     return (
         <View>
             <Text>friend history</Text>
-            <Button title="back" onPress={() => history.push({
-                pathname: "/",
-                state: 1,
-            })}/>
         </View>
     )
 }

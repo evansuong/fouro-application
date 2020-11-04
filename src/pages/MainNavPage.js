@@ -1,29 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { View } from 'react-native'
-import Swiper from 'react-native-swiper'
-
+import React from 'react'
 import HomePage from './HomePage'
 import NotificationPage from './NotificationPage'
 import UserProfilePage from './UserProfilePage'
 
-import AppStyles from '../AppStyles'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-export default function MainNavPage({ history, location }) {
+export default function MainNavPage() {
+
+    const Tab = createMaterialTopTabNavigator()
  
     return (
-        <View>
-            <Swiper showsPagination={false} loop={false} index={location.state}>
-                <View style={AppStyles.container}>
-                    <UserProfilePage history={history}/>
-                </View>
-                <View style={AppStyles.container}>
-                    <HomePage history={history}/>
-                </View>
-                <View style={AppStyles.container}>
-                    <NotificationPage history={history}/>
-                </View>
-            </Swiper>
-        </View>
+        <Tab.Navigator tabBarPosition="bottom" initialRouteName="Home">
+            <Tab.Screen name="Profile" component={UserProfilePage} />
+            <Tab.Screen name="Home" component={HomePage} />
+            <Tab.Screen name="Notification" component={NotificationPage} />
+        </Tab.Navigator>
     )
 }
 

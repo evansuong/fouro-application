@@ -1,14 +1,10 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text } from 'react-native'
 
-export default function CorkboardPage({ history }) {
+export default function CorkboardPage() {
     return (
         <View>
             <Text>corkboard</Text>
-            <Button title="back" onPress={() => history.push({
-                pathname: "/",
-                state: 0,
-            })} />
         </View>
     )
 }

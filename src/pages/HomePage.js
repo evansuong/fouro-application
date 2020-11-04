@@ -1,14 +1,16 @@
+import { Button, Text, View } from 'react-native'
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import AppStyles from '../AppStyles'
 
-export default function HomePage({ history }) {
+export default function HomePage( { navigation }) {
+
     return (
-        <View>
+        <View style={AppStyles.container}>
             <Text>home</Text>
-            <Button title="create hug" onPress={() => history.push("create-hug")}/>
-            <Button title="add friend" onPress={() => history.push("add-friend")}/>
-            <Button title="friend history" onPress={() => history.push("friend-history")}/>
-            <Button title="friend profile" onPress={() => history.push("friend-profile")}/>
+            <Button title="create hug" onPress={() => navigation.navigate('Create Hug')}/>
+            <Button title="add friend" onPress={() => navigation.navigate('Add Friend')}/>
+            <Button title="friend history" onPress={() => navigation.navigate('Friend History')}/>
+            <Button title="friend profile" onPress={() => navigation.navigate('Friend Profile')}/>
         </View>
     )
 }

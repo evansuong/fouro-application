@@ -1,12 +1,13 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import { Button, Text, View } from 'react-native'
+import AppStyles from '../AppStyles'
 
-export default function UserProfilePage({ history }) {
+export default function UserProfileScreen( { navigation } ) {
     return (
-        <View>
-            <Text>user profile</Text>
-            <Button title="view corkboard" onPress={() => history.push("corkboard")}/>
-            <Button title="hug info" onPress={() => history.push("hug-info")}/>
+        <View style={AppStyles.container}>
+            <Text>my profile</Text>
+            <Button title="corkboard" onPress={() => navigation.navigate('Corkboard')}/>
+            <Button title="hug info" onPress={() => navigation.navigate('Hug Info')}/>
         </View>
     )
 }
