@@ -15,6 +15,7 @@
     "@react-navigation/stack": "^5.11.1",
     "expo": "^39.0.4",
     "expo-status-bar": "~1.0.2",
+    "firebase": "^8.0.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",
