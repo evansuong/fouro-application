@@ -10,10 +10,12 @@ export default function HomePage({ navigation }) {
     <View style={AppStyles.container}>
       <Text>home</Text>
       <Button
-        //title="create hug"
         title="BACKEND TEST"
-        //onPress={() => navigation.navigate("Create Hug")}
-        onPress={() => Users.addUser("John")} // Backend TEST
+        onPress={() => Users.addUser("John")} // BACKEND TEST
+      />
+      <Button
+        title="create hug"
+        onPress={() => navigation.navigate("Create Hug")}
       />
       <Button
         title="add friend"
