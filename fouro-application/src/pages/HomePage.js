@@ -3,15 +3,15 @@ import React from "react";
 import AppStyles from "../AppStyles";
 
 // Backend TEST
-import Users from "../../backend/users/Users";
+import * as Users from "../../backend/users/users";
 
 export default function HomePage({ navigation }) {
   return (
     <View style={AppStyles.container}>
       <Text>home</Text>
       <Button
-        title="BACKEND TEST"
-        onPress={() => Users.addUser("John")} // BACKEND TEST
+        title="BACKEND TEST ADD USER"
+        onPress={() => Users.addUser("president45", "Donald", "Trump")} // BACKEND TEST
       />
       <Button
         title="create hug"

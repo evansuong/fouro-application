@@ -1,18 +1,17 @@
 import "firebase/firestore";
 import "firebase/auth";
-
+// Import timerCorrector to handle trivial timer warnings
+import "../timerCorrector";
 import Fire from "../firebase/config";
 
-// Users Class for Creating and Updating Users
-export default class Users {
-  db = Fire.firestore();
-  users = db.collection("users");
+// Users File for Creating, Reading, Updating, and Deleting Users
+export const db = Fire.firestore();
+export const users = db.collection("users");
 
-  // TEST: Add object to Firestore
-  addUser(name) {
-    users.doc(name).set({
-      first_name: name,
-      last_name: "Smith",
-    });
-  }
+// TEST: Add object to Firestore
+export function addUser(username, first, last) {
+  users.doc(username).set({
+    first_name: first,
+    last_name: last,
+  });
 }
