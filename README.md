@@ -1,10 +1,8 @@
-# fouro-application
+# CSE 110 Project: fouro-application
+
+Fouro is ... (insert short paragraph here)
 
 ## Team Care and Friendship Everyday (CAFE)
-
-### CSE 110 project: fouro
-
-Frontend and Backend README files in their respective folders.
 
 ## Team Members:
 
