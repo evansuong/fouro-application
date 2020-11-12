@@ -4,8 +4,6 @@ Fouro is ... (insert short paragraph here)
 
 ## Team Care and Friendship Everyday (CAFE)
 
-## Team Members:
-
 Alana Klopstein - Project Manager
 
 Alex Chow - Software Dev Lead
