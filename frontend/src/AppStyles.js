@@ -29,8 +29,7 @@ const AppStyles = StyleSheet.create({
       paddingVertical: 8,
       borderBottomWidth: 1,
       borderBottomColor: '#ddd',
-    },
-    
+    }, 
   });
   
 export default AppStyles;

@@ -13,7 +13,6 @@ export default function LinkedButton({ navigation, link, text }) {
   return (
     <TouchableOpacity onPress={() => navigation.navigate(`${link}`)}>
       <View style={styles.linkedButtonContainer}>
-        
           <Text style={styles.buttonText}>{text}</Text>
       </View>
     </TouchableOpacity>
