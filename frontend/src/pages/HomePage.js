@@ -3,16 +3,16 @@ import React from "react";
 import AppStyles from "../AppStyles";
 
 // Backend TEST
-import * as Users from "../../backend/users/users";
+// import * as Users from "backend/routes/users";
 
 export default function HomePage({ navigation }) {
   return (
     <View style={AppStyles.container}>
       <Text>home</Text>
-      <Button
+      {/* <Button
         title="BACKEND TEST ADD USER"
         onPress={() => Users.addUser("president45", "Donald", "Trump")} // BACKEND TEST
-      />
+      /> */}
       <Button
         title="create hug"
         onPress={() => navigation.navigate("Create Hug")}
