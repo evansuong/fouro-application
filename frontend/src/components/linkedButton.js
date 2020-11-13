@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Button, Text, TouchableOpacity } from 'react-native';
 import AppStyles from '../AppStyles';
 
 
@@ -11,18 +11,13 @@ export default function LinkedButton({ navigation, link, text }) {
   // const linkedButtonContainer = {}
 
   return (
-    <TouchableHighlight 
-      onPress={() => navigation.navigate(`${link}`)}
-    >
-      <View style={styles.linkedButtonContainer}>
-        <Button 
-          style={styles.linkedButton}
-          color='white'
-          title={text}
-          onPress={() => navigation.navigate(`${link}`)}
-        />
-      </View>
-    </TouchableHighlight>
+    <View style={styles.linkedButtonContainer}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate(`${link}`)}
+      >
+        <Text style={styles.buttonText}>{text}</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -32,9 +27,15 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
-    borderRadius: 10,
-  },
-  linkedButton: {
     borderRadius: 100,
+    color: '#FFFFFF',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40,
   },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+  }
 })
