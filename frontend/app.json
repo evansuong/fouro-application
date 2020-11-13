@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "fouro-frontend",
-    "slug": "fouro-frontend",
+    "name": "fouro-application",
+    "slug": "fouro-application",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
