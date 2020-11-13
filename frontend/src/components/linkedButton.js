@@ -7,6 +7,9 @@ import AppStyles from '../AppStyles';
 // and not representative of the button's size)
 
 export default function LinkedButton({ navigation, link, text }) {
+  // TODO: Later
+  // const linkedButtonContainer = {}
+
   return (
     <TouchableHighlight 
       onPress={() => navigation.navigate(`${link}`)}

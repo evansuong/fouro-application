@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, ImageBackground, View } from 'react-native'
-import LinkedButton from '../../components/linkedButton';
+import LinkedButton from 'components/linkedButton';
 import AppStyles from '../../AppStyles';
 
 // TODO: Figure out how to get custom background colors into each
@@ -9,10 +9,12 @@ import AppStyles from '../../AppStyles';
 // const image = { uri: '../../assets/tempBackground.png'};
 
 export default function LaunchPage({ navigation }) {
+  const background = require('../../../assets/tempBackground.png');
+
   return (
     <View style={styles.container}>
       <ImageBackground 
-        source={require('../../../assets/tempBackground.png')}
+        source={background}
         style={AppStyles.backgroundStyle}
       >
         <View style={styles.innerContainer}>

@@ -7,19 +7,19 @@ import {
   TouchableWithoutFeedback, 
   Keyboard 
 } from 'react-native';
-import CustomTextField from '../../components/customTextField';
-import LinkedButton from '../../components/linkedButton';
+import CustomTextField from 'components/customTextField';
+import LinkedButton from 'components/linkedButton';
 
 
 export default function LoginPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
-  const [results, setResults] = useState('Email:   |   Password: ');
+  const [results, setResults] = useState({ email: '', password: '' });
 
   const submitHandler = () => {
     console.log('test')
     console.log(emailField, passwordField);
-    setResults(`Email: ${emailField}   |   Password: ${passwordField}`)
+    setResults({ email: {emailField}, password: {passwordField} });
   }
 
   return (
@@ -47,7 +47,9 @@ export default function LoginPage({ navigation }) {
           text='SUBMIT'
         />
 
-        <Text style={{ marginTop: 40 }}>{results}</Text>
+        <Text style={{ marginTop: 40 }}>
+          Email: {results.email} Password: {results.password}
+        </Text>
       </View>
     </TouchableWithoutFeedback>
   );

@@ -2,10 +2,12 @@ const path = require('path');
 
 const extraNodeModules = {
   'backend': path.resolve(__dirname + '/../backend'),
+  'components': path.resolve(__dirname + '/../frontend/src/components')
 };
 
 const watchFolders = [
-  path.resolve(__dirname + '/../backend')
+  path.resolve(__dirname + '/../backend'),
+  path.resolve(__dirname + '/../frontend/src/components'),
 ];
 
 module.exports = {
