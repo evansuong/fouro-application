@@ -16,7 +16,6 @@ export default function LinkedButton({ navigation, link, text }) {
           <Text style={styles.buttonText}>{text}</Text>
       </View>
     </TouchableOpacity>
-
   );
 }
 
