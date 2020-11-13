@@ -1,15 +1,15 @@
 import React from 'react';
-import MainNavPage from './src/pages/MainNavPage';
-import AddFriendPage from './src/pages/AddFriendPage';
-import CreateHugPage from './src/pages/CreateHugPage';
-import FriendHistoryPage from './src/pages/FriendHistoryPage';
-import FriendProfilePage from './src/pages/FriendProfilePage';
-import CorkboardPage from './src/pages/CorkboardPage';
-import HugInfoPage from './src/pages/HugInfoPage';
-import LoginPage from './src/pages/LoginPage';
-import LaunchPage from './src/pages/LaunchPage';
-import SignupPage from './src/pages/SignupPage';
-import ProfileSetupPage from './src/pages/ProfileSetupPage';
+import MainNavPage from './src/pages/main_nav/MainNavPage';
+import AddFriendPage from './src/pages/main_nav/friends/AddFriendPage';
+import CreateHugPage from './src/pages/main_nav/home/CreateHugPage';
+import FriendHistoryPage from './src/pages/main_nav/friends/FriendHistoryPage';
+import FriendProfilePage from './src/pages/main_nav/friends/FriendProfilePage';
+import CorkboardPage from './src/pages/main_nav/home/CorkboardPage';
+import HugInfoPage from './src/pages/main_nav/home/HugInfoPage';
+import LoginPage from './src/pages/onboarding/LoginPage';
+import LaunchPage from './src/pages/onboarding/LaunchPage';
+import SignupPage from './src/pages/onboarding/signup/SignupPage';
+import ProfileSetupPage from './src/pages/onboarding/signup/ProfileSetupPage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Text, View } from 'react-native'
-import AppStyles from '../AppStyles'
+import AppStyles from '../../../../AppStyles'
 
 export default function UserProfileScreen( { navigation } ) {
     return (

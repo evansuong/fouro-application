@@ -1,6 +1,6 @@
 import { Button, Text, View } from 'react-native'
 import React from 'react'
-import AppStyles from '../AppStyles'
+import AppStyles from '../../../AppStyles'
 
 export default function HomePage( { navigation }) {
 

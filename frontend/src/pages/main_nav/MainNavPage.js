@@ -1,7 +1,7 @@
 import React from 'react'
-import HomePage from './HomePage'
-import NotificationPage from './NotificationPage'
-import UserProfilePage from './UserProfilePage'
+import HomePage from './home/HomePage'
+import NotificationPage from './notifications/NotificationPage'
+import UserProfilePage from './home/profile/UserProfilePage'
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
