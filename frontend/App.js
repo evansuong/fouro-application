@@ -6,6 +6,10 @@ import FriendHistoryPage from './src/pages/FriendHistoryPage';
 import FriendProfilePage from './src/pages/FriendProfilePage';
 import CorkboardPage from './src/pages/CorkboardPage';
 import HugInfoPage from './src/pages/HugInfoPage';
+import LoginPage from './src/pages/LoginPage';
+import LaunchPage from './src/pages/LaunchPage';
+import SignupPage from './src/pages/SignupPage';
+import ProfileSetupPage from './src/pages/ProfileSetupPage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -23,6 +27,10 @@ export default function App() {
         <Stack.Screen name="Friend Profile" component={FriendProfilePage} />
         <Stack.Screen name="Corkboard" component={CorkboardPage} />
         <Stack.Screen name="Hug Info" component={HugInfoPage} />
+        <Stack.Screen name='Login Page' component={LoginPage} />
+        <Stack.Screen name='Signup Page' component={SignupPage} />
+        <Stack.Screen name='Launch Page' component={LaunchPage} />
+        <Stack.Screen name='Profile Setup Page' component={ProfileSetupPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
