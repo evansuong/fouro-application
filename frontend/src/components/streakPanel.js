@@ -35,8 +35,8 @@ export default function StreakPanel() {
   
   return (
     <View style={styles.container}>
-      <View style={AppStyles.streakContainer}>
-        <View style={AppStyles.innerStreakContainer}>
+      <View style={styles.streakContainer}>
+        <View style={styles.innerStreakContainer}>
           <Image
             source={images.streakEmoji}
             style={styles.image}
@@ -63,6 +63,19 @@ const styles = StyleSheet.create({
     display: 'flex',
     margin: 40,
     alignItems: 'center',
+  },
+  streakContainer: {
+    width: 250,
+    height: 80,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 100,
+  },
+  innerStreakContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
   },
   image: {
     width: 50, 

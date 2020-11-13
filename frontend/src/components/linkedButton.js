@@ -14,9 +14,9 @@ export default function LinkedButton({ navigation, link, text }) {
     <TouchableHighlight 
       onPress={() => navigation.navigate(`${link}`)}
     >
-      <View style={AppStyles.linkedButtonContainer}>
+      <View style={styles.linkedButtonContainer}>
         <Button 
-          style={AppStyles.linkedButton}
+          style={styles.linkedButton}
           color='white'
           title={text}
           onPress={() => navigation.navigate(`${link}`)}
@@ -25,3 +25,16 @@ export default function LinkedButton({ navigation, link, text }) {
     </TouchableHighlight>
   );
 }
+
+const styles = StyleSheet.create({
+  linkedButtonContainer: {
+    backgroundColor: '#FB7250',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 20,
+    borderRadius: 10,
+  },
+  linkedButton: {
+    borderRadius: 100,
+  },
+})

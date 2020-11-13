@@ -6,8 +6,8 @@ import AppStyles from '../AppStyles';
 export default function FriendListing({ profilePicture, friendName }) {
   return (
     <View style={styles.container}>
-      <View style={AppStyles.friendListingContainer}>
-        <View style={AppStyles.tinyProfilePic}>
+      <View style={styles.friendListingContainer}>
+        <View style={styles.tinyProfilePic}>
           <Image
             source={profilePicture}
             style={styles.image}
@@ -25,6 +25,22 @@ export default function FriendListing({ profilePicture, friendName }) {
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
+  },
+  tinyProfilePic: {
+    marginLeft: 20,
+    justifyContent: 'center',
+    borderRadius: 100,
+    width: '13%',
+    height: '80%',
+    backgroundColor: 'pink'
+  },
+  friendListingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 300,
+    height: 50,
+    borderRadius: 100,
+    backgroundColor: 'rgba(255,0,50,0.8)'
   },
   image: {
     width: 40,
