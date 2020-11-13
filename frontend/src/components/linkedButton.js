@@ -11,13 +11,13 @@ export default function LinkedButton({ navigation, link, text }) {
   // const linkedButtonContainer = {}
 
   return (
-    <View style={styles.linkedButtonContainer}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate(`${link}`)}
-      >
-        <Text style={styles.buttonText}>{text}</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity onPress={() => navigation.navigate(`${link}`)}>
+      <View style={styles.linkedButtonContainer}>
+        
+          <Text style={styles.buttonText}>{text}</Text>
+      </View>
+    </TouchableOpacity>
+
   );
 }
 
