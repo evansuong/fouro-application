@@ -1,38 +1,37 @@
 import Fire from "../firebase/config";
 
 export function signInWtihEmailAndPassword(email, password) {
+  Fire.auth()
+    .signInWithEmailAndPassword(email, password)
+    .catch(function (error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
 
-  Fire.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-    var errorCode = error.code;
-    var errorMessage = error.message;
+      switch (error.code) {
+        case "auth/invalid-email":
+          alert("Invalid email.");
+          break;
 
-    switch (error.code) {
-      case 'auth/invalid-email':
-        alert('Invalid email.');
-        break;
+        case "auth/user-disabled":
+          alert("User disabled.");
+          break;
 
-      case 'auth/user-disabled':
-        alert('User disabled.');
-        break;
+        case "auth/user-not-found":
+          alert("User not found.");
+          break;
 
-      case 'auth/user-not-found':
-        alert('User not found.');
-        break;
+        case "auth/wrong-password":
+          alert("Incorrect password.");
+          break;
 
-      case 'auth/wrong-password':
-        alert('Incorrect password.');
-        break;
+        default:
+          alert(errorMessage);
+          break;
+      }
 
-      default:
-        alert(errorMessage);
-        break;
-    }
-
-    console.log(error);
-  });
-
+      console.log(error);
+    });
 }
-
 
 /*
 import React, {useContext} from "react";

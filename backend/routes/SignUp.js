@@ -1,33 +1,33 @@
 import Fire from "../firebase/config";
 
 export function createUserWtihEmailAndPassword(email, password) {
+  Fire.auth()
+    .createUserWithEmailAndPassword(email, password)
+    .catch(function (error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
 
-  Fire.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-    var errorCode = error.code;
-    var errorMessage = error.message;
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          alert("The email is already in use.");
+          break;
 
-    switch (error.code) {
-      case 'auth/email-already-in-use':
-        alert('The email is already in use.');
-        break;
+        case "auth/invalid-email":
+          alert("The email is invalid.");
+          break;
 
-      case 'auth/invalid-email':
-        alert('The email is invalid.');
-        break;
+        case "auth/weak-password":
+          alert("The password is too weak.");
+          break;
 
-      case 'auth/weak-password':
-        alert('The password is too weak.');
-        break;
+        case "auth/operation-not-allowed":
+        default:
+          alert(errorMessage);
+          break;
+      }
 
-      case 'auth/operation-not-allowed':
-      default:
-        alert(errorMessage);
-        break;
-    }
-
-    console.log(error);
-  });
-
+      console.log(error);
+    });
 }
 
 //import React from "react";
