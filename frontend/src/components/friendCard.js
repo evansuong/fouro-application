@@ -3,6 +3,13 @@ import { StyleSheet, View, Text, Image, } from 'react-native';
 import AppStyles from '../AppStyles';
 
 
+/**
+ * A single friend card to be used in the list of friends on the friends
+ * page
+ * @param {image} profilePicture An image to be rendered as the friend's
+ *                               profile picture 
+ * @param {string} friendName The name to be rendered for the friend
+ */
 export default function FriendCard({ profilePicture, friendName }) {
   return (
     <View style={styles.container}>
