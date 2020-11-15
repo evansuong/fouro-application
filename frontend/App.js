@@ -8,8 +8,10 @@ import CorkboardPage from './src/pages/main_nav/home/CorkboardPage';
 import HugInfoPage from './src/pages/main_nav/home/HugInfoPage';
 import LoginPage from './src/pages/onboarding/LoginPage';
 import LaunchPage from './src/pages/onboarding/LaunchPage';
-import SignupPage from './src/pages/onboarding/signup/SignupPage';
-import ProfileSetupPage from './src/pages/onboarding/signup/ProfileSetupPage';
+import SignupPage from './src/pages/onboarding/SignupPage';
+import PicUploadPage from './src/pages/onboarding/PicUploadPage';
+import NamePage from './src/pages/onboarding/NamePage';
+import QuestionPage from './src/pages/onboarding/QuestionPage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -30,7 +32,9 @@ export default function App() {
         <Stack.Screen name='Login Page' component={LoginPage} />
         <Stack.Screen name='Signup Page' component={SignupPage} />
         <Stack.Screen name='Launch Page' component={LaunchPage} />
-        <Stack.Screen name='Profile Setup Page' component={ProfileSetupPage} />
+        <Stack.Screen name='Pic Upload Page' component={PicUploadPage} />
+        <Stack.Screen name='Name Page' component={NamePage} />
+        <Stack.Screen name='Question Page' component={QuestionPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

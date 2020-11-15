@@ -22,12 +22,14 @@ export default function LaunchPage({ navigation }) {
             navigation={navigation} 
             link='Login Page'
             text='LOGIN'
+            color='#FB7250'
           />
 
           <LinkedButton
             navigation={navigation}
             link='Signup Page'
             text='SIGNUP'
+            color='#FFC24A'
           />
         </View>
       </ImageBackground>
