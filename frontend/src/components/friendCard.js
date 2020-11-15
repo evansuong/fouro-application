@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, } from 'react-native';
 import AppStyles from '../AppStyles';
 
-
+//comment
 /**
  * A single friend card to be used in the list of friends on the friends
  * page

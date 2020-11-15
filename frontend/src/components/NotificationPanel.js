@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Button, TouchableOpacity, Animated } from 'reac
 export default function NotificationPanel(props) {
 
     const [expanded, setExpanded] = useState(false)
-    
+    //comment
     const {type, message, image} = props.notificationData;
     return (
         <TouchableOpacity style={styles.hugPanel} onPress={() => setExpanded(!expanded)}>

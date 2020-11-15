@@ -36,7 +36,7 @@ export default function LinkedButton({ navigation, link, text, color }) {
     cursor: 'pointer',
   }
 
-  
+  //comment
   function handlePressIn() {
     Animated.spring(animatedValue, {
       toValue: 0.8,
