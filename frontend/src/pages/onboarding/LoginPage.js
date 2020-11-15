@@ -4,11 +4,12 @@ import {
   Button, 
   Text, 
   View, 
-  TouchableWithoutFeedback, 
-  Keyboard 
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Keyboard
 } from 'react-native';
-import CustomTextField from 'components/customTextField';
-import LinkedButton from 'components/linkedButton';
+import CustomTextField from 'components/CustomTextField';
+import LinkedButton from 'components/LinkedButton';
 
 
 export default function LoginPage({ navigation }) {
@@ -20,6 +21,9 @@ export default function LoginPage({ navigation }) {
     console.log('test')
     console.log(emailField, passwordField);
     setResults({ email: {emailField}, password: {passwordField} });
+    setTimeout(() => {
+      navigation.navigate(`${link}`);
+    }, 50)
   }
 
   return (
@@ -40,11 +44,12 @@ export default function LoginPage({ navigation }) {
           setField={setPasswordField}
         />
 
+        {/* TODO:  How to check input validity */}
         <LinkedButton
           navigation={navigation}
-          onPress={() => submitHandler()} 
-          link='Profile Setup Page'
+          link='Main Nav Page'
           text='SUBMIT'
+          color='#FB7250'
         />
 
         <Text style={{ marginTop: 40 }}>

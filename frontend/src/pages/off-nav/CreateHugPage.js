@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import StreakPanel from 'components/streakPanel';
+import StreakPanel from 'components/StreakPanel';
 
 export default function CreateHugPage() {
     return (

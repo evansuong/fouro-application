@@ -4,6 +4,10 @@ import { db, users } from 'backend/routes/users';
 import AppStyles from '../AppStyles';
 
 
+/**
+ * The streak panel to be showed in the home page with the hug and streak
+ * counts. 
+ */
 export default function StreakPanel() {
   // TODO: Hard-coded state values
   const [streakCount, setStreakCount] = useState(3);

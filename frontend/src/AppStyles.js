@@ -5,30 +5,14 @@ import * as Font from 'expo-font';
 // TODO: Not sure how to load custom fonts
 
 const AppStyles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+    navPageContainer: {
+      display: 'flex',
+      backgroundColor: 'transparent',
+      height: '100%'
     },
     backgroundStyle: {
       flex: 1,
       resizeMode: 'cover',
-    },
-    onboardingText: {
-      // fontFamily: 'Montserrat',
-      fontSize: 18,
-      marginTop: 25,
-      marginBottom: 5,
-      marginLeft: 25,
-    },
-    onboardingInput: {
-      marginRight: 20,
-      marginLeft: 20,
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: '#ddd',
     }, 
   });
   
