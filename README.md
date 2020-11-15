@@ -45,7 +45,7 @@ navigate into backend and frontend directories and run:
 5. Run from Android Virtual Device (AVD) or install Expo Client on your mobile device
 6. Scan QR code with your camera
 
-## pulling changes
+## Pulling changes
 
 before you start working, make sure to pull from the master repo to get any changes done using:
 
@@ -64,7 +64,7 @@ should return something like this:
         origin  https://github.com/evansuong/fouro-application (fetch)
         origin  https://github.com/evansuong/fouro-application (push)
 
-## pushing changes
+## Pushing changes
 
 when working, make sure to work on your own feature branch
 
