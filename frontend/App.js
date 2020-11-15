@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 
 import MainNavPage from './src/pages/main_nav/MainNavPage';
 
@@ -23,7 +24,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator style={styles.appContainer}>
         <Stack.Screen name="Main Nav Page" component={MainNavPage} />
 
         <Stack.Screen name="Create Hug" component={CreateHugPage} />
@@ -31,7 +32,7 @@ export default function App() {
         <Stack.Screen name="Friend Profile" component={FriendProfilePage} />
         <Stack.Screen name="Corkboard" component={CorkboardPage} />
         <Stack.Screen name="Hug Info" component={HugInfoPage} />
-        
+
         <Stack.Screen name='Login Page' component={LoginPage} />
         <Stack.Screen name='Signup Page' component={SignupPage} />
         <Stack.Screen name='Launch Page' component={LaunchPage} />
@@ -42,3 +43,9 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  appContainer: {
+    backgroundColor: 'transparent',
+  }
+})

@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, StyleSheet } from 'react-native'
+import AppStyles from '../../AppStyles'
 
 export default function FriendsPage() {
     return (
-        <View>
+        <View style={AppStyles.navPageContainer}>
             <Text>friends page</Text>
             <Button 
                 title="friend history" 

@@ -4,12 +4,10 @@ import AppStyles from '../../AppStyles'
 import Background from 'components/Background';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function HomePage( { navigation }) {
+export default function HomePage({ navigation }) {
 
     return (
-      <View>
-        <Background direction='middle' />
-        <View style={AppStyles.container}>
+      <View style={AppStyles.navPageContainer}>
           <Text>home</Text>
           <Button 
             title="create hug" 
@@ -23,7 +21,6 @@ export default function HomePage( { navigation }) {
             title='launch page'
             onPress={() => navigation.navigate('Launch Page')}
           />
-        </View>
       </View>
     )
 }

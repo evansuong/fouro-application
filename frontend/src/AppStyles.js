@@ -5,11 +5,9 @@ import * as Font from 'expo-font';
 // TODO: Not sure how to load custom fonts
 
 const AppStyles = StyleSheet.create({
-    container: {
+    navPageContainer: {
       display: 'flex',
-      // backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+      backgroundColor: 'transparent',
       height: '100%'
     },
     backgroundStyle: {
