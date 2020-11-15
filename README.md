@@ -70,11 +70,13 @@ when working, make sure to work on your own feature branch
 
 1. create new branch (this copies all the files from your current branch to the new branch)
 
+        create branch "featurename/yourname"
         git branch featurename/yourname
 
 2. navigate to your branch
 
-        git checkout branchYouWannaCheckout
+        navigate to the branch you just created
+        git checkout featurename/yourname
 
 3. do sum coding and commmit the changes
 
