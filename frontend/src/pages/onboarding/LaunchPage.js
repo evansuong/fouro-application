@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, ImageBackground, View } from 'react-native'
-import LinkedButton from 'components/linkedButton';
+import LinkedButton from 'components/LinkedButton';
 import AppStyles from '../../AppStyles';
 
 // TODO: Figure out how to get custom background colors into each

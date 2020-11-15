@@ -1,7 +1,7 @@
 import { StyleSheet, Button, Text, View } from 'react-native'
 import React from 'react'
-import AppStyles from '../../../AppStyles'
-import Background from 'components/background';
+import AppStyles from '../../AppStyles'
+import Background from 'components/Background';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomePage( { navigation }) {
@@ -18,14 +18,6 @@ export default function HomePage( { navigation }) {
           <Button 
             title="add friend" 
             onPress={() => navigation.navigate('Add Friend')}
-          />
-          <Button 
-            title="friend history" 
-            onPress={() => navigation.navigate('Friend History')}
-          />
-          <Button 
-            title="friend profile" 
-            onPress={() => navigation.navigate('Friend Profile')}
           />
           <Button
             title='launch page'

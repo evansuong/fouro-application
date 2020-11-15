@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import fillerProfilePic from '../../../assets/fillerProfilePic.jpg';
-import LinkedButton from 'components/linkedButton';
+import LinkedButton from 'components/LinkedButton';
 
 
 export default function ProfileSetupPage({ navigation }) {

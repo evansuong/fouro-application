@@ -1,11 +1,12 @@
 import React from 'react';
+
 import MainNavPage from './src/pages/main_nav/MainNavPage';
-import AddFriendPage from './src/pages/main_nav/friends/AddFriendPage';
-import CreateHugPage from './src/pages/main_nav/home/CreateHugPage';
-import FriendHistoryPage from './src/pages/main_nav/friends/FriendHistoryPage';
-import FriendProfilePage from './src/pages/main_nav/friends/FriendProfilePage';
-import CorkboardPage from './src/pages/main_nav/home/CorkboardPage';
-import HugInfoPage from './src/pages/main_nav/home/HugInfoPage';
+
+import FriendHistoryPage from './src/pages/off-nav/FriendHistoryPage';
+import FriendProfilePage from './src/pages/off-nav/FriendProfilePage';
+import CorkboardPage from './src/pages/off-nav/CorkboardPage';
+import HugInfoPage from './src/pages/off-nav/HugInfoPage';
+
 import LoginPage from './src/pages/onboarding/LoginPage';
 import LaunchPage from './src/pages/onboarding/LaunchPage';
 import SignupPage from './src/pages/onboarding/SignupPage';
@@ -15,6 +16,7 @@ import QuestionPage from './src/pages/onboarding/QuestionPage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import CreateHugPage from './src/pages/off-nav/CreateHugPage';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -23,12 +25,13 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Main Nav Page" component={MainNavPage} />
+
         <Stack.Screen name="Create Hug" component={CreateHugPage} />
-        <Stack.Screen name="Add Friend" component={AddFriendPage} />
         <Stack.Screen name="Friend History" component={FriendHistoryPage} />
         <Stack.Screen name="Friend Profile" component={FriendProfilePage} />
         <Stack.Screen name="Corkboard" component={CorkboardPage} />
         <Stack.Screen name="Hug Info" component={HugInfoPage} />
+        
         <Stack.Screen name='Login Page' component={LoginPage} />
         <Stack.Screen name='Signup Page' component={SignupPage} />
         <Stack.Screen name='Launch Page' component={LaunchPage} />

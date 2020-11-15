@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import LinkedButton from 'components/linkedButton';
+import LinkedButton from 'components/LinkedButton';
 
 
 export default function QuestionPage({ navigation }) {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import CustomTextField from 'components/customTextField';
-import LinkedButton from 'components/linkedButton';
+import CustomTextField from 'components/CustomTextField';
+import LinkedButton from 'components/LinkedButton';
 
 
 export default function NamePage({ navigation }) {
