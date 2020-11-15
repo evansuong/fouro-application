@@ -34,11 +34,7 @@ Vuk Radovanovic - Algorithm Specialist
         npm install -g expo-cli
 
 3. Install dependencies
-Go to frontend directory and type
-
-        npm install
-
-Go to backend directory and type
+navigate into backend and frontend directories and run:
 
         npm install
 
