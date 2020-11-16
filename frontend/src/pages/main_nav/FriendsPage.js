@@ -5,10 +5,36 @@ import FriendCard from '../../components/FriendCard'
 
 export default function FriendsPage() {
 
-    const testProfilePic = require('../../../assets/profilePic.jpg')
+    const friends = 
+    //  BACKEND TODO: replace this list with a fetch call or firestore equivalent
+        [{
+            friend_id: '1',
+            friend_first: 'Dont',
+            friend_last: 'let',
+            friend_profile_picture: 'https://picsum.photos/200',
+            hug_count: 9,
+            friend_color: '#FE5951'
+        },
+        {
+            friend_id: '2',
+            friend_first: 'your',
+            friend_last: 'dreams',
+            friend_profile_picture: 'https://picsum.photos/200',
+            hug_count: 6,
+            friend_color: '#FE5951'
+        },
+        {
+            friend_id: '3',
+            friend_first: 'be',
+            friend_last: 'memes',
+            friend_profile_picture: 'https://picsum.photos/200',
+            hug_count: 1000,
+            friend_color: '#FE5951'
+        }
+        ]
 
     return (
-        <View style={AppStyles.navPageContainer}>
+        <View style={styles.navPageContainer}>
             {/* <Text>friends page</Text> */}
             {/* <Button 
                 title="friend history" 
@@ -18,36 +44,29 @@ export default function FriendsPage() {
                 title="friend profile" 
                 onPress={() => navigation.navigate('Friend Profile')}
             /> */}
-            <FriendCard
-                profilePicture={testProfilePic}
-                friendName="Don't"
-                friendColorString='rgba(255, 100, 0, 1)'
-            />
-            <FriendCard
-                profilePicture={testProfilePic}
-                friendName='let'
-                friendColorString='rgba(255, 120, 0, 1)'
-            />
-            <FriendCard
-                profilePicture={testProfilePic}
-                friendName='your'
-                friendColorString='rgba(255, 140, 0, 1)'
-            />
-            <FriendCard
-                profilePicture={testProfilePic}
-                friendName='dreams'
-                friendColorString='rgba(255, 160, 0, 1)'
-            />
-            <FriendCard
-                profilePicture={testProfilePic}
-                friendName='be'
-                friendColorString='rgba(255, 180, 0, 1)'
-            />
-            <FriendCard
-                profilePicture={testProfilePic}
-                friendName='memes'
-                friendColorString='rgba(255, 200, 0, 1)'
-            />
+            
+            {
+                friends.map((friend) => {
+                    //let testProfilePic = require(friend.friend_profile_picture)
+                    return (
+                        <FriendCard
+                            profilePicture={friend.friend_profile_picture}
+                            friendName={friend.friend_first + " " + friend.friend_last}
+                            friendColorString={friend.friend_color}
+                            key={friend.friend_id}
+                        />
+                    )
+                })
+            }
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    navPageContainer: {
+      display: 'flex',
+      backgroundColor: 'transparent',
+      height: '100%',
+      alignItems: 'center'
+    }
+  });
