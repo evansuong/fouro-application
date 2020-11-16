@@ -13,23 +13,23 @@ import { LinearGradient } from 'expo-linear-gradient';
 export default function Background({ direction='middle' }) { //comment
   const directionMap = {
     'middle': {
-      'start': [0.9, 0.1],
+      'start': [0.9, 0.18],
       'end': [0.9, 0.9]
     },
     'left': {
       'start': [0.9, 0.1],
-      'end': [0.1, 0.7]
+      'end': [0.1, 0.6]
     },
     'right': {
       'start': [0.1, 0.1],
-      'end': [0.9, 0.7]
+      'end': [0.9, 0.6]
     },
   }
   
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['rgba(240,240,0,0.8)', 'rgba(255,80,0,1)']}
+        colors={['rgba(240,194,74,1)', 'rgba(255,80,0,1)']}
         start={[directionMap[`${direction}`].start[0], directionMap[`${direction}`].start[1]]}
         end={[directionMap[`${direction}`].end[0], directionMap[`${direction}`].end[1]]}
         style={styles.linearGradient}

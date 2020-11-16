@@ -15,12 +15,12 @@ export default function MainNavPage() {
     return (
         <>
             <View style={styles.background}>
-                <LinearGradient
+                {/* <LinearGradient
                     colors={['rgba(240,240,0,0.8)', 'rgba(255,80,0,1)']}
                     start={[0.9, 0.1]}
                     end={[0.1, 0.7]}
                     style={styles.linearGradient}
-                />
+                /> */}
             </View>
             <Tab.Navigator sceneContainerStyle={styles.tabScreen} opacity={0} style={styles.tabNav} tabBarPosition="bottom" initialRouteName="Home">
                 <Tab.Screen name="Profile" component={FriendsPage} />

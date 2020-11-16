@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import NotificationPanel from '../../components/NotificationPanel';
-
+import Background from 'components/Background';
 
 function buildTestData(type, msg, img) {
     return {
@@ -31,18 +31,27 @@ export default function NotificationPage({ navigation }) {
     }
 
     return (
-        <View style={styles.notificationList}>
-            <ScrollView {...scrollProps}>
-                {notifications.map(data => (
-                    <NotificationPanel notificationData={data} />
-                ))}
-            </ScrollView>
-        </View>
+        <>
+            <View style={styles.background}>
+                <Background direction='right' />
+            </View>
+            <View style={styles.notificationList}>
+                <ScrollView {...scrollProps}>
+                    {notifications.map(data => (
+                        <NotificationPanel notificationData={data} />
+                    ))}
+                </ScrollView>
+            </View>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     notificationList: {
         margin: 20,
+    },
+    background: {
+        position: 'absolute',
+        width: '100%'
     }
 })
