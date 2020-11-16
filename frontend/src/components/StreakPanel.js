@@ -28,7 +28,7 @@ export default function StreakPanel() {
   // }
 
   // UNCOMMENT WHEN WE CAN COMMUNICATE WITH BACKEND
-  // useEffect(() => {
+  // useEffect(() => {comment
   //   fetchUser();
   // }, [/* dependecies */])
 

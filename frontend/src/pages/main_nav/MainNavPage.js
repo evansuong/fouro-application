@@ -28,7 +28,6 @@ export default function MainNavPage() {
                 <Tab.Screen name="Notification" component={NotificationPage} />
             </Tab.Navigator>
         </>
-
     )
 }
 

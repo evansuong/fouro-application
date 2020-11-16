@@ -11,9 +11,8 @@ export default function QuestionPage({ navigation }) {
           Question Page
         </Text>
       </View>
-      
       <View style={styles.body}>
-        <Text style={{textAlign: 'center'}}>
+        <Text style={{textAlign: 'center'}}> 
           Needs to be a scrollable list
           of questions or have large-sized questions
           that will dynamically change (ie question 1

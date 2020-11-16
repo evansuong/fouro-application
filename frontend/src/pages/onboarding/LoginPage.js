@@ -22,7 +22,7 @@ export default function LoginPage({ navigation }) {
     console.log(emailField, passwordField);
     setResults({ email: {emailField}, password: {passwordField} });
     setTimeout(() => {
-      navigation.navigate(`${link}`);
+      navigation.navigate("Main Nav Page");
     }, 50)
   }
 
@@ -50,10 +50,11 @@ export default function LoginPage({ navigation }) {
           link='Main Nav Page'
           text='SUBMIT'
           color='#FB7250'
+          onPress={() => submitHandler()}
         />
 
         <Text style={{ marginTop: 40 }}>
-          Email: {results.email} Password: {results.password}
+          {/* Email: {results.email} Password: {results.password} */}
         </Text>
       </View>
     </TouchableWithoutFeedback>

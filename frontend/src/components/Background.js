@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
  * @param {string} direction The direction in which the gradient should be 
  *                           oriented. Pick from [left, middle, right]
  */
-export default function Background({ direction='middle' }) {
+export default function Background({ direction='middle' }) { //comment
   const directionMap = {
     'middle': {
       'start': [0.9, 0.1],
