@@ -1,10 +1,11 @@
+// Users file for Creating, Reading, Updating, and Deleting Users
 import "firebase/firestore";
 import "firebase/auth";
+import Fire from "../firebase/config";
 // Import timerCorrector to handle trivial timer warnings
 import "../timerCorrector";
-import Fire from "../firebase/config";
 
-// Users File for Creating, Reading, Updating, and Deleting Users
+// Firestore
 export const db = Fire.firestore();
 export const users = db.collection("users");
 
