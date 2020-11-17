@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "Starting bash script"
+git checkout master
 git pull origin master
 cd frontend
 pwd
