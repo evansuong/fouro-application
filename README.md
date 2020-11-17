@@ -62,6 +62,13 @@ Vuk Radovanovic - Algorithm Specialist
 
     npm run sync2
 
+    OR (if neither works)
+
+    ./sync.sh
+
+This makes sure that your current branch is up to date with the master branch. You will also have to resolve merge conflicts and choose which parts of the code get to stay.
+
+
 If you don't have the `origin` variable set, run:
 
     git remote add origin https://github.com/evansuong/fouro-application
