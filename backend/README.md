@@ -20,7 +20,7 @@
        export default firebase.initializeApp(firebaseConfig);
        ```
 
-    3. Go to your Firebase console, find the cafe-fouro project, and navigate to the Project Overview page
+    3. Go to your Firebase console, open the cafe-fouro project, and navigate to the Project Overview page
 
     4. Copy the Web app Firebase SDK snippet which should look something like:
        ```
@@ -34,7 +34,7 @@
             appId: "APP-ID-HERE"
         };
        ```
-    5. Paste the snippet into [./firebase/config.js](./firebase/config.js) replacing line 6. The file should now look like:
+    5. Replace line 6 of [./firebase/config.js](./firebase/config.js) with the project configuration. The file should now look like:
 
        ```
        // Firebase App (the core Firebase SDK) is always required and

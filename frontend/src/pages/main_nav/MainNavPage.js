@@ -16,13 +16,13 @@ export default function MainNavPage() {
         <>
             <View style={styles.background}>
                 <LinearGradient
-                    colors={['rgba(240,240,0,0.8)', 'rgba(255,80,0,1)']}
+                    colors={['#FFC24A','#FB7250']}
                     start={[0.9, 0.1]}
                     end={[0.1, 0.7]}
                     style={styles.linearGradient}
                 />
             </View>
-            <Tab.Navigator sceneContainerStyle={styles.tabScreen} opacity={0} style={styles.tabNav} tabBarPosition="bottom" initialRouteName="Home">
+            <Tab.Navigator sceneContainerStyle={styles.tabScreen} style={styles.tabNav} tabBarPosition="bottom" initialRouteName="Home">
                 <Tab.Screen name="Profile" component={FriendsPage} />
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Notification" component={NotificationPage} />
@@ -46,10 +46,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     linearGradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 700,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: 700,
     },
 })
