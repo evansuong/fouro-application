@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, .3)',
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
-        padding: 10,
+        padding: 5,
         paddingLeft: 10,
     },
     body: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     text: {
         color: 'white',
         fontSize: 20,
-        marginRight: 30,
+        marginHorizontal: 10,
         flex: 1,
         flexWrap: 'wrap',
     },
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     },  
     imageContainer: {
         borderRadius: 100,
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
         borderWidth: 2,
         borderColor: 'white',
         marginRight: 20,

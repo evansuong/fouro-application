@@ -22,7 +22,7 @@ export default function MainNavPage() {
                     style={styles.linearGradient}
                 />
             </View>
-            <Tab.Navigator sceneContainerStyle={styles.tabScreen} opacity={0} style={styles.tabNav} tabBarPosition="bottom" initialRouteName="Home">
+            <Tab.Navigator sceneContainerStyle={styles.tabScreen} style={styles.tabNav} tabBarPosition="bottom" initialRouteName="Home">
                 <Tab.Screen name="Profile" component={FriendsPage} />
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Notification" component={NotificationPage} />
@@ -46,10 +46,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     linearGradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 700,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: 700,
     },
 })

@@ -4,6 +4,7 @@
   "description": "Fouro is ... (insert short paragraph here)",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,4 +18,21 @@
     "url": "https://github.com/evansuong/fouro-frontend/issues"
   },
   "homepage": "https://github.com/evansuong/fouro-frontend#readme"
+=======
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sync": "./sync.sh",
+    "sync2": "sync.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evansuong/fouro-application.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/evansuong/fouro-application/issues"
+  },
+  "homepage": "https://github.com/evansuong/fouro-application#readme"
+>>>>>>> 56fb5d4c070eae5e2471145ff9269114b3364e2e
 }
