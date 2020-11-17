@@ -12,7 +12,7 @@ function removeFriend() {
 }
 
 export default function FriendProfilePage() {
-    const icon = require("../../../../assets/overflowMenuIcon.png");
+    const icon = require("../../../assets/overflowMenuIcon.png");
 
     return (
         <View>

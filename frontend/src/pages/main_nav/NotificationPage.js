@@ -1,30 +1,33 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, PickerIOSItem } from 'react-native';
 import NotificationPanel from '../../components/NotificationPanel';
 
-// test we can delete this later
 
-function buildTestData(type, msg, img) {
-    return {
-        type: type,
-        message: msg,
-        image: img,
-    }
-}
 
-const testData = [
-    buildTestData('friend request', 'Alex has sent you a friend request', 'image'),
-    buildTestData('hug', 'Alex has sent you a hug', 'imgae'),
-    buildTestData('reminder', 'Alex not had any hugs today, send him a hug', 'image'),
-    buildTestData('reminder', 'Alex not had any hugs today, send him a hug', 'image'),
-    buildTestData('reminder', 'Alex not had any hugs today, send him a hug', 'image'),
-    buildTestData('friend request', 'Alex has sent you a friend request', 'image'),
-    buildTestData('friend request', 'Alex has sent you a friend request', 'image'),
-]
+
 
 export default function NotificationPage({ navigation }) {
 
-    const [notifications, setNotifications] = useState(testData)
+    // const [notifications, setNotifications] = useState(testData)
+    const pic = require('../../../assets/profilePic.jpg')
+
+    const testData = [
+        buildTestData('request', 'yixuaiend request', require('../../../assets/profilePic.jpg')),
+        buildTestData('hug', 'yixuas sent you a hug', require('../../../assets/profilePic.jpg')),
+        buildTestData('hug', 'yixuas sent you a hug', require('../../../assets/profilePic.jpg')),
+        buildTestData('request', 'yixuan has sent you a friend request', require('../../../assets/profilePic.jpg')),
+        buildTestData('request', 'yixuan has sent you a friend request', require('../../../assets/profilePic.jpg')),
+    ]
+
+    
+    function buildTestData(type, msg, img) {
+        return {
+            type: type,
+            message: msg,
+            image: img,
+        }
+    }
+
 
     const scrollProps = {
         showsVerticalScrollIndicator: false,
@@ -34,7 +37,7 @@ export default function NotificationPage({ navigation }) {
     return (
         <View style={styles.notificationList}>
             <ScrollView {...scrollProps}>
-                {notifications.map(data => (
+                {testData.map(data => (
                     <NotificationPanel notificationData={data} />
                 ))}
             </ScrollView>
@@ -44,6 +47,6 @@ export default function NotificationPage({ navigation }) {
 
 const styles = StyleSheet.create({
     notificationList: {
-        margin: 20,
+        margin: 5,
     }
 })

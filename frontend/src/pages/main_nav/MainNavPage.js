@@ -16,7 +16,7 @@ export default function MainNavPage() {
         <>
             <View style={styles.background}>
                 <LinearGradient
-                    colors={['rgba(240,240,0,0.8)', 'rgba(255,80,0,1)']}
+                    colors={['#FFC24A','#FB7250']}
                     start={[0.9, 0.1]}
                     end={[0.1, 0.7]}
                     style={styles.linearGradient}
