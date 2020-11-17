@@ -62,6 +62,14 @@ Vuk Radovanovic - Algorithm Specialist
 
     npm run sync2
 
+    OR (if the top command doesn't work)
+
+    ./sync.sh
+
+    OR (if the top command doesn't work)
+
+    @ Rickesh in #gen-dev Discord channel
+
 If you don't have the `origin` variable set, run:
 
     git remote add origin https://github.com/evansuong/fouro-application
