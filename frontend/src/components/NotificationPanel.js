@@ -37,7 +37,7 @@ export default function NotificationPanel(props) {
         
 const styles = StyleSheet.create({
     hugPanel: {
-        backgroundColor: 'rgba(0, 0, 0, .3)',
+        backgroundColor: 'rgba(0, 0, 0, .25)',
         margin: 5,
         borderRadius: 15,
     },
