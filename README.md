@@ -77,7 +77,6 @@ When working, make sure to work on your own feature branch
 
 1.  Create a new branch (this copies all the files from your current branch to the new branch)
 
-        create branch "feature-name/first-last"
         git branch feature-name/first-last
 
 2.  Navigate to your branch
