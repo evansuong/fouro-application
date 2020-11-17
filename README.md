@@ -25,3 +25,74 @@ Vicki Chen - Quality Assurance Lead
 Vivian Tang - Quality Assurance Lead
 
 Vuk Radovanovic - Algorithm Specialist
+
+## Setup
+
+1.  Install [node.js](https://nodejs.org/en/)
+
+2.  Install [Expo](https://docs.expo.io/) CLI:
+
+        npm install -g expo-cli
+
+3.  Setup Backend Firebase Configuration (see [./backend](./backend) README)
+
+4.  Install dependencies in BOTH backend and frontend:
+
+    1. In [./backend](./backend) AND [./frontend](./frontend) and run:
+
+       ```
+       npm install
+       ```
+
+5.  Run application with Expo from [./frontend](./frontend) directory
+
+        npm start
+
+6.  Run from Android Virtual Device (AVD) or install Expo Client on your mobile device
+
+7.  Scan QR code with your camera
+
+## Pulling changes
+
+Before you start working, make sure to pull from the `master` branch to get the most up to date changes using:
+
+    git pull origin master
+
+If you don't have the `origin` variable set, run:
+
+    git remote add origin https://github.com/evansuong/fouro-application
+
+and verify your local repo is connected to the github repo.
+
+    git remote -v
+
+It should return something like this:
+
+    origin  https://github.com/evansuong/fouro-application (fetch)
+    origin  https://github.com/evansuong/fouro-application (push)
+
+## Pushing changes
+
+When working, make sure to work on your own feature branch
+
+1.  Create a new branch (this copies all the files from your current branch to the new branch)
+
+        create branch "feature-name/first-last"
+        git branch feature-name/first-last
+
+2.  Navigate to your branch
+
+        git checkout feature-name/first-last
+
+3.  Do some coding and commit the changes
+
+        git add .
+        git commit -m "changes you made"
+
+4.  Push to the branch you created
+
+        git push origin featurename/yourname
+
+5.  Create a pull request on Github by going to your branch and clicking on "pull request"
+
+6.  Make the pull request and one of us will look over the code and merge it to the `master` branch to save the changes
