@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import NotificationPanel from '../../components/NotificationPanel';
 
+// test we can delete this later
 
 function buildTestData(type, msg, img) {
     return {
