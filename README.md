@@ -54,9 +54,13 @@ Vuk Radovanovic - Algorithm Specialist
 
 ## Pulling changes
 
-Before you start working, make sure to pull from the `master` branch to get the most up to date changes using:
+**Before you start working, make sure to type:**
 
-    git pull origin master
+    npm run sync
+
+    OR (if the top command doesn't work)
+
+    npm run sync2
 
 If you don't have the `origin` variable set, run:
 
