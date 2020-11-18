@@ -19,6 +19,9 @@ export function addUser(username, first, last) {
 } */
 
 const UsersAPI = {
+
+  user: firebase.auth().currentUser,
+
   createNewUser: function(username, first, last) {
     users.doc(username).set({
       first_name: first,
@@ -27,7 +30,7 @@ const UsersAPI = {
   },
 
   uploadUserProfilePicture() {
-
+    //users.photoURL = 
   },
 
   getUserProfile(userId) {
