@@ -20,13 +20,18 @@ export function addUser(username, first, last) {
 
 const UsersAPI = {
 
-  user: firebase.auth().currentUser,
+  user: Fire.auth().currentUser,
 
-  createNewUser: function(username, first, last) {
-    users.doc(username).set({
-      first_name: first,
-      last_name: last
+  createNewUser: function(username, firstName, lastName) {
+    // same functionality
+    this.updateUserProfile(username, firstName, lastName);
+    /*
+    this.user.updateProfile({displayName: username});
+    users.doc(user.uid).set({
+      first_name: firstName,
+      last_name: lastName
     });
+    */
   },
 
   uploadUserProfilePicture: function() {
@@ -36,11 +41,21 @@ const UsersAPI = {
   },
 
   getUserProfile: function(userId) {
-
+    var userProfile = {
+      username: this.user.username,
+      firstName: users.get(user.first_name),
+      lastName: users.get(user.last_name),
+      profPicUrl: this.user.photoURL
+    };
+    return userProfile;
   },
 
   updateUserProfile: function(username, firstName, lastName) {
-
+    this.user.updateProfile({displayName: username});
+    users.doc(user.uid).set({
+      first_name: firstName,
+      last_name: lastName
+    });
   }
 }
  
