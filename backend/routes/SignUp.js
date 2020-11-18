@@ -1,6 +1,6 @@
 import Fire from "../firebase/config";
 
-export function createUserWtihEmailAndPassword(email, password) {
+export function registerUser(email, password) {
   Fire.auth()
     .createUserWithEmailAndPassword(email, password)
     .catch(function (error) {
