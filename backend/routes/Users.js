@@ -10,11 +10,74 @@ import "../timerCorrector";
 export const db = Fire.firestore();
 export const users = db.collection("users");
 
-// TEST Firestore Function
+/* TEST Firestore Function
 export function addUser(username, first, last) {
   users.doc(username).set({
     first_name: first,
     last_name: last,
   });
-} 
+} */
+
+const UsersAPI = {
+
+  user: Fire.auth().currentUser,
+
+  createNewUser: function(username, firstName, lastName) {
+    // same functionality
+    this.updateUserProfile(username, firstName, lastName);
+    /*
+    this.user.updateProfile({displayName: username});
+    users.doc(user.uid).set({
+      first_name: firstName,
+      last_name: lastName
+    });
+    */
+  },
+
+  uploadUserProfilePicture: function() {    // TODO this function may not work correctly.
+    // create a cloud storage refrence
+    var storageRef = firebase.storage().ref(user.uid + '/profilePicture/' + file.name);
+
+    // save to cloud storage
+    var task = storageRef.put(file);
+
+    // update user's photo URL to the saved cloud storage url
+    user.updateProfile({ photoURL = storageRef.getDownloadURL() });
+  },
+
+  getUserProfile: function(userId) {
+    var userProfile = {
+      username: this.user.username,
+      firstName: users.get(user.first_name),
+      lastName: users.get(user.last_name),
+      profPicUrl: this.user.photoURL
+    };
+    return userProfile;
+  },
+
+  updateUserProfile: function(username, firstName, lastName) {
+    this.user.updateProfile({displayName: username});
+    users.doc(user.uid).set({
+      first_name: firstName,
+      last_name: lastName
+    });
+  }
+}
  
+const HugCountAPI = {
+  getUserHugCount: function() {
+
+  },
+
+  getUserHugStreak: function() {
+
+  },
+
+  resetUserHugCount: function() {
+
+  },
+
+  increaseHugCount: function() {
+    
+  }
+}
