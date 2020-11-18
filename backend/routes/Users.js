@@ -10,11 +10,24 @@ import "../timerCorrector";
 export const db = Fire.firestore();
 export const users = db.collection("users");
 
-// TEST Firestore Function
+/* TEST Firestore Function
 export function addUser(username, first, last) {
   users.doc(username).set({
     first_name: first,
     last_name: last,
   });
-} 
+} */
+
+const UsersAPI = {
+  createNewUser: function(username, first, last) {
+    users.doc(username).set({
+      first_name: first,
+      last_name: last
+    });
+  },
+
+}
  
+const HugCountAPI = {
+
+}
