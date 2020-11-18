@@ -2,48 +2,64 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, PickerIOSItem } from 'react-native';
 import NotificationPanel from '../../components/NotificationPanel';
 
+import { useFocusEffect } from '@react-navigation/native';
+
+// temorary test data to simulate backend notification data 
+const pic = require('../../../assets/profilePic.jpg')
+   
+function buildTestData(type, msg, img, id) {
+    return {
+        type: type,
+        message: msg,
+        image: img,
+        id: id
+    }
+}
+
+
+const testData = [
+    buildTestData('request', 'Alex Chow', require('../../../assets/profilePic.jpg'), 0),
+    buildTestData('hug', 'Evan Suong', require('../../../assets/profilePic.jpg'), 1),
+    buildTestData('hug', 'Yixuan Zhou', require('../../../assets/profilePic.jpg'), 2),
+    buildTestData('request', 'Tyus Liu', require('../../../assets/profilePic.jpg'), 3),
+    buildTestData('request', 'Vicki Chen', require('../../../assets/profilePic.jpg'), 4),
+]
 
 export default function NotificationPage({ navigation }) {
 
-    // const [notifications, setNotifications] = useState(testData)
-    const pic = require('../../../assets/profilePic.jpg')
+    // stores whether the user is on this page (true) or not (false)
+    const [isFocused, setIsFocused] = useState(false)
+    const [notifications, setNotifications] = useState(testData ? testData : {})
 
-    const testData = [
-        buildTestData('request', 'yixuaiend request', require('../../../assets/profilePic.jpg')),
-        buildTestData('hug', 'yixuas sent you a hug', require('../../../assets/profilePic.jpg')),
-        buildTestData('hug', 'yixuas sent you a hug', require('../../../assets/profilePic.jpg')),
-        buildTestData('request', 'yixuan has sent you a friend request', require('../../../assets/profilePic.jpg')),
-        buildTestData('request', 'yixuan has sent you a friend request', require('../../../assets/profilePic.jpg')),
-    ]
+    // check whether the user is on the page (true) or navigates away from the page (false)
+    useFocusEffect(() => {
+        setIsFocused(true)
+        return () => {
+           setIsFocused(false)
+        }
+    }, []);  
+
+    function clearNotification(id) {
+        const newList = notifications.filter((item) => item.id !== id);
+        setNotifications(newList)
+    }
 
     
-    function buildTestData(type, msg, img) {
-        return {
-            type: type,
-            message: msg,
-            image: img,
-        }
-    }
-
-
-    const scrollProps = {
-        showsVerticalScrollIndicator: false,
-
-    }
-
+    // map every notification entry to a notification panel element 
     return (
         <View style={styles.notificationList}>
-            <ScrollView {...scrollProps}>
-                {testData.map(data => (
-                    <NotificationPanel notificationData={data} />
+            <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
+                {notifications.map((data, index) => (
+                    <NotificationPanel key={index} index={index} notificationData={data} isFocused={isFocused} clearNotification={clearNotification} />
                 ))}
             </ScrollView>
         </View>
     )
-}
+} 
 
+// notification list styles
 const styles = StyleSheet.create({
     notificationList: {
-        margin: 5,
+        marginHorizontal: 5,
     }
 })
