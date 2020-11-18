@@ -42,7 +42,7 @@ const UsersAPI = {
     var task = storageRef.put(file);
 
     // update user's photo URL to the saved cloud storage url
-    user.updateProfile({ photoURL = storageRef.getDownloadURL() });
+    user.updateProfile({ photoURL: storageRef.getDownloadURL() });
   },
 
   getUserProfile: function(userId) {

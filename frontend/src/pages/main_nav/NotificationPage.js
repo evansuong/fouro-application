@@ -37,8 +37,11 @@ export default function NotificationPage({ navigation }) {
     return (
         <View style={styles.notificationList}>
             <ScrollView {...scrollProps}>
-                {testData.map(data => (
-                    <NotificationPanel notificationData={data} />
+                {testData.map((data, i) => (
+                    <NotificationPanel 
+                      notificationData={data}
+                      key={i}
+                    />
                 ))}
             </ScrollView>
         </View>
