@@ -10,16 +10,33 @@ import {
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
 
+// TODO: Hide passwords
 
 export default function SignupPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
   const [passwordConfirmField, setPasswordConfirmField] = useState('');
-  const [results, setResults] = useState('Email:   |   Password:   |   Password Confirmation: ');
+  const [formStatus, setFormStatus] = useState(false);
 
   const submitHandler = () => {
     console.log(emailField, passwordField, passwordConfirmField);
-    setResults(`Email: ${emailField}   |   Password: ${passwordField}   |   Password Confirmation: ${passwordConfirmField}`);
+  }
+
+  const checkLength = () => {
+    if (passwordField.length < 6 || passwordConfirmField.length < 6) {
+      return false
+    }
+    return true;
+  }
+
+  const checkFilled = () => {
+    return emailField !== '' && 
+      passwordField !== '' && 
+      passwordConfirmField !== '';
+  }
+
+  const passwordMatch = () => {
+    return passwordField === passwordConfirmField;
   }
 
   return (
@@ -46,16 +63,42 @@ export default function SignupPage({ navigation }) {
           setField={setPasswordConfirmField}
         />
 
-        {/* TODO:  How to check input validity */}
-        <LinkedButton
-          navigation={navigation}
-          onPress={() => submitHandler()} 
-          link='Name Page'
-          text='SUBMIT'
-          color='#FFC24A'
-        />
 
-        <Text style={{ marginTop: 40 }}>{results}</Text>
+        {
+          !checkLength() &&
+          <View style={styles.errorTextContainer}>
+            <Text style={styles.errorText}>
+              Your password must be at least 6 characters long!
+            </Text>
+          </View>
+        }
+        {
+          !passwordMatch() &&
+          <View style={styles.errorTextContainer}>
+            <Text style={styles.errorText}>
+              Passwords do not match!
+            </Text>
+          </View>
+        }
+        {
+          !checkFilled() &&
+          <View style={styles.errorTextContainer}>
+            <Text style={styles.errorText}>
+              Not all form fields are filled!
+            </Text>
+          </View>
+        }
+        {
+          checkFilled() && passwordMatch() && 
+          <LinkedButton
+            navigation={navigation}
+            link='Name Page'
+            text='SUBMIT'
+            color='#FFC24A'
+            onPress={() => submitHandler()}
+            formStatus={formStatus} 
+          />
+        }
       </View>
     </TouchableWithoutFeedback>
   );
@@ -65,5 +108,16 @@ export default function SignupPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  errorTextContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 20,
   }
 });

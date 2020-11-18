@@ -10,20 +10,35 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
+import UsersAPI from 'backend/routes/Users';
 
 
 export default function LoginPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
-  const [results, setResults] = useState({ email: '', password: '' });
+  const [error, setError] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
 
-  const submitHandler = () => {
-    console.log('test')
-    console.log(emailField, passwordField);
-    setResults({ email: {emailField}, password: {passwordField} });
+  const submitHandler = async () => {
+    setLoggingIn(true);
+    const signedin = await UsersAPI.signInAuthUser(emailField, passwordField);
+    if (signedin) {
+      navigation.navigate('Main Nav Page')
+    } else {
+      setError(true);
+    }
+  }
+
+  const checkFilled = () => {
+    return emailField !== '' && 
+      passwordField !== '';
+  }
+
+  const timeout = () => {
     setTimeout(() => {
-      navigation.navigate("Main Nav Page");
-    }, 50)
+      setError(false);
+    }, 10000);
+    return true;
   }
 
   return (
@@ -44,18 +59,38 @@ export default function LoginPage({ navigation }) {
           setField={setPasswordField}
         />
 
-        {/* TODO:  How to check input validity */}
-        <LinkedButton
-          navigation={navigation}
-          link='Main Nav Page'
-          text='SUBMIT'
-          color='#FB7250'
-          onPress={() => submitHandler()}
-        />
-
-        <Text style={{ marginTop: 40 }}>
-          {/* Email: {results.email} Password: {results.password} */}
-        </Text>
+        {
+          !checkFilled() &&
+          <View style={styles.textContainer}>
+            <Text style={styles.errorText}>
+              Not all form fields are filled!
+            </Text>
+          </View>
+        }
+        {
+          checkFilled() && 
+          <LinkedButton
+            text='SUBMIT'
+            color='#FB7250'
+            onPress={() => submitHandler()}
+          />
+        }
+        {
+          error && timeout() &&
+          <View style={styles.textContainer}>
+            <Text style={styles.errorText}>
+              There is no user profile with those credentials!
+            </Text>
+          </View>
+        }
+        {
+          loggingIn &&
+          <View style={styles.textContainer}>
+            <Text style={styles.loggingText}>
+              Logging in...
+            </Text>
+          </View>
+        }
       </View>
     </TouchableWithoutFeedback>
   );
@@ -65,5 +100,19 @@ export default function LoginPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 18,
+  },
+  loggingText: {
+    color: 'green',
+    fontSize: 18,
+  },
+  textContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 20,
   }
 });
