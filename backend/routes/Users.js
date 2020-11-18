@@ -34,10 +34,15 @@ const UsersAPI = {
     */
   },
 
-  uploadUserProfilePicture: function() {
+  uploadUserProfilePicture: function() {    // TODO this function may not work correctly.
+    // create a cloud storage refrence
+    var storageRef = firebase.storage().ref(user.uid + '/profilePicture/' + file.name);
+
     // save to cloud storage
-    // get the cloud storage url
+    var task = storageRef.put(file);
+
     // update user's photo URL to the saved cloud storage url
+    user.updateProfile({ photoURL = storageRef.getDownloadURL() });
   },
 
   getUserProfile: function(userId) {
