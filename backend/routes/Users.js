@@ -26,8 +26,33 @@ const UsersAPI = {
     });
   },
 
+  uploadUserProfilePicture() {
+
+  },
+
+  getUserProfile(userId) {
+
+  },
+
+  updateUserProfile(username, firstName, lastName) {
+
+  }
 }
  
 const HugCountAPI = {
+  getUserHugCount() {
 
+  },
+
+  getUserHugStreak() {
+
+  },
+
+  resetUserHugCount() {
+
+  },
+
+  increaseHugCount() {
+
+  }
 }
