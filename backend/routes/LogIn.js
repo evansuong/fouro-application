@@ -1,6 +1,6 @@
 import Fire from "../firebase/config";
 
-export function signInWtihEmailAndPassword(email, password) {
+export function loginUser(email, password) {
   Fire.auth()
     .signInWithEmailAndPassword(email, password)
     .catch(function (error) {
