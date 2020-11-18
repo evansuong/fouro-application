@@ -7,15 +7,12 @@ import Fire from "../firebase/config";
 import "../timerCorrector";
 
 // Firestore
-//export const db = Fire.firestore();
-//export const users = db.collection("users");
+// export const db = Fire.firestore();
+// export const users = db.collection("users");
 
 // Initialize your Web app as described in the Get started for Web
 // Firebase previously initialized using firebase.initializeApp().
 export var db = Fire.firestore();
-//if (location.hostname === "localhost") {
-db.useEmulator("localhost", 8080);
-//}
 export const users = db.collection("users");
 
 // TEST Firestore Function
@@ -24,5 +21,4 @@ export function addUser(username, first, last) {
     first_name: first,
     last_name: last,
   });
-} 
- 
+}
