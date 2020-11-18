@@ -16,20 +16,5 @@ export function addUser(username, first, last) {
     first_name: first,
     last_name: last,
   });
-}
-
-
-// const UsersAPI = {
-//   addUser: function(username, first, last) {
-//     users.doc(username).set({
-//       first_name: first,
-//       last_name: last,
-//     });
-//   },
-
-// }
-
-// export default UsersAPI;
-// import UsersAPI from 'backend/routes/users';
-// await UsersAPI.addUser(username, first, last)
-
+} 
+ 
