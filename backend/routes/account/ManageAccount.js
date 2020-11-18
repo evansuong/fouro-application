@@ -6,11 +6,18 @@ const ManageAccountAPI = {
     user: Fire.auth().currentUser,
 
     logout: function() {
-        
+        Fire.auth().signOut();
     },
 
     resetPassword: function() {
-        
+        var auth = firebase.auth();
+        var emailAddress = user.email;
+
+        auth.sendPasswordResetEmail(emailAddress).then(function() {
+            // Email sent.
+          }).catch(function(error) {
+            // An error happened.
+          });
     },
 
     deleteAccount: function() {
