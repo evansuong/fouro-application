@@ -3,9 +3,6 @@ import { View, Text, ScrollView, StyleSheet, PickerIOSItem } from 'react-native'
 import NotificationPanel from '../../components/NotificationPanel';
 
 
-
-
-
 export default function NotificationPage({ navigation }) {
 
     // const [notifications, setNotifications] = useState(testData)

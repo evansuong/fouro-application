@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, TouchableOpacity, Animated, Image, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, StyleSheet, Animated, Image, TouchableWithoutFeedback } from 'react-native'
+
 
 export default function NotificationPanel(props) {
 
     const [expanded, setExpanded] = useState(false)
-    //comment
     const {type, message, image} = props.notificationData;
 
     return (
-        <TouchableOpacity style={styles.hugPanel} onPress={() => setExpanded(!expanded)}>
+        <TouchableWithoutFeedBack style={styles.hugPanel} onPress={() => setExpanded(!expanded)}>
 
             {/* header */}
             <View style={styles.header}>
@@ -31,7 +31,7 @@ export default function NotificationPanel(props) {
                     </TouchableOpacity>
                 </View>
             }
-        </TouchableOpacity>
+        </TouchableWithoutFeedBack>
     )
 }
         
