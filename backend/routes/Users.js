@@ -29,33 +29,35 @@ const UsersAPI = {
     });
   },
 
-  uploadUserProfilePicture() {
-    //users.photoURL = 
+  uploadUserProfilePicture: function() {
+    // save to cloud storage
+    // get the cloud storage url
+    // update user's photo URL to the saved cloud storage url
   },
 
-  getUserProfile(userId) {
+  getUserProfile: function(userId) {
 
   },
 
-  updateUserProfile(username, firstName, lastName) {
+  updateUserProfile: function(username, firstName, lastName) {
 
   }
 }
  
 const HugCountAPI = {
-  getUserHugCount() {
+  getUserHugCount: function() {
 
   },
 
-  getUserHugStreak() {
+  getUserHugStreak: function() {
 
   },
 
-  resetUserHugCount() {
+  resetUserHugCount: function() {
 
   },
 
-  increaseHugCount() {
-
+  increaseHugCount: function() {
+    
   }
 }
