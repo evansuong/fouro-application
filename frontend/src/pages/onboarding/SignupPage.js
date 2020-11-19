@@ -9,21 +9,39 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
+import SignupAPI from 'backend/routes/SignUp';
 
 // TODO: Hide passwords
+// TODO: Check for valid email
+// TODO: Check if user already exists
+// TODO: STRIP INPUTS
 
 export default function SignupPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
   const [passwordConfirmField, setPasswordConfirmField] = useState('');
-  const [formStatus, setFormStatus] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+  const [mounted, setMounted] = useState(true);
 
-  const submitHandler = () => {
-    console.log(emailField, passwordField, passwordConfirmField);
+  const submitHandler = async () => {
+    // console.log(emailField, passwordField, passwordConfirmField);
+    setSigningIn(true);
+    const [registered, newUser] = await SignupAPI.registerUser(emailField, passwordField);
+    // console.log('30', newUser);
+    const createdInFS = await SignupAPI.createUserInCollection(newUser, emailField, 
+      passwordField);
+    if (registered && createdInFS) {
+      setMounted(false);
+      navigation.navigate('Name Page');
+    } else {
+      setSigningIn(false);
+      console.log(`There was an error signing in. Booleans: 
+        ${registered} | ${createdInFS}`);
+    }
   }
 
   const checkLength = () => {
-    if (passwordField.length < 6 || passwordConfirmField.length < 6) {
+    if (passwordField.length < 6) {
       return false
     }
     return true;
@@ -66,7 +84,7 @@ export default function SignupPage({ navigation }) {
 
         {
           !checkLength() &&
-          <View style={styles.errorTextContainer}>
+          <View style={styles.textContainer}>
             <Text style={styles.errorText}>
               Your password must be at least 6 characters long!
             </Text>
@@ -74,7 +92,7 @@ export default function SignupPage({ navigation }) {
         }
         {
           !passwordMatch() &&
-          <View style={styles.errorTextContainer}>
+          <View style={styles.textContainer}>
             <Text style={styles.errorText}>
               Passwords do not match!
             </Text>
@@ -82,7 +100,7 @@ export default function SignupPage({ navigation }) {
         }
         {
           !checkFilled() &&
-          <View style={styles.errorTextContainer}>
+          <View style={styles.textContainer}>
             <Text style={styles.errorText}>
               Not all form fields are filled!
             </Text>
@@ -91,13 +109,18 @@ export default function SignupPage({ navigation }) {
         {
           checkFilled() && passwordMatch() && 
           <LinkedButton
-            navigation={navigation}
-            link='Name Page'
             text='SUBMIT'
             color='#FFC24A'
             onPress={() => submitHandler()}
-            formStatus={formStatus} 
           />
+        }
+        {
+          signingIn &&
+          <View style={styles.textContainer}>
+            <Text style={styles.signingText}>
+              Signing up...
+            </Text>
+          </View>
         }
       </View>
     </TouchableWithoutFeedback>
@@ -114,10 +137,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
   },
-  errorTextContainer: {
+  signingText: {
+    color: 'green',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  textContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     margin: 20,
-  }
+  },
 });

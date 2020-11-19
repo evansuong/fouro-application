@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   StyleSheet,
   Button, 
@@ -10,22 +10,27 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import UsersAPI from 'backend/routes/Users';
+import LoginAPI from 'backend/routes/LogIn';
 
+
+// TODO: Destroy firebase reference on component unmount
 
 export default function LoginPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
   const [error, setError] = useState(false);
   const [loggingIn, setLoggingIn] = useState(false);
+  const [mounted, setMounted] = useState(true);
 
   const submitHandler = async () => {
     setLoggingIn(true);
-    const signedin = await UsersAPI.signInAuthUser(emailField, passwordField);
+    const signedin = await LoginAPI.loginUser(emailField, passwordField);
     if (signedin) {
-      navigation.navigate('Main Nav Page')
+      setMounted(false);
+      navigation.navigate('Main Nav Page');
     } else {
       setError(true);
+      setLoggingIn(false);
     }
   }
 
@@ -35,10 +40,12 @@ export default function LoginPage({ navigation }) {
   }
 
   const timeout = () => {
-    setTimeout(() => {
-      setError(false);
-    }, 10000);
-    return true;
+    if (mounted) {
+      setTimeout(() => {
+        setError(false);
+      }, 10000);
+      return true;
+    }
   }
 
   return (

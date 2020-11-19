@@ -11,7 +11,7 @@ import AppStyles from '../AppStyles';
  * @param {string} text The text to be rendered on the button
  * @param {color} color The background color of the button
  */
-export default function LinkedButton({ navigation, link, text, color, onPress, formStatus }) {
+export default function LinkedButton({ navigation, link, text, color, onPress }) {
   const [animatedValue, setAnimatedValue] = useState(new Animated.Value(1));
 
   const linkedButtonContainer = {

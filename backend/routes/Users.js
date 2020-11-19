@@ -1,7 +1,7 @@
 // Users file for Creating, Reading, Updating, and Deleting Users
 // and User Profile Management
-// import "firebase/firestore";
-// import "firebase/auth";
+import "firebase/firestore";
+import "firebase/auth";
 import firebase from "../firebase/config";
 // Import timerCorrector to handle trivial timer warnings
 import "../timerCorrector";
@@ -10,40 +10,14 @@ import "../timerCorrector";
 export const db = firebase.firestore();
 export const users = db.collection("users");
 
-/* TEST Firestore Function
-export function addUser(username, first, last) {
-  users.doc(username).set({
-    first_name: first,
-    last_name: last,
-  });
-} */
-
-// firebase.auth().onAuthStateChanged(function(user) {
-//   if (user) {
-//     console.log(`User signed in: ${user}`);
-//   }
-// })
-
 const UsersAPI = {
 
-  user: firebase.auth().currentUser,
-
-  signInAuthUser: async function(email, password) {
-    let loggedin = false;
-    await firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => {
-      loggedin = true;
-    })
-    .catch((error) => {
-      console.log(`Error while signing in: ${error}`);
-      loggedin = false;
-    })
-    return loggedin;
-  },
+  // user: firebase.auth().currentUser,
 
   createNewUser: function(username, firstName, lastName) {
     // same functionality
     this.updateUserProfile(username, firstName, lastName);
+    console.log(user);
     /*
     this.user.updateProfile({displayName: username});
     users.doc(user.uid).set({
@@ -74,11 +48,18 @@ const UsersAPI = {
     return userProfile;
   },
 
+  // TODO: Need to fix for testing purposes
+  // User and UID remains constant throughout expo session
+  // In order to reset UID, close metro bundler and npm start again
+  // TODO: Develop a SIGNOUT button ASAP
   updateUserProfile: function(username, firstName, lastName) {
-    this.user.updateProfile({displayName: username});
-    users.doc(user.uid).set({
+    const user = firebase.auth().currentUser;
+    console.log(user);
+    // await user.updateProfile({displayName: username});
+    users.doc(user.uid).update({
       first_name: firstName,
-      last_name: lastName
+      last_name: lastName,
+      username: username,
     });
   }
 }
