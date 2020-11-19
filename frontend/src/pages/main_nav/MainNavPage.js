@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -44,8 +44,6 @@ export default function MainNavPage() {
                     },
                   })}
                   tabBarOptions={{
-                    activeTintColor: 'tomato',
-                    inactiveTintColor: 'gray',
                     showIcon: true,
                     showLabel: false,
                     iconStyle: {
