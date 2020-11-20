@@ -86,7 +86,7 @@ It should return something like this:
 
 When working, make sure to work on your own feature branch
 
-1.  Create a new branch (this copies all the files from your current branch to the new branch)
+1.  Create a new branch of the form [feature-name]/[your-name](this copies all the files from your current branch to the new branch)
 
         git branch feature-name/first-last
 

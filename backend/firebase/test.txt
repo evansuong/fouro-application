@@ -1,1 +1,0 @@
-Ignore this file but this just keeps the firebase folder up. 
