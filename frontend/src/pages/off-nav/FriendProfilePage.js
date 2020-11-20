@@ -13,13 +13,14 @@ function removeFriend() {
 }
 
 export default function FriendProfilePage() {
-    const icon = require("../../../assets/overflowMenuIcon.png");
+    const icon = require("assets/overflowMenuIcon.png");
 
     return (
 
         <View>
             {/* option overflow button (remove friend button) */}
             <View style={styles.removeFriendOverlay}>
+                {/* add a 'close' option */}
                 <OptionsMenu
                     button={icon}
                     buttonStyle={styles.button}
