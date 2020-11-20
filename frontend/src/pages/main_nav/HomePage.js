@@ -26,6 +26,9 @@ export default function HomePage({ navigation }) {
           <Button
             title='friend profile'
             onPress={() => navigation.navigate('Friend Profile')}
+          <Button
+            title='hug info page'
+            onPress={() => navigation.navigate('Hug Info')}
           />
       </View>
     )
