@@ -2,12 +2,24 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
+import UsersAPI from 'backend/routes/Users';
 
 
 export default function NamePage({ navigation }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
+
+  const checkFilled = () => {
+    return firstName !== '' && 
+      lastName !== '' &&
+      username !== '';
+  }
+
+  const submitHandler = async () => {
+    await UsersAPI.updateUserProfile(username, firstName, lastName);
+    navigation.navigate('Pic Upload Page');
+  }
 
   return(
     <TouchableWithoutFeedback onPress={() => {
@@ -33,14 +45,36 @@ export default function NamePage({ navigation }) {
           setField={setUsername}
         />
 
-        {/* TODO:  How to check input validity */}
-        <LinkedButton
-          navigation={navigation}
-          link='Pic Upload Page'
-          text='SUBMIT'
-          color='#FFC24A'
-        />
+        {
+          !checkFilled() &&
+          <View style={styles.textContainer}>
+            <Text style={styles.errorText}>
+              Not all form fields are filled!
+            </Text>
+          </View>
+        }
+        {
+          checkFilled() &&
+          <LinkedButton
+            text='SUBMIT'
+            color='#FFC24A'
+            onPress={() => submitHandler()}
+          />
+        }
       </View>
     </TouchableWithoutFeedback>
   );
 }
+
+const styles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    fontSize: 18,
+  },
+  textContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 20,
+  }
+});
