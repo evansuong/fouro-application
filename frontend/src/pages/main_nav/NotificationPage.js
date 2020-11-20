@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, PickerIOSItem } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, PickerIOSItem, LayoutAnimation } from 'react-native';
 import NotificationPanel from '../../components/NotificationPanel';
 
 import { useFocusEffect } from '@react-navigation/native';
@@ -41,8 +41,14 @@ export default function NotificationPage({ navigation }) {
 
     function clearNotification(id) {
         const newList = notifications.filter((item) => item.id !== id);
-        setNotifications(newList)
+        setNotifications(() => {
+            return newList
+        }, () => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        });
     }
+
+
 
     
     // map every notification entry to a notification panel element 
