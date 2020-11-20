@@ -1,9 +1,17 @@
 import Fire from "../firebase/config";
+import "firebase/firestore";
+import "firebase/auth";
 
-export function loginUser(email, password) {
-  Fire.auth()
+const LoginAPI = {
+  loginUser: async function(email, password) {
+    let loggedin = false;
+    await Fire.auth()
     .signInWithEmailAndPassword(email, password)
+    .then(() => {
+      loggedin = true;
+    })
     .catch(function (error) {
+      loggedin = false;
       var errorCode = error.code;
       var errorMessage = error.message;
 
@@ -30,62 +38,9 @@ export function loginUser(email, password) {
       }
 
       console.log(error);
-    });
+    })
+    return loggedin;
+  }
 }
 
-/*
-import React, {useContext} from "react";
-import {AuthContext} from "../auth/Auth";
-import {Redirect} from "react-router-dom";
-import "../App.css";
-import db from "../base"
-
-const Login = ({history}) => {
-
-  const { currentUser } = useContext(AuthContext);
-  if (currentUser) {
-    return <Redirect to="/" />;
-  }
-    
-  const redirectSignUp = () => {
-    history.push("/signup");
-  }
-
-  const handleLogin = (event) => {
-
-    event.preventDefault();
-    const { email, password } = event.target.elements;
-
-    try{
-      db
-        .auth()
-        .signInWithEmailAndPassword(email.value,
-          password.value);
-      history.push("/");
-    } catch(error){
-      alert(error);
-    }
-  }
-
-  return(
-    <div className="centered">
-      <h1>Log In</h1>
-      <form onSubmit={handleLogin} >
-        <label>
-          Email
-          <input name="email" type="email" placeholder="Email" />
-        </label>
-        <label>
-          Password
-          <input name="password" type="password" placeholder="Password" />
-        </label>
-        <button type="submit">Log In</button>
-      </form>
-      <button onClick={redirectSignUp}>Sign Up</button>
-    </div>
-  );
-};
-      
-
-export default Login;
-*/
+export default LoginAPI;
