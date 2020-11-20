@@ -5,5 +5,7 @@ import Fire from "../firebase/config";
 export const db = Fire.firestore();
 
 const HugsAPI = {
-    createHug(friend_id, message, image)
+    createHug: function(friend_id, message, image) {
+
+    },
 }
