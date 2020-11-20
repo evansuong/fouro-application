@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { View, Text, StyleSheet, Animated, Image, TouchableOpacity } from 'react-native'
 
 
-export default function NotificationPanel({ index, notificationData, clearNotification, isFocused }) {
+export default function NotificationPanel({ index, notificationData, isFocused }) {
 
     // prop destructuring
     const { type, message, image, id } = notificationData;
@@ -10,6 +10,7 @@ export default function NotificationPanel({ index, notificationData, clearNotifi
 
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
+    const [display, setDisplay] = useState('flex');
 
     // TODO: implement this to get height of the panel
     const body = useRef({})
@@ -39,7 +40,7 @@ export default function NotificationPanel({ index, notificationData, clearNotifi
     // expand animation definition
     function expand() {
          // Will change fadeAnim value to 1 in 5 seconds
-        Animated.timing(height, {
+        Animated.spring(height, {
             toValue: 130,
             duration: 200,
             useNativeDriver: false,
@@ -53,7 +54,7 @@ export default function NotificationPanel({ index, notificationData, clearNotifi
 
     // collapse animation definition
     function collapse() {
-        Animated.timing(height, {
+        Animated.spring(height, {
             toValue: 70,
             duration: 200,
             useNativeDriver: false,
@@ -65,110 +66,108 @@ export default function NotificationPanel({ index, notificationData, clearNotifi
         }).start();
     }
 
+    function clearNotification() {
+        setDisplay('none')
+    }
+
+    const styles = StyleSheet.create({
+        hugPanelContainer: {
+            backgroundColor: 'rgba(0, 0, 0, .55)',
+            margin: 5,
+            borderRadius: 15,
+        },
+        headerContainer: {
+            backgroundColor: 'rgba(0, 0, 0, .3)',
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            display: 'flex',
+            flexDirection: 'row',
+        },
+        clearBtn:{
+            backgroundColor: '#88888888',
+            borderRadius: 100,
+            width: 18,
+            height: 18,
+            display: 'flex',
+            alignItems: 'center',
+        },
+        body: {
+            padding: 15,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        footer: {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            padding: 10,
+            paddingTop: 0,
+        },
+        text: {
+            color: 'white',
+            fontSize: 20,
+            marginHorizontal: 10,
+            flex: 1,
+            flexWrap: 'wrap',
+        },
+        buttonContainer: {
+            borderRadius: 100,
+            height: 35,
+            width: 200,
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: type === 'request' ? '#8677E5' : '#E57777', 
+        },
+        buttonText: {
+            fontSize: 15,
+            color: 'white',
+        },  
+        imageContainer: {
+            borderRadius: 100,
+            height: 40,
+            width: 40,
+            borderWidth: 2,
+            borderColor: 'white',
+            marginRight: 20,
+        },
+    }) 
+    
+
 
     return (
-        <TouchableOpacity style={styles.hugPanel} onPress={handlePress} activeOpacity={1.0}>
-            
-            {/* header */}
-            <View style={styles.header}>
-                <Text style={styles.text}>{type}</Text>  
-                <TouchableOpacity style={styles.clearBtn} onPress={() => clearNotification(id)}>
-                    <Text style={{color: '#FFFFFF'}}>x</Text>
-                </TouchableOpacity>
-            </View>
-            
-            {/* body */}
-            <Animated.View
-                style={{
-                    height: height // Bind opacity to animated value
-                }}
-            >
-                <View ref={body}>
-                <View style={styles.body}>
-                    <Image style={styles.imageContainer} source={image} />
-                    <Text style={styles.text}>{message}</Text>
+        <View style={{ ...styles.hugPanelContainer, display: display }}>
+            <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
+                {/* header */}
+                <View style={styles.headerContainer}>
+                    <Text style={styles.text}>{type}</Text>  
+                    <TouchableOpacity style={styles.clearBtn} onPress={() => clearNotification(id)}>
+                        <Text style={{color: '#FFFFFF'}}>x</Text>
+                    </TouchableOpacity>
                 </View>
                 
-                {/* footer button container */}
+                {/* body */}
+                <Animated.View style={{ height: height }}>
+                    <View style={styles.body}>
+                        <Image style={styles.imageContainer} source={image} />
+                        <Text style={styles.text}>{message}</Text>
+                    </View>
+                    
+                    {/* footer button container */}
                     <View style={styles.footer}>
                         <TouchableOpacity onPress={() => type === 'request' ? alert('accepted!') : alert('caught hug!')}>
-                            <Animated.View style={{
-                                ...styles.buttonContainer, 
-                                backgroundColor: type === 'request' ? '#8677E5' : '#E57777', 
-                                opacity: fade
-                            }}>
+                            <Animated.View style={styles.buttonContainer} opacity={fade}>
                                 <Text style={styles.buttonText}>{type === 'request' ? 'Accept' : 'Catch'}</Text>    
                             </Animated.View>
                         </TouchableOpacity>
                     </View>
-                </View>
-            </Animated.View>
-        </TouchableOpacity>
+                </Animated.View>
+            </TouchableOpacity>
+        </View>
     )
 }
         
-const styles = StyleSheet.create({
-    hugPanel: {
-        backgroundColor: 'rgba(0, 0, 0, .55)',
-        margin: 5,
-        borderRadius: 15,
-    },
-    header: {
-        backgroundColor: 'rgba(0, 0, 0, .3)',
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    clearBtn:{
-        backgroundColor: '#88888888',
-        borderRadius: 100,
-        width: 18,
-        height: 18,
-        display: 'flex',
-        alignItems: 'center',
-    },
-    body: {
-        padding: 15,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    footer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        padding: 10,
-        paddingTop: 0,
-    },
-    text: {
-        color: 'white',
-        fontSize: 20,
-        marginHorizontal: 10,
-        flex: 1,
-        flexWrap: 'wrap',
-    },
-    buttonContainer: {
-        borderRadius: 100,
-        height: 35,
-        width: 200,
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    buttonText: {
-        fontSize: 15,
-        color: 'white',
-    },  
-    imageContainer: {
-        borderRadius: 100,
-        height: 40,
-        width: 40,
-        borderWidth: 2,
-        borderColor: 'white',
-        marginRight: 20,
-    },
-}) 
