@@ -21,6 +21,12 @@ export default function HomePage({ navigation }) {
             title='launch page'
             onPress={() => navigation.navigate('Launch Page')}
           />
+
+          {/* temporary to test friend profile page */}
+          <Button
+            title='friend profile'
+            onPress={() => navigation.navigate('Friend Profile')}
+          />
       </View>
     )
 }
