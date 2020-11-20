@@ -23,12 +23,13 @@ import { StyleSheet, View, Text, Image, } from 'react-native';
  * 
  * @param {string} key                  An identifier for the friend
  */
-export default function FriendCard({ profilePicture, friendName, friendColorString, key }) {
+export default function FriendCard({ profilePicture, friendName, friendColorString}) {
 
   const friendColor = { backgroundColor: friendColorString }
+  //
 
   return (
-    <View style={styles.container} key={key}>
+    <View style={styles.container}>
       <View style={[styles.friendCardContainer, friendColor]}>
         <View style={styles.tinyProfilePic}>
           <Image
