@@ -29,7 +29,7 @@ export default function FriendProfilePage() {
             
             {/* user profile information */}
             <UserProfile 
-                profilePicture={require("../../../assets/profilePic.jpg")}
+                profilePicture={require("assets/profilePic.jpg")}
                 userFirstLast = "vicki chen"
                 username = "vickichn" 
             />            
