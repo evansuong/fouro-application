@@ -5,7 +5,7 @@
 1.  Install [node.js](https://nodejs.org/en/)
 2.  Setup Firebase Configuration from the cafe-fouro Firebase project
 
-    1. Create a file in the [.firebase](./firebase) folder called `config.js`
+    1. Create a file in the [./firebase](./firebase) folder called `config.js`
 
     2. Copy the contents of [./firebase/config-template.js](./firebase/config-template.js) into `config.js`:
 
@@ -42,7 +42,7 @@
             appId: "APP-ID-HERE"
         };
        ```
-    5. Replace line 6 of `./firebase/config.js` with the project configuration.
+    5. Replace line 6-14 of `./firebase/config.js` with the project configuration.
 
 3.  Install Node dependencies
 
