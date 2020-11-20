@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage'
 import HomePage from './HomePage'
-
 
 export default function MainNavPage() {
 
@@ -22,8 +21,37 @@ export default function MainNavPage() {
                     style={styles.linearGradient}
                 />
             </View>
-            <Tab.Navigator sceneContainerStyle={styles.tabScreen} style={styles.tabNav} tabBarPosition="bottom" initialRouteName="Home">
-                <Tab.Screen name="Profile" component={FriendsPage} />
+            <Tab.Navigator
+                sceneContainerStyle={styles.tabScreen}
+                style={styles.tabNav}
+                tabBarPosition="bottom"
+                initialRouteName="Home"
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                      let icon;
+          
+                      if (route.name === 'Home') {
+                        icon = focused
+                          ? require("../../../assets/homeFocused.png")
+                          : require("../../../assets/homeBlurred.png");
+                      } else if (route.name === 'Friends') {
+                        icon = focused ? require('../../../assets/friendsFocused.png') : require('../../../assets/friendsBlurred.png');
+                      } else if (route.name === 'Notification') {
+                        icon = focused ? require('../../../assets/notifFocused.png') : require('../../../assets/notifBlurred.png');
+                      }
+
+                      return <Image source={icon} resizeMode='stretch' style={{ width: 120, height: 55, margin: 0, padding: 0 }} />
+                    },
+                  })}
+                  tabBarOptions={{
+                    showIcon: true,
+                    showLabel: false,
+                    iconStyle: {
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }
+                  }}>
+                <Tab.Screen name="Friends" component={FriendsPage} />
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Notification" component={NotificationPage} />
             </Tab.Navigator>
