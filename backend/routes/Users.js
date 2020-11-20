@@ -6,11 +6,6 @@ import Fire from "../firebase/config";
 // Import timerCorrector to handle trivial timer warnings
 import "../timerCorrector";
 
-// Firestore
-// export const db = Fire.firestore();
-// export const users = db.collection("users");
-
-// Initialize your Web app as described in the Get started for Web
 // Firebase previously initialized using firebase.initializeApp().
 export var db = Fire.firestore();
 export const users = db.collection("users");
