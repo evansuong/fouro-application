@@ -54,9 +54,20 @@ Vuk Radovanovic - Algorithm Specialist
 
 ## Pulling changes
 
-Before you start working, make sure to pull from the `master` branch to get the most up to date changes using:
+**Before you start working, make sure to type:**
 
-    git pull origin master
+    npm run sync
+
+    OR (if the top command doesn't work)
+
+    npm run sync2
+
+    OR (if neither works)
+
+    ./sync.sh
+
+This makes sure that your current branch is up to date with the master branch. You will also have to resolve merge conflicts and choose which parts of the code get to stay.
+
 
 If you don't have the `origin` variable set, run:
 
@@ -75,9 +86,8 @@ It should return something like this:
 
 When working, make sure to work on your own feature branch
 
-1.  Create a new branch (this copies all the files from your current branch to the new branch)
+1.  Create a new branch of the form [feature-name]/[your-name](this copies all the files from your current branch to the new branch)
 
-        create branch "feature-name/first-last"
         git branch feature-name/first-last
 
 2.  Navigate to your branch
