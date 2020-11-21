@@ -7,8 +7,8 @@ import firebase from "../firebase/config";
 import "../timerCorrector";
 
 // Firestore
-export const db = firebase.firestore();
-export const users = db.collection("users");
+const db = firebase.firestore();
+const users = db.collection("users");
 
 const UsersAPI = {
 
@@ -82,4 +82,4 @@ const HugCountAPI = {
   }
 }
 
-export default UsersAPI;
+export default {UsersAPI, HugCountAPI};
