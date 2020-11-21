@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Button, StyleSheet, FlatList, Dimensions } from 'react-native'
 import AppStyles from '../../AppStyles'
 import FriendCard from '../../components/FriendCard'
-import FriendsPageHeader from '../../components/FriendsPageHeader'
+import FriendsPageHeader from '../../components/headers/FriendsPageHeader'
 
 const window = Dimensions.get('window');
 const screenHeight = window.height
