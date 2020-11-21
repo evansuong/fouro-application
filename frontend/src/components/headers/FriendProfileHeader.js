@@ -1,22 +1,35 @@
 import React from 'react'
-import { View, StyleSheet, OptionsMenu, Dimensions } from 'react-native'
+import { View, StyleSheet, Image, Dimensions } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import OptionsMenu from "react-native-options-menu";
+import removeFriend from '../../pages/off-nav/FriendProfilePage'
 
 const {screenHeight, screenWidth} = Dimensions.get('window');
 
 //comment
-export default function Header() {
+export default function Header({ navigation }) {
 
     const icon = require("assets/overflowMenuIcon.png");
+    const backButton = require("assets/backButton.png");
 
     return (
-        /* option overflow button (remove friend button) */
-        <View style={styles.removeFriendOverlay}>
-            {/* add a 'close' option */}
-            <OptionsMenu
-                button={icon}
-                buttonStyle={styles.button}
-                options={["remove friend"]}
-                actions={[removeFriend]} />
+        /* Overall header wrapper */
+        <View style={ styles.header }>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Image 
+                    source={backButton}
+                    style={styles.backButton}
+                />
+            </TouchableOpacity>
+            {/* option overflow button (remove friend button) */}
+            <View style={ styles.removeFriendOverlay }>
+                {/* add a 'close' option */}
+                <OptionsMenu
+                    button={ icon }
+                    buttonStyle={ styles.button }
+                    options={["remove friend"]}
+                    actions={[removeFriend]} />
+            </View>
         </View>
     );
 }
@@ -27,24 +40,27 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'flex-end'
     },
+    button: {
+        //position: 'absolute', // now we can place it wherever
+        width: 30,
+        height: 30,
+        resizeMode: 'contain',
+        //top: 15, // the wherever, top margin
+        right: -5 // the wherever, right margin. still don't know why it's neg
+    },
+    backButton: {
+        width: 30,
+        height: 30
+    },
     header: {
+        position: 'absolute',
+        padding: 15,
+        paddingTop: 15,
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 10,
-        marginBottom: 10
+        //marginTop: 10,
+        marginBottom: 20
     },
-    text: {
-        fontSize: 27,
-        color: 'black',
-        fontWeight: 'bold',
-        letterSpacing: 0.5,
-        marginLeft: 20
-    },
-    searchButton: {
-        width: 25,
-        height: 25,
-        marginRight: 20
-    }
 });

@@ -1,32 +1,24 @@
 import React from 'react';
-import OptionsMenu from "react-native-options-menu";
 import { View, Text, StyleSheet, Image } from 'react-native';
 import UserProfile from '../../components/UserProfile';
+import FriendProfileHeader from '../../components/headers/FriendProfileHeader'
 
 // const removeFriendHandler = () => {
 //     console.log("removed friend");
 //     //setResults(`Email: ${emailField}   |   Password: ${passwordField}   |   Password Confirmation: ${passwordConfirmField}`);
 //   }
 
-function removeFriend() {
+export function removeFriend() {
     console.log("removing friend");
 }
 
-export default function FriendProfilePage() {
+export default function FriendProfilePage({ navigation }) {
     const icon = require("assets/overflowMenuIcon.png");
 
     return (
 
         <View>
-            {/* option overflow button (remove friend button) */}
-            <View style={styles.removeFriendOverlay}>
-                {/* add a 'close' option */}
-                <OptionsMenu
-                    button={icon}
-                    buttonStyle={styles.button}
-                    options={["remove friend"]}
-                    actions={[removeFriend]} />
-            </View>
+            <FriendProfileHeader navigation={navigation}/>
             
             {/* user profile information */}
             <UserProfile 
@@ -48,10 +40,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         top: 15, // the wherever, top margin
         right: -15 // the wherever, right margin. still don't know why it's neg
-        // marginTop: 60,
-        // marginRight: -10
     },
-
     removeFriendOverlay: {
         display: 'flex', 
         flexDirection: 'row', 
