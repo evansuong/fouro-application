@@ -25,6 +25,7 @@ export default function UserProfile({ profilePicture, userFirstLast, username })
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20, // added this
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center'
@@ -32,9 +33,11 @@ const styles = StyleSheet.create({
   profilePicStyle: {
     justifyContent: 'center',
     borderRadius: 100,
-    width: 150,
-    height: 150,
-    backgroundColor: 'blue'
+    width: "30%", // TODO: change to responsive design
+    height: "50%", // TODO: change to responsive design
+    // use the line below to test dimensions
+    backgroundColor: 'blue',
+    resizeMode: 'contain'
   },
   userFirstLastStyle: {
     marginTop: 5,
