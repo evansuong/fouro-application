@@ -24,7 +24,16 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator style={styles.appContainer}>
+      <Stack.Navigator 
+        style={styles.appContainer} 
+        /** 
+         * comment out the line below when you need the header for 
+        /* going back to the previous screen. Leave it to see what 
+        /* the app will actually look like
+         * */
+        screenOptions={{ headerShown: false }}
+      >
+
         <Stack.Screen name="Main Nav Page" component={MainNavPage} />
 
         <Stack.Screen name="Create Hug" component={CreateHugPage} />

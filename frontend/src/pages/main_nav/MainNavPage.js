@@ -1,3 +1,9 @@
+/**
+ * 
+ * References:
+ * https://reactnavigation.org/docs/stack-navigator/#headershown
+ */
+
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
