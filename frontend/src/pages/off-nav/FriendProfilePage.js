@@ -42,11 +42,14 @@ export default function FriendProfilePage() {
 
 const styles = StyleSheet.create({
     button: {
+        position: 'absolute', // now we can place it wherever
         width: 75,
         height: 30,
         resizeMode: 'contain',
-        marginTop: 15,
-        marginRight: -10
+        top: 15, // the wherever, top margin
+        right: -15 // the wherever, right margin. still don't know why it's neg
+        // marginTop: 60,
+        // marginRight: -10
     },
 
     removeFriendOverlay: {
@@ -54,9 +57,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'flex-end'
     },
-
-    logo: {
-        width: "80%",
-        height: "80%",
-      }
 });

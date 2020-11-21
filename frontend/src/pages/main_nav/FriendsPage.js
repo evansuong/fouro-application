@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Button, StyleSheet } from 'react-native'
+import { View, Text, Button, StyleSheet, FlatList } from 'react-native'
 import AppStyles from '../../AppStyles'
 import FriendCard from '../../components/FriendCard'
 
@@ -33,6 +33,18 @@ export default function FriendsPage() {
         }
         ]
 
+    const renderCards = friend => (
+        // NOTE: Depending on how the data is retrieved from firebase/firestore,
+        // we'll need to rewrite how we get each friend
+        //console.log(friend.item.friend_first)
+        <FriendCard
+            profilePicture={friend.item.friend_profile_picture}
+            friendName={friend.item.friend_first + " " + friend.item.friend_last}
+            friendColorString={friend.item.friend_color}
+            key={friend.item.friend_id}
+        />
+    )
+
     return (
         <View style={styles.navPageContainer}>
             {/* <Text>friends page</Text> */}
@@ -44,20 +56,10 @@ export default function FriendsPage() {
                 title="friend profile" 
                 onPress={() => navigation.navigate('Friend Profile')}
             /> */}
-            
-            {
-                friends.map((friend) => {
-                    //let testProfilePic = require(friend.friend_profile_picture)
-                    return (
-                        <FriendCard
-                            profilePicture={friend.friend_profile_picture}
-                            friendName={friend.friend_first + " " + friend.friend_last}
-                            friendColorString={friend.friend_color}
-                            key={friend.friend_id}
-                        />
-                    )
-                })
-            }
+            <FlatList
+                data={friends}
+                renderItem={renderCards}
+            />
         </View>
     )
 }
