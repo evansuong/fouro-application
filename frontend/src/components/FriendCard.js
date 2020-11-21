@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 
 /**
  * A single friend card to be used in the list of friends on the friends
@@ -29,35 +29,38 @@ export default function FriendCard({ profilePicture, friendName, friendColorStri
   //
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.friendCardContainer, friendColor]}>
-        <View style={styles.tinyProfilePic}>
-          <Image
-            source={{ uri: profilePicture }}
-            style={styles.image}
-          />
-        </View>
-        <Text style={styles.friendText}>
-          {friendName}
-        </Text>
+    /* the card itself */
+    <TouchableOpacity style={[styles.friendCardContainer, friendColor]}>
+
+      {/* profile picture */}
+      <View style={styles.tinyProfilePic}>
+        <Image
+          source={{ uri: profilePicture }}
+          style={styles.image}
+        />
       </View>
-    </View>
+
+      {/* friend name */}
+      <Text style={styles.friendText}>
+        {friendName}
+      </Text>
+
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 10,
-  },
   tinyProfilePic: {
     marginLeft: 20,
     justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 100,
     width: '13%',
     height: '80%',
     backgroundColor: 'pink'
   },
   friendCardContainer: {
+    marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
     width: 325,

@@ -42,7 +42,7 @@
             appId: "APP-ID-HERE"
         };
        ```
-    5. Replace line 6 of `./firebase/config.js` with the project configuration.
+    5. Replace line 6-14 of `./firebase/config.js` with the project configuration.
 
 3.  Install Node dependencies
 
