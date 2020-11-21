@@ -25,4 +25,4 @@ const UsersAPI = {
   },
 };
 
-export default UsersAPI;
+module.exports = UsersAPI;

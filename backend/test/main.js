@@ -1,3 +1,3 @@
-import UsersAPI from "./Test.js";
+const UsersAPI = require("./Test");
 
 UsersAPI.addUser("Hi", "bye", "lol");
