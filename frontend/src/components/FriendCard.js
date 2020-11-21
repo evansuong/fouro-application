@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
 
 /**
  * A single friend card to be used in the list of friends on the friends
@@ -21,58 +21,80 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
  *                                      (e.g., '#FE5951') indicating how much
  *                                      the user has interacted with this friend recently
  * 
- * @param {string} key                  An identifier for the friend
+ * @param {string} navigation           The navigation prop for React Native navigation
  */
-export default function FriendCard({ profilePicture, friendName, friendColorString}) {
+export default function FriendCard({ profilePicture, friendName, 
+  friendColorString, navigation, height, width}) {
 
   const friendColor = { backgroundColor: friendColorString }
-  //
+  const containerDimensions = { width: width, height: height }
 
   return (
     /* the card itself */
-    <TouchableOpacity style={[styles.friendCardContainer, friendColor]}>
+    <TouchableOpacity 
+      style={[styles.friendCardContainer, friendColor, containerDimensions]}
+      onPress={() => { navigation.navigate("Friend Profile") }}
+    >
 
-      {/* profile picture */}
-      <View style={styles.tinyProfilePic}>
-        <Image
-          source={{ uri: profilePicture }}
-          style={styles.image}
-        />
+    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+
+        {/* profile picture */}
+        <View style={styles.pfpContainer}>
+          <Image
+            source={{ uri: profilePicture }}
+            style={styles.pfp}
+          />
+        </View>
+
+        {/* friend name */}
+        <Text style={styles.friendText}>
+          {friendName}
+        </Text>
+
+        {/* profile picture */}
+        <View style={styles.pfpContainer2}>
+        </View>
+
       </View>
-
-      {/* friend name */}
-      <Text style={styles.friendText}>
-        {friendName}
-      </Text>
 
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  tinyProfilePic: {
+  pfpContainer: {
     marginLeft: 20,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    width: '13%',
-    height: '80%',
+    width: 45,
+    height: 45,
     backgroundColor: 'pink'
   },
+  pfpContainer2: {
+    marginRight: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+    width: 45,
+    height: 45
+  },
   friendCardContainer: {
-    marginTop: 10,
+    marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    width: 325,
-    height: 55,
     borderRadius: 100,
+
+    /* iOS shadow*/
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
+
+    /* Android shadow */
     elevation: 4
   },
-  image: {
+  pfp: {
     width: 40,
     height: 40,
     borderRadius: 100,
@@ -80,6 +102,6 @@ const styles = StyleSheet.create({
   friendText: {
     fontSize: 20,
     marginLeft: 20,
-    color: 'white'
+    color: 'white',
   }
 });
