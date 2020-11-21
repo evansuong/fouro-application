@@ -1,6 +1,6 @@
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
-import firebase from "firebase/app";
+var firebase = require("firebase/app");
 
 // Cafe fouro Firebase Configuration
 var firebaseConfig = {
@@ -13,4 +13,4 @@ var firebaseConfig = {
   appId: "APP-ID-HERE",
 };
 
-export default firebase.initializeApp(firebaseConfig);
+module.exports = firebase.initializeApp(firebaseConfig);
