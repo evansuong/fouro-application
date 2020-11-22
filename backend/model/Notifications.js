@@ -5,6 +5,26 @@ require("firebase/firestore");
 require("firebase/auth");
 
 // Firestore
+const NotificationsAPI = {
+
+    getNotifications: function() {
+
+    },
+
+    deleteNotification: function(requestId) {
+
+    },
+}
+
+const RequestsAPI = {
+    sendFriendRequest: function(userId) {
+
+    },
+
+    createHugRequest(friendId, hugId) {
+
+    }
+}
 
 // Export the module
-module.exports = {}; // awaiting to be filled
+module.exports = {NotificationsAPI, RequestsAPI}; // awaiting to be filled

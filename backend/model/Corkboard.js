@@ -5,6 +5,23 @@ require("firebase/firestore");
 require("firebase/auth");
 
 // Firestore
+const CorkboardAPI = {
+
+    buildCorkboard: function() {
+
+    }
+}
+
+const PinAPI = {
+
+    pinHugToCorkboard: function(hugId) {
+
+    },
+
+    unpinHugFromCorkboard: function(hugId) {
+        
+    }
+}
 
 // Export the module
-module.exports = {}; // awaiting to be filled
+module.exports = {CorkboardAPI, PinAPI};
