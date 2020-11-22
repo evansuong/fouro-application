@@ -1,6 +1,7 @@
 const path = require('path');
 
 const extraNodeModules = {
+  'backend': path.resolve(__dirname + '/../backend'),
   'components': path.resolve(__dirname + '/../frontend/src/components'),
   'assets': path.resolve(__dirname + '/../frontend/assets'),
 };

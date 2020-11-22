@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-// import SignupAPI from 'backend/routes/SignUp';
-// import UsersAPI from 'backend/routes/Users';
-// import { useIsFocused } from '@react-navigation/native';
+// import SignupAPI from 'backend/model/account/SignUp';
+// import UsersAPI from 'backend/model/Users';
+import { useIsFocused } from '@react-navigation/native';
 
 
 export default function SignupPage({ navigation }) {
@@ -30,7 +30,7 @@ export default function SignupPage({ navigation }) {
 
   const submitHandler = async () => {
     // console.log(emailField, passwordField, passwordConfirmField);
-    setSigningIn(true);
+    // setSigningIn(true);
     // const [registered, newUser] = await SignupAPI.registerUser(emailField, passwordField);
     // console.log('30', newUser);
     // const createdInFS = await SignupAPI.createUserInCollection(newUser, emailField, passwordField);

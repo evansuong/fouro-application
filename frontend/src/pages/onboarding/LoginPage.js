@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import LoginAPI from 'backend/routes/LogIn';
+// import LoginAPI from 'backend/model/account/LogIn';
 import { useIsFocused } from '@react-navigation/native';
 
 

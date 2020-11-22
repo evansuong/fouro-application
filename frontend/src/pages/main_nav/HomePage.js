@@ -31,6 +31,11 @@ export default function HomePage({ navigation }) {
             title='hug info page'
             onPress={() => navigation.navigate('Hug Info')}
           />
+
+          <Button
+            title='pic upload'
+            onPress={() => navigation.navigate('Pic Upload Page')}
+          />
       </View>
     )
 }

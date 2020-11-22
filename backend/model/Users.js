@@ -1,9 +1,10 @@
 // Users file for Creating, Reading, Updating, and Deleting Users
 // and User Profile Management
 var firebase = require("../firebase/config");
-require("firebase/firestore");
-require("firebase/auth");
-
+// require("firebase/firestore");
+// require("firebase/auth");
+import "firebase/firestore";
+import "firebase/auth";
 // Firestore
 const db = firebase.firestore();
 const users = db.collection("users");
@@ -70,8 +71,6 @@ const UsersAPI = {
       last_name: lastName,
       username: username,
     });
-<<<<<<< Updated upstream:backend/model/Users.js
-=======
   },
 
   emailTaken: async function(email) {
@@ -91,18 +90,7 @@ const UsersAPI = {
 const HugCountAPI = {
   getUserHugCount: function() {
 
->>>>>>> Stashed changes:backend/routes/Users.js
   },
-};
-
-const HugCountAPI = {
-  getUserHugCount: function () {},
-
-  getUserHugStreak: function () {},
-
-  resetUserHugCount: function () {},
-
-  increaseHugCount: function () {},
 };
 
 module.exports = { UsersAPI, HugCountAPI };

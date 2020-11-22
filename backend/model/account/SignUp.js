@@ -1,7 +1,10 @@
 // SignUp used for signing up users into Firebase Authentication
-var firebase = require("../../firebase/config");
-require("firebase/auth");
-require("firebase/firestore");
+// var firebase = require("../../firebase/config");
+import firebase from '../../firebase/config';
+// require("firebase/auth");
+// require("firebase/firestore");
+import "firebase/firestore";
+import "firebase/auth";
 
 const db = firebase.firestore();
 const usersCollection = db.collection("users");

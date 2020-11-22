@@ -1,33 +1,83 @@
-import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
-import fillerProfilePic from '../../../assets/fillerProfilePic.jpg';
+import React, { useState, } from 'react';
+import { 
+  StyleSheet, 
+  View, 
+  Text, 
+  Image, 
+  TouchableWithoutFeedback,
+  Animated,
+  Alert,
+} from 'react-native';
+import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 import LinkedButton from 'components/LinkedButton';
-
+import PicUploadButton from 'components/PicUploadButton';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 
 export default function ProfileSetupPage({ navigation }) {
+  const [uploadPic, setUploadPic] = useState({});
+
+  const pickFromGallery = async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (granted) {
+      console.log('granted');
+      let data = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1,1],
+        quality: 0.5,
+      })
+      console.log(data);
+      setUploadPic(data);
+    } else {
+      console.log('access denied');
+      Alert.alert('You need to give up permission to work');
+    }
+  }
+
+  const pickFromCamera = async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA);
+    if (granted) {
+      console.log('granted');
+      let data = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1,1],
+        quality: 0.5,
+      })
+      console.log(data);
+      setUploadPic(data);
+    } else {
+      console.log('access denied');
+      Alert.alert('You need to give up permission to work');
+    }
+  }
+
+  const isEmpty = (obj) => {
+    return Object.keys(obj).length == 0;
+  }
+  
   return (
     <View>
       <View style={styles.picContainer}>
         <Image
-          source={fillerProfilePic}
+          source={isEmpty(uploadPic) || uploadPic.cancelled ? fillerProfilePic : {uri: `${uploadPic.uri}`}}
           style={styles.profilePicture}
         />
       </View>
 
       <View style={styles.buttonContainer}>
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>
-            Choose a profile picture
-          </Text>
-        </View>
-
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>
-            Take a profile picture
-          </Text>
-        </View>
+        <PicUploadButton
+          text='Choose a profile picture'
+          onPress={() => pickFromGallery()}
+        />
+        <PicUploadButton
+          text='Take a profile picture'
+          onPress={() => pickFromCamera()}
+        />
       </View>
-      <View style={{marginTop: 30,}}>
+
+      <View style={styles.submit}>
         <LinkedButton
           navigation={navigation}
           link='Question Page'
@@ -78,5 +128,8 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     textAlign: 'center',
+  },
+  submit: {
+    marginTop: 30,
   }
 })
