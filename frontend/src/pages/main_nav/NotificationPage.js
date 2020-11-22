@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, PickerIOSItem, LayoutAnimation } from 'react-native';
-import NotificationPanel from '../../components/NotificationPanel';
+import NotificationPanel from 'components/NotificationPanel';
+import { DimensionContext } from '../../contexts/DimensionContext'
 
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -17,6 +18,7 @@ function buildTestData(type, msg, img, id) {
 }
 
 
+
 const testData = [
     buildTestData('request', 'Alex Chow', require('../../../assets/profilePic.jpg'), 0),
     buildTestData('hug', 'Evan Suong', require('../../../assets/profilePic.jpg'), 1),
@@ -29,7 +31,9 @@ export default function NotificationPage({ navigation }) {
 
     // stores whether the user is on this page (true) or not (false)
     const [isFocused, setIsFocused] = useState(false)
+
     const [notifications, setNotifications] = useState(testData ? testData : {})
+    const { windowWidth, windowHeight } = useContext(DimensionContext)
 
     // check whether the user is on the page (true) or navigates away from the page (false)
     useFocusEffect(() => {
@@ -47,9 +51,6 @@ export default function NotificationPage({ navigation }) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         });
     }
-
-
-
     
     // map every notification entry to a notification panel element 
     return (
