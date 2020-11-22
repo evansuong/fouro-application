@@ -33,9 +33,10 @@ export default function NotificationPage({ navigation }) {
     const [isFocused, setIsFocused] = useState(false)
 
     const [notifications, setNotifications] = useState(testData ? testData : {})
-    const dimensions = useContext(DimensionContext)
+    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    console.log(windowWidth)
+    console.log(windowHeight)
 
-   
 
     // check whether the user is on the page (true) or navigates away from the page (false)
     useFocusEffect(() => {
