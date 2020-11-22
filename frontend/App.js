@@ -24,6 +24,7 @@ export default function App() {
   const Stack = createStackNavigator();
 
   return (
+    <DimensionContextProvider>
       <NavigationContainer>
         <Stack.Navigator 
           style={styles.appContainer} 
@@ -51,6 +52,8 @@ export default function App() {
           <Stack.Screen name='Question Page' component={QuestionPage} />
         </Stack.Navigator>
       </NavigationContainer>    
+    </DimensionContextProvider>
+      
   );
 }
 

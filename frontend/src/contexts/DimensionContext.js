@@ -10,13 +10,15 @@ export const DimensionContext = createContext();
 export function DimensionContextProvider(props) {
 
 
-    const [dimensions, setDimensions] = useState({ 
+    const dimensions = { 
         windowWidth: windowDimensions.width,
         windowHeight: windowDimensions.height,
-    })
+    }
 
+    console.log('dims: ', dimensions)
+   
     return (
-        <DimensionContext.Provider value={dimensions}> 
+        <DimensionContext.Provider value={{ ...dimensions }}> 
             {props.children}
         </DimensionContext.Provider>
     )

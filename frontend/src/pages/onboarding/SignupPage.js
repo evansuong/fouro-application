@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import SignupAPI from 'backend/routes/SignUp';
 
 // TODO: Hide passwords
 // TODO: Check for valid email
@@ -26,18 +25,17 @@ export default function SignupPage({ navigation }) {
   const submitHandler = async () => {
     // console.log(emailField, passwordField, passwordConfirmField);
     setSigningIn(true);
-    const [registered, newUser] = await SignupAPI.registerUser(emailField, passwordField);
+    // const [registered, newUser] = await SignupAPI.registerUser(emailField, passwordField);
     // console.log('30', newUser);
-    const createdInFS = await SignupAPI.createUserInCollection(newUser, emailField, 
-      passwordField);
-    if (registered && createdInFS) {
-      setMounted(false);
-      navigation.navigate('Name Page');
-    } else {
-      setSigningIn(false);
-      console.log(`There was an error signing in. Booleans: 
-        ${registered} | ${createdInFS}`);
-    }
+    // const createdInFS = await SignupAPI.createUserInCollection(newUser, emailField, passwordField);
+    // if (registered && createdInFS) {
+    //   setMounted(false);
+    //   navigation.navigate('Name Page');
+    // } else {
+    //   setSigningIn(false);
+    //   console.log(`There was an error signing in. Booleans: 
+    //     ${registered} | ${createdInFS}`);
+    // }
   }
 
   const checkLength = () => {
