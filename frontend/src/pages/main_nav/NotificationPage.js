@@ -90,14 +90,14 @@ export default function NotificationPage({ navigation }) {
                         key={data.id} 
                         notificationData={data} 
                         isFocused={isFocused} 
-                        handleAccept={catchHug} 
-                        handleDecline={dropHug} />
-                    :
+                        handleAccept={acceptFriendRequest} 
+                        handleDecline={declineFriendRequest} />
+                        :
                     <NotificationCard 
                         key={data.id} 
                         notificationData={data} 
                         isFocused={isFocused} 
-                        handleAccept={acceptFriendRequest} 
+                        handleAccept={catchHug} 
                         handleDecline={dropHug} />
                 ))}
             </ScrollView>
