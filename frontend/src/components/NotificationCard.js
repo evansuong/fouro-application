@@ -3,6 +3,12 @@ import { View, Text, StyleSheet, Animated, Image, TouchableOpacity } from 'react
 import { DimensionContext } from '../contexts/DimensionContext';
 
 
+const COLLAPSED_CARD_HEIGHT_PROPORTION = 4.6;
+const EXPANDED_CARD_HEIGHT_PROPORTION = 2.7;
+const ANIMATION_DURATION_MS = 150;
+const VISIBLE = 1;
+const HIDDEN = 0;
+
 /**
  */
 export default function NotificationCard({ notificationData, isFocused, handleAccept, handleDecline }) {
@@ -12,12 +18,11 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
 
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
-    const [display, setDisplay] = useState('flex');
 
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     
     // animated value to animate panel expansion and collapse
-    const height = useRef(new Animated.Value(windowWidth / 4.6)).current;
+    const height = useRef(new Animated.Value(windowWidth / COLLAPSED_CARD_HEIGHT_PROPORTION)).current;
     const fade = useRef(new Animated.Value(0)).current;
 
     const notificationMessage = type === 'r' ? "sent you a friend request" : "sent you a hug!"
@@ -46,13 +51,13 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
     function expand() {
          // Will change fadeAnim value to 1 in 5 seconds
         Animated.spring(height, {
-            toValue: windowWidth / 2.7,
-            duration: 150,
+            toValue: windowWidth / EXPANDED_CARD_HEIGHT_PROPORTION,
+            duration: ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
         Animated.timing(fade, {
-            toValue: 1,
-            duration: 150,
+            toValue: VISIBLE,
+            duration: ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
     }
@@ -60,13 +65,13 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
     // collapse animation definition
     function collapse() {
         Animated.spring(height, {
-            toValue: windowWidth / 4.6,
-            duration: 150,
+            toValue: windowWidth / COLLAPSED_CARD_HEIGHT_PROPORTION,
+            duration: ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
         Animated.timing(fade, {
-            toValue: 0,
-            duration: 150,
+            toValue: HIDDEN,
+            duration: ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
     }
@@ -76,7 +81,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             display: 'flex',
             justifyContent: 'center',
             
-            backgroundColor: 'white', 
+            backgroundColor: '#ffffff', 
             borderRadius: 10,
 
             margin: windowWidth / 75,
@@ -167,7 +172,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
 
 
     return (
-        <View style={{ ...styles.hugPanelContainer, display: display }}>
+        <View style={{ ...styles.hugPanelContainer, display: 'flex' }}>
             <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
                 
                 {/* body */}

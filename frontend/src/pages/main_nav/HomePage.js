@@ -1,5 +1,5 @@
 import { StyleSheet, Button, Text, View, Dimensions } from 'react-native'
-import React from 'react'
+import React, {useEffect} from 'react'
 import AppStyles from '../../AppStyles'
 import Background from 'components/Background';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function HomePage({ navigation }) {
+
 
     return (
       <View style={AppStyles.navPageContainer}>

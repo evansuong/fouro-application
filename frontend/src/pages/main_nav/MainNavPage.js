@@ -4,7 +4,7 @@
  * https://reactnavigation.org/docs/stack-navigator/#headershown
  */
 
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -12,24 +12,51 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage'
 import HomePage from './HomePage'
+import { DimensionContext } from '../../contexts/DimensionContext';
+import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
+import Background from '../../components/Background';
 
-const window = Dimensions.get('window');
-const screenHeight = window.height
-const screenWidth = window.width
-
+// TODO: follow the gradient thing
 export default function MainNavPage() {
 
     const Tab = createMaterialTopTabNavigator()
- 
+    const [backgroundState, setBackgroundState] = useState({ 
+        start: [0.9, 0.1],
+        end:[0.1, 0.7] 
+    })
+    
+    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const route = useRoute();
+    const routename =  getFocusedRouteNameFromRoute(route);
+        
+    const styles = StyleSheet.create({
+        background: {
+            position: 'absolute',
+            width: '100%',
+        },
+        tabScreen: {
+            backgroundColor: 'transparent',
+            overflow: "visible",
+        },
+        container: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        linearGradient: {
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            height: windowHeight,
+        },
+    })
+
+    
     return (
         <>
             <View style={styles.background}>
-                <LinearGradient
-                    colors={['#FFC24A','#FB7250']}
-                    start={[0.9, 0.1]}
-                    end={[0.1, 0.7]}
-                    style={styles.linearGradient}
-                />
+                <Background page={routename}/>
             </View>
             <Tab.Navigator
                 sceneContainerStyle={styles.tabScreen}
@@ -60,7 +87,8 @@ export default function MainNavPage() {
                         justifyContent: 'center',
                         alignItems: 'center'
                     }
-                  }}>
+                  }}
+                  beforeRemove={() => console.log('remove')}>
                 <Tab.Screen name="Friends" component={FriendsPage} />
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Notification" component={NotificationPage} />
@@ -68,26 +96,3 @@ export default function MainNavPage() {
         </>
     )
 }
-
-const styles = StyleSheet.create({
-    background: {
-        position: 'absolute',
-        width: '100%',
-    },
-    tabScreen: {
-        backgroundColor: 'transparent',
-        overflow: "visible",
-    },
-    container: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    linearGradient: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        height: screenHeight,
-    },
-})

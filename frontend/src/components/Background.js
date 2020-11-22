@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useState, useRef, useContext } from 'react';
+import { StyleSheet, View, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { DimensionContext } from '../contexts/DimensionContext';
 
 // Make sure there are no backgroundColor attributes.
 // They will overwrite this background.
@@ -10,46 +11,63 @@ import { LinearGradient } from 'expo-linear-gradient';
  * @param {string} direction The direction in which the gradient should be 
  *                           oriented. Pick from [left, middle, right]
  */
-export default function Background({ direction='middle' }) { //comment
-  const directionMap = {
-    'middle': {
-      'start': [0.9, 0.1],
-      'end': [0.9, 0.9]
+export default function Background({ page }) { //comment
+
+  const { windowWidth, windowHeight } = useContext(DimensionContext)
+
+  const backgroundState = useRef(new Animated.Value(1)).current;
+  console.log('ey')
+  
+  useEffect(() => {
+    console.log(page)
+    if (page === 'Friends') {
+      shiftBackground(0)
+    } else if (page === 'Home') {
+      shiftBackground(-100)
+    } else {
+      shiftBackground(-200)
+    }
+  }, [page])
+
+  const styles = StyleSheet.create({
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
     },
-    'left': {
-      'start': [0.9, 0.1],
-      'end': [0.1, 0.7]
+    linearGradient: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      height: windowHeight,
+      width: windowHeight,
     },
-    'right': {
-      'start': [0.1, 0.1],
-      'end': [0.9, 0.7]
-    },
+  })
+  
+  // expand animation definition
+  function shiftBackground(x) {
+    // Will change fadeAnim value to 1 in 5 seconds
+    Animated.timing(backgroundState, {
+      toValue: x,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    
   }
   
   return (
-    <View style={styles.container}>
+    <Animated.View style={{ ...styles.container, left: backgroundState }}>
       <LinearGradient
         colors={['rgba(240,240,0,0.8)', 'rgba(255,80,0,1)']}
-        start={[directionMap[`${direction}`].start[0], directionMap[`${direction}`].start[1]]}
-        end={[directionMap[`${direction}`].end[0], directionMap[`${direction}`].end[1]]}
         style={styles.linearGradient}
+        start={[.2, .7]}
+        end={[1, .4]}
       />
-    </View>
+    </Animated.View>
   );
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  linearGradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 700,
-  },
-})
+
