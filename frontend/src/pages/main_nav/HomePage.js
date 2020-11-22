@@ -5,6 +5,8 @@ import { FlatList } from 'react-native-gesture-handler';
 
 import HugCard from 'components/HugCard'
 
+
+
 export default function HomePage({ navigation }) {
 
   function buildTestData(name, text, img, id) {
