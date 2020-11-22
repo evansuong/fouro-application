@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import LoginAPI from 'backend/routes/LogIn';
 
 
 // TODO: Destroy firebase reference on component unmount
@@ -23,15 +22,15 @@ export default function LoginPage({ navigation }) {
   const [mounted, setMounted] = useState(true);
 
   const submitHandler = async () => {
-    setLoggingIn(true);
-    const signedin = await LoginAPI.loginUser(emailField, passwordField);
-    if (signedin) {
-      setMounted(false);
-      navigation.navigate('Main Nav Page');
-    } else {
-      setError(true);
-      setLoggingIn(false);
-    }
+    // setLoggingIn(true);
+    // const signedin = await LoginAPI.loginUser(emailField, passwordField);
+    // if (signedin) {
+    //   setMounted(false);
+    //   navigation.navigate('Main Nav Page');
+    // } else {
+    //   setError(true);
+    //   setLoggingIn(false);
+    // }
   }
 
   const checkFilled = () => {

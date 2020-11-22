@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import UsersAPI from 'backend/routes/Users';
 
 
 export default function NamePage({ navigation }) {
@@ -17,7 +16,6 @@ export default function NamePage({ navigation }) {
   }
 
   const submitHandler = async () => {
-    await UsersAPI.updateUserProfile(username, firstName, lastName);
     navigation.navigate('Pic Upload Page');
   }
 

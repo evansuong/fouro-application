@@ -1,20 +1,24 @@
 // Users file for Creating, Reading, Updating, and Deleting Users
 // and User Profile Management
-import "firebase/firestore";
-import "firebase/auth";
-import firebase from "../firebase/config";
-// Import timerCorrector to handle trivial timer warnings
-import "../timerCorrector";
+var firebase = require("../firebase/config");
+require("firebase/firestore");
+require("firebase/auth");
 
 // Firestore
-export const db = firebase.firestore();
-export const users = db.collection("users");
+const db = firebase.firestore();
+const users = db.collection("users");
 
 const UsersAPI = {
-
+  // FOR TESTING PURPOSES ONLY, NOT A FUNCTION
+  addUser: function (username, first, last) {
+    users.doc(username).set({
+      first: first,
+      last: last,
+    });
+  },
   // user: firebase.auth().currentUser,
 
-  createNewUser: function(username, firstName, lastName) {
+  createNewUser: function (username, firstName, lastName) {
     // same functionality
     this.updateUserProfile(username, firstName, lastName);
     console.log(user);
@@ -27,9 +31,12 @@ const UsersAPI = {
     */
   },
 
-  uploadUserProfilePicture: function() {    // TODO this function may not work correctly.
+  uploadUserProfilePicture: function () {
+    // TODO this function may not work correctly.
     // create a cloud storage refrence
-    var storageRef = firebase.storage().ref(user.uid + '/profilePicture/' + file.name);
+    var storageRef = firebase
+      .storage()
+      .ref(user.uid + "/profilePicture/" + file.name);
 
     // save to cloud storage
     var task = storageRef.put(file);
@@ -38,12 +45,12 @@ const UsersAPI = {
     user.updateProfile({ photoURL: storageRef.getDownloadURL() });
   },
 
-  getUserProfile: function(userId) {
+  getUserProfile: function (userId) {
     var userProfile = {
       username: this.user.username,
       firstName: users.get(user.first_name),
       lastName: users.get(user.last_name),
-      profPicUrl: this.user.photoURL
+      profPicUrl: this.user.photoURL,
     };
     return userProfile;
   },
@@ -52,7 +59,7 @@ const UsersAPI = {
   // User and UID remains constant throughout expo session
   // In order to reset UID, close metro bundler and npm start again
   // TODO: Develop a SIGNOUT button ASAP
-  updateUserProfile: function(username, firstName, lastName) {
+  updateUserProfile: function (username, firstName, lastName) {
     const user = firebase.auth().currentUser;
     console.log(user);
     // await user.updateProfile({displayName: username});
@@ -61,25 +68,17 @@ const UsersAPI = {
       last_name: lastName,
       username: username,
     });
-  }
-}
- 
+  },
+};
+
 const HugCountAPI = {
-  getUserHugCount: function() {
+  getUserHugCount: function () {},
 
-  },
+  getUserHugStreak: function () {},
 
-  getUserHugStreak: function() {
+  resetUserHugCount: function () {},
 
-  },
+  increaseHugCount: function () {},
+};
 
-  resetUserHugCount: function() {
-
-  },
-
-  increaseHugCount: function() {
-    
-  }
-}
-
-export default UsersAPI;
+module.exports = { UsersAPI, HugCountAPI };
