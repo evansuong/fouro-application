@@ -2,13 +2,13 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "timerCorrector.js",
+  "main": "./test/main.js",
   "dependencies": {
     "firebase": "^8.0.2"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./test/main.js"
   },
   "keywords": [],
   "author": "",
