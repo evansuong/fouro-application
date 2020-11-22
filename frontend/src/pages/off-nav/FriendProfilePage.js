@@ -8,9 +8,7 @@ import FriendProfileHeader from '../../components/headers/FriendProfileHeader'
 //     //setResults(`Email: ${emailField}   |   Password: ${passwordField}   |   Password Confirmation: ${passwordConfirmField}`);
 //   }
 
-export function removeFriend() {
-    console.log("removing friend");
-}
+
 
 export default function FriendProfilePage({ navigation }) {
     const icon = require("assets/overflowMenuIcon.png");
@@ -18,32 +16,37 @@ export default function FriendProfilePage({ navigation }) {
     return (
 
         <View>
-            <FriendProfileHeader navigation={navigation}/>
+            <FriendProfileHeader 
+                navigation={navigation}
+                style={styles.header}
+            />
             
-            {/* user profile information */}
-            <UserProfile 
-                profilePicture={require("assets/profilePic.jpg")}
-                userFirstLast = "vicki chen"
-                username = "vickichn" 
-            />            
-            
+            <View style={styles.userProfile}>
+                {/* user profile information */}
+                <UserProfile 
+                    profilePicture={require("assets/profilePic.jpg")}
+                    userFirstLast = "vicki chen"
+                    username = "vickichn"
+                />
+            </View>            
             
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    button: {
-        position: 'absolute', // now we can place it wherever
-        width: 75,
-        height: 30,
-        resizeMode: 'contain',
-        top: 15, // the wherever, top margin
-        right: -15 // the wherever, right margin. still don't know why it's neg
+    header: {
+        position: 'absolute',
+        zIndex: 3
     },
     removeFriendOverlay: {
         display: 'flex', 
         flexDirection: 'row', 
         justifyContent: 'flex-end'
     },
+    userProfile: {
+        position: 'absolute',
+        marginTop: 20,
+        zIndex: -1
+    }
 });

@@ -2,9 +2,12 @@ import React from 'react'
 import { View, StyleSheet, Image, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
-import removeFriend from '../../pages/off-nav/FriendProfilePage'
+// import removeFriend from '../../pages/off-nav/FriendProfilePage'
 
-const {screenHeight, screenWidth} = Dimensions.get('window');
+
+function removeFriend() {
+    console.log("removing friend");
+}
 
 //comment
 export default function Header({ navigation }) {
@@ -26,7 +29,7 @@ export default function Header({ navigation }) {
                 {/* add a 'close' option */}
                 <OptionsMenu
                     button={ icon }
-                    buttonStyle={ styles.button }
+                    buttonStyle={ styles.optionsMenuButton }
                     options={["remove friend"]}
                     actions={[removeFriend]} />
             </View>
@@ -40,27 +43,29 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'flex-end'
     },
-    button: {
-        //position: 'absolute', // now we can place it wherever
-        width: 30,
-        height: 30,
+    optionsMenuButton: {
+        width: 40,
+        height: 25,
         resizeMode: 'contain',
+        marginRight: 0,
         //top: 15, // the wherever, top margin
-        right: -5 // the wherever, right margin. still don't know why it's neg
+        // right: -5, // the wherever, right margin. still don't know why it's neg
+        //backgroundColor: 'pink'
     },
     backButton: {
-        width: 30,
-        height: 30
+        width: 40,
+        height: 25,
+        resizeMode: 'contain',
+        //backgroundColor: 'pink'
     },
     header: {
-        position: 'absolute',
-        padding: 15,
-        paddingTop: 15,
-        width: '100%',
+        // position: 'absolute',
+        padding: 10,
+        paddingTop: 20,
+        width: "100%",
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        //marginTop: 10,
-        marginBottom: 20
+        marginTop: 20,
     },
 });
