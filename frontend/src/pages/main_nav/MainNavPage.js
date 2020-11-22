@@ -1,11 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage'
 import HomePage from './HomePage'
+
+const window = Dimensions.get('window');
+const screenHeight = window.height
+const screenWidth = window.width
 
 export default function MainNavPage() {
 
@@ -78,6 +82,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         top: 0,
-        height: 700,
+        height: screenHeight,
     },
 })
