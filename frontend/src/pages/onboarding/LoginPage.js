@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { 
   StyleSheet,
   Button, 
@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
+import LoginAPI from 'backend/routes/LogIn';
+import { useIsFocused } from '@react-navigation/native';
 
-
-// TODO: Destroy firebase reference on component unmount
 
 export default function LoginPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
@@ -20,6 +20,14 @@ export default function LoginPage({ navigation }) {
   const [error, setError] = useState(false);
   const [loggingIn, setLoggingIn] = useState(false);
   const [mounted, setMounted] = useState(true);
+
+  useEffect(() => {
+    if (!isFocused) {
+      setMounted(false);
+    }
+  }, []);
+
+  const isFocused = useIsFocused();
 
   const submitHandler = async () => {
     // setLoggingIn(true);
@@ -42,7 +50,7 @@ export default function LoginPage({ navigation }) {
     if (mounted) {
       setTimeout(() => {
         setError(false);
-      }, 10000);
+      }, 5000);
       return true;
     }
   }
@@ -57,22 +65,17 @@ export default function LoginPage({ navigation }) {
           titleText='Email' 
           placeholder='eg rikhilna@ucsd.edu'
           setField={setEmailField}
+          required={true}
         />
 
         <CustomTextField
           titleText='Password'
           placeholder='eg password'
           setField={setPasswordField}
+          secureText={true}
+          required={true}
         />
 
-        {
-          !checkFilled() &&
-          <View style={styles.textContainer}>
-            <Text style={styles.errorText}>
-              Not all form fields are filled!
-            </Text>
-          </View>
-        }
         {
           checkFilled() && 
           <LinkedButton

@@ -11,15 +11,22 @@ import AppStyles from '../AppStyles'
  * @param {string} placeholder The input placeholder
  * @param {stateHook} setField The field to set in the parent component
  */
-export default function CustomTextField({ titleText, placeholder, setField }) { //comment
+export default function CustomTextField({ titleText, placeholder, setField, secureText=false, required=false }) {
   return (
     <View>
       <Text style={styles.onboardingText}>
         {titleText}
+        { 
+        required && 
+        <Text style={styles.required}>
+          *
+        </Text>
+        }
       </Text> 
       <TextInput 
         style={styles.onboardingInput}
         placeholder={placeholder}
+        secureTextEntry={secureText}
         onChangeText={(val) => setField(val)}
       />
     </View>
@@ -32,6 +39,10 @@ const styles = StyleSheet.create({
     marginTop: 25,
     marginBottom: 5,
     marginLeft: 25,
+  },
+  required: {
+    fontSize: 18,
+    color: 'red',
   },
   onboardingInput: {
     marginRight: 20,
