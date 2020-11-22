@@ -8,15 +8,21 @@
  * */
 
 import React, { useEffect, useContext } from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, ScrollView } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { DimensionContext } from '../contexts/DimensionContext'
 
-
 export default function HugCard({ navigation, name, hugText, hugImage, hugId }) {
 
-  const dimensions = useContext(DimensionContext)
-        
+  const {windowWidth, windowHeight} = useContext(DimensionContext)
+
+  const hugCardWidth = windowWidth - 20
+  const hugDescMaxHeight = windowHeight / 6
+  const hugImageWidth = hugCardWidth / 4
+  const hugDescWidth = hugCardWidth / 1.5
+  const pinHeight = hugCardWidth / 13
+  const pinWidth = pinHeight
+  
   const pinPress = () => {
     console.log('pinning hug');
     // Navigate to corkboard
@@ -26,7 +32,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
   
   return (
     /* container */
-    <View style={styles.hugCardContainer}>
+    <View style={[styles.hugCardContainer, { width: hugCardWidth }]}>
         
         {/* text area */}
         <View style={styles.bodyContainer}>
@@ -38,34 +44,48 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
                 </Text>
 
                 {/* hug description */}
-                <Text style={styles.hugText}>
-                    {hugText}
-                </Text>
+                <View style={{ 
+                    width: hugDescWidth,
+                    // backgroundColor: 'pink',
+                    overflow: 'hidden',
+                    maxHeight: hugDescMaxHeight
+                    }}>
+                    <ScrollView nestedScrollEnabled={true}>
+                        <Text style={styles.hugText}>
+                            {hugText}
+                        </Text>
+                    </ScrollView>
+                </View>
             </View>            
 
             {/* Pin button */}
-            <TouchableOpacity onPress={() => pinPress()}>
+            <TouchableOpacity 
+                onPress={() => pinPress()}
+                style={styles.pinButton}
+            >
 
                 {/* Pin icon */}
                 <Image
                     source={require('assets/pinIcon.png')}
-                    style={styles.pinButton}
+                    style={[styles.pinIcon, {width: pinWidth, height: pinHeight}]}
                 />
                 
             </TouchableOpacity>
                 
         </View>
 
-        {/* image */}
-        <View style={styles.imageContainer}>
-            
-            {/* hug image */}
-            <Image
-                source={hugImage}
-                style={styles.hugImage}
-            />
-            
-        </View>       
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            {/* image */}
+            <View style={[styles.imageContainer, {width: hugImageWidth, height: hugImageWidth}]}>
+                
+                {/* hug image */}
+                <Image
+                    source={hugImage}
+                    style={[styles.imageContainer, {width: hugImageWidth, height: hugImageWidth}]}
+                />
+                
+            </View>
+        </View>
 
     </View>
   )
@@ -76,6 +96,7 @@ const styles = StyleSheet.create({
     hugCardContainer: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'space-between',
         shadowColor: '#000',
         shadowOffset: {
           width: 10,
@@ -83,36 +104,44 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.41,
         shadowRadius: 50,
-        elevation: 14,
-        backgroundColor: 'rgba(166,166,166,1)',
-        margin: 5,
+        elevation: 7,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255,255,255,1)',
+        padding: 10,
+        marginBottom: 5,
+        marginTop: 5
     },
     bodyContainer: {
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         alignContent: 'space-between',
     },
     textContainer: {
     },
-    pinButton: {
+    pinIcon: {
         borderRadius: 50,
-        width: 20,
-        height: 20,
+        // width: 25,
+        // height: 25,
         overflow: 'hidden',
+        backgroundColor: 'pink'
+    },
+    pinButton: {
+        margin: 10,        
     },
     imageContainer: {
         borderRadius: 15,
         overflow: 'hidden',
-        width: 50,
-        height: 50
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     name: {
         margin: 10,
         fontSize: 20
     },
     hugText: {
+        marginLeft: 10,
         fontSize: 15,
-        color: 'black'
+        color: 'black',
     },
     hugImage: {
         borderRadius: 20,

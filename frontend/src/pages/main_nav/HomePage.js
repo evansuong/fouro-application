@@ -22,7 +22,7 @@ export default function HomePage({ navigation }) {
     buildTestData('Vicki', 'do you remember', require('assets/profilePic.jpg'), 1),
     buildTestData('Ricky', 'the 21st night of september Chow', require('assets/profilePic.jpg'), 2),
     buildTestData('Alex', 'soulja boy tellem', require('assets/profilePic.jpg'), 3),
-    buildTestData('Evan', 'nobody pray for me if they not there for me', require('assets/profilePic.jpg'), 4),
+    buildTestData('Evan', 'nobody \n \n\npray for\n me if t\nhey n\no\n\n\n\n\n\nt \n there \n \n \n for me', require('assets/profilePic.jpg'), 4),
     buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), 5),
   ]
 
@@ -53,7 +53,7 @@ export default function HomePage({ navigation }) {
             onPress={() => navigation.navigate('Hug Info')}
           />
           
-          <ScrollView>
+          <ScrollView contentContainerStyle={{alignItems: 'center'}}>
             {testData.map(hugData => (
               <HugCard 
                  key={hugData.hugId} 
