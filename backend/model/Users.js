@@ -61,13 +61,37 @@ const UsersAPI = {
   // TODO: Develop a SIGNOUT button ASAP
   updateUserProfile: function (username, firstName, lastName) {
     const user = firebase.auth().currentUser;
-    console.log(user);
+    username = username.trim();
+    firstName = firstName.trim();
+    lastName = lastName.trim();
     // await user.updateProfile({displayName: username});
     users.doc(user.uid).update({
       first_name: firstName,
       last_name: lastName,
       username: username,
     });
+<<<<<<< Updated upstream:backend/model/Users.js
+=======
+  },
+
+  emailTaken: async function(email) {
+    const response = users.where('email', '==', email);
+    const query = await response.get();
+    return !query.empty;
+  },
+
+  usernameTaken: async function(username) {
+    console.log('user input: ', username);
+    const response = users.where('username', '==', username);
+    const query = await response.get();
+    return !query.empty;
+  }
+}
+ 
+const HugCountAPI = {
+  getUserHugCount: function() {
+
+>>>>>>> Stashed changes:backend/routes/Users.js
   },
 };
 
