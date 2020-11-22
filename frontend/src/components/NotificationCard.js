@@ -3,11 +3,12 @@ import { View, Text, StyleSheet, Animated, Image, TouchableOpacity } from 'react
 import { DimensionContext } from '../contexts/DimensionContext';
 
 
+/**
+ */
 export default function NotificationCard({ notificationData, isFocused, handleAccept, handleDecline }) {
 
-    // prop destructuring
+    // prop destructuring: { notification type, user that generated notif, sender pp, notification id }
     const { type, user, image, id } = notificationData;
-    // holds if the notification page is focused
 
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
