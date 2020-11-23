@@ -6,32 +6,117 @@ require("firebase/auth");
 
 // Firestore
 const db = firebase.firestore();
-const users = db.collection("users");
+const usersCollection = db.collection("users");
 
 const UsersAPI = {
   // FOR TESTING PURPOSES ONLY, NOT A FUNCTION
   addUser: function (username, first, last) {
-    users.doc(username).set({
+    usersCollection.doc(username).set({
       first: first,
       last: last,
     });
   },
-  // user: firebase.auth().currentUser,
 
-  createNewUser: function (username, firstName, lastName) {
-    // same functionality
-    this.updateUserProfile(username, firstName, lastName);
-    console.log(user);
-    /*
-    this.user.updateProfile({displayName: username});
-    users.doc(user.uid).set({
-      first_name: firstName,
-      last_name: lastName
-    });
-    */
+  // Profile pic, friends, hugs, chatrooms, corkboard_id
+  /*
+   * @Param: firebase::auth::User current_user - Current signed in user from firebase authentication
+   */
+  createNewUser: async function (current_user) {
+    let created = false;
+    const newCorkboardRef = corkboardCollection.doc();
+
+    // initialize local object containing initial user values
+    const user = {
+      user_id: current_user.uid(),
+      username: "",
+      first_name: "",
+      last_name: "",
+      prof_pic_url: "",
+      day_hug_count: 0,
+      current_streak: 0
+    };
+
+    await usersCollection
+      .doc(current_user.uid())
+      .set(user) // set uid document to new user values
+      .then(() => {
+        console.log(`User created with ID: ${current_user.uid()}`);
+        created = true;
+      })
+      .catch((error) => {
+        console.log(`Error adding user: ${error}`);
+        created = false;
+      });
+
+    return created;
   },
 
-  uploadUserProfilePicture: function () {
+  // returns users profile information in an object
+  // takes in signed-in user 
+  getUserProfile: function (current_user) {
+
+    var userDocRef = usersCollection.doc(current_user.uid());
+    var userProfile;
+
+    // access document
+    userDocRef.get().then(function(userDoc) {
+      if (userDoc.exists) {
+        // set userProfile to retrieved data
+        // not sure this is how to retrieve data
+        userProfile = {
+          username:     userDoc.get("username"),
+          frist_name:   userDoc.get("first_name"),
+          last_name:    userDoc.get("last_name"),
+          prof_pic_url: userDoc.get("prof_pic_url")
+        };
+      } else {
+        // no data under uid
+        userProfile = null;
+      }
+    }).catch(function(error) {
+      console.log("Error getting document: ", error);
+      userProfile = null;
+    });
+
+    return userProfile;
+  },
+
+  // TODO: Need to fix for testing purposes
+  // User and UID remains constant throughout expo session
+  // In order to reset UID, close metro bundler and npm start again
+  // TODO: Develop a SIGNOUT button ASAP
+  updateUserProfile: async function (current_user, username, firstName, lastName) {
+    var success = false;
+
+    // trim whitespace from username
+    username = username.trim();
+    firstName = firstName.trim();
+    lastName = lastName.trim();
+
+    // initialize local object containing new user values
+    const user = {
+      username: username, 
+      first_name: firstName,
+      last_name: lastName
+    };
+
+    // update document with data
+    await usersCollection
+      .doc(current_user.uid())
+      .update(user) // set uid document to new user values
+      .then(() => {
+        console.log(`Updated user with ID: ${current_user.uid()}\n with data: ${user}`);
+        success = true;
+      })
+      .catch((error) => {
+        console.log(`Error adding user: ${error}`);
+        success = false;
+      });
+
+      return success;
+  },
+
+  uploadUserProfilePicture: async function () {
     // TODO this function may not work correctly.
     // create a cloud storage refrence
     var storageRef = firebase
@@ -43,35 +128,6 @@ const UsersAPI = {
 
     // update user's photo URL to the saved cloud storage url
     user.updateProfile({ photoURL: storageRef.getDownloadURL() });
-  },
-
-  getUserProfile: function (userId) {
-    var userProfile = {
-      username: this.user.username,
-      firstName: users.get(user.first_name),
-      lastName: users.get(user.last_name),
-      profPicUrl: this.user.photoURL,
-    };
-    return userProfile;
-  },
-
-  // TODO: Need to fix for testing purposes
-  // User and UID remains constant throughout expo session
-  // In order to reset UID, close metro bundler and npm start again
-  // TODO: Develop a SIGNOUT button ASAP
-  updateUserProfile: function (username, firstName, lastName) {
-    const user = firebase.auth().currentUser;
-    username = username.trim();
-    firstName = firstName.trim();
-    lastName = lastName.trim();
-    // await user.updateProfile({displayName: username});
-    users.doc(user.uid).update({
-      first_name: firstName,
-      last_name: lastName,
-      username: username,
-    });
-<<<<<<< Updated upstream:backend/model/Users.js
-=======
   },
 
   emailTaken: async function(email) {
@@ -89,20 +145,91 @@ const UsersAPI = {
 }
  
 const HugCountAPI = {
-  getUserHugCount: function() {
+  getUserHugCount: function (current_user) {
+    var userDocRef = usersCollection.doc(current_user.uid());
+    var hug_count;
 
->>>>>>> Stashed changes:backend/routes/Users.js
+    // access document
+    userDocRef.get().then(function(userDoc) {
+      if (userDoc.exists) {
+        // set userProfile to retrieved data
+        // not sure this is how to retrieve data
+        hug_count = userDoc.get("day_hug_count");
+      } else {
+        // no data under uid
+        hug_count = null;
+      }
+    }).catch(function(error) {
+      console.log("Error getting document: ", error);
+      hug_count= null;
+    });
+
+    return hug_count;
   },
-};
 
-const HugCountAPI = {
-  getUserHugCount: function () {},
+  getUserHugStreak: function (current_user) {
+    var userDocRef = usersCollection.doc(current_user.uid());
+    var streak_count;
 
-  getUserHugStreak: function () {},
+    // access document
+    userDocRef.get().then(function(userDoc) {
+      if (userDoc.exists) {
+        // set userProfile to retrieved data
+        // not sure this is how to retrieve data
+        streak_count = userDoc.get("current_streak");
+      } else {
+        // no data under uid
+        streak_count = null;
+      }
+    }).catch(function(error) {
+      console.log("Error getting document: ", error);
+      streak_count = null;
+    });
 
-  resetUserHugCount: function () {},
+    return streak_count;
+  },
 
-  increaseHugCount: function () {},
+  increaseHugCount: async function (current_user) {
+    // retrieve hug and streak count
+    var hug_count = this.getUserHugCount(current_user);
+    var streak_count = this.getUserHugStreak(current_user);
+    var success = false;
+
+    var userDocRef = usersCollection.doc(current_user.uid());
+    
+    // failed to retrieve hug count
+    if (hug_count == null || streak_count == null) {
+      return false;
+    }
+    else {
+      // incrememnt hug count
+      hug_count = hug_count + 1;
+      // increment streak count
+      if (hug_count == 4) {
+        streak_count = streak_count + 1;
+      }
+
+      // add new data to object
+      const user = {
+        day_hug_count: hug_count,
+        current_streak: streak_count
+      };
+
+      // update document with new data
+      await usersCollection
+        .doc(current_user.uid())
+        .update(user) // set uid document to new user values
+        .then(() => {
+          console.log(`Updated user with ID: ${current_user.uid()}\n with data: ${user}`);
+          success = true;
+        })
+        .catch((error) => {
+          console.log(`Error adding user: ${error}`);
+          success = false;
+        });
+    }
+    return success;
+  },
 };
 
 module.exports = { UsersAPI, HugCountAPI };
