@@ -130,7 +130,7 @@ const UsersAPI = {
     // update user's photo URL to the saved cloud storage url
     await usersCollection
       .doc(current_user.uid)
-      .set({
+      .update({
         profile_pic:  storageRef
       });
   }
