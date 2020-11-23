@@ -5,7 +5,8 @@ import { DimensionContext } from '../contexts/DimensionContext';
 
 const COLLAPSED_CARD_HEIGHT_PROPORTION = 4.6;
 const EXPANDED_CARD_HEIGHT_PROPORTION = 2.7;
-const ANIMATION_DURATION_MS = 150;
+const EXPAND_ANIMATION_DURATION_MS = 150;
+const FADE_ANIMATION_DURATION_MS = 100;
 const VISIBLE = 1;
 const HIDDEN = 0;
 
@@ -52,12 +53,12 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
          // Will change fadeAnim value to 1 in 5 seconds
         Animated.spring(height, {
             toValue: windowWidth / EXPANDED_CARD_HEIGHT_PROPORTION,
-            duration: ANIMATION_DURATION_MS,
+            duration: EXPAND_ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
         Animated.timing(fade, {
             toValue: VISIBLE,
-            duration: ANIMATION_DURATION_MS,
+            duration: FADE_ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
     }
@@ -66,12 +67,12 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
     function collapse() {
         Animated.spring(height, {
             toValue: windowWidth / COLLAPSED_CARD_HEIGHT_PROPORTION,
-            duration: ANIMATION_DURATION_MS,
+            duration: EXPAND_ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
         Animated.timing(fade, {
             toValue: HIDDEN,
-            duration: ANIMATION_DURATION_MS,
+            duration: FADE_ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
     }
