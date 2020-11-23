@@ -1,5 +1,6 @@
-import { StyleSheet, Button, Text, View, ScrollView } from 'react-native'
-import React from 'react'
+import { StyleSheet, Button, Text, View, Dimensions } from 'react-native'
+import React, {useEffect} from 'react'
+
 import AppStyles from '../../AppStyles'
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -8,6 +9,7 @@ import HugCard from 'components/HugCard'
 
 
 export default function HomePage({ navigation }) {
+
 
   function buildTestData(name, text, img, id) {
     return {

@@ -4,7 +4,7 @@
  * https://reactnavigation.org/docs/stack-navigator/#headershown
  */
 
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -12,24 +12,39 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage'
 import HomePage from './HomePage'
+import { DimensionContext } from '../../contexts/DimensionContext';
+import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
+import Background from '../../components/Background';
 
-const window = Dimensions.get('window');
-const screenHeight = window.height
-const screenWidth = window.width
-
+// TODO: follow the gradient thing
 export default function MainNavPage() {
 
     const Tab = createMaterialTopTabNavigator()
- 
+    const [backgroundState, setBackgroundState] = useState({ 
+        start: [0.9, 0.1],
+        end:[0.1, 0.7] 
+    })
+    
+    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const route = useRoute();
+    const routename =  getFocusedRouteNameFromRoute(route);
+
+    const homeFocused = require("assets/homeFocused.png")
+    const homeBlurred = require("assets/homeBlurred.png")
+    const friendsFocused = require("assets/friendsFocused.png")
+    const friendsBlurred = require("assets/friendsBlurred.png")
+    const notifFocused = require("assets/notifFocused.png")
+    const notifBlurred = require("assets/notifBlurred.png")
+
+    const tabWidth = windowWidth / 3
+    const tabHeight = windowHeight * 0.085
+
+    console.log("windowHeight is " + windowHeight)
+        
     return (
         <>
             <View style={styles.background}>
-                <LinearGradient
-                    colors={['#FFC24A','#FB7250']}
-                    start={[0.9, 0.1]}
-                    end={[0.1, 0.7]}
-                    style={styles.linearGradient}
-                />
+                <Background page={routename}/>
             </View>
             <Tab.Navigator
                 sceneContainerStyle={styles.tabScreen}
@@ -41,16 +56,21 @@ export default function MainNavPage() {
                       let icon;
           
                       if (route.name === 'Home') {
-                        icon = focused
-                          ? require("../../../assets/homeFocused.png")
-                          : require("../../../assets/homeBlurred.png");
+                        icon = focused ? homeFocused : homeBlurred
                       } else if (route.name === 'Friends') {
-                        icon = focused ? require('../../../assets/friendsFocused.png') : require('../../../assets/friendsBlurred.png');
+                        icon = focused ? friendsFocused : friendsBlurred
                       } else if (route.name === 'Notification') {
-                        icon = focused ? require('../../../assets/notifFocused.png') : require('../../../assets/notifBlurred.png');
+                        icon = focused ? notifFocused : notifBlurred
                       }
 
-                      return <Image source={icon} resizeMode='stretch' style={{ width: 120, height: 55, margin: 0, padding: 0 }} />
+                      return <Image 
+                                source={icon}
+                                resizeMode='stretch'
+                                style={{
+                                    width: tabWidth,
+                                    height: tabHeight
+                                }}
+                            />
                     },
                   })}
                   tabBarOptions={{
@@ -60,7 +80,8 @@ export default function MainNavPage() {
                         justifyContent: 'center',
                         alignItems: 'center'
                     }
-                  }}>
+                  }}
+                  beforeRemove={() => console.log('remove')}>
                 <Tab.Screen name="Friends" component={FriendsPage} />
                 <Tab.Screen name="Home" component={HomePage} />
                 <Tab.Screen name="Notification" component={NotificationPage} />
@@ -83,11 +104,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    linearGradient: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        height: screenHeight,
-    },
+    // linearGradient: {
+    //     position: 'absolute',
+    //     left: 0,
+    //     right: 0,
+    //     top: 0,
+    //     height: windowHeight,
+    // },
 })
