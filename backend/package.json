@@ -4,7 +4,8 @@
   "description": "",
   "main": "./test/main.js",
   "dependencies": {
-    "firebase": "^8.0.2"
+    "firebase": "^8.0.2",
+    "firebase-admin": "^9.4.1"
   },
   "devDependencies": {},
   "scripts": {

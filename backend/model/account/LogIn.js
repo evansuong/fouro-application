@@ -1,5 +1,4 @@
-// LogIn used to handle Firebase Authentication and logging
-// in users
+// LogIn used to handle Firebase Authentication and logging in users
 var firebase = require("../../firebase/config");
 require("firebase/auth");
 
@@ -43,9 +42,9 @@ const LoginAPI = {
         console.log(error);
         current_user = null;
       });
-      return new Promise((resolve, reject) => {
-        resolve(current_user);
-      });
+    return new Promise((resolve, reject) => {
+      resolve(current_user);
+    });
   },
 };
 
