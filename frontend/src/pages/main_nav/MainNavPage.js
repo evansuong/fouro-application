@@ -36,7 +36,7 @@ export default function MainNavPage() {
 
     const tabWidth = windowWidth / 3
     const tabHeight = tabWidth / 2.25
-        
+    
     return (
         <>
             <View style={styles.background}>
