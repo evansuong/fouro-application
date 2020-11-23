@@ -63,6 +63,7 @@ export default function HomePage({ navigation }) {
               />
             ))}
           </ScrollView>
+          
       </View>
     )
 }

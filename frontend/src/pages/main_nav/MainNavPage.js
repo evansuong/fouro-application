@@ -37,7 +37,7 @@ export default function MainNavPage() {
     const notifBlurred = require("assets/notifBlurred.png")
 
     const tabWidth = windowWidth / 3
-    const tabHeight = windowHeight * 0.085
+    const tabHeight = tabWidth / 2.25
 
     console.log("windowHeight is " + windowHeight)
         
