@@ -4,13 +4,14 @@ var firebase = require("../../firebase/config");
 require("firebase/auth");
 
 const LoginAPI = {
-  loginUser: async function (email, password) {
+  loginUser: function (email, password) {
     let loggedin = false;
-    await firebase
+    firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         loggedin = true;
+        return firebase.auth().currentUser;
       })
       .catch(function (error) {
         loggedin = false;
@@ -39,9 +40,9 @@ const LoginAPI = {
         }
 
         console.log(error);
+        return null;
       });
-    return loggedin;
   },
 };
 
-module.exports = LoginAPI;
+module.exports = { LoginAPI };

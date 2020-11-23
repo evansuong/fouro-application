@@ -23,11 +23,10 @@ const UsersAPI = {
    */
   createNewUser: async function (current_user) {
     let created = false;
-    const newCorkboardRef = corkboardCollection.doc();
 
     // initialize local object containing initial user values
     const user = {
-      user_id: current_user.uid(),
+      user_id: current_user.uid,
       username: "",
       first_name: "",
       last_name: "",
@@ -37,10 +36,10 @@ const UsersAPI = {
     };
 
     await usersCollection
-      .doc(current_user.uid())
+      .doc(current_user.uid)
       .set(user) // set uid document to new user values
       .then(() => {
-        console.log(`User created with ID: ${current_user.uid()}`);
+        console.log(`User created with ID: ${current_user.uid}`);
         created = true;
       })
       .catch((error) => {
@@ -55,7 +54,7 @@ const UsersAPI = {
   // takes in signed-in user 
   getUserProfile: function (current_user) {
 
-    var userDocRef = usersCollection.doc(current_user.uid());
+    var userDocRef = usersCollection.doc(current_user.uid);
     var userProfile;
 
     // access document
@@ -102,10 +101,10 @@ const UsersAPI = {
 
     // update document with data
     await usersCollection
-      .doc(current_user.uid())
+      .doc(current_user.uid)
       .update(user) // set uid document to new user values
       .then(() => {
-        console.log(`Updated user with ID: ${current_user.uid()}\n with data: ${user}`);
+        console.log(`Updated user with ID: ${current_user.uid}\n with data: ${user}`);
         success = true;
       })
       .catch((error) => {
@@ -128,7 +127,7 @@ const UsersAPI = {
 
     // update user's photo URL to the saved cloud storage url
     await usersCollection
-      .doc(current_user.uid())
+      .doc(current_user.uid)
       .set({
         profile_pic:  storageRef
       });
@@ -137,7 +136,7 @@ const UsersAPI = {
  
 const HugCountAPI = {
   getUserHugCount: function (current_user) {
-    var userDocRef = usersCollection.doc(current_user.uid());
+    var userDocRef = usersCollection.doc(current_user.uid);
     var hug_count;
 
     // access document
@@ -159,7 +158,7 @@ const HugCountAPI = {
   },
 
   getUserHugStreak: function (current_user) {
-    var userDocRef = usersCollection.doc(current_user.uid());
+    var userDocRef = usersCollection.doc(current_user.uid);
     var streak_count;
 
     // access document
@@ -186,7 +185,7 @@ const HugCountAPI = {
     var streak_count = this.getUserHugStreak(current_user);
     var success = false;
 
-    var userDocRef = usersCollection.doc(current_user.uid());
+    var userDocRef = usersCollection.doc(current_user.uid);
     
     // failed to retrieve hug count
     if (hug_count == null || streak_count == null) {
@@ -208,10 +207,10 @@ const HugCountAPI = {
 
       // update document with new data
       await usersCollection
-        .doc(current_user.uid())
+        .doc(current_user.uid)
         .update(user) // set uid document to new user values
         .then(() => {
-          console.log(`Updated user with ID: ${current_user.uid()}\n with data: ${user}`);
+          console.log(`Updated user with ID: ${current_user.uid}\n with data: ${user}`);
           success = true;
         })
         .catch((error) => {
