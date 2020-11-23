@@ -104,7 +104,7 @@ const UsersAPI = {
     // update document with data
     await usersCollection
       .doc(current_user.uid)
-      .update(user) // set uid document to new user values
+      .set(user, {merge: true}) // set uid document to new user values
       .then(() => {
         console.log(`Updated user with ID: ${current_user.uid}\n with data: ${JSON.stringify(user)}`);
         success = true;
