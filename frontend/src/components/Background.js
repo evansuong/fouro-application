@@ -15,16 +15,16 @@ export default function Background({ page }) { //comment
 
   const { windowWidth, windowHeight } = useContext(DimensionContext)
 
-  const backgroundState = useRef(new Animated.Value(1)).current;
+  const backgroundState = useRef(new Animated.Value(-1500)).current;
   
   useEffect(() => {
     console.log(page)
     if (page === 'Friends') {
-      shiftBackground(-400)
+      shiftBackground(-1200)
     } else if (page === 'Home') {
-      shiftBackground(-600)
+      shiftBackground(-1500)
     } else if (page === 'Notification') {
-      shiftBackground(-950)
+      shiftBackground(-1800)
     }
   }, [page])
 
@@ -41,7 +41,7 @@ export default function Background({ page }) { //comment
       right: 0,
       top: 0,
       height: windowHeight,
-      width: windowHeight * 2,
+      width: windowHeight * 4,
     },
   })
   
@@ -54,15 +54,16 @@ export default function Background({ page }) { //comment
       easing: Easing.inOut(Easing.sin),
       useNativeDriver: true,
     }).start();
+
   }
   
   return (
     <Animated.View style={{ ...styles.container, transform: [{ translateX: backgroundState }] }}>
       <LinearGradient
-        colors={['#FB7250DD', '#FFC24ACC', '#FFC24ACC', '#FB7250DD']}
+        colors={['#FB7250DD', '#FFC24AE0', '#FFC24AE0', '#FB7250DD']}
         style={styles.linearGradient}
-        start={[.4, .2]}
-        end={[.8, .8]}
+        start={[.5, .3]}
+        end={[.7, .8]}
       />
     </Animated.View>
   );
