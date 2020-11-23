@@ -142,7 +142,7 @@ const UsersAPI = {
     const query = await response.get();
     return !query.empty;
   }
-}
+};
  
 const HugCountAPI = {
   getUserHugCount: function (current_user) {
