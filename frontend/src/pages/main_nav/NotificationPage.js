@@ -45,7 +45,10 @@ export default function NotificationPage({ navigation }) {
 
     function catchHug(id) {
         clearNotification(id)
-        navigation.navigate('Hug Info', id)
+        navigation.navigate('Hug Info', { 
+            page: 'Hug Info',
+            data: notifications.filter((item) => item.id === id)[0], 
+        })
         // signify hug as caught to the database
     }
 
@@ -76,7 +79,8 @@ export default function NotificationPage({ navigation }) {
             marginHorizontal: 5,
             display: 'flex',
             alignItems: 'center',
-            height: windowHeight,
+            minHeight: windowHeight - 20,
+            marginTop: 70,
         }
     })
     

@@ -18,12 +18,11 @@ export default function Background({ page }) { //comment
   const backgroundState = useRef(new Animated.Value(-1500)).current;
   
   useEffect(() => {
-    console.log(page)
     if (page === 'Friends') {
       shiftBackground(-1200)
     } else if (page === 'Home') {
       shiftBackground(-1500)
-    } else if (page === 'Notification') {
+    } else if (page === 'Notifications') {
       shiftBackground(-1800)
     }
   }, [page])

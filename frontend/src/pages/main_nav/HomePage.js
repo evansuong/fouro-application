@@ -9,7 +9,6 @@ import HugCard from 'components/HugCard'
 
 export default function HomePage({ navigation }) {
 
-
   function buildTestData(name, text, img, id) {
     return {
       name: name,
@@ -28,8 +27,7 @@ export default function HomePage({ navigation }) {
   ]
 
     return (
-      <View style={AppStyles.navPageContainer}>
-          <Text>home</Text>
+      <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
           <Button 
             title="create hug" 
             onPress={() => navigation.navigate('Create Hug')}
