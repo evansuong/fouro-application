@@ -1,8 +1,7 @@
-import { StyleSheet, Button, Text, View, Dimensions } from 'react-native'
+import { StyleSheet, Button, Text, View, Dimensions, ScrollView } from 'react-native'
 import React, {useEffect} from 'react'
 
 import AppStyles from '../../AppStyles'
-import { FlatList } from 'react-native-gesture-handler';
 
 import HugCard from 'components/HugCard'
 
