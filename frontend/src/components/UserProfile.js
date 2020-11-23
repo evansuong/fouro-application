@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, Dimensions } from 'react-native';
 import AppStyles from '../AppStyles';
+const window = Dimensions.get('window')
 
+const screenWidth = window.width
 
 export default function UserProfile({ profilePicture, userFirstLast, username }) {
   const userFirstLastDummy = userFirstLast
@@ -25,16 +27,22 @@ export default function UserProfile({ profilePicture, userFirstLast, username })
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 40, // added this
     overflow: 'hidden',
+    width: screenWidth,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    zIndex: -1,
+    backgroundColor: 'transparent'
   },
   profilePicStyle: {
     justifyContent: 'center',
     borderRadius: 100,
-    width: 150,
-    height: 150,
-    backgroundColor: 'blue'
+    width: 100, // TODO: change to responsive design
+    height: 100, // TODO: change to responsive design
+    // use the line below to test dimensions
+    backgroundColor: 'blue',
+    resizeMode: 'contain'
   },
   userFirstLastStyle: {
     marginTop: 5,
