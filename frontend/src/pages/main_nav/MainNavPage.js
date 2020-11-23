@@ -28,31 +28,19 @@ export default function MainNavPage() {
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const route = useRoute();
     const routename =  getFocusedRouteNameFromRoute(route);
-        
-    const styles = StyleSheet.create({
-        background: {
-            position: 'absolute',
-            width: '100%',
-        },
-        tabScreen: {
-            backgroundColor: 'transparent',
-            overflow: "visible",
-        },
-        container: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        linearGradient: {
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            top: 0,
-            height: windowHeight,
-        },
-    })
 
-    
+    const homeFocused = require("assets/homeFocused.png")
+    const homeBlurred = require("assets/homeBlurred.png")
+    const friendsFocused = require("assets/friendsFocused.png")
+    const friendsBlurred = require("assets/friendsBlurred.png")
+    const notifFocused = require("assets/notifFocused.png")
+    const notifBlurred = require("assets/notifBlurred.png")
+
+    const tabWidth = windowWidth / 3
+    const tabHeight = windowHeight * 0.085
+
+    console.log("windowHeight is " + windowHeight)
+        
     return (
         <>
             <View style={styles.background}>
@@ -68,16 +56,21 @@ export default function MainNavPage() {
                       let icon;
           
                       if (route.name === 'Home') {
-                        icon = focused
-                          ? require("../../../assets/homeFocused.png")
-                          : require("../../../assets/homeBlurred.png");
+                        icon = focused ? homeFocused : homeBlurred
                       } else if (route.name === 'Friends') {
-                        icon = focused ? require('../../../assets/friendsFocused.png') : require('../../../assets/friendsBlurred.png');
+                        icon = focused ? friendsFocused : friendsBlurred
                       } else if (route.name === 'Notification') {
-                        icon = focused ? require('../../../assets/notifFocused.png') : require('../../../assets/notifBlurred.png');
+                        icon = focused ? notifFocused : notifBlurred
                       }
 
-                      return <Image source={icon} resizeMode='stretch' style={{ width: 120, height: 55, margin: 0, padding: 0 }} />
+                      return <Image 
+                                source={icon}
+                                resizeMode='stretch'
+                                style={{
+                                    width: tabWidth,
+                                    height: tabHeight
+                                }}
+                            />
                     },
                   })}
                   tabBarOptions={{
@@ -96,3 +89,26 @@ export default function MainNavPage() {
         </>
     )
 }
+
+const styles = StyleSheet.create({
+    background: {
+        position: 'absolute',
+        width: '100%',
+    },
+    tabScreen: {
+        backgroundColor: 'transparent',
+        overflow: "visible",
+    },
+    container: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    // linearGradient: {
+    //     position: 'absolute',
+    //     left: 0,
+    //     right: 0,
+    //     top: 0,
+    //     height: windowHeight,
+    // },
+})
