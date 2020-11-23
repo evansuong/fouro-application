@@ -132,19 +132,6 @@ const UsersAPI = {
       .set({
         profile_pic:  storageRef
       });
-  },
-
-  emailTaken: async function(email) {
-    const response = users.where('email', '==', email);
-    const query = await response.get();
-    return !query.empty;
-  },
-
-  usernameTaken: async function(username) {
-    console.log('user input: ', username);
-    const response = users.where('username', '==', username);
-    const query = await response.get();
-    return !query.empty;
   }
 };
  
