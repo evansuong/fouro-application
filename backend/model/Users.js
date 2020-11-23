@@ -31,7 +31,7 @@ const UsersAPI = {
       username: "",
       first_name: "",
       last_name: "",
-      prof_pic_url: "",
+      profile_pic: "",
       day_hug_count: 0,
       current_streak: 0
     };
@@ -67,7 +67,7 @@ const UsersAPI = {
           username:     userDoc.get("username"),
           frist_name:   userDoc.get("first_name"),
           last_name:    userDoc.get("last_name"),
-          prof_pic_url: userDoc.get("prof_pic_url")
+          profile_pic: userDoc.get("profile_pic")
         };
       } else {
         // no data under uid
@@ -116,7 +116,7 @@ const UsersAPI = {
       return success;
   },
 
-  uploadUserProfilePicture: async function () {
+  uploadUserProfilePicture: async function (current_user, file) {
     // TODO this function may not work correctly.
     // create a cloud storage refrence
     var storageRef = firebase
@@ -127,7 +127,11 @@ const UsersAPI = {
     var task = storageRef.put(file);
 
     // update user's photo URL to the saved cloud storage url
-    user.updateProfile({ photoURL: storageRef.getDownloadURL() });
+    await usersCollection
+      .doc(current_user.uid())
+      .set({
+        profile_pic:  storageRef
+      });
   },
 
   emailTaken: async function(email) {
@@ -161,7 +165,7 @@ const HugCountAPI = {
       }
     }).catch(function(error) {
       console.log("Error getting document: ", error);
-      hug_count= null;
+      hug_count = null;
     });
 
     return hug_count;
