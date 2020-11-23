@@ -33,4 +33,19 @@ db.collection("hugs")
     .catch(function (error) {
         console.log("Error getting document:", error);
     });
+
+// loop through all of a user's user_hugs
+db.collection("users")
+    .doc("example@email.com")
+    .collection("user_hugs")
+    .get()
+    .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+            //doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, "=>", doc.data());
+        });
+    });
+
+//loop through images? Need cloud function?
+//db.doc("hugs/hug1").
 //Hugs.HugsAPI.createHug()

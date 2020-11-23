@@ -13,6 +13,7 @@ const users = db.collection("users");
 
 const HugsAPI = {
     // The user that calls this function is the sender
+    // TODO: More error handling and monitor upload progress?
     createHug: function (friendId, message, image) {
         // Set current user
         const currUser = firebase.auth().currentUser;
@@ -20,7 +21,7 @@ const HugsAPI = {
         var dateTime = db.dateTime.now();
         var dateTimeString = dateTime.toString();
         // Image: byte array
-        // Create a root reference
+        // Create a root reference in firebase storage
         var storageRef = firebase.storage().ref();
         // Create a unique image ID
         var imageName = "images/" + dateTimeString;
@@ -28,6 +29,7 @@ const HugsAPI = {
         // var hugImageRef = storageRef.child(imageName)
         // Convert the byte array image to Uint8Array
         var bytes = new Uint8Array(image);
+        // TODO: not sure if var is needed
         var uploadTask = storageRef.child(imageName).put(bytes);
         // Add fields to the top level "hugs" collection and store the reference
         // Save a reference to the top level hug with an autoID (I think)
@@ -120,13 +122,78 @@ const UpdateHugAPI = {
             });
     },
 
-    dropAHug: function (requestId, hugId) {},
+    // hugId is the global hug.
+    // NOT SURE if hugId.delete is okay bc idk what hugId really is...
+    dropAHug: function (requestId, hugId) {
+        // TODO: delete requestId?
+        // TODO: delete the document corresponding to this hug in the sender's user_hugs
+        // TODO: Remove hug images from storage
+        // TODO: Loop through each element in the images array of hugId
+        // Create a root reference in firebase storage
+        var storageRef = firebase.storage().ref();
+        // TODO: .delete().then(???)
+        storageRef.child(imageName).delete().then();
+
+        // Delete the global hug document
+        hugId.delete().then();
+    },
 };
 
 const ViewHugAPI = {
-    getHugById: function (hugId) {},
+    getHugById: function (hugId) {
+        db.collection("hugs")
+            .doc(hugId)
+            .get()
+            .then(function (variable) {
+                if (variable.exists) {
+                    return variable.data();
+                } else {
+                    console.log("No such document!");
+                }
+            })
+            .catch(function (error) {
+                console.log("Error getting document:", error);
+            });
+    },
 
-    getUserHugs: function () {},
+    // Gets all hugs from the currently logged in user
+    // TODO: not sure how to use the paginated data "next"
+    // TODO: delete one of the versions. not sure how to return multiple docs?
+    getUserHugs: function () {
+        // GET ALL VERSION
+        db.doc(currUser.uid)
+            .collection("user_hugs")
+            .get()
+            .then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    //doc.data() is never undefined for query doc snapshots
+                    console.log(doc.id, "=>", doc.data());
+                    //this should be like?
+                    return doc.data();
+                });
+            });
+
+        // PAGINATED VERSION
+        var first = db
+            .doc(currUser.uid)
+            .collection("user_hugs")
+            .orderBy("date_time")
+            .limit(25);
+        return first.get().then(function (documentSnapshots) {
+            // Get the last visible document
+            var lastVisible =
+                documentSnapshots.docs[documentSnapshots.docs.length - 1];
+            console.log("last", lastVisible);
+
+            // Construct a new query starting at this document,
+            // get the next 25 cities.
+            var next = db
+                .doc(currUser.uid)
+                .collection("user_hugs")
+                .orderBy("date_time")
+                .limit(25);
+        });
+    },
 };
 
 // Export the module
