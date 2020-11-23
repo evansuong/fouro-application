@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, Text } from 'react-native';
 
 import MainNavPage from './src/pages/main_nav/MainNavPage';
 
@@ -19,9 +19,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreateHugPage from './src/pages/off-nav/CreateHugPage'; 
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
+import headerOptions from './src/components/Header';
+import AppStyles from './src/AppStyles';
+
 
 export default function App() {
   const Stack = createStackNavigator();
+
+  const [mainNavPageTitle, setMainNavPageTitle] = useState("Main")
 
   return (
     <DimensionContextProvider>
@@ -33,23 +38,67 @@ export default function App() {
           /* going back to the previous screen. Leave it to see what 
           /* the app will actually look like
           * */
-          screenOptions={{ headerShown: false }}
+          // screenOptions={{ headerShown: false }}
         >
+          <Stack.Screen 
+            name="Main Nav Page" 
+            component={MainNavPage} 
+            options={({navigation, route}) => headerOptions(true, navigation, route)}/>
 
-          <Stack.Screen name="Main Nav Page" component={MainNavPage} />
+          <Stack.Screen 
+            name="Create Hug" 
+            component={CreateHugPage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
 
-          <Stack.Screen name="Create Hug" component={CreateHugPage} />
-          <Stack.Screen name="Friend History" component={FriendHistoryPage} />
-          <Stack.Screen name="Friend Profile" component={FriendProfilePage} />
-          <Stack.Screen name="Corkboard" component={CorkboardPage} />
-          <Stack.Screen name="Hug Info" component={HugInfoPage} />
+          <Stack.Screen 
+            name="Friend History" 
+            component={FriendHistoryPage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
 
-          <Stack.Screen name='Login Page' component={LoginPage} />
-          <Stack.Screen name='Signup Page' component={SignupPage} />
-          <Stack.Screen name='Launch Page' component={LaunchPage} />
-          <Stack.Screen name='Pic Upload Page' component={PicUploadPage} />
-          <Stack.Screen name='Name Page' component={NamePage} />
-          <Stack.Screen name='Question Page' component={QuestionPage} />
+          <Stack.Screen 
+            name="Friend Profile" 
+            component={FriendProfilePage} 
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name="Corkboard"
+            component={CorkboardPage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name="Hug Info" 
+            component={HugInfoPage} 
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name='Login Page' 
+            component={LoginPage} 
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name='Signup Page' 
+            component={SignupPage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name='Launch Page' 
+            component={LaunchPage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name='Pic Upload Page' 
+            component={PicUploadPage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name='Name Page' 
+            component={NamePage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name='Question Page' 
+            component={QuestionPage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
         </Stack.Navigator>
       </NavigationContainer>    
     </DimensionContextProvider>

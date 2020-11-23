@@ -119,8 +119,7 @@ export default function FriendsPage({ navigation }) {
     )
 
     return (
-        <View style={styles.navPageContainer}>
-            <FriendsPageHeader />
+        <View style={{...styles.navPageContainer, marginTop: 70}}>
             <FlatList
                 data={friends}
                 renderItem={renderCards}

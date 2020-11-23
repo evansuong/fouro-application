@@ -5,12 +5,14 @@ require("firebase/auth");
 
 const LoginAPI = {
   loginUser: async function (email, password) {
-    let loggedin = false;
+    var loggedin = false;
+    var current_user;
     await firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         loggedin = true;
+        current_user = firebase.auth().currentUser;
       })
       .catch(function (error) {
         loggedin = false;
@@ -18,30 +20,33 @@ const LoginAPI = {
 
         switch (error.code) {
           case "auth/invalid-email":
-            alert("Invalid email.");
+            console.log("Invalid email.");
             break;
 
           case "auth/user-disabled":
-            alert("User disabled.");
+            console.log("User disabled.");
             break;
 
           case "auth/user-not-found":
-            alert("User not found.");
+            console.log("User not found.");
             break;
 
           case "auth/wrong-password":
-            alert("Incorrect password.");
+            console.log("Incorrect password.");
             break;
 
           default:
-            alert(errorMessage);
+            console.log(errorMessage);
             break;
         }
 
         console.log(error);
+        current_user = null;
       });
-    return loggedin;
+      return new Promise((resolve, reject) => {
+        resolve(current_user);
+      });
   },
 };
 
-module.exports = LoginAPI;
+module.exports = { LoginAPI };

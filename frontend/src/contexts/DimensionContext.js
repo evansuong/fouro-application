@@ -12,8 +12,9 @@ export function DimensionContextProvider(props) {
 
     const dimensions = { 
         windowWidth: windowDimensions.width,
-        windowHeight: windowDimensions.height,
+        windowHeight: windowDimensions.height,   
     }   
+    
     return (
         <DimensionContext.Provider value={{ ...dimensions }}> 
             {props.children}
