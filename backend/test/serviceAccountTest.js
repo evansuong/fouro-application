@@ -1,6 +1,6 @@
 // Purely for testing the new config file
 var firebase = require("../firebase/config");
-require("firebase/firestore");
+//require("firebase/firestore");
 
 const db = firebase.firestore();
 const usersCollection = db.collection("users");

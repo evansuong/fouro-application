@@ -2,6 +2,9 @@
 var firebase = require("../../firebase/config");
 require("firebase/auth");
 
+// Sorry I broke all of your code
+// - terry
+
 const LoginAPI = {
   loginUser: async function (email, password) {
     var loggedin = false;
