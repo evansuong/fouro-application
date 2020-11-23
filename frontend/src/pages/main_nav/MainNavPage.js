@@ -16,8 +16,6 @@ import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
 import Background from '../../components/Background';
 import customHeader from '../../components/Header';
 
-
-
 // TODO: follow the gradient thing
 export default function MainNavPage() {
 
@@ -54,7 +52,7 @@ export default function MainNavPage() {
                         icon = focused ? homeFocused : homeBlurred
                       } else if (route.name === 'Friends') {
                         icon = focused ? friendsFocused : friendsBlurred
-                      } else if (route.name === 'Notification') {
+                      } else if (route.name === 'Notifications') {
                         icon = focused ? notifFocused : notifBlurred
                       }
 
