@@ -34,7 +34,6 @@ export default function HomePage({ navigation }) {
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
 
-
   function buildTestData(name, text, img, id) {
     return {
       name: name,
@@ -106,7 +105,7 @@ export default function HomePage({ navigation }) {
     createHugButtonContainer: {
       flexDirection: 'row',
       position: 'absolute',
-      bottom: 10,
+      bottom: 100,
       // left: windowWidth - 250,
       left: 10,
       borderRadius: 50,
@@ -130,9 +129,7 @@ export default function HomePage({ navigation }) {
   })
 
     return (
-      <View style={AppStyles.navPageContainer}>
-        <HomeHeader />
-        <Panel mode={mode}/>
+      <View style={{...AppStyles.navPageContainer, marginTop: 90}}>
 
         {/* Light and Dark Mode Switch */}
         <View style={styles.switchContainer}>
@@ -144,11 +141,6 @@ export default function HomePage({ navigation }) {
             value={isEnabled}
           />
         </View>
-
-        <Button 
-          title="create hug" 
-          onPress={() => navigation.navigate('Create Hug')}
-        />
         <Button
           title='launch page'
           onPress={() => navigation.navigate('Launch Page')}
@@ -160,6 +152,7 @@ export default function HomePage({ navigation }) {
         >
           <ScrollView 
             contentContainerStyle={{alignItems: 'center'}}
+            style={{marginBottom: 90,}}
           >
             {testData.map(hugData => (
               <HugCard 
@@ -204,8 +197,6 @@ export default function HomePage({ navigation }) {
             
           </Animated.View>
         </TouchableWithoutFeedback>
-
-
       </View>
     )
 }

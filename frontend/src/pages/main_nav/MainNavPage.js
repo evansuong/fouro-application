@@ -4,9 +4,8 @@
  * https://reactnavigation.org/docs/stack-navigator/#headershown
  */
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import FriendsPage from './FriendsPage';
@@ -15,15 +14,14 @@ import HomePage from './HomePage'
 import { DimensionContext } from '../../contexts/DimensionContext';
 import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
 import Background from '../../components/Background';
+import customHeader from '../../components/Header';
+
+
 
 // TODO: follow the gradient thing
 export default function MainNavPage() {
 
     const Tab = createMaterialTopTabNavigator()
-    const [backgroundState, setBackgroundState] = useState({ 
-        start: [0.9, 0.1],
-        end:[0.1, 0.7] 
-    })
     
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const route = useRoute();
@@ -36,11 +34,9 @@ export default function MainNavPage() {
     const notifFocused = require("assets/notifFocused.png")
     const notifBlurred = require("assets/notifBlurred.png")
 
-    const tabWidth = windowWidth / 3;
-    const tabHeight = tabWidth / 2.25;
-
-    // console.log("windowHeight is " + windowHeight)
-        
+    const tabWidth = windowWidth / 3
+    const tabHeight = tabWidth / 2.25
+    
     return (
         <>
             <View style={styles.background}>
@@ -54,7 +50,6 @@ export default function MainNavPage() {
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                       let icon;
-          
                       if (route.name === 'Home') {
                         icon = focused ? homeFocused : homeBlurred
                       } else if (route.name === 'Friends') {
@@ -82,9 +77,9 @@ export default function MainNavPage() {
                     }
                   }}
                   beforeRemove={() => console.log('remove')}>
-                <Tab.Screen name="Friends" component={FriendsPage} />
-                <Tab.Screen name="Home" component={HomePage} />
-                <Tab.Screen name="Notification" component={NotificationPage} />
+                <Tab.Screen name="Friends" component={FriendsPage} {...customHeader(true, 'Friends')} />
+                <Tab.Screen name="Home" component={HomePage} {...customHeader(true, 'Home')} />
+                <Tab.Screen name="Notifications" component={NotificationPage} {...customHeader(true, 'Notifications')} />
             </Tab.Navigator>
         </>
     )

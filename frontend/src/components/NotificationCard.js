@@ -5,7 +5,8 @@ import { DimensionContext } from '../contexts/DimensionContext';
 
 const COLLAPSED_CARD_HEIGHT_PROPORTION = 4.6;
 const EXPANDED_CARD_HEIGHT_PROPORTION = 2.7;
-const ANIMATION_DURATION_MS = 150;
+const EXPAND_ANIMATION_DURATION_MS = 150;
+const FADE_ANIMATION_DURATION_MS = 100;
 const VISIBLE = 1;
 const HIDDEN = 0;
 
@@ -52,12 +53,12 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
          // Will change fadeAnim value to 1 in 5 seconds
         Animated.spring(height, {
             toValue: windowWidth / EXPANDED_CARD_HEIGHT_PROPORTION,
-            duration: ANIMATION_DURATION_MS,
+            duration: EXPAND_ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
         Animated.timing(fade, {
             toValue: VISIBLE,
-            duration: ANIMATION_DURATION_MS,
+            duration: FADE_ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
     }
@@ -66,12 +67,12 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
     function collapse() {
         Animated.spring(height, {
             toValue: windowWidth / COLLAPSED_CARD_HEIGHT_PROPORTION,
-            duration: ANIMATION_DURATION_MS,
+            duration: EXPAND_ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
         Animated.timing(fade, {
             toValue: HIDDEN,
-            duration: ANIMATION_DURATION_MS,
+            duration: FADE_ANIMATION_DURATION_MS,
             useNativeDriver: false,
         }).start();
     }
@@ -110,7 +111,6 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             flexDirection: 'row',
             justifyContent: 'space-between',
             height: windowWidth / 4.7,
-            backgroundColor: 'pink',
         },
         footer: {
             display: 'flex',
@@ -118,7 +118,6 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             justifyContent: 'center',
             padding: 10,
             paddingTop: 0,
-            backgroundColor: 'red',
         },
         textArea: {
             color: '#000',
@@ -181,7 +180,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                 <Animated.View style={{ height: height, ...styles.bodyContainer }}>
 
                     {/* card color */}
-                    {/* <View style={styles.cardColor}><Text></Text></View> */}
+                    <View style={styles.cardColor}><Text></Text></View>
 
                     {/* notification content */}
                     <View style={{ padding: 0 }}>
@@ -191,18 +190,18 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                                     <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
                                         {user}
                                     </Text>  
-                                    {/* <Text>
+                                    <Text>
                                         {notificationMessage}
-                                    </Text> */}
+                                    </Text>
                                 </View>
                                 
-                                {/* <Text style={{ fontSize: 12, color: '#bbbbbb' }}>
+                                <Text style={{ fontSize: 12, color: '#bbbbbb' }}>
                                     23m ago
-                                </Text> */}
+                                </Text>
                             </View>
-                            {/* <View style={styles.imageContainer}>
+                            <View style={styles.imageContainer}>
                                 <Image style={styles.image} source={image} />
-                            </View> */}
+                            </View>
                         </View>
                         
                         
