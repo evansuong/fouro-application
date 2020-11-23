@@ -4,6 +4,7 @@ import NotificationCard from 'components/NotificationCard';
 import { DimensionContext } from '../../contexts/DimensionContext'
 
 import { useFocusEffect } from '@react-navigation/native';
+import NotificationHeader from 'components/headers/NotificationsHeader';
 
 // temorary test data to simulate backend notification data 
 const pic = require('../../../assets/profilePic.jpg')
@@ -83,6 +84,7 @@ export default function NotificationPage({ navigation }) {
     // map every notification entry to a notification panel element 
     return (
         <View style={styles.notificationList}>
+            <NotificationHeader />
             <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
                 {notifications.map((data, index) => (
                     data.type === 'request' ? 

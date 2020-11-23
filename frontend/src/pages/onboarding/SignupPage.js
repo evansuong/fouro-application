@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-// import SignupAPI from 'backend/model/account/SignUp';
-// import UsersAPI from 'backend/model/Users';
+// import SignupAPI from 'backend/routes/SignUp';
+// import UsersAPI from 'backend/routes/Users';
 import { useIsFocused } from '@react-navigation/native';
 
 
@@ -36,7 +36,8 @@ export default function SignupPage({ navigation }) {
     // const createdInFS = await SignupAPI.createUserInCollection(newUser, emailField, passwordField);
     // if (registered && createdInFS) {
     //   setMounted(false);
-    //   navigation.navigate('Name Page');
+    console.log('hey')
+    navigation.navigate('Name Page');
     // } else {
     //   setSigningIn(false);
     //   console.log(`There was an error signing in. Booleans: 
@@ -46,7 +47,7 @@ export default function SignupPage({ navigation }) {
 
   const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
-  const isFocused = useIsFocused();
+  // const isFocused = useIsFocused();
 
   const checkLength = () => {
     if (passwordField.length < 6) {
@@ -148,11 +149,11 @@ export default function SignupPage({ navigation }) {
           </View>
         }
         {  
-          checkEmailFilled() &&
-          checkPasswordFilled() && 
-          checkEmailValid() &&
-          passwordMatch() && 
-          checkLength() &&
+          // checkEmailFilled() &&
+          // checkPasswordFilled() && 
+          // checkEmailValid() &&
+          // passwordMatch() && 
+          // checkLength() &&
           <LinkedButton
             text='SUBMIT'
             color='#FFC24A'
