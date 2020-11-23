@@ -18,23 +18,23 @@ const LoginAPI = {
 
         switch (error.code) {
           case "auth/invalid-email":
-            alert("Invalid email.");
+            console.log("Invalid email.");
             break;
 
           case "auth/user-disabled":
-            alert("User disabled.");
+            console.log("User disabled.");
             break;
 
           case "auth/user-not-found":
-            alert("User not found.");
+            console.log("User not found.");
             break;
 
           case "auth/wrong-password":
-            alert("Incorrect password.");
+            console.log("Incorrect password.");
             break;
 
           default:
-            alert(errorMessage);
+            console.log(errorMessage);
             break;
         }
 

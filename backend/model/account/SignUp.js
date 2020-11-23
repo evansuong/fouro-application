@@ -25,20 +25,20 @@ const SignupAPI = {
 
         switch (error.code) {
           case "auth/email-already-in-use":
-            alert("The email is already in use.");
+            console.log("The email is already in use.");
             break;
 
           case "auth/invalid-email":
-            alert("The email is invalid.");
+            console.log("The email is invalid.");
             break;
 
           case "auth/weak-password":
-            alert("The password is too weak.");
+            console.log("The password is too weak.");
             break;
 
           case "auth/operation-not-allowed":
           default:
-            alert(errorMessage);
+            console.log(errorMessage);
             break;
         }
 
