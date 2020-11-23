@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { StyleSheet, View, Animated } from 'react-native';
+import { StyleSheet, Easing, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DimensionContext } from '../contexts/DimensionContext';
 
@@ -16,16 +16,15 @@ export default function Background({ page }) { //comment
   const { windowWidth, windowHeight } = useContext(DimensionContext)
 
   const backgroundState = useRef(new Animated.Value(1)).current;
-  console.log('ey')
   
   useEffect(() => {
     console.log(page)
     if (page === 'Friends') {
-      shiftBackground(0)
+      shiftBackground(-400)
     } else if (page === 'Home') {
-      shiftBackground(-100)
-    } else {
-      shiftBackground(-200)
+      shiftBackground(-600)
+    } else if (page === 'Notification') {
+      shiftBackground(-950)
     }
   }, [page])
 
@@ -42,7 +41,7 @@ export default function Background({ page }) { //comment
       right: 0,
       top: 0,
       height: windowHeight,
-      width: windowHeight,
+      width: windowHeight * 2,
     },
   })
   
@@ -51,19 +50,19 @@ export default function Background({ page }) { //comment
     // Will change fadeAnim value to 1 in 5 seconds
     Animated.timing(backgroundState, {
       toValue: x,
-      duration: 500,
-      useNativeDriver: false,
+      duration: 2500,
+      easing: Easing.inOut(Easing.sin),
+      useNativeDriver: true,
     }).start();
-    
   }
   
   return (
-    <Animated.View style={{ ...styles.container, left: backgroundState }}>
+    <Animated.View style={{ ...styles.container, transform: [{ translateX: backgroundState }] }}>
       <LinearGradient
-        colors={['rgba(240,240,0,0.8)', 'rgba(255,80,0,1)']}
+        colors={['#FB7250DD', '#FFC24ACC', '#FFC24ACC', '#FB7250DD']}
         style={styles.linearGradient}
-        start={[.2, .7]}
-        end={[1, .4]}
+        start={[.4, .2]}
+        end={[.8, .8]}
       />
     </Animated.View>
   );
