@@ -127,6 +127,7 @@ const UpdateHugAPI = {
     dropAHug: function (requestId, hugId) {
         // TODO: delete requestId?
         // TODO: delete the document corresponding to this hug in the sender's user_hugs
+        // TODO: delete the document corresponding to this hug in the receiver's user_hugs
         // TODO: Remove hug images from storage
         // TODO: Loop through each element in the images array of hugId
         // Create a root reference in firebase storage
