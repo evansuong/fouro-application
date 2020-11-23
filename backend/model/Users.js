@@ -52,13 +52,13 @@ const UsersAPI = {
 
   // returns users profile information in an object
   // takes in signed-in user 
-  getUserProfile: function (current_user) {
+  getUserProfile: async function (current_user) {
 
     var userDocRef = usersCollection.doc(current_user.uid);
     var userProfile;
 
     // access document
-    userDocRef.get().then(function(userDoc) {
+    await userDocRef.get().then(function(userDoc) {
       if (userDoc.exists) {
         // set userProfile to retrieved data
         // not sure this is how to retrieve data
@@ -72,12 +72,14 @@ const UsersAPI = {
         // no data under uid
         userProfile = null;
       }
+
     }).catch(function(error) {
       console.log("Error getting document: ", error);
       userProfile = null;
     });
 
-    return userProfile;
+    return new Promise((resolve,reject) => resolve(userProfile));
+
   },
 
   // TODO: Need to fix for testing purposes
@@ -104,7 +106,7 @@ const UsersAPI = {
       .doc(current_user.uid)
       .update(user) // set uid document to new user values
       .then(() => {
-        console.log(`Updated user with ID: ${current_user.uid}\n with data: ${user}`);
+        console.log(`Updated user with ID: ${current_user.uid}\n with data: ${JSON.stringify(user)}`);
         success = true;
       })
       .catch((error) => {

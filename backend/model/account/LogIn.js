@@ -4,14 +4,15 @@ var firebase = require("../../firebase/config");
 require("firebase/auth");
 
 const LoginAPI = {
-  loginUser: function (email, password) {
-    let loggedin = false;
-    firebase
+  loginUser: async function (email, password) {
+    var loggedin = false;
+    var current_user;
+    await firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         loggedin = true;
-        return firebase.auth().currentUser;
+        current_user = firebase.auth().currentUser;
       })
       .catch(function (error) {
         loggedin = false;
@@ -40,7 +41,10 @@ const LoginAPI = {
         }
 
         console.log(error);
-        return null;
+        current_user = null;
+      });
+      return new Promise((resolve, reject) => {
+        resolve(current_user);
       });
   },
 };

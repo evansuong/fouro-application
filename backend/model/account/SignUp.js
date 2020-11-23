@@ -1,22 +1,17 @@
 // SignUp used for signing up users into Firebase Authentication
 var firebase = require("../../firebase/config");
 require("firebase/auth");
-//require("firebase/firestore");
-
-//const db = firebase.firestore();
 
 const SignupAPI = {
-  registerUser: function (email, password) {
-    let registered = false;
-    let createdUser;
-    firebase
+  registerUser: async function (email, password) {
+    var registered = false;
+    var current_user;
+    await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((user) => {
-        createdUser = user;
+      .then(() => {
         registered = true;
-        // console.log(`Registered: ${user}`);
-        return firebase.auth().currentUser;
+        current_user = firebase.auth().currentUser;
       })
       .catch(function (error) {
         console.log("error");
@@ -44,7 +39,11 @@ const SignupAPI = {
         }
 
         console.log(error);
-        return null;
+        current_user = null;
+      });
+
+      return new Promise((resolve, reject) => {
+        resolve(current_user);
       });
   } 
 };
