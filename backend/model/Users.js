@@ -122,7 +122,7 @@ const UsersAPI = {
     // create a cloud storage refrence
     var storageRef = firebase
       .storage()
-      .ref("profilePictures/" + user.uid + "/" + file.name);
+      .ref("profile_pictures/" + user.uid + "/" + file.name);
 
     // save to cloud storage
     var task = storageRef.put(file);
