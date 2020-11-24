@@ -4,6 +4,10 @@ var firebase = require("../firebase/config");
 require("firebase/firestore");
 require("firebase/auth");
 
+
+// Firestore
+const db = firebase.firestore();
+const users = db.collection("users");
 // Firestore
 const NotificationsAPI = {
     getNotifications: function () {
@@ -35,10 +39,42 @@ const NotificationsAPI = {
 };
 
 const RequestsAPI = {
-    sendFriendRequest: function (userId) {},
+    sendFriendRequest: function (userId) {
+        //Set current user
+        const currUser = firebase.auth().currentUser;
+        //Gets the time that the notification is sent
+        var dateTime = db.dateTime.now();
+        //navigates to current users notification collection and updates with 
+        // the current time, friend_id, and type
+        db
+            .collection("users")
+            .doc(userId)
+            .collection("notifications")
+            .add({
+                type : "friend",
+                date_time : dateTime,
+                friend_id : currUser.uid
+                
+            });
+    },
 
-    createHugRequest(friendId, hugId) {},
-};
+    sendHugRequest(friendId, hugId) {
+         //Set current user
+         const currUser = firebase.auth().currentUser;
+         //Gets the time that the notification is sent
+         var dateTime = db.dateTime.now();
+         db
+            .collection("users")
+            .doc(friendId)
+            .collection("notifications")
+            .add({
+                type : "hug",
+                hug_id : hugId,
+                date_time : dateTime,
+                user_id : currUser.uid
+            });
+    },
+}
 
 // Export the module
 module.exports = { NotificationsAPI, RequestsAPI }; // awaiting to be filled
