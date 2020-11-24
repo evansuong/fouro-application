@@ -37,9 +37,9 @@ export default function MainNavPage() {
     
     return (
         <>
-            <View style={styles.background}>
+            {/* <View style={styles.background}>
                 <Background page={routename}/>
-            </View>
+            </View> */}
             <Tab.Navigator
                 sceneContainerStyle={styles.tabScreen}
                 style={styles.tabNav}

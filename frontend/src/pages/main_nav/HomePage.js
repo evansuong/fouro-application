@@ -1,5 +1,6 @@
-import { StyleSheet, Button, Text, View, Dimensions, ScrollView } from 'react-native'
-import React, {useEffect} from 'react'
+import { StyleSheet, Button, Text, View, Dimensions, ScrollView, Image } from 'react-native'
+import React, {useEffect, useContext} from 'react'
+import { DimensionContext } from '../../contexts/DimensionContext'
 
 import AppStyles from '../../AppStyles'
 
@@ -8,6 +9,9 @@ import HugCard from 'components/HugCard'
 
 
 export default function HomePage({ navigation }) {
+
+  const gradient = require('assets/gradients/middle.png')
+  const { windowWidth, windowHeight } = useContext(DimensionContext)
 
   function buildTestData(name, text, img, id) {
     return {
@@ -28,6 +32,12 @@ export default function HomePage({ navigation }) {
 
     return (
       <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
+        {/* background */}
+        <Image
+                source={gradient}
+                style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
+            />
+
           <Button 
             title="create hug" 
             onPress={() => navigation.navigate('Create Hug')}
@@ -65,3 +75,9 @@ export default function HomePage({ navigation }) {
       </View>
     )
 }
+
+const styles = StyleSheet.create({
+  background: {
+      position: 'absolute',
+  }
+});

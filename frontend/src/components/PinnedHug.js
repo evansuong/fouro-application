@@ -4,9 +4,8 @@ import { DimensionContext } from '../contexts/DimensionContext';
 import pinIcons from '../../assets/pinIcons/pinIcons'
 
 function randomPinIcon() {
-    const randNum = Math.floor(Math.random() * 41)
-    console.log(randNum)
-    return pinIcons.pinIcons[randNum]    
+    const randNum = Math.floor(Math.random() * 40)
+    return pinIcons.pinIcons[randNum]
 }
 
 export default function PinnedHug( { navigation, unpin, picture, date, friendName, id } ) {

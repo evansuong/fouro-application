@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, PickerIOSItem, LayoutAnimation } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, PickerIOSItem, LayoutAnimation, Image } from 'react-native';
 import NotificationCard from 'components/NotificationCard';
 import { DimensionContext } from '../../contexts/DimensionContext'
 
@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 // temorary test data to simulate backend notification data 
 const pic = require('../../../assets/profilePic.jpg')
+const gradient = require('assets/gradients/right.png')
    
 function buildTestData(type, user, img, id) {
     return {
@@ -81,12 +82,22 @@ export default function NotificationPage({ navigation }) {
             alignItems: 'center',
             minHeight: windowHeight - 20,
             marginTop: 70,
+        },
+        background: {
+            position: 'absolute'
         }
     })
     
     // map every notification entry to a notification panel element 
     return (
         <View style={styles.notificationList}>
+            {/* background */}
+            <Image
+                source={gradient}
+                style={[styles.background, { width: windowWidth, height: windowHeight }]}
+            />
+
+            {/* actual list */}
             <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
                 {notifications.map((data, index) => (
                     data.type === 'request' ? 
