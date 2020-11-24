@@ -16,7 +16,7 @@ var Hugs = require("../model/Hugs");
 
 // Hugs
 
-//updateHugUsers(hugId)
+// Get a field from top level hugs collection
 db.collection("hugs")
     .doc("hug1")
     .get()

@@ -31,18 +31,74 @@ const HugsAPI = {
         var bytes = new Uint8Array(image);
         // TODO: not sure if var is needed
         var uploadTask = storageRef.child(imageName).put(bytes);
+        // Listen for state changes, errors, and completion of the upload
+        uploadTask.on(
+            firebase.storage.TaskEvent.STATE_CHANGED,
+            function (snapshot) {
+                // Get task prograss, including the number of bytes uploaded and the total number of bytes to be uploaded
+                var progress =
+                    (snapshot.bytesTrasferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED:
+                        console.log("Upload is paused");
+                        break;
+                    case firebase.storage.TaskState.RUNNING:
+                        console.log("Upload is running");
+                        break;
+                }
+            },
+            function (error) {
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                    case "storage/unauthorized":
+                        // User doesn't have permission to access the object
+                        break;
+
+                    case "storage/canceled":
+                        // User canceled the upload
+                        break;
+
+                    case "storage/unknown":
+                        // Unknown error occurred, inspect error.serverResponse
+                        break;
+                }
+            },
+            function () {
+                //Upload completed successfully, now we can get the download URL
+                uploadTask.snapshot.ref
+                    .getDownloadURL()
+                    .then(function (downloadURL) {
+                        console.log("File available at", downloadURL);
+                        // Add fields to the top level "hugs" collection and store the reference
+                        // Save a reference to the top level hug with an autoID (I think)
+                        var topLevelHug = db.collection("user_hugs").doc();
+                        topLevelHug.set({
+                            completed: false,
+                            date_time: dateTime,
+                            receiver_description: "",
+                            sender_description_: message,
+                            images: [downloadURL],
+                            receiver_id: friendId,
+                            sender_id: currUser.uid,
+                        });
+                    });
+            }
+        );
+        // COMMENTED OUT FOR NEW IMAGE UPLOAD ^^
         // Add fields to the top level "hugs" collection and store the reference
         // Save a reference to the top level hug with an autoID (I think)
-        var topLevelHug = db.collection("user_hugs").doc();
-        topLevelHug.set({
-            completed: false,
-            date_time: dateTime,
-            receiver_description: "",
-            sender_description_: message,
-            images: [uploadTask],
-            receiver_id: friendId,
-            sender_id: currUser.uid,
-        });
+        //var topLevelHug = db.collection("user_hugs").doc();
+        //topLevelHug.set({
+        //    completed: false,
+        //    date_time: dateTime,
+        //    receiver_description: "",
+        //    sender_description_: message,
+        //    images: [uploadTask],
+        //    receiver_id: friendId,
+        //    sender_id: currUser.uid,
+        //});
         // Add fields to currUser's hug auto-ID document
         users
             .doc(currUser.uid)
@@ -90,13 +146,66 @@ const UpdateHugAPI = {
         var bytes = new Uint8Array(image);
         // uploadTask is the ref to the image in GCP?
         var uploadTask = storageRef.child(imageName).put(bytes);
+        // Listen for state changes, errors, and completion of the upload
+        uploadTask.on(
+            firebase.storage.TaskEvent.STATE_CHANGED,
+            function (snapshot) {
+                // Get task prograss, including the number of bytes uploaded and the total number of bytes to be uploaded
+                var progress =
+                    (snapshot.bytesTrasferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED:
+                        console.log("Upload is paused");
+                        break;
+                    case firebase.storage.TaskState.RUNNING:
+                        console.log("Upload is running");
+                        break;
+                }
+            },
+            function (error) {
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                    case "storage/unauthorized":
+                        // User doesn't have permission to access the object
+                        break;
 
+                    case "storage/canceled":
+                        // User canceled the upload
+                        break;
+
+                    case "storage/unknown":
+                        // Unknown error occurred, inspect error.serverResponse
+                        break;
+                }
+            },
+            function () {
+                //Upload completed successfully, now we can get the download URL
+                uploadTask.snapshot.ref
+                    .getDownloadURL()
+                    .then(function (downloadURL) {
+                        console.log("File available at", downloadURL);
+                        db.collection("hugs")
+                            .doc(hugId)
+                            .update({
+                                completed: true,
+                                description_receiver: message,
+                                images: db.FieldValue.arrayUnion(downloadURL),
+                            });
+                    });
+            }
+        );
+
+        // COMMENTED THIS OUT FOR NEW IMAGE UPLOAD ^^
         // hugId is a refernce to the top level hug
-        hugId.update({
-            completed: true,
-            description_receiver: message,
-            images: db.FieldValue.arrayUnion(uploadTask), //not sure how arrayUnion works
-        });
+        //db.collection("hugs")
+        //    .doc(hugId)
+        //    .update({
+        //        completed: true,
+        //        description_receiver: message,
+        //        images: db.FieldValue.arrayUnion(uploadTask), //not sure how arrayUnion works
+        //    });
 
         // Call updateHugUsers()
         this.updateHugUsers(hugId);
@@ -130,8 +239,14 @@ const UpdateHugAPI = {
         // TODO: delete the document corresponding to this hug in the receiver's user_hugs
         // TODO: Remove hug images from storage
         // TODO: Loop through each element in the images array of hugId
-        // Create a root reference in firebase storage
-        var storageRef = firebase.storage().ref();
+        // Every time we get another HTTPS URL from images, we need to make an httpsReference
+        // and then delete that image in firebase storage
+        // Create a reference to firebase storage
+        var storage = firebase.storage();
+        // Create a reference from a HTTPS URL
+        var httpsReference = storage.refFromURL(
+            db.collection("hugs").doc(hugId).get("")
+        );
         // TODO: .delete().then(???)
         storageRef.child(imageName).delete().then();
 
@@ -162,7 +277,9 @@ const ViewHugAPI = {
     // TODO: delete one of the versions. not sure how to return multiple docs?
     getUserHugs: function () {
         // GET ALL VERSION
-        db.doc(currUser.uid)
+        var hugsList;
+        db.collection("users")
+            .doc(currUser.uid)
             .collection("user_hugs")
             .get()
             .then(function (querySnapshot) {
@@ -176,6 +293,7 @@ const ViewHugAPI = {
 
         // PAGINATED VERSION
         var first = db
+            .collection("users")
             .doc(currUser.uid)
             .collection("user_hugs")
             .orderBy("date_time")
@@ -187,8 +305,9 @@ const ViewHugAPI = {
             console.log("last", lastVisible);
 
             // Construct a new query starting at this document,
-            // get the next 25 cities.
+            // get the next 25 hugs.
             var next = db
+                .collection("users")
                 .doc(currUser.uid)
                 .collection("user_hugs")
                 .orderBy("date_time")
