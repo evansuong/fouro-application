@@ -24,7 +24,7 @@ const HugsAPI = {
         // Create a root reference in firebase storage
         var storageRef = firebase.storage().ref();
         // Create a unique image ID
-        var imageName = "images/" + dateTimeString;
+        var imageName = "hugs/" + dateTimeString;
         // Create a reference to the hug image (use when we download?)
         // var hugImageRef = storageRef.child(imageName)
         // Convert the byte array image to Uint8Array
@@ -139,7 +139,7 @@ const UpdateHugAPI = {
         // Create a root reference
         var storageRef = firebase.storage().ref();
         // Create a unique image ID
-        var imageName = "images/" + dateTimeString;
+        var imageName = "hugs/" + dateTimeString;
         // Create a reference to the hug image (use when we download?)
         // var hugImageRef = storageRef.child(imageName)
         // Convert the byte array image to Uint8Array
@@ -233,9 +233,19 @@ const UpdateHugAPI = {
 
     // hugId is the global hug.
     // NOT SURE if hugId.delete is okay bc idk what hugId really is...
+    // MAKE THIS userHugId ??????????
     dropAHug: function (requestId, hugId) {
-        // TODO: delete requestId?
+        // delete requestId
+        db.collection("users")
+            .doc(currUser.uid)
+            .collection("notifications")
+            .doc(requestId)
+            .delete()
+            .then();
         // TODO: delete the document corresponding to this hug in the sender's user_hugs
+        let sendersUserHug = db
+            .collection("users")
+            .doc(db.collection("hugs").doc(hugId).get("sender_id"));
         // TODO: delete the document corresponding to this hug in the receiver's user_hugs
         // TODO: Remove hug images from storage
         // TODO: Loop through each element in the images array of hugId
