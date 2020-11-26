@@ -1,3 +1,4 @@
+import { DimensionContext } from '../../contexts/DimensionContext'
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { 
   StyleSheet, 
@@ -10,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Switch,
+  Image
 } from 'react-native'
 
 import AppStyles from '../../AppStyles'
@@ -33,6 +35,9 @@ export default function HomePage({ navigation }) {
   const width = useRef(new Animated.Value(70)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
+
+  const gradient = require('assets/gradients/middle.png')
+  const { windowWidth, windowHeight } = useContext(DimensionContext)
 
   function buildTestData(name, text, img, id) {
     return {
@@ -129,7 +134,25 @@ export default function HomePage({ navigation }) {
   })
 
     return (
-      <View style={{...AppStyles.navPageContainer, marginTop: 90}}>
+      <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
+        {/* background */}
+        <Image
+                source={gradient}
+                style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
+            />
+
+          <Button 
+            title="create hug" 
+            onPress={() => navigation.navigate('Create Hug')}
+          />
+          <Button 
+            title="add friend" 
+            onPress={() => navigation.navigate('Add Friend')}
+          />
+          <Button
+            title='launch page'
+            onPress={() => navigation.navigate('Launch Page')}
+          />
 
         {/* Light and Dark Mode Switch */}
         <View style={styles.switchContainer}>
@@ -200,3 +223,9 @@ export default function HomePage({ navigation }) {
       </View>
     )
 }
+
+const styles = StyleSheet.create({
+  background: {
+      position: 'absolute',
+  }
+});
