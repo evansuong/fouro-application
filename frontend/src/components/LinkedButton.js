@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Button, Text, TouchableWithoutFeedback, Animated } from 'react-native';
-import AppStyles from '../AppStyles';
-
+import { StyleSheet, Text, TouchableWithoutFeedback, Animated } from 'react-native';
 
 /**
  * A custom-made button used for page routing
