@@ -207,6 +207,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                         
                         {/* footer button container */}
                         <View style={styles.footer}>
+                          {/* <Text>hello</Text> */}
                             {/* accept button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 

@@ -99,13 +99,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    mainNavContainer: {
-    }
-    // linearGradient: {
-    //     position: 'absolute',
-    //     left: 0,
-    //     right: 0,
-    //     top: 0,
-    //     height: windowHeight,
-    // },
 })

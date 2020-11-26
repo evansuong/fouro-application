@@ -4,6 +4,7 @@ import NotificationCard from 'components/NotificationCard';
 import { DimensionContext } from '../../contexts/DimensionContext'
 
 import { useFocusEffect } from '@react-navigation/native';
+import NotificationHeader from 'components/headers/NotificationsHeader';
 
 // temorary test data to simulate backend notification data 
 const pic = require('../../../assets/profilePic.jpg')
