@@ -1,11 +1,12 @@
 // Hugs file for Creating, Reading, Updating, and Deleting Hugs
-var firebase = require("../firebase/config");
+var firebase = require("../firebase/admin");
 require("firebase/firestore");
 require("firebase/auth");
 require("firebase/storage");
 
 //import users
 var Users = require("../model/Users");
+const Notifications = require("./Notifications");
 
 // Firestore
 const db = firebase.firestore();
@@ -24,13 +25,15 @@ const HugsAPI = {
         // Create a root reference in firebase storage
         var storageRef = firebase.storage().ref();
         // Create a unique image ID
-        var imageName = "hugs/" + dateTimeString;
+        var imageName = "hug_images/" + dateTimeString;
         // Create a reference to the hug image (use when we download?)
         // var hugImageRef = storageRef.child(imageName)
         // Convert the byte array image to Uint8Array
         var bytes = new Uint8Array(image);
         // TODO: not sure if var is needed
         var uploadTask = storageRef.child(imageName).put(bytes);
+        // Save a reference to the top level hug with an autoID (I think)
+        var topLevelHug = db.collection("hugs").doc(); //possible problems if we make a doc every time
         // Listen for state changes, errors, and completion of the upload
         uploadTask.on(
             firebase.storage.TaskEvent.STATE_CHANGED,
@@ -71,9 +74,8 @@ const HugsAPI = {
                     .getDownloadURL()
                     .then(function (downloadURL) {
                         console.log("File available at", downloadURL);
-                        // Add fields to the top level "hugs" collection and store the reference
-                        // Save a reference to the top level hug with an autoID (I think)
-                        var topLevelHug = db.collection("user_hugs").doc();
+                        // Add fields to the top level "hugs" collection
+                        // and store the reference
                         topLevelHug.set({
                             completed: false,
                             date_time: dateTime,
@@ -82,6 +84,7 @@ const HugsAPI = {
                             images: [downloadURL],
                             receiver_id: friendId,
                             sender_id: currUser.uid,
+                            hug_id: topLevelHug.id,
                         });
                     });
             }
@@ -100,13 +103,16 @@ const HugsAPI = {
         //    sender_id: currUser.uid,
         //});
         // Add fields to currUser's hug auto-ID document
+
+        // MAKE SURE THIS HAPPENS AFTER WE MADE THE TOP LEVEL HUG
         users
             .doc(currUser.uid)
             .collection("user_hugs")
-            .add({
+            .doc(topLevelHug)
+            .set({
                 date_time: dateTime, //dateTime is an actual DateTime object (timestamp?)
                 friend: friendId,
-                hug_id: topLevelHug, //Use the ref to the top level hug ^^
+                hug_id: topLevelHug.id, //Use the ref to the top level hug ^^
                 pinned: false,
             })
             .then(function (docRef) {
@@ -117,10 +123,11 @@ const HugsAPI = {
             });
         friendId
             .collection("user_hugs")
-            .add({
+            .doc(topLevelHug)
+            .set({
                 date_time: dateTime, //dateTime is an actual DateTime object (timestamp?)
                 friend: friendId,
-                hug_id: topLevelHug, //Use the ref to the top level hug ^^
+                hug_id: topLevelHug.id, //Use the ref to the top level hug ^^
                 pinned: false,
             })
             .then(function (docRef) {
@@ -139,7 +146,7 @@ const UpdateHugAPI = {
         // Create a root reference
         var storageRef = firebase.storage().ref();
         // Create a unique image ID
-        var imageName = "hugs/" + dateTimeString;
+        var imageName = "hug_images/" + dateTimeString;
         // Create a reference to the hug image (use when we download?)
         // var hugImageRef = storageRef.child(imageName)
         // Convert the byte array image to Uint8Array
@@ -209,13 +216,20 @@ const UpdateHugAPI = {
 
         // Call updateHugUsers()
         this.updateHugUsers(hugId);
-        // TODO: call deleteHugRequest
-        //deleteHugRequest(TODO)
+        // call deleteNotification
+        // Getting the requestId may be questionable
+        currUserNotifRef = db
+            .colection("users")
+            .doc(currUser.uid)
+            .collection("notifications");
+        requestIdRef = currUserNotifRef.where("hug_id", "==", hugId);
+        Notifications.NotificationsAPI.deleteNotification(requestIdRef);
     },
 
     updateHugUsers: function (hugId) {
         // Increment hug count for sender
-        hugId
+        db.collection("hugs")
+            .doc(hugId)
             .get()
             .then(function (doc) {
                 if (doc.exists) {
@@ -235,6 +249,8 @@ const UpdateHugAPI = {
     // NOT SURE if hugId.delete is okay bc idk what hugId really is...
     // MAKE THIS userHugId ??????????
     dropAHug: function (requestId, hugId) {
+        // Set ref for top level hug
+        var topLevelHug = db.collection("hugs").doc(hugId);
         // delete requestId
         db.collection("users")
             .doc(currUser.uid)
@@ -242,26 +258,61 @@ const UpdateHugAPI = {
             .doc(requestId)
             .delete()
             .then();
-        // TODO: delete the document corresponding to this hug in the sender's user_hugs
-        let sendersUserHug = db
-            .collection("users")
-            .doc(db.collection("hugs").doc(hugId).get("sender_id"));
-        // TODO: delete the document corresponding to this hug in the receiver's user_hugs
-        // TODO: Remove hug images from storage
+        // delete the sender's user_hug
+        db.collection("users")
+            .doc(db.collection("hugs").doc(hugId).get("sender_id"))
+            .delete()
+            .then();
+        // delete the receiver's user_hug
+        db.collection("users")
+            .doc(db.collection("hugs").doc(hugId).get("receiver_id"))
+            .delete()
+            .then();
+        // Remove hug images from storage
+
         // TODO: Loop through each element in the images array of hugId
-        // Every time we get another HTTPS URL from images, we need to make an httpsReference
+        db.collection("hugs")
+            .doc(hugId)
+            .get("images")
+            .then(function (querySnapshot) {
+                querySnapshot.forEach(function (image) {
+                    // Every time we get another HTTPS URL from images, we need to make an httpsReference
+                    // Create a reference from a HTTPS URL
+                    var httpsReference = storage.refFromURL(image);
+                    httpsReference.delete().then();
+                });
+                //res.json(results)
+                return results;
+            });
+
         // and then delete that image in firebase storage
         // Create a reference to firebase storage
         var storage = firebase.storage();
-        // Create a reference from a HTTPS URL
-        var httpsReference = storage.refFromURL(
-            db.collection("hugs").doc(hugId).get("")
-        );
+        var imgStorageRef = storage.child("hug_images");
+
         // TODO: .delete().then(???)
         storageRef.child(imageName).delete().then();
 
         // Delete the global hug document
-        hugId.delete().then();
+        topLevelHug.delete().then();
+    },
+
+    deleteAllImagesInArray: function (imagesArray) {
+        var storage = firebase.storage();
+        // Loop through each element in the images array of hugId
+        imagesArray.forEach(function (image) {
+            // Every time we get another HTTPS URL from images, we need to make an httpsReference
+            // Create a reference from a HTTPS URL
+            var httpsReference = storage.refFromURL(image);
+            httpsReference.delete().then();
+        });
+    },
+
+    deleteImage: function (imageHttps) {
+        var storage = firebase.storage();
+        // Create a root reference in firebase storage
+        var httpsReference = storage.refFromURL(imageHttps);
+        httpsReference.delete().then();
     },
 };
 
@@ -287,42 +338,40 @@ const ViewHugAPI = {
     // TODO: delete one of the versions. not sure how to return multiple docs?
     getUserHugs: function () {
         // GET ALL VERSION
-        var hugsList;
+        var results = [];
         db.collection("users")
             .doc(currUser.uid)
             .collection("user_hugs")
             .get()
             .then(function (querySnapshot) {
                 querySnapshot.forEach(function (doc) {
-                    //doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, "=>", doc.data());
-                    //this should be like?
-                    return doc.data();
+                    results = [...results, doc.data()];
                 });
+                //res.json(results)
+                return results;
             });
-
         // PAGINATED VERSION
-        var first = db
-            .collection("users")
-            .doc(currUser.uid)
-            .collection("user_hugs")
-            .orderBy("date_time")
-            .limit(25);
-        return first.get().then(function (documentSnapshots) {
-            // Get the last visible document
-            var lastVisible =
-                documentSnapshots.docs[documentSnapshots.docs.length - 1];
-            console.log("last", lastVisible);
+        // var first = db
+        //     .collection("users")
+        //     .doc(currUser.uid)
+        //     .collection("user_hugs")
+        //     .orderBy("date_time")
+        //     .limit(25);
+        // return first.get().then(function (documentSnapshots) {
+        //     // Get the last visible document
+        //     var lastVisible =
+        //         documentSnapshots.docs[documentSnapshots.docs.length - 1];
+        //     console.log("last", lastVisible);
 
-            // Construct a new query starting at this document,
-            // get the next 25 hugs.
-            var next = db
-                .collection("users")
-                .doc(currUser.uid)
-                .collection("user_hugs")
-                .orderBy("date_time")
-                .limit(25);
-        });
+        //     // Construct a new query starting at this document,
+        //     // get the next 25 hugs.
+        //     var next = db
+        //         .collection("users")
+        //         .doc(currUser.uid)
+        //         .collection("user_hugs")
+        //         .orderBy("date_time")
+        //         .limit(25);
+        // });
     },
 };
 
