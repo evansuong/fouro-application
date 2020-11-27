@@ -85,14 +85,11 @@ export default function App() {
             component={LaunchPage}
             options={({navigation, route}) => headerOptions(false, navigation, route)}/>
 
-<<<<<<< Updated upstream
           <Stack.Screen 
             name='Pic Upload Page' 
             component={PicUploadPage}
             options={({navigation, route}) => headerOptions(false, navigation, route)}/>
-=======
-          <Stack.Screen name="Main Nav Page" component={MainNavPage} options={{ header: (props) => <Header {...props} navigation={this}/>, headerStyle: { backgroundColor: 'transparent' } }} />
->>>>>>> Stashed changes
+
 
           <Stack.Screen 
             name='Name Page' 
