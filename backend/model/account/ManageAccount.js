@@ -52,7 +52,7 @@ const ManageAccountAPI = {
   checkLoggedIn: function () {
     return user ? true : false; // currentUser is null if nobody is signed in.
   },
-/*
+  /*
   emailTaken: async function(email) {
     const response = users.where('email', '==', email);
     const query = await response.get();
@@ -60,13 +60,12 @@ const ManageAccountAPI = {
   },
 
   */
-  usernameTaken: async function(username) {
-    console.log('user input: ', username);
-    const response = users.where('username', '==', username);
+  usernameTaken: async function (username) {
+    console.log("user input: ", username);
+    const response = users.where("username", "==", username);
     const query = await response.get();
     return !query.empty;
-  }
-  
+  },
 };
 
 module.exports = ManageAccountAPI;
