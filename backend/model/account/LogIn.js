@@ -1,7 +1,9 @@
 // LogIn used to handle Firebase Authentication and logging
 // in users
 var firebase = require("../../firebase/config");
-require("firebase/auth");
+import "firebase/firestore";
+import "firebase/auth";
+// require("firebase/auth");
 
 const LoginAPI = {
   loginUser: async function (email, password) {

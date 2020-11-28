@@ -1,12 +1,14 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, PickerIOSItem, LayoutAnimation } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, PickerIOSItem, LayoutAnimation, Image } from 'react-native';
 import NotificationCard from 'components/NotificationCard';
 import { DimensionContext } from '../../contexts/DimensionContext'
 
 import { useFocusEffect } from '@react-navigation/native';
+import NotificationHeader from 'components/headers/NotificationsHeader';
 
 // temorary test data to simulate backend notification data 
 const pic = require('../../../assets/profilePic.jpg')
+const gradient = require('assets/gradients/right.png')
    
 function buildTestData(type, user, img, id) {
     return {
@@ -45,7 +47,10 @@ export default function NotificationPage({ navigation }) {
 
     function catchHug(id) {
         clearNotification(id)
-        navigation.navigate('Hug Info', id)
+        navigation.navigate('Hug Info', { 
+            page: 'Hug Info',
+            data: notifications.filter((item) => item.id === id)[0], 
+        })
         // signify hug as caught to the database
     }
 
@@ -76,13 +81,24 @@ export default function NotificationPage({ navigation }) {
             marginHorizontal: 5,
             display: 'flex',
             alignItems: 'center',
-            height: windowHeight,
+            minHeight: windowHeight - 20,
+            marginTop: 70,
+        },
+        background: {
+            position: 'absolute'
         }
     })
     
     // map every notification entry to a notification panel element 
     return (
         <View style={styles.notificationList}>
+            {/* background */}
+            <Image
+                source={gradient}
+                style={[styles.background, { width: windowWidth, height: windowHeight }]}
+            />
+
+            {/* actual list */}
             <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
                 {notifications.map((data, index) => (
                     data.type === 'request' ? 
