@@ -9,8 +9,10 @@ export function Header({ route }) {
     const [headerTitle, setHeaderTitle] = useState()
     const [headerButtons, setHeaderButtons] = useState([])
 
-    useEffect(() => {
+    // turn the switch into a mapping 
+    // standardize route param names
 
+    useEffect(() => {
 
         if (route.params) {
             console.log(route.params.page)
@@ -28,23 +30,22 @@ export function Header({ route }) {
             }
         }
        
-            const routeName = getFocusedRouteNameFromRoute(route)
-            console.log('routename: ', routeName)
+        const routeName = getFocusedRouteNameFromRoute(route)
+        console.log('routename: ', routeName)
 
-            switch(routeName) {
-                case "Home":
-                    setHeaderTitle('Home');
-                    break;
-                case "Friends":
-                    setHeaderTitle("Friends");
-                    setHeaderButtons(["searchBtn"])
-                    break;
-                case "Notifications":
-                    setHeaderTitle("Notifications");
-                    break;
-        }
-        
-    }, [route])
+        switch(routeName) {
+            case "Home":
+                setHeaderTitle('Hug Feed');
+                break;
+            case "Friends":
+                setHeaderTitle("Friends");
+                setHeaderButtons(["searchBtn"])
+                break;
+            case "Notifications":
+                setHeaderTitle("Notifications");
+                break;
+        } 
+    }, [route]);
   
     return (
         <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: 'transparent', fontSize: 20, justifyContent: 'center' }}>

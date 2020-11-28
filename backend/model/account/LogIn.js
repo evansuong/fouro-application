@@ -1,6 +1,8 @@
 // LogIn used to handle Firebase Authentication and logging in users
 var firebase = require("../../firebase/config");
-require("firebase/auth");
+import "firebase/firestore";
+import "firebase/auth";
+// require("firebase/auth");
 
 // Sorry I broke all of your code
 // - terry

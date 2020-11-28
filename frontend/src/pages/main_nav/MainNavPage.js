@@ -16,8 +16,6 @@ import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
 import Background from '../../components/Background';
 import customHeader from '../../components/Header';
 
-
-
 // TODO: follow the gradient thing
 export default function MainNavPage() {
 
@@ -39,9 +37,9 @@ export default function MainNavPage() {
     
     return (
         <>
-            <View style={styles.background}>
+            {/* <View style={styles.background}>
                 <Background page={routename}/>
-            </View>
+            </View> */}
             <Tab.Navigator
                 sceneContainerStyle={styles.tabScreen}
                 style={styles.tabNav}
@@ -54,7 +52,7 @@ export default function MainNavPage() {
                         icon = focused ? homeFocused : homeBlurred
                       } else if (route.name === 'Friends') {
                         icon = focused ? friendsFocused : friendsBlurred
-                      } else if (route.name === 'Notification') {
+                      } else if (route.name === 'Notifications') {
                         icon = focused ? notifFocused : notifBlurred
                       }
 
@@ -99,13 +97,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    mainNavContainer: {
-    }
-    // linearGradient: {
-    //     position: 'absolute',
-    //     left: 0,
-    //     right: 0,
-    //     top: 0,
-    //     height: windowHeight,
-    // },
 })
