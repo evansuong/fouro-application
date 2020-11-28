@@ -1,10 +1,9 @@
 // Users file for Creating, Reading, Updating, and Deleting Users
 // and User Profile Management
 var firebase = require("../firebase/config");
-// require("firebase/firestore");
-// require("firebase/auth");
-import "firebase/firestore";
-import "firebase/auth";
+require("firebase/firestore");
+require("firebase/auth");
+
 // Firestore
 const db = firebase.firestore();
 const usersCollection = db.collection("users");
@@ -97,12 +96,10 @@ const UsersAPI = {
 
     // initialize local object containing new user values
     const user = {
+      username: username, 
       first_name: firstName,
-      last_name: lastName,
-      username: username,
-    });
-  },
-
+      last_name: lastName
+    };
 
     // update document with data
     await usersCollection
@@ -136,14 +133,7 @@ const UsersAPI = {
       .update({
         profile_pic:  storageRef
       });
-  },
-
-  /*usernameTaken: async function(username) {
-    console.log('user input: ', username);
-    const response = users.where('username', '==', username);
-    const query = await response.get();
-    return !query.empty;
-  }*/
+  }
 };
  
 const HugCountAPI = {
@@ -168,7 +158,6 @@ const HugCountAPI = {
 
     return hug_count;
   },
-
 
   getUserHugStreak: function (current_user) {
     var userDocRef = usersCollection.doc(current_user.uid);
