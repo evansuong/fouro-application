@@ -136,7 +136,14 @@ const UsersAPI = {
       .update({
         profile_pic:  storageRef
       });
-  }
+  },
+
+  /*usernameTaken: async function(username) {
+    console.log('user input: ', username);
+    const response = users.where('username', '==', username);
+    const query = await response.get();
+    return !query.empty;
+  }*/
 };
  
 const HugCountAPI = {
