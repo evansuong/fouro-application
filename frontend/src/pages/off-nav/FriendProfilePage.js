@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import UserProfile from '../../components/UserProfile';
 import FriendProfileHeader from '../../components/headers/FriendProfileHeader'
 import HugCard from 'components/HugCard'
 // import { FlatList } from 'react-native-gesture-handler';
-// import { DimensionContext } from '../contexts/DimensionContext'
+import { DimensionContext } from '../../contexts/DimensionContext'
 
 function buildTestData(name, text, img, id) {
     return {
@@ -25,11 +25,13 @@ function buildTestData(name, text, img, id) {
 
 export default function FriendProfilePage({ navigation }) {
     const icon = require("assets/overflowMenuIcon.png");
-    // const {windowWidth, windowHeight} = useContext(DimensionContext)
+    const {windowWidth, windowHeight} = useContext(DimensionContext)
+
+    //const hugButtonWidth = windowWidth - 50;
+    //const hugButtonHeight = windowHeight / 8;
+
 
     const renderHug = (( item ) => {
-        //console.log(item)
-        //console.log("-------------------------------")
 
         return(
         <HugCard 
@@ -43,7 +45,7 @@ export default function FriendProfilePage({ navigation }) {
 
     return (
 
-        <View style={{ height: '100%', flex: 1 }}>
+        <View style={{ height: '100%', flex: 1, backgroundColor: 'white' }}>
             {/* <FriendProfileHeader 
                 navigation={navigation}
                 style={styles.header}
@@ -69,7 +71,13 @@ export default function FriendProfilePage({ navigation }) {
                     keyExtractor={(item) => item.hugId}
                 />
             </View>
-            
+
+            <TouchableOpacity 
+                style={[styles.hugButton, { height: 40 }]}
+                onPress={() => navigation.navigate('Create Hug')}
+            >
+                <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Hug</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -106,5 +114,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: 5,
         paddingBottom: 10
+    },
+    hugButton: {
+        backgroundColor: '#FB7250',
+        alignItems: 'center',
+        borderRadius: 20,
+        margin: 20,
+        //height: 40
+        
     }
 });

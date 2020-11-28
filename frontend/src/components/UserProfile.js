@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, Dimensions } from 'react-native';
 import AppStyles from '../AppStyles';
-const window = Dimensions.get('window')
-
-const screenWidth = window.width
+import { DimensionContext } from '../contexts/DimensionContext'
 
 export default function UserProfile({ profilePicture, userFirstLast, username }) {
   const userFirstLastDummy = userFirstLast
-  const usernameDummy = username  
-  
+  const usernameDummy = username
+  const {windowWidth, windowHeight} = useContext(DimensionContext)
+
   return (
     <View> 
-        <View style={styles.container}>
+        <View style={[styles.container, {width: windowWidth}]}>
             <Image
                 source={profilePicture}
                 style={styles.profilePicStyle}
@@ -29,8 +28,6 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 40, // added this
     overflow: 'hidden',
-    width: screenWidth,
-    justifyContent: 'center',
     alignItems: 'center',
     zIndex: -1,
     backgroundColor: 'transparent'
