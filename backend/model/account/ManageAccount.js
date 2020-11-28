@@ -6,20 +6,6 @@ require("firebase/auth");
 const ManageAccountAPI = {
   user: firebase.auth().currentUser,
 
-  logout: function () {
-    if (this.checkLoggedIn()) {
-      firebase
-        .auth()
-        .signOut()
-        .then(function () {
-          return true;
-        }) // user signed out successfully.
-        .catch(function (error) {
-          return false;
-        }); // an error happened.
-    }
-  },
-
   resetPassword: function () {
     if (this.checkLoggedIn()) {
       var auth = firebase.auth();
@@ -47,10 +33,6 @@ const ManageAccountAPI = {
           return false;
         }); // an error happened.
     }
-  },
-
-  checkLoggedIn: function () {
-    return user ? true : false; // currentUser is null if nobody is signed in.
   },
   
 };
