@@ -24,6 +24,15 @@ router.post("/createUser/:id", (req, res) => {
   res.status(200).json();
 });
 */
+router.post("/createUser/:id", (req, res) => {
+  var out = {
+    output: req.body.user,
+  };
+  var id = req.params.id;
+  console.log(id);
+  console.log(out.output);
+  res.status(200).json();
+});
 // Routes
 router.post("/createNewUser/:id", (req, res) => {});
 

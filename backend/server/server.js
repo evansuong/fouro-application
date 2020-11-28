@@ -30,7 +30,6 @@ app.use("/notifications", notifications);
 app.use("/users", users);
 
 // Server
-const http = require("http");
 const port = 3000;
 
 app.listen(port, () => {
