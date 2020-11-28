@@ -16,7 +16,6 @@ import {
 
 import AppStyles from '../../AppStyles'
 import { FlatList } from 'react-native-gesture-handler';
-import { DimensionContext } from '../../contexts/DimensionContext';
 
 import HugCard from 'components/HugCard'
 import HomeHeader from 'components/headers/HomePageHeader';
@@ -37,7 +36,6 @@ export default function HomePage({ navigation }) {
   const animationDuration = 150;
 
   const gradient = require('assets/gradients/middle.png')
-  const { windowWidth, windowHeight } = useContext(DimensionContext)
 
   function buildTestData(name, text, img, id) {
     return {
