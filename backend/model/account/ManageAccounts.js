@@ -1,6 +1,6 @@
 // ManageAccount file used for managing Firebase Authentication
 // and user accounts
-var firebase = require("../../firebase/config");
+var firebase = require("../../firebase/admin");
 require("firebase/auth");
 
 const ManageAccountAPI = {
