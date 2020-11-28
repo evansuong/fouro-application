@@ -18,7 +18,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
 
   const hugCardWidth = windowWidth - 20;
   const hugCardHeight = windowHeight / 4;
-  const hugDescMaxHeight = windowHeight / 7.3;
+  const hugDescMaxHeight = hugCardHeight / 2.5;
   const hugImageWidth = hugCardWidth / 4;
   const hugDescWidth = hugCardWidth / 1.5;
   const pinHeight = hugCardWidth / 13;
@@ -47,7 +47,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
       paddingLeft: 5,
     },
     outerImageContainer: {
-      marginRight: 20, 
+      marginRight: 10, 
     },
     pinContainer: {
       alignItems: 'center',
@@ -76,6 +76,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
         justifyContent: 'space-between',
     },
     textContainer: {
+      marginLeft: 15
     },
     pinIcon: {
         borderRadius: 50,
@@ -89,14 +90,14 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
         justifyContent: 'center',
     },
     name: {
-        margin: 10,
+        marginTop: 10,
+        marginLeft: 10,
+        marginBottom: 5,
         fontSize: 20,
         color: mode == 'dark' ? 'white' : 'black',
     },
     hugText: {
-        marginLeft: 10,
         fontSize: 15,
-        paddingTop: 10,
         color: mode == 'dark' ? 'white' : 'black',
     },
   })
@@ -118,21 +119,20 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
         {/* Everything else */}
         <View style={styles.outerContainer}>
           <View style={styles.bodyContainer}>
-            <View style={styles.textContainer}>
-              <View style={{ 
-                width: hugDescWidth,
-                overflow: 'hidden',
-                maxHeight: hugDescMaxHeight
-              }}>
-                <ScrollView 
-                  nestedScrollEnabled={true}
-                  persistentScrollbar={true}
-                >
-                  <Text style={styles.hugText}>
-                      {hugText}
-                  </Text>
-                </ScrollView>
-              </View>
+            <View style={[styles.textContainer, {
+              width: hugDescWidth,
+              overflow: 'hidden',
+              maxHeight: hugDescMaxHeight
+            }]}>
+              <ScrollView 
+                nestedScrollEnabled={true}
+                persistentScrollbar={true}
+                //contentContainerStyle={{backgroundColor: 'pink'}}
+              >
+                <Text style={styles.hugText}>
+                    {hugText}
+                </Text>
+              </ScrollView>
             </View>
 
             <TouchableOpacity 
@@ -141,6 +141,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
             >
               <View style={[styles.pinContainer, {
                 margin: 10,
+                marginLeft: 15,
                 width: pinHeight, 
                 height: pinHeight
               }]}>
