@@ -20,6 +20,7 @@ import HugCard from 'components/HugCard'
 import HomeHeader from 'components/headers/HomePageHeader';
 import Panel from 'components/StreakPanel';
 import CreateHugButton from 'components/CreateHugButton';
+import { DimensionContext } from '../../contexts/DimensionContext'; 
 
 // TODO: Move create hug button to the right side of the screen.
 // TODO: Fix button animation starting from far left of button
@@ -127,16 +128,19 @@ export default function HomePage({ navigation }) {
       justifyContent: 'space-between',
       width: windowWidth / 4,
       marginLeft: windowWidth / 2.7,
+    },
+    background: {
+      position: 'absolute',
     }
   })
 
     return (
       <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
           {/* background */}
-          {/* <Image
-              source={gradient}
-              style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
-          /> */}
+          <Image
+            source={gradient}
+            style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
+          />
 
           <Button 
             title="create hug" 
@@ -168,7 +172,7 @@ export default function HomePage({ navigation }) {
         >
           <ScrollView 
             contentContainerStyle={{alignItems: 'center'}}
-            style={{marginBottom: 90,}}
+            style={{marginBottom: 70,}}
           >
             {testData.map(hugData => (
               <HugCard 
@@ -216,9 +220,3 @@ export default function HomePage({ navigation }) {
       </View>
     )
 }
-
-const styles = StyleSheet.create({
-  background: {
-      position: 'absolute',
-  }
-});
