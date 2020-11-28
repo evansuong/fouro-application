@@ -15,7 +15,6 @@ import {
 
 import AppStyles from '../../AppStyles'
 import { FlatList } from 'react-native-gesture-handler';
-import { DimensionContext } from '../../contexts/DimensionContext';
 
 import HugCard from 'components/HugCard'
 import HomeHeader from 'components/headers/HomePageHeader';
