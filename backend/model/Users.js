@@ -19,27 +19,27 @@ const UsersAPI = {
 
   // Profile pic, friends, hugs, chatrooms, corkboard_id
   /*
-   * @Param: firebase::auth::User current_user - Current signed in user from firebase authentication
+   * @Param: string - Current User's uid (currentUser.uid)
    */
-  createNewUser: async function (current_user) {
+  createNewUser: async function (user_uid) {
     let created = false;
 
     // initialize local object containing initial user values
     const user = {
-      user_id: current_user.uid,
+      user_id: user_uid,
       username: "",
       first_name: "",
       last_name: "",
       profile_pic: "",
       day_hug_count: 0,
-      current_streak: 0
+      current_streak: 0,
     };
 
     await usersCollection
-      .doc(current_user.uid)
+      .doc(user_uid)
       .set(user) // set uid document to new user values
       .then(() => {
-        console.log(`User created with ID: ${current_user.uid}`);
+        console.log(`User created with ID: ${user_uid}`);
         created = true;
       })
       .catch((error) => {
@@ -47,46 +47,46 @@ const UsersAPI = {
         created = false;
       });
 
-    return created;
+    return { out: created };
   },
 
   // returns users profile information in an object
-  // takes in signed-in user 
-  getUserProfile: async function (current_user) {
-
-    var userDocRef = usersCollection.doc(current_user.uid);
+  // takes in signed-in user
+  getUserProfile: async function (user_uid) {
+    var userDocRef = usersCollection.doc(user_uid);
     var userProfile;
 
     // access document
-    await userDocRef.get().then(function(userDoc) {
-      if (userDoc.exists) {
-        // set userProfile to retrieved data
-        // not sure this is how to retrieve data
-        userProfile = {
-          username:     userDoc.get("username"),
-          first_name:   userDoc.get("first_name"),
-          last_name:    userDoc.get("last_name"),
-          profile_pic: userDoc.get("profile_pic")
-        };
-      } else {
-        // no data under uid
+    await userDocRef
+      .get()
+      .then(function (userDoc) {
+        if (userDoc.exists) {
+          // set userProfile to retrieved data
+          // not sure this is how to retrieve data
+          userProfile = {
+            username: userDoc.get("username"),
+            first_name: userDoc.get("first_name"),
+            last_name: userDoc.get("last_name"),
+            profile_pic: userDoc.get("profile_pic"),
+          };
+        } else {
+          // no data under uid
+          userProfile = null;
+        }
+      })
+      .catch(function (error) {
+        console.log("Error getting document: ", error);
         userProfile = null;
-      }
+      });
 
-    }).catch(function(error) {
-      console.log("Error getting document: ", error);
-      userProfile = null;
-    });
-
-    return new Promise((resolve,reject) => resolve(userProfile));
-
+    return userProfile;
   },
 
   // TODO: Need to fix for testing purposes
   // User and UID remains constant throughout expo session
   // In order to reset UID, close metro bundler and npm start again
   // TODO: Develop a SIGNOUT button ASAP
-  updateUserProfile: async function (current_user, username, firstName, lastName) {
+  updateUserProfile: async function (user_uid, username, firstName, lastName) {
     var success = false;
 
     // trim whitespace from username
@@ -96,17 +96,21 @@ const UsersAPI = {
 
     // initialize local object containing new user values
     const user = {
-      username: username, 
+      username: username,
       first_name: firstName,
-      last_name: lastName
+      last_name: lastName,
     };
 
     // update document with data
     await usersCollection
-      .doc(current_user.uid)
-      .set(user, {merge: true}) // set uid document to new user values
+      .doc(user_uid)
+      .set(user, { merge: true }) // set uid document to new user values
       .then(() => {
-        console.log(`Updated user with ID: ${current_user.uid}\n with data: ${JSON.stringify(user)}`);
+        console.log(
+          `Updated user with ID: ${user_uid}\n with data: ${JSON.stringify(
+            user
+          )}`
+        );
         success = true;
       })
       .catch((error) => {
@@ -114,10 +118,10 @@ const UsersAPI = {
         success = false;
       });
 
-      return success;
+    return { out: success };
   },
 
-  uploadUserProfilePicture: async function (current_user, file) {
+  uploadUserProfilePicture: async function (user_uid, file) {
     // TODO this function may not work correctly.
     // create a cloud storage refrence
     var storageRef = firebase
@@ -128,72 +132,75 @@ const UsersAPI = {
     var task = storageRef.put(file);
 
     // update user's photo URL to the saved cloud storage url
-    await usersCollection
-      .doc(current_user.uid)
-      .update({
-        profile_pic:  storageRef
-      });
-  }
+    await usersCollection.doc(user_uid).update({
+      profile_pic: storageRef,
+    });
+  },
 };
- 
+
 const HugCountAPI = {
-  getUserHugCount: function (current_user) {
-    var userDocRef = usersCollection.doc(current_user.uid);
+  getUserHugCount: function (user_uid) {
+    var userDocRef = usersCollection.doc(user_uid);
     var hug_count;
 
     // access document
-    userDocRef.get().then(function(userDoc) {
-      if (userDoc.exists) {
-        // set userProfile to retrieved data
-        // not sure this is how to retrieve data
-        hug_count = userDoc.get("day_hug_count");
-      } else {
-        // no data under uid
+    userDocRef
+      .get()
+      .then(function (userDoc) {
+        if (userDoc.exists) {
+          // set userProfile to retrieved data
+          // not sure this is how to retrieve data
+          hug_count = userDoc.get("day_hug_count");
+        } else {
+          // no data under uid
+          hug_count = null;
+        }
+      })
+      .catch(function (error) {
+        console.log("Error getting document: ", error);
         hug_count = null;
-      }
-    }).catch(function(error) {
-      console.log("Error getting document: ", error);
-      hug_count = null;
-    });
+      });
 
-    return hug_count;
+    return { out: hug_count };
   },
 
-  getUserHugStreak: function (current_user) {
-    var userDocRef = usersCollection.doc(current_user.uid);
+  getUserHugStreak: function (user_uid) {
+    var userDocRef = usersCollection.doc(user_uid);
     var streak_count;
 
     // access document
-    userDocRef.get().then(function(userDoc) {
-      if (userDoc.exists) {
-        // set userProfile to retrieved data
-        // not sure this is how to retrieve data
-        streak_count = userDoc.get("current_streak");
-      } else {
-        // no data under uid
+    userDocRef
+      .get()
+      .then(function (userDoc) {
+        if (userDoc.exists) {
+          // set userProfile to retrieved data
+          // not sure this is how to retrieve data
+          streak_count = userDoc.get("current_streak");
+        } else {
+          // no data under uid
+          streak_count = null;
+        }
+      })
+      .catch(function (error) {
+        console.log("Error getting document: ", error);
         streak_count = null;
-      }
-    }).catch(function(error) {
-      console.log("Error getting document: ", error);
-      streak_count = null;
-    });
+      });
 
-    return streak_count;
+    return { out: streak_count };
   },
 
-  increaseHugCount: async function (current_user) {
+  increaseHugCount: async function (user_uid) {
     // retrieve hug and streak count
-    var hug_count = this.getUserHugCount(current_user);
-    var streak_count = this.getUserHugStreak(current_user);
+    var hug_count = this.getUserHugCount(user_uid);
+    var streak_count = this.getUserHugStreak(user_uid);
     var success = false;
 
-    var userDocRef = usersCollection.doc(current_user.uid);
-    
+    var userDocRef = usersCollection.doc(user_uid);
+
     // failed to retrieve hug count
     if (hug_count == null || streak_count == null) {
       return false;
-    }
-    else {
+    } else {
       // incrememnt hug count
       hug_count = hug_count + 1;
       // increment streak count
@@ -204,15 +211,15 @@ const HugCountAPI = {
       // add new data to object
       const user = {
         day_hug_count: hug_count,
-        current_streak: streak_count
+        current_streak: streak_count,
       };
 
       // update document with new data
       await usersCollection
-        .doc(current_user.uid)
+        .doc(user_uid)
         .update(user) // set uid document to new user values
         .then(() => {
-          console.log(`Updated user with ID: ${current_user.uid}\n with data: ${user}`);
+          console.log(`Updated user with ID: ${user_uid}\n with data: ${user}`);
           success = true;
         })
         .catch((error) => {
@@ -220,7 +227,7 @@ const HugCountAPI = {
           success = false;
         });
     }
-    return success;
+    return { out: success };
   },
 };
 
