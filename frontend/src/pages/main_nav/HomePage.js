@@ -1,4 +1,3 @@
-import { DimensionContext } from '../../contexts/DimensionContext'
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { 
   StyleSheet, 
@@ -37,7 +36,6 @@ export default function HomePage({ navigation }) {
   const animationDuration = 150;
 
   const gradient = require('assets/gradients/middle.png')
-  const { windowWidth, windowHeight } = useContext(DimensionContext)
 
   function buildTestData(name, text, img, id) {
     return {
@@ -135,11 +133,11 @@ export default function HomePage({ navigation }) {
 
     return (
       <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
-        {/* background */}
-        <Image
-                source={gradient}
-                style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
-            />
+          {/* background */}
+          {/* <Image
+              source={gradient}
+              style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
+          /> */}
 
           <Button 
             title="create hug" 
@@ -164,10 +162,6 @@ export default function HomePage({ navigation }) {
             value={isEnabled}
           />
         </View>
-        <Button
-          title='launch page'
-          onPress={() => navigation.navigate('Launch Page')}
-        />
 
         {/* Hug Cards */}
         <TouchableWithoutFeedback
