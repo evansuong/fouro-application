@@ -1,25 +1,53 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
 import UserProfile from '../../components/UserProfile';
 import FriendProfileHeader from '../../components/headers/FriendProfileHeader'
+import HugCard from 'components/HugCard'
+// import { FlatList } from 'react-native-gesture-handler';
+// import { DimensionContext } from '../contexts/DimensionContext'
 
-// const removeFriendHandler = () => {
-//     console.log("removed friend");
-//     //setResults(`Email: ${emailField}   |   Password: ${passwordField}   |   Password Confirmation: ${passwordConfirmField}`);
-//   }
+function buildTestData(name, text, img, id) {
+    return {
+      name: name,
+      hugText: text,
+      hugImage: img,
+      hugId: id,
+    }
+  }
 
-
+  const testData = [
+    buildTestData('Vicki', 'do you remember', require('assets/profilePic.jpg'), '1'),
+    buildTestData('Ricky', 'the 21st night of september Chow', require('assets/profilePic.jpg'), '2'),
+    buildTestData('Alex', 'soulja boy tellem', require('assets/profilePic.jpg'), '3'),
+    buildTestData('Evan', 'nobody \n \n\npray for\n me if t\nhey n\no\n\n\n\n\n\nt \n there \n \n \n for me', require('assets/profilePic.jpg'), '4'),
+    buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), '5'),
+  ]
 
 export default function FriendProfilePage({ navigation }) {
     const icon = require("assets/overflowMenuIcon.png");
+    // const {windowWidth, windowHeight} = useContext(DimensionContext)
+
+    const renderHug = (( item ) => {
+        //console.log(item)
+        //console.log("-------------------------------")
+
+        return(
+        <HugCard 
+            navigation={navigation}
+            name={item.item.name}
+            hugText={item.item.hugText}
+            hugImage={item.item.hugImage}
+            // hugId={item.hugId}
+        />)}
+    )
 
     return (
 
-        <View>
-            <FriendProfileHeader 
+        <View style={{ height: '100%', flex: 1 }}>
+            {/* <FriendProfileHeader 
                 navigation={navigation}
                 style={styles.header}
-            />
+            /> */}
             
             <View style={styles.userProfile}>
                 {/* user profile information */}
@@ -28,7 +56,19 @@ export default function FriendProfilePage({ navigation }) {
                     userFirstLast = "vicki chen"
                     username = "vickichn"
                 />
-            </View>            
+            </View>
+
+            <View style={{ height: '64%' }}>
+                <View style={styles.sharedHugsTitleContainer}>
+                    <Text style={styles.sharedHugsTitle}>Shared Hugs</Text>
+                </View>
+                <FlatList
+                    contentContainerStyle={styles.sharedHugsContainer}
+                    data={testData}
+                    renderItem={renderHug}
+                    keyExtractor={(item) => item.hugId}
+                />
+            </View>
             
         </View>
     )
@@ -45,8 +85,26 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     userProfile: {
-        position: 'absolute',
-        marginTop: 20,
+        // position: 'absolute',
+        marginTop: -20, // was 20
         zIndex: -1
+    },
+    sharedHugsTitleContainer: {
+        marginTop: 5,
+        padding: 7,
+        alignItems: 'center',
+        borderStyle: 'solid',
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
+        borderWidth: 1,
+        borderColor: '#D4D4D4'
+    },
+    sharedHugsTitle: {
+        fontSize: 20,
+    },
+    sharedHugsContainer: {
+        alignItems: 'center',
+        paddingTop: 5,
+        paddingBottom: 10
     }
 });
