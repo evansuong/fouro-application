@@ -107,7 +107,7 @@ const UsersAPI = {
     // update document with data
     await usersCollection
       .doc(current_user.uid)
-      .update(user) // set uid document to new user values
+      .set(user, {merge: true}) // set uid document to new user values
       .then(() => {
         console.log(`Updated user with ID: ${current_user.uid}\n with data: ${JSON.stringify(user)}`);
         success = true;
@@ -125,7 +125,7 @@ const UsersAPI = {
     // create a cloud storage refrence
     var storageRef = firebase
       .storage()
-      .ref(user.uid + "/profilePicture/" + file.name);
+      .ref("profile_pictures/" + user.uid + "/" + file.name);
 
     // save to cloud storage
     var task = storageRef.put(file);
@@ -133,7 +133,7 @@ const UsersAPI = {
     // update user's photo URL to the saved cloud storage url
     await usersCollection
       .doc(current_user.uid)
-      .set({
+      .update({
         profile_pic:  storageRef
       });
   },
