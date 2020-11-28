@@ -1,4 +1,5 @@
 // SignUp used for signing up users into Firebase Authentication
+
 var firebase = require("../../firebase/config");
 require("firebase/auth");
 

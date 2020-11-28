@@ -23,9 +23,9 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions } from 'rea
  * 
  * @param {string} navigation           The navigation prop for React Native navigation
  */
-export default function FriendCard({ profilePicture, friendName, 
-  friendColorString, navigation, height, width}) {
+export default function FriendCard(props) {
 
+  const { profilePicture, friendName, friendColorString, navigation, height, width} = props;
   const friendColor = { backgroundColor: friendColorString }
   const containerDimensions = { width: width, height: height }
 
@@ -33,7 +33,7 @@ export default function FriendCard({ profilePicture, friendName,
     /* the card itself */
     <TouchableOpacity 
       style={[styles.friendCardContainer, friendColor, containerDimensions]}
-      onPress={() => { navigation.navigate("Friend Profile") }}
+      onPress={() => { navigation.navigate("Friend Profile", { page: "Friend Profile", data: props }) }}
     >
 
     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>

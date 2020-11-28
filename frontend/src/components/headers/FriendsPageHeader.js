@@ -9,9 +9,7 @@ export default function Header() {
     return (
         <View style={styles.header}>
             <Text style={styles.text}>Friends</Text>
-            <TouchableOpacity>
-                <Image source={require('assets/magnifyingGlass.png')} style={styles.searchButton} />
-            </TouchableOpacity>
+            
         </View>
     );
 }

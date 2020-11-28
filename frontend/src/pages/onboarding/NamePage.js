@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-// import UsersAPI from 'backend/routes/Users';
-// import { useIsFocused } from '@react-navigation/native';
+// import UsersAPI from 'backend/model/Users';
+import { useIsFocused } from '@react-navigation/native';
 
 
 export default function NamePage({ navigation }) {
@@ -33,7 +33,7 @@ export default function NamePage({ navigation }) {
     //   return;
     // }
     // await UsersAPI.updateUserProfile(username, firstName, lastName);
-    navigation.navigate('Pic Upload Page');
+    // navigation.navigate('Pic Upload Page');
   }
 
   const timeout = () => {
