@@ -1,5 +1,6 @@
 import React, {useContext} from 'react'
 import { View, Text, StyleSheet, Image, Pressable, FlatList } from 'react-native'
+import Header from '../../components/Header';
 import PinnedHug from '../../components/PinnedHug'
 import { DimensionContext } from '../../contexts/DimensionContext';
 
@@ -33,7 +34,7 @@ const testData = [
 
 /*------- end of testing --------*/
 
-export default function CorkboardPage({ navigation }) {
+export default function CorkboardPage({ navigation, route }) {
     const corkboardImg = require('assets/corkboard.jpg')
     const trashCanImg = require('assets/trashCan.png')
 
@@ -47,6 +48,8 @@ export default function CorkboardPage({ navigation }) {
                 source={corkboardImg}
                 style={styles.corkboardImage}
             />
+
+            <Header route={route} navigation={navigation} onMainNav={false}/>
 
             {/* Hugs list as a grid */}
             <FlatList

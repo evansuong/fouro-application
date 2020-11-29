@@ -2,13 +2,16 @@ import React, { useContext } from 'react'
 import { View, Text, Button, StyleSheet, FlatList, Dimensions, Image } from 'react-native'
 import AppStyles from '../../AppStyles'
 import FriendCard from '../../components/FriendCard'
-import FriendsPageHeader from '../../components/headers/FriendsPageHeader'
+import Header from '../../components/Header'
 import { DimensionContext } from '../../contexts/DimensionContext'
 
-export default function FriendsPage({ navigation }) {
+export default function FriendsPage({ navigation, route }) {
 
     const gradient = require('assets/gradients/left.png')
     const { windowWidth, windowHeight } = useContext(DimensionContext)
+
+
+    
 
     const friends = 
     //  BACKEND TODO: replace this list with a fetch call or firestore equivalent
@@ -118,30 +121,21 @@ export default function FriendsPage({ navigation }) {
     )
 
     return (
-        <View style={{...styles.navPageContainer}}>
+        <View style={AppStyles.navPageContainer}>
+
             {/* background */}
             <Image
                 source={gradient}
-                style={[styles.background, { width: windowWidth, height: windowHeight }]}
+                style={AppStyles.background}
             />
+            <Header route={route} navigation={navigation} onMainNav={true}>Friends</Header>
+
 
             <FlatList
                 data={friends}
                 renderItem={renderCards}
-                style={{ paddingTop: 10, paddingBottom: 10, marginTop: 70 }}
+                style={{ paddingTop: 10, paddingBottom: 10 }}
             />
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    navPageContainer: {
-      display: 'flex',
-      backgroundColor: 'transparent',
-      alignItems: 'center',
-      flexShrink: 1
-    },
-    background: {
-        position: 'absolute',
-    }
-  });

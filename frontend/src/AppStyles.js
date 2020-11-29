@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 // import '../assets/fonts/Montserrat-Regular.ttf';
 import * as Font from 'expo-font';
 
@@ -8,11 +8,13 @@ const AppStyles = StyleSheet.create({
     navPageContainer: {
       display: 'flex',
       backgroundColor: 'transparent',
-      height: '100%'
+      height: '100%',
+      alignItems: 'center',
     },
-    backgroundStyle: {
-      flex: 1,
-      resizeMode: 'cover',
+    background: {
+      position: 'absolute',
+      width: Dimensions.get('window').width + 1,
+      height: Dimensions.get('window').height,
     }, 
   });
   

@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import UserProfile from '../../components/UserProfile';
-import FriendProfileHeader from '../../components/headers/FriendProfileHeader'
 import HugCard from 'components/HugCard'
 // import { FlatList } from 'react-native-gesture-handler';
 import { DimensionContext } from '../../contexts/DimensionContext'
@@ -116,7 +115,7 @@ export default function FriendProfilePage({ navigation }) {
                 />
                 <TouchableOpacity 
                     style={[styles.hugButton, { height: 40, alignItems: 'center', justifyContent: 'center' }]}
-                    onPress={() => navigation.navigate('Create Hug')}
+                    onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
                 >
                     <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Hug</Text>
                 </TouchableOpacity>

@@ -33,7 +33,7 @@ export default function FriendCard(props) {
     /* the card itself */
     <TouchableOpacity 
       style={[styles.friendCardContainer, friendColor, containerDimensions]}
-      onPress={() => { navigation.navigate("Friend Profile", { page: "Friend Profile", data: props }) }}
+      onPress={() => { navigation.navigate("Friend Profile", { page: "friendProfile", data: props }) }}
     >
 
     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>

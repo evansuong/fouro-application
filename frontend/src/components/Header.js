@@ -1,4 +1,4 @@
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute, NavigationHelpersContext } from '@react-navigation/native';
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -12,9 +12,10 @@ const corkboardIcon = require('assets/corkboard-icon.png');
 
 
 // function formats button data into an object 
-function buildButtonProps(icon, onPress) {
+function buildButtonProps(name, icon, onPress) {
 
     return {
+        name: name,
         onPress: onPress,
         icon: icon,
     }
@@ -25,44 +26,50 @@ function buildButtonProps(icon, onPress) {
 // button functions return button objects to be passed into headerButton
 function BackButton(navigation) {
     function onPress() {
-        navigation.goBack();
+        if(navigation.canGoBack()) {
+            navigation.goBack();
+        } else {
+            navigation.replace('Main Nav Page');
+        }
     }
-    return buildButtonProps(backIcon, onPress);
+    return buildButtonProps('back', backIcon, onPress);
 }
 
 function SearchButton(navigation) {
     function onPress() {
         alert('search button pressed');
     }
-    return buildButtonProps(searchIcon, onPress);
+    return buildButtonProps('search', searchIcon, onPress);
 }
 
 function ProfileButton(navigation) {
     function onPress() {
-        navigation.navigate('User Profile Page', { page: 'Profile' });
+        navigation.replace('User Profile Page', { page: 'Profile' });
     }
-    return buildButtonProps(profileIcon, onPress);
+    return buildButtonProps('profile', profileIcon, onPress);
 }
 
 function EditButton(navigation) {
     function onPress() {
         alert('edit button pressed');
     }
-    return buildButtonProps(editIcon, onPress);
+    return buildButtonProps('edit', editIcon, onPress);
 } 
 
 function CorkboardButton(navigation) {
     function onPress() {
         alert('corkboard button pressed');
     }
-    return buildButtonProps(corkboardIcon, onPress);
+    return buildButtonProps('corkboard', corkboardIcon, onPress);
 } 
 
 
 
 
 
-export function HeaderButton({ icon, onPress }) {
+export function HeaderButton({ name, icon, onPress }) {
+
+    // console.log("buttonName: ", name)
 
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const styles = {
@@ -94,11 +101,10 @@ export function HeaderButton({ icon, onPress }) {
 
 
 // header template
-export function Header({ route, navigation, onMainNav }) {
+export default function Header(props) {
     
-    const [title, setTitle] = useState('')      // header title
-    const [buttons, setButtons] = useState([])  // header buttons
     const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const { route, navigation, onMainNav } = props;
 
     // standardize route param names
 
@@ -115,32 +121,22 @@ export function Header({ route, navigation, onMainNav }) {
         Home: [ProfileButton(navigation), CorkboardButton(navigation)],
         Notification: [],
         Profile: [EditButton(navigation)],
+        friendProfile: [],
     };
 
-    // update header title and buttons whenever user navigates to a different page
-    useEffect(() => {
+    let title = ''
+    let buttons = []
 
-        // update to render main nav header
-        if (onMainNav) {
-            let currentRoute = getFocusedRouteNameFromRoute(route)
-            let title = mainNavTitles[currentRoute]
-            console.log(currentRoute)
-            setTitle(title)
-            let newButtons = headerButtons[currentRoute]
-            setButtons(newButtons)
+    // update to render main nav header
+    if (onMainNav) {
+        let currentRoute = (route.name)
+        title = mainNavTitles[currentRoute]
+        buttons = headerButtons[currentRoute]
 
-        // update to render off nav header
-        } else if (route.params.page) {
-            setTitle('')
-            let newButtons = [BackButton(navigation), headerButtons[route.params.page]]
-            setButtons(newButtons)
-        }
-    }, [route]);
-
-    useEffect(() => {
-        console.log('titie: ', title);
-        console.log(getFocusedRouteNameFromRoute(route))
-    }, [title])
+    // update to render off nav header
+    } else if (route.params.page) {
+        buttons = [BackButton(navigation), headerButtons[route.params.page]]
+    }
 
     const styles = StyleSheet.create({
         header: {
@@ -148,7 +144,8 @@ export function Header({ route, navigation, onMainNav }) {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            margin: windowWidth / 20, 
+            width: windowWidth / 1.1,
+            marginTop: windowHeight / 20,
         }, 
         title: {
             fontWeight: 'bold',
@@ -157,16 +154,18 @@ export function Header({ route, navigation, onMainNav }) {
         filler: {
             width: windowWidth / 8.5,
             height: windowWidth / 8.5,
-        }
+        },
     });
 
+    // buttons && console.log(buttons.length)
+    // console.log(onMainNav)
   
     // return new header
     return (
         <View style={styles.header}>
             {buttons ? <HeaderButton {...buttons[0]}/> : <View style={styles.filler}/>}
             {title !== '' && 
-                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.title}>{props.children}</Text>
             }
             {buttons && buttons.length > 1 ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
         </View>
@@ -175,12 +174,3 @@ export function Header({ route, navigation, onMainNav }) {
 
 
 
-
-
-export default function headerOptions(onMainNav, navigation, route) {
-    return {
-        header: () => <Header route={route} navigation={navigation} onMainNav={onMainNav}/>,
-        headerMode: 'float',
-        headerTransparent: true,
-    }
-}

@@ -4,7 +4,8 @@ import NotificationCard from 'components/NotificationCard';
 import { DimensionContext } from '../../contexts/DimensionContext'
 
 import { useFocusEffect } from '@react-navigation/native';
-import NotificationHeader from 'components/headers/NotificationsHeader';
+import AppStyles from '../../AppStyles';
+import Header from '../../components/Header';
 
 // temorary test data to simulate backend notification data 
 const pic = require('../../../assets/profilePic.jpg')
@@ -29,7 +30,7 @@ const testData = [
     buildTestData('r', 'Vicki Chen', require('../../../assets/profilePic.jpg'), 4),
 ]
 
-export default function NotificationPage({ navigation }) {
+export default function NotificationPage({ navigation, route }) {
 
     // stores whether the user is on this page (true) or not (false)
     const [isFocused, setIsFocused] = useState(false)
@@ -78,28 +79,16 @@ export default function NotificationPage({ navigation }) {
     }
 
         
-    // notification list styles
-    const styles = StyleSheet.create({
-        notificationList: {
-            marginHorizontal: 5,
-            display: 'flex',
-            alignItems: 'center',
-            maxHeight: '100%',
-            marginTop: 70,
-        },
-        background: {
-            position: 'absolute'
-        }
-    })
-    
+   
     // map every notification entry to a notification panel element 
     return (
         <View>
             {/* background */}
             <Image
                 source={gradient}
-                style={[styles.background, { width: windowWidth, height: windowHeight }]}
+                style={AppStyles.background}
             />
+            <Header route={route} navigation={navigation} onMainNav={true}>Notifications</Header>
 
             <View style={styles.notificationList}>
                 {/* actual list */}
@@ -125,3 +114,14 @@ export default function NotificationPage({ navigation }) {
         </View>
     )
 } 
+
+// notification list styles
+const styles = StyleSheet.create({
+    notificationList: {
+        marginHorizontal: 5,
+        display: 'flex',
+        flexShrink: 1,
+        alignItems: 'center',
+    },
+})
+
