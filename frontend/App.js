@@ -21,7 +21,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import CreateHugPage from './src/pages/off-nav/CreateHugPage'; 
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
 import AppStyles from './src/AppStyles';
-import UserProfilePage from './src/pages/off-nav/UserProfilePage';
 
 export default function App() {
   const Stack = createStackNavigator();
