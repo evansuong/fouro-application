@@ -3,7 +3,11 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
-
+const backIcon = require('assets/back-icon.png');
+const searchIcon = require('assets/magnifyingGlass.png');
+const profileIcon = require('assets/user-icon.png');
+const editIcon = require('assets/edit-icon.png');
+const corkboardIcon = require('assets/corkboard-icon.png');
 
 
 
@@ -23,40 +27,35 @@ function BackButton(navigation) {
     function onPress() {
         navigation.goBack();
     }
-    const icon = require('assets/back-icon.png');
-    return buildButtonProps(icon, onPress)
+    return buildButtonProps(backIcon, onPress);
 }
 
 function SearchButton(navigation) {
     function onPress() {
         alert('search button pressed');
     }
-    const icon = require('assets/magnifyingGlass.png');
-    return buildButtonProps(icon, onPress)
+    return buildButtonProps(searchIcon, onPress);
 }
 
-function SettingsButton(navigation) {
+function ProfileButton(navigation) {
     function onPress() {
-        alert('settings button pressed');
+        navigation.navigate('User Profile Page', { page: 'Profile' });
     }
-    const icon = require('assets/settings-icon.png')
-    return buildButtonProps(icon, onPress)
+    return buildButtonProps(profileIcon, onPress);
 }
 
 function EditButton(navigation) {
     function onPress() {
-        alert('edit button pressed')
+        alert('edit button pressed');
     }
-    const icon = require('assets/edit-icon.png');
-    return buildButtonProps(icon, onPress)
+    return buildButtonProps(editIcon, onPress);
 } 
 
 function CorkboardButton(navigation) {
     function onPress() {
-        alert('corkboard button pressed')
+        alert('corkboard button pressed');
     }
-    const icon = require('assets/corkboard-icon.png');
-    return buildButtonProps(icon, onPress)
+    return buildButtonProps(corkboardIcon, onPress);
 } 
 
 
@@ -70,8 +69,8 @@ export function HeaderButton({ icon, onPress }) {
         btnContainer: {
             backgroundColor: 'rgba(0, 0, 0, .5)', 
             borderRadius: 100,
-            height: windowWidth / 8,
-            width: windowWidth / 8, 
+            height: windowWidth / 8.5,
+            width: windowWidth / 8.5, 
             display: 'flex', 
             justifyContent: 'center', 
             alignItems: 'center',
@@ -113,7 +112,7 @@ export function Header({ route, navigation, onMainNav }) {
     // collection of headerbuttons to render based on the page
     const headerButtons = {
         Friends: [SearchButton(navigation)],
-        Home: [SettingsButton(navigation), CorkboardButton(navigation)],
+        Home: [ProfileButton(navigation), CorkboardButton(navigation)],
         Notification: [],
         Profile: [EditButton(navigation)],
     };
@@ -125,40 +124,51 @@ export function Header({ route, navigation, onMainNav }) {
         if (onMainNav) {
             let currentRoute = getFocusedRouteNameFromRoute(route)
             let title = mainNavTitles[currentRoute]
+            console.log(currentRoute)
             setTitle(title)
-            let buttons = headerButtons[currentRoute]
-            setButtons(buttons)
+            let newButtons = headerButtons[currentRoute]
+            setButtons(newButtons)
 
         // update to render off nav header
         } else if (route.params.page) {
             setTitle('')
-            let buttons = [BackButton(navigation), headerButtons[route.params.page]]
-            setButtons(buttons)
+            let newButtons = [BackButton(navigation), headerButtons[route.params.page]]
+            setButtons(newButtons)
         }
     }, [route]);
+
+    useEffect(() => {
+        console.log('titie: ', title);
+        console.log(getFocusedRouteNameFromRoute(route))
+    }, [title])
 
     const styles = StyleSheet.create({
         header: {
             display: 'flex',
             flexDirection: 'row',
-            alignContent: 'center',
+            alignItems: 'center',
             justifyContent: 'space-between',
-            width: windowWidth,
+            margin: windowWidth / 20, 
         }, 
         title: {
             fontWeight: 'bold',
             fontSize: 30,
         },
+        filler: {
+            width: windowWidth / 8.5,
+            height: windowWidth / 8.5,
+        }
     });
+
   
     // return new header
     return (
         <View style={styles.header}>
-            {buttons ? <HeaderButton {...buttons[0]}/> : <View style={{ width: windowWidth / 8 }}/>}
+            {buttons ? <HeaderButton {...buttons[0]}/> : <View style={styles.filler}/>}
             {title !== '' && 
                 <Text style={styles.title}>{title}</Text>
             }
-            {buttons && buttons.length > 1 ? <HeaderButton {...buttons[1]}/> : <View style={{ width: windowWidth / 8 }}/>}
+            {buttons && buttons.length > 1 ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
         </View>
     )
 }

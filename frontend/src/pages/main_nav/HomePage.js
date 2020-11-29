@@ -132,88 +132,86 @@ export default function HomePage({ navigation }) {
     background: {
       position: 'absolute',
     }
-  })
+  })  
 
     return (
-      <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
+      <View style={{...AppStyles.navPageContainer}}>
           {/* background */}
           <Image
             source={gradient}
             style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
           />
+          <View style={{ marginTop: 70 }}>
+            <Button 
+              title="create hug" 
+              onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
+            />
+            <Button
+              title='launch page'
+              onPress={() => navigation.navigate('Launch Page', { page: 'launchPage' })}
+            />
+            <Button
+              title='welcome page'
+              onPress={() => navigation.navigate('Welcome Page', { page: 'welcomePage' })}
+            />
 
-          <Button 
-            title="create hug" 
-            onPress={() => navigation.navigate('Create Hug')}
-          />
-          <Button 
-            title="add friend" 
-            onPress={() => navigation.navigate('Add Friend')}
-          />
-          <Button
-            title='launch page'
-            onPress={() => navigation.navigate('Launch Page')}
-          />
-          <Button
-            title='welcome page'
-            onPress={() => navigation.navigate('Welcome Page')}
-          />
-
-        {/* Light and Dark Mode Switch */}
-        <View style={styles.switchContainer}>
-          <Text style={{color: mode == 'light' ? 'black': 'white'}}>
-            {mode == 'light' ? 'Light' : 'Dark'}
-          </Text>
-          <Switch
-            onValueChange={handleToggleSwitch}
-            value={isEnabled}
-          />
-        </View>
-
-        {/* Hug Cards */}
-        <TouchableWithoutFeedback
-          onPress={() => dismissCreateButton()}
-        >
-          <ScrollView 
-            contentContainerStyle={{alignItems: 'center'}}
-            style={{marginBottom: 70,}}
-          >
-            {testData.map(hugData => (
-              <HugCard 
-                key={hugData.hugId} 
-                navigation={navigation}
-                { ...hugData } 
-                mode={mode}
-              />
-            ))}
-          </ScrollView>
-        </TouchableWithoutFeedback>
-
-
-        {/* Create Hug Button */}
-        <TouchableWithoutFeedback
-          onPressIn={handlePress}
-        >
-          <Animated.View style={[styles.createHugButtonContainer, {
-            width:width
-          }]}>
-            <Text style={[styles.createHugText, {
-              marginLeft: 17.5
-            }]}>
-              +
+          {/* Light and Dark Mode Switch */}
+          <View style={styles.switchContainer}>
+            <Text style={{color: mode == 'light' ? 'black': 'white'}}>
+              {mode == 'light' ? 'Light' : 'Dark'}
             </Text>
-            <Animated.View opacity={fade}>
-              <Text style={[styles.createHugText, {
-                marginTop: 18,
-                fontSize: 25
-              }]}>
-                Create Hug
-              </Text>
-            </Animated.View>
-            
-          </Animated.View>
-        </TouchableWithoutFeedback>
+            <Switch
+              onValueChange={handleToggleSwitch}
+              value={isEnabled}
+            />
+          </View>
 
+          {/* Hug Cards */}
+          <TouchableWithoutFeedback
+            onPress={() => dismissCreateButton()}
+          >
+            <ScrollView 
+              contentContainerStyle={{alignItems: 'center'}}
+              style={{marginBottom: 70,}}
+            >
+              {testData.map(hugData => (
+                <HugCard 
+                  key={hugData.hugId} 
+                  navigation={navigation}
+                  { ...hugData } 
+                  mode={mode}
+                />
+              ))}
+            </ScrollView>
+          </TouchableWithoutFeedback>
+
+
+          {/* Create Hug Button */}
+          <TouchableWithoutFeedback
+            onPressIn={handlePress}
+          >
+            <Animated.View style={[styles.createHugButtonContainer, {
+              width:width
+            }]}>
+              <Text style={[styles.createHugText, {
+                marginLeft: 17.5
+              }]}>
+                +
+              </Text>
+              <Animated.View opacity={fade}>
+                <Text style={[styles.createHugText, {
+                  marginTop: 18,
+                  fontSize: 25
+                }]}>
+                  Create Hug
+                </Text>
+              </Animated.View>
+              
+            </Animated.View>
+          </TouchableWithoutFeedback>
+
+
+        </View>
       </View>
     )
 }

@@ -3,7 +3,7 @@ import { Button, Text, View } from 'react-native'
 import AppStyles from '../../AppStyles'
 import Background from 'components/Background';
 
-export default function UserProfileScreen( { navigation } ) {
+export default function UserProfilePage( { navigation } ) {
     return (
       <View>
         <Background direction='left'/>
