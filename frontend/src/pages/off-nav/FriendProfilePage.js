@@ -27,9 +27,53 @@ export default function FriendProfilePage({ navigation }) {
     const icon = require("assets/overflowMenuIcon.png");
     const {windowWidth, windowHeight} = useContext(DimensionContext)
 
+    const topMarginSize = windowWidth * 0.01
+
     //const hugButtonWidth = windowWidth - 50;
     //const hugButtonHeight = windowHeight / 8;
 
+    const styles = StyleSheet.create({
+        header: {
+            position: 'absolute',
+            zIndex: 3
+        },
+        removeFriendOverlay: {
+            display: 'flex',
+            flexDirection: 'row', 
+            justifyContent: 'flex-end'
+        },
+        userProfile: {
+            // position: 'absolute',
+            // marginTop: topMarginSize, // was 20
+            
+            zIndex: -1
+        },
+        sharedHugsTitleContainer: {
+            // marginTop: 5,
+            padding: 7,
+            alignItems: 'center',
+            borderStyle: 'solid',
+            borderLeftWidth: 0,
+            borderRightWidth: 0,
+            borderWidth: 1,
+            borderColor: '#D4D4D4'
+        },
+        sharedHugsTitle: {
+            fontSize: 20,
+        },
+        sharedHugsContainer: {
+            alignItems: 'center',
+            paddingTop: 5,
+            paddingBottom: 10,
+        },
+        hugButton: {
+            backgroundColor: '#FB7250',
+            alignItems: 'center',
+            borderRadius: 20,
+            margin: 10,
+            //height: 40            
+        }
+    });
 
     const renderHug = (( item ) => {
 
@@ -45,7 +89,7 @@ export default function FriendProfilePage({ navigation }) {
 
     return (
 
-        <View style={{ height: '100%', flex: 1, backgroundColor: 'white' }}>
+        <View style={{ height: '100%', display: "flex", backgroundColor: 'white' }}>
             {/* <FriendProfileHeader 
                 navigation={navigation}
                 style={styles.header}
@@ -60,7 +104,7 @@ export default function FriendProfilePage({ navigation }) {
                 />
             </View>
 
-            <View style={{ height: '64%' }}>
+            <View style={{ display: "flex", flexShrink: 1 }}>
                 <View style={styles.sharedHugsTitleContainer}>
                     <Text style={styles.sharedHugsTitle}>Shared Hugs</Text>
                 </View>
@@ -70,57 +114,15 @@ export default function FriendProfilePage({ navigation }) {
                     renderItem={renderHug}
                     keyExtractor={(item) => item.hugId}
                 />
+                <TouchableOpacity 
+                    style={[styles.hugButton, { height: 40, alignItems: 'center', justifyContent: 'center' }]}
+                    onPress={() => navigation.navigate('Create Hug')}
+                >
+                    <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Hug</Text>
+                </TouchableOpacity>
             </View>
 
-            <TouchableOpacity 
-                style={[styles.hugButton, { height: 40 }]}
-                onPress={() => navigation.navigate('Create Hug')}
-            >
-                <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Hug</Text>
-            </TouchableOpacity>
+            
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    header: {
-        position: 'absolute',
-        zIndex: 3
-    },
-    removeFriendOverlay: {
-        display: 'flex', 
-        flexDirection: 'row', 
-        justifyContent: 'flex-end'
-    },
-    userProfile: {
-        // position: 'absolute',
-        marginTop: -20, // was 20
-        zIndex: -1
-    },
-    sharedHugsTitleContainer: {
-        marginTop: 5,
-        padding: 7,
-        alignItems: 'center',
-        borderStyle: 'solid',
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
-        borderWidth: 1,
-        borderColor: '#D4D4D4'
-    },
-    sharedHugsTitle: {
-        fontSize: 20,
-    },
-    sharedHugsContainer: {
-        alignItems: 'center',
-        paddingTop: 5,
-        paddingBottom: 10
-    },
-    hugButton: {
-        backgroundColor: '#FB7250',
-        alignItems: 'center',
-        borderRadius: 20,
-        margin: 20,
-        //height: 40
-        
-    }
-});
