@@ -15,9 +15,10 @@ const users = db.collection("users");
 const HugsAPI = {
     // The user that calls this function is the sender
     // TODO: More error handling and monitor upload progress?
-    createHug: function (friendId, message, image) {
+    createHug: function (currentUser, friendId, message, image) {
         // Set current user
-        const currUser = firebase.auth().currentUser;
+        var currUser = db.collection("users").doc(currentUser);
+        // const currUser = firebase.auth().currentUser;
         // Set the date of the hug (also used to ID image)
         var dateTime = db.dateTime.now();
         var dateTimeString = dateTime.toString();
@@ -83,7 +84,7 @@ const HugsAPI = {
                             sender_description_: message,
                             images: [downloadURL],
                             receiver_id: friendId,
-                            sender_id: currUser.uid,
+                            sender_id: currUser.id,
                             hug_id: topLevelHug.id,
                         });
                     });
@@ -106,7 +107,7 @@ const HugsAPI = {
 
         // MAKE SURE THIS HAPPENS AFTER WE MADE THE TOP LEVEL HUG
         users
-            .doc(currUser.uid)
+            .doc(currUser.id)
             .collection("user_hugs")
             .doc(topLevelHug)
             .set({
@@ -137,11 +138,56 @@ const HugsAPI = {
                 console.error("Error adding document: ", error);
             });
     },
+
+    // hugId is the global hug.
+    dropHug: function (currentUser, requestId, hugId) {
+        // Set current user
+        var currUser = db.collection("users").doc(currentUser);
+        // Set ref for top level hug
+        var topLevelHug = db.collection("hugs").doc(hugId);
+        // delete requestId
+        db.collection("users")
+            .doc(currUser.id)
+            .collection("notifications")
+            .doc(requestId)
+            .delete()
+            .then();
+        // delete the sender's user_hug
+        db.collection("users")
+            .doc(db.collection("hugs").doc(hugId).get("sender_id"))
+            .delete()
+            .then();
+        // delete the receiver's user_hug
+        db.collection("users")
+            .doc(db.collection("hugs").doc(hugId).get("receiver_id"))
+            .delete()
+            .then();
+        // Remove hug images from storage
+
+        // TODO: Loop through each element in the images array of hugId
+        db.collection("hugs")
+            .doc(hugId)
+            .get("images")
+            .then(function (querySnapshot) {
+                querySnapshot.forEach(function (image) {
+                    // Every time we get another HTTPS URL from images, we need to make an httpsReference
+                    // Create a reference from a HTTPS URL
+                    var httpsReference = storage.getReferenceFromURL(image);
+                    httpsReference.delete().then();
+                });
+                return results;
+            });
+
+        // Delete the global hug document
+        topLevelHug.delete().then();
+    },
 };
 
 const UpdateHugAPI = {
-    // The current user must be the receiver of a hug
-    respondToHug: function (hugId, message, image) {
+    // currentUser must be the receiver of a hug
+    respondToHug: function (currentUser, hugId, message, image) {
+        // Set current user
+        var currUser = db.collection("users").doc(currentUser);
         // Process the image
         // Create a root reference
         var storageRef = firebase.storage().ref();
@@ -220,14 +266,13 @@ const UpdateHugAPI = {
         // Getting the requestId may be questionable
         currUserNotifRef = db
             .colection("users")
-            .doc(currUser.uid)
+            .doc(currUser.id)
             .collection("notifications");
         requestIdRef = currUserNotifRef.where("hug_id", "==", hugId);
         Notifications.NotificationsAPI.deleteNotification(requestIdRef);
     },
 
-    updateHugUsers: function (hugId) {
-        // Increment hug count for sender
+    updateUserHugCount: function (hugId) {
         db.collection("hugs")
             .doc(hugId)
             .get()
@@ -243,58 +288,6 @@ const UpdateHugAPI = {
             .catch(function (error) {
                 console.log("Error getting document:", error);
             });
-    },
-
-    // hugId is the global hug.
-    // NOT SURE if hugId.delete is okay bc idk what hugId really is...
-    // MAKE THIS userHugId ??????????
-    dropAHug: function (requestId, hugId) {
-        // Set ref for top level hug
-        var topLevelHug = db.collection("hugs").doc(hugId);
-        // delete requestId
-        db.collection("users")
-            .doc(currUser.uid)
-            .collection("notifications")
-            .doc(requestId)
-            .delete()
-            .then();
-        // delete the sender's user_hug
-        db.collection("users")
-            .doc(db.collection("hugs").doc(hugId).get("sender_id"))
-            .delete()
-            .then();
-        // delete the receiver's user_hug
-        db.collection("users")
-            .doc(db.collection("hugs").doc(hugId).get("receiver_id"))
-            .delete()
-            .then();
-        // Remove hug images from storage
-
-        // TODO: Loop through each element in the images array of hugId
-        db.collection("hugs")
-            .doc(hugId)
-            .get("images")
-            .then(function (querySnapshot) {
-                querySnapshot.forEach(function (image) {
-                    // Every time we get another HTTPS URL from images, we need to make an httpsReference
-                    // Create a reference from a HTTPS URL
-                    var httpsReference = storage.refFromURL(image);
-                    httpsReference.delete().then();
-                });
-                //res.json(results)
-                return results;
-            });
-
-        // and then delete that image in firebase storage
-        // Create a reference to firebase storage
-        var storage = firebase.storage();
-        var imgStorageRef = storage.child("hug_images");
-
-        // TODO: .delete().then(???)
-        storageRef.child(imageName).delete().then();
-
-        // Delete the global hug document
-        topLevelHug.delete().then();
     },
 
     deleteAllImagesInArray: function (imagesArray) {
@@ -313,6 +306,12 @@ const UpdateHugAPI = {
         // Create a root reference in firebase storage
         var httpsReference = storage.refFromURL(imageHttps);
         httpsReference.delete().then();
+    },
+
+    deleteImageFromPath: function (pathString) {
+        var storage = firebase.storage();
+        var storageRef = storage.ref();
+        storageRef.child(pathString).delete().then();
     },
 };
 
@@ -336,11 +335,13 @@ const ViewHugAPI = {
     // Gets all hugs from the currently logged in user
     // TODO: not sure how to use the paginated data "next"
     // TODO: delete one of the versions. not sure how to return multiple docs?
-    getUserHugs: function () {
+    getUserHugs: function (currentUser) {
+        // Set current user
+        var currUser = db.collection("users").doc(currentUser);
         // GET ALL VERSION
         var results = [];
         db.collection("users")
-            .doc(currUser.uid)
+            .doc(currUser.id)
             .collection("user_hugs")
             .get()
             .then(function (querySnapshot) {
@@ -373,6 +374,8 @@ const ViewHugAPI = {
         //         .limit(25);
         // });
     },
+
+    getSharedHugs: function (currUser, targetUser) {},
 };
 
 // Export the module

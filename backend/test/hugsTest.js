@@ -64,8 +64,13 @@ var Hugs = require("../model/Hugs");
 //     });
 
 // deleteImage()
-Hugs.UpdateHugAPI.deleteImage(
-    "https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb"
+// Hugs.UpdateHugAPI.deleteImage(
+//     "https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb"
+// );
+
+// deleteImageFromPath()
+Hugs.UpdateHugAPI.deleteImageFromPath(
+    "profile_pictures/Photo on 3-30-20 at 5.34 PM.jpg"
 );
 
 //loop through images? Need cloud function?
