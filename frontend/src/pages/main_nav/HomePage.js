@@ -17,15 +17,16 @@ import AppStyles from '../../AppStyles'
 import { FlatList } from 'react-native-gesture-handler';
 
 import HugCard from 'components/HugCard'
-import HomeHeader from 'components/headers/HomePageHeader';
 import Panel from 'components/StreakPanel';
 import CreateHugButton from 'components/CreateHugButton';
 import { DimensionContext } from '../../contexts/DimensionContext'; 
+import Header from '../../components/Header';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 // TODO: Move create hug button to the right side of the screen.
 // TODO: Fix button animation starting from far left of button
 
-export default function HomePage({ navigation }) {
+export default function HomePage({ navigation, route }) {
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [mode, setMode] = useState('light');
@@ -135,83 +136,82 @@ export default function HomePage({ navigation }) {
   })  
 
     return (
-      <View style={{...AppStyles.navPageContainer}}>
-          {/* background */}
-          <Image
-            source={gradient}
-            style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
-          />
-          <View style={{ marginTop: 70 }}>
-            <Button 
-              title="create hug" 
-              onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
-            />
-            <Button
-              title='launch page'
-              onPress={() => navigation.navigate('Launch Page', { page: 'launchPage' })}
-            />
-            <Button
-              title='welcome page'
-              onPress={() => navigation.navigate('Welcome Page', { page: 'welcomePage' })}
-            />
+      <View style={AppStyles.navPageContainer}>
+        {/* background */}
+        <Image
+          source={gradient}
+          style={AppStyles.background}
+        />
 
-          {/* Light and Dark Mode Switch */}
-          <View style={styles.switchContainer}>
-            <Text style={{color: mode == 'light' ? 'black': 'white'}}>
-              {mode == 'light' ? 'Light' : 'Dark'}
-            </Text>
-            <Switch
-              onValueChange={handleToggleSwitch}
-              value={isEnabled}
-            />
-          </View>
+        <Header route={route} navigation={navigation} onMainNav={true}>Hug Feed</Header>
 
-          {/* Hug Cards */}
-          <TouchableWithoutFeedback
-            onPress={() => dismissCreateButton()}
-          >
-            <ScrollView 
-              contentContainerStyle={{alignItems: 'center'}}
-              style={{marginBottom: 70,}}
-            >
-              {testData.map(hugData => (
-                <HugCard 
-                  key={hugData.hugId} 
-                  navigation={navigation}
-                  { ...hugData } 
-                  mode={mode}
-                />
-              ))}
-            </ScrollView>
-          </TouchableWithoutFeedback>
+        <Button 
+          title="create hug" 
+          onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
+        />
+        <Button
+          title='launch page'
+          onPress={() => navigation.navigate('Launch Page', { page: 'launchPage' })}
+        />
+        <Button
+          title='welcome page'
+          onPress={() => navigation.navigate('Welcome Page', { page: 'welcomePage' })}
+        />
 
-
-          {/* Create Hug Button */}
-          <TouchableWithoutFeedback
-            onPressIn={handlePress}
-          >
-            <Animated.View style={[styles.createHugButtonContainer, {
-              width:width
-            }]}>
-              <Text style={[styles.createHugText, {
-                marginLeft: 17.5
-              }]}>
-                +
-              </Text>
-              <Animated.View opacity={fade}>
-                <Text style={[styles.createHugText, {
-                  marginTop: 18,
-                  fontSize: 25
-                }]}>
-                  Create Hug
-                </Text>
-              </Animated.View>
-              
-            </Animated.View>
-          </TouchableWithoutFeedback>
-
-
-        </View>
+      {/* Light and Dark Mode Switch */}
+      <View style={styles.switchContainer}>
+        <Text style={{color: mode == 'light' ? 'black': 'white'}}>
+          {mode == 'light' ? 'Light' : 'Dark'}
+        </Text>
+        <Switch
+          onValueChange={handleToggleSwitch}
+          value={isEnabled}
+        />
       </View>
-    )
+
+      {/* Hug Cards */}
+      <TouchableWithoutFeedback
+        onPress={() => dismissCreateButton()}
+      >
+        <ScrollView 
+          contentContainerStyle={{alignItems: 'center'}}
+          style={{marginBottom: 70,}}
+        >
+          {testData.map(hugData => (
+            <HugCard 
+              key={hugData.hugId} 
+              navigation={navigation}
+              { ...hugData } 
+              mode={mode}
+            />
+          ))}
+        </ScrollView>
+      </TouchableWithoutFeedback>
+
+
+      {/* Create Hug Button */}
+      <TouchableWithoutFeedback
+        onPressIn={handlePress}
+      >
+        <Animated.View style={[styles.createHugButtonContainer, {
+          width:width
+        }]}>
+          <Text style={[styles.createHugText, {
+            marginLeft: 17.5
+          }]}>
+            +
+          </Text>
+          <Animated.View opacity={fade}>
+            <Text style={[styles.createHugText, {
+              marginTop: 18,
+              fontSize: 25
+            }]}>
+              Create Hug
+            </Text>
+          </Animated.View>
+          
+        </Animated.View>
+      </TouchableWithoutFeedback>
+    </View>
+  )
 }
