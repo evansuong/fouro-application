@@ -6,7 +6,7 @@ import { DimensionContext } from '../contexts/DimensionContext';
 const backIcon = require('assets/back-icon.png');
 const searchIcon = require('assets/magnifyingGlass.png');
 const profileIcon = require('assets/user-icon.png');
-const editIcon = require('assets/user-icon.png');
+const editIcon = require('assets/edit-icon.png');
 const corkboardIcon = require('assets/corkboard-icon.png');
 const dotsIcon = require('assets/dots-icon.png');
 
@@ -54,19 +54,19 @@ function EditButton(navigation) {
     function onPress() {
         alert('edit button pressed');
     }
-    return buildButtonProps('edit', profileIcon, onPress);
+    return buildButtonProps('edit', editIcon, onPress);
 } 
 
 function CorkboardButton(navigation) {
     function onPress() {
-        alert('corkboard button pressed');
+        navigation.navigate('Corkboard');
     }
     return buildButtonProps('corkboard', corkboardIcon, onPress);
 } 
 
 function RemoveFriendButton(navigation) {
     function onPress() {
-        alert('remove button pressed');
+        alert('remove friend button pressed')
     }
     return buildButtonProps('remove', dotsIcon, onPress);
 } 
@@ -107,7 +107,7 @@ export function HeaderButton({ name, icon, onPress }) {
 
 
 
-// header template
+// TODO: ALLOW ON PRESS FUNCTIONS TO BE PASSED IN AS PROPS
 export default function Header(props) {
     
     const { windowWidth, windowHeight } = useContext(DimensionContext)
@@ -124,11 +124,14 @@ export default function Header(props) {
 
     // collection of headerbuttons to render based on the page
     const headerButtons = {
-        Friends: [SearchButton(navigation)],
-        Home: [ProfileButton(navigation), CorkboardButton(navigation)],
-        Notification: '',
+        'Friends': [SearchButton(navigation)],
+        'Home': [ProfileButton(navigation), CorkboardButton(navigation)],
+        'Notification': '',
         'User Profile Page': [EditButton(navigation)],
         'Friend Profile': [RemoveFriendButton(navigation)],
+        'Hug Info': '',
+        'Create Hug': '',
+        'Corkboard': '',
     };
 
     let title = ''
@@ -143,7 +146,7 @@ export default function Header(props) {
     // update to render off nav header
     } else if (route.name) {
         console.log(route.name)
-        buttons = [BackButton(navigation), headerButtons[route.name]]
+        buttons = [BackButton(navigation), ...headerButtons[route.name]]
         console.log(buttons)
         console.log(buttons.length)
     }

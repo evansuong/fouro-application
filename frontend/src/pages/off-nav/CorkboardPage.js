@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Image, Pressable, FlatList } from 'react-native
 import Header from '../../components/Header';
 import PinnedHug from '../../components/PinnedHug'
 import { DimensionContext } from '../../contexts/DimensionContext';
+const corkboardImg = require('assets/corkboard.jpg')
+const trashCanImg = require('assets/trashCan.png')
 
 function showTrashCan() {
     console.log("long press")
@@ -35,20 +37,19 @@ const testData = [
 /*------- end of testing --------*/
 
 export default function CorkboardPage({ navigation, route }) {
-    const corkboardImg = require('assets/corkboard.jpg')
-    const trashCanImg = require('assets/trashCan.png')
+    
 
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const margin = windowWidth * 0.03
 
     return (
         <View style={{ alignItems: 'center' }}>
+            
 
             <Image
                 source={corkboardImg}
                 style={styles.corkboardImage}
             />
-
             <Header route={route} navigation={navigation} onMainNav={false}/>
 
             {/* Hugs list as a grid */}

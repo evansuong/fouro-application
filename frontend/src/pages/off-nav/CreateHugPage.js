@@ -17,9 +17,10 @@ import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import Header from '../../components/Header';
 
 
-export default function CreateHugPage({ navigation, friendName='Placeholder', friendPic }) {
+export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
 
@@ -81,6 +82,7 @@ export default function CreateHugPage({ navigation, friendName='Placeholder', fr
         console.log('dismissed keyboard')
       }}>
         <View>
+          <Header route={route} navigation={navigation} onMainNav={false} />
           <View style={styles.mainContainer}>
             {/* Friend Info */}
             <View style={{alignItems: 'center',}}>
