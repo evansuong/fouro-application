@@ -26,7 +26,7 @@ export default function FriendProfilePage({ navigation }) {
     const icon = require("assets/overflowMenuIcon.png");
     const {windowWidth, windowHeight} = useContext(DimensionContext)
 
-    const topMarginSize = windowWidth * 0.01
+    const topMarginSize = windowWidth*0.1;
 
     //const hugButtonWidth = windowWidth - 50;
     //const hugButtonHeight = windowHeight / 8;
@@ -43,7 +43,7 @@ export default function FriendProfilePage({ navigation }) {
         },
         userProfile: {
             // position: 'absolute',
-            // marginTop: topMarginSize, // was 20
+            //marginTop: 20, // was 20
             
             zIndex: -1
         },
@@ -94,7 +94,7 @@ export default function FriendProfilePage({ navigation }) {
                 style={styles.header}
             /> */}
             
-            <View style={styles.userProfile}>
+            <View style={styles.userProfile, {marginTop: topMarginSize}}>
                 {/* user profile information */}
                 <UserProfile 
                     profilePicture={require("assets/profilePic.jpg")}

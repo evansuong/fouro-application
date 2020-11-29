@@ -11,8 +11,24 @@ import PicUploadButton from 'components/PicUploadButton';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 
+const fetch = require('node-fetch');
+
 export default function ProfileSetupPage({ navigation }) {
   const [uploadPic, setUploadPic] = useState({});
+
+  const callBackend = async () => {
+    console.log(uploadPic);
+    const splitPicURI = uploadPic.uri.split('/');
+    let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
+    // Send res to backend to push to firebase
+    // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
+    // console.log('success', JSON.stringify(res));
+  }
+
+  const getBlobObj = async (uri, imgName) => {
+    const response = await fetch(uri);
+    return await response.blob();
+  }
 
   const pickFromGallery = async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -77,10 +93,11 @@ export default function ProfileSetupPage({ navigation }) {
       <View style={styles.submit}>
         <LinkedButton
           navigation={navigation}
-          link='Question Page'
+          link='Welcome Page'
           text='SUBMIT'
           // Should this be yellow or grey?
           color='#FFC24A'
+          onPress={() => callBackend()}
         />
       </View>
     </View>

@@ -15,7 +15,6 @@ import { DimensionContext } from '../../contexts/DimensionContext';
 import {getFocusedRouteNameFromRoute, useFocusEffect, useRoute} from '@react-navigation/native';
 
 
-
 // TODO: follow the gradient thing
 export default function MainNavPage() {
 
