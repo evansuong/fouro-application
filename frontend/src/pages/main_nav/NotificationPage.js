@@ -48,7 +48,7 @@ export default function NotificationPage({ navigation }) {
     function catchHug(id) {
         clearNotification(id)
         navigation.navigate('Hug Info', { 
-            page: 'Hug Info',
+            page: 'hugInfo',
             data: notifications.filter((item) => item.id === id)[0], 
         })
         // signify hug as caught to the database
@@ -61,6 +61,9 @@ export default function NotificationPage({ navigation }) {
 
     function acceptFriendRequest(id) {
         clearNotification(id)
+        navigation.navigate('Friend Profile', {
+            page: 'friendProfile'
+        })
         // add friend to user friend list in database
     }
 
@@ -91,32 +94,34 @@ export default function NotificationPage({ navigation }) {
     
     // map every notification entry to a notification panel element 
     return (
-        <View style={styles.notificationList}>
+        <View>
             {/* background */}
             <Image
                 source={gradient}
                 style={[styles.background, { width: windowWidth, height: windowHeight }]}
             />
 
-            {/* actual list */}
-            <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
-                {notifications.map((data, index) => (
-                    data.type === 'request' ? 
-                    <NotificationCard 
-                        key={data.id} 
-                        notificationData={data} 
-                        isFocused={isFocused} 
-                        handleAccept={acceptFriendRequest} 
-                        handleDecline={declineFriendRequest} />
-                        :
-                    <NotificationCard 
-                        key={data.id} 
-                        notificationData={data} 
-                        isFocused={isFocused} 
-                        handleAccept={catchHug} 
-                        handleDecline={dropHug} />
-                ))}
-            </ScrollView>
+            <View style={styles.notificationList}>
+                {/* actual list */}
+                <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
+                    {notifications.map((data, index) => (
+                        data.type === 'r' ? 
+                        <NotificationCard 
+                            key={data.id} 
+                            notificationData={data} 
+                            isFocused={isFocused} 
+                            handleAccept={acceptFriendRequest} 
+                            handleDecline={declineFriendRequest} />
+                            :
+                        <NotificationCard 
+                            key={data.id} 
+                            notificationData={data} 
+                            isFocused={isFocused} 
+                            handleAccept={catchHug} 
+                            handleDecline={dropHug} />
+                    ))}
+                </ScrollView>
+            </View>                   
         </View>
     )
 } 

@@ -132,10 +132,10 @@ export default function HomePage({ navigation }) {
     background: {
       position: 'absolute',
     }
-  })
+  })  
 
     return (
-      <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
+      <View style={{...AppStyles.navPageContainer}}>
           {/* background */}
           <Image
             source={gradient}
@@ -204,20 +204,25 @@ export default function HomePage({ navigation }) {
             <Text style={[styles.createHugText, {
               marginLeft: 17.5
             }]}>
-              +
-            </Text>
-            <Animated.View opacity={fade}>
               <Text style={[styles.createHugText, {
-                marginTop: 18,
-                fontSize: 25
+                marginLeft: 17.5
               }]}>
-                Create Hug
+                +
               </Text>
+              <Animated.View opacity={fade}>
+                <Text style={[styles.createHugText, {
+                  marginTop: 18,
+                  fontSize: 25
+                }]}>
+                  Create Hug
+                </Text>
+              </Animated.View>
+              
             </Animated.View>
-            
-          </Animated.View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
 
+
+        </View>
       </View>
     )
 }
