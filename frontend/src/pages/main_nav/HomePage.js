@@ -29,6 +29,7 @@ export default function HomePage({ navigation }) {
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [mode, setMode] = useState('light');
+  const { windowWidth, windowHeight } = useContext(DimensionContext)
 
   const width = useRef(new Animated.Value(70)).current;
   const fade = useRef(new Animated.Value(0)).current;
