@@ -21,6 +21,7 @@ import CreateHugPage from './src/pages/off-nav/CreateHugPage';
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
 import headerOptions from './src/components/Header';
 import AppStyles from './src/AppStyles';
+import UserProfilePage from './src/pages/off-nav/UserProfilePage';
 
 
 export default function App() {
@@ -98,6 +99,11 @@ export default function App() {
           <Stack.Screen 
             name='Welcome Page' 
             component={WelcomePage}
+            options={({navigation, route}) => headerOptions(false, navigation, route)}/>
+
+          <Stack.Screen 
+            name='User Profile Page'
+            component={UserProfilePage}
             options={({navigation, route}) => headerOptions(false, navigation, route)}/>
         </Stack.Navigator>
       </NavigationContainer>    

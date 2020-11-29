@@ -118,7 +118,7 @@ export default function FriendsPage({ navigation }) {
     )
 
     return (
-        <View style={{...styles.navPageContainer, marginTop: 70}}>
+        <View style={{...styles.navPageContainer}}>
             {/* background */}
             <Image
                 source={gradient}
@@ -128,7 +128,7 @@ export default function FriendsPage({ navigation }) {
             <FlatList
                 data={friends}
                 renderItem={renderCards}
-                style={{ paddingTop: 10, paddingBottom: 10 }}
+                style={{ paddingTop: 10, paddingBottom: 10, marginTop: 70 }}
             />
         </View>
     )
