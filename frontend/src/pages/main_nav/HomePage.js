@@ -26,7 +26,6 @@ import { DimensionContext } from '../../contexts/DimensionContext';
 // TODO: Fix button animation starting from far left of button
 
 export default function HomePage({ navigation }) {
-  const {windowWidth, windowHeight} = useContext(DimensionContext);
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [mode, setMode] = useState('light');

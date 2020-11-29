@@ -1,55 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, Dimensions } from 'react-native';
 import AppStyles from '../AppStyles';
-const window = Dimensions.get('window')
-
-const screenWidth = window.width
+import { DimensionContext } from '../contexts/DimensionContext'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 export default function UserProfile({ profilePicture, userFirstLast, username }) {
   const userFirstLastDummy = userFirstLast
-  const usernameDummy = username  
-  
+  const usernameDummy = username
+  const {windowWidth, windowHeight} = useContext(DimensionContext)
+
+  const userInfoHeight = hp('20%')
+  const profPicWidth = userInfoHeight * 0.6
+  const nameFontSize = userInfoHeight * 0.17 //0.15 before
+  const usernameFontSize = userInfoHeight * 0.12
+  const marginSize = userInfoHeight * 0.01
+
   return (
-    <View> 
-        <View style={styles.container}>
-            <Image
-                source={profilePicture}
-                style={styles.profilePicStyle}
-            />
-            <Text style={styles.userFirstLastStyle}>
-                {userFirstLastDummy}</Text>
-            <Text style={styles.usernameStyle}>
-                @{usernameDummy}</Text>
-        </View>
-    </View>
+      <View style={[styles.container, { display: "flex" }]}>
+          <Image
+              source={profilePicture}
+              style={[styles.profilePicStyle, { width: profPicWidth, height: profPicWidth }]}
+          />
+          <Text style={[styles.userFirstLastStyle, { fontSize: nameFontSize }]}>
+              {userFirstLastDummy}</Text>
+          <Text style={[styles.usernameStyle, { fontSize: usernameFontSize }]}>
+              @{usernameDummy}</Text>
+      </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 40, // added this
+    // paddingTop: 40, // added this
     overflow: 'hidden',
-    width: screenWidth,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     zIndex: -1,
-    backgroundColor: 'transparent'
+    paddingTop: 5,
+    paddingBottom: 5
   },
   profilePicStyle: {
     justifyContent: 'center',
     borderRadius: 100,
-    width: 100, // TODO: change to responsive design
-    height: 100, // TODO: change to responsive design
     // use the line below to test dimensions
-    backgroundColor: 'blue',
+    // backgroundColor: 'blue',
     resizeMode: 'contain'
   },
   userFirstLastStyle: {
-    marginTop: 5,
-    fontSize: 30,
     fontWeight: 'bold'
   },
   usernameStyle: {
-      fontSize: 18
+      //backgroundColor: 'blue'
   }
 });
