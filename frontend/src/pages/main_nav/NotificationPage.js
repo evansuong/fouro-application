@@ -81,7 +81,7 @@ export default function NotificationPage({ navigation }) {
             marginHorizontal: 5,
             display: 'flex',
             alignItems: 'center',
-            minHeight: windowHeight - 20,
+            maxHeight: '100%',
             marginTop: 70,
         },
         background: {
