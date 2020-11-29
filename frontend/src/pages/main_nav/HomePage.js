@@ -154,6 +154,10 @@ export default function HomePage({ navigation }) {
             title='launch page'
             onPress={() => navigation.navigate('Launch Page')}
           />
+          <Button
+            title='welcome page'
+            onPress={() => navigation.navigate('Welcome Page')}
+          />
 
         {/* Light and Dark Mode Switch */}
         <View style={styles.switchContainer}>
