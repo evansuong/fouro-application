@@ -89,9 +89,9 @@ export default function FriendProfilePage({ navigation, route }) {
 
     return (
 
-        <View style={{ height: '100%', display: "flex", backgroundColor: 'white' }}>
+        <View style={{ height: '100%', display: "flex", backgroundColor: 'white', alignItems: 'center' }}>
             <Header route={route} navigation={navigation} onMainNav={false} />
-            <View style={styles.userProfile, {marginTop: topMarginSize}}>
+            <View style={styles.userProfile, {marginTop: -windowHeight / 20}}>
                 {/* user profile information */}
                 <UserProfile 
                     profilePicture={require("assets/profilePic.jpg")}
