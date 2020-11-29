@@ -13,7 +13,7 @@ import LaunchPage from './src/pages/onboarding/LaunchPage';
 import SignupPage from './src/pages/onboarding/SignupPage';
 import PicUploadPage from './src/pages/onboarding/PicUploadPage';
 import NamePage from './src/pages/onboarding/NamePage';
-import QuestionPage from './src/pages/onboarding/QuestionPage';
+import WelcomePage from './src/pages/onboarding/WelcomePage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -96,8 +96,8 @@ export default function App() {
             options={({navigation, route}) => headerOptions(false, navigation, route)}/>
 
           <Stack.Screen 
-            name='Question Page' 
-            component={QuestionPage}
+            name='Welcome Page' 
+            component={WelcomePage}
             options={({navigation, route}) => headerOptions(false, navigation, route)}/>
         </Stack.Navigator>
       </NavigationContainer>    
