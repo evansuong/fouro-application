@@ -1,4 +1,3 @@
-import { DimensionContext } from '../../contexts/DimensionContext'
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { 
   StyleSheet, 
@@ -27,7 +26,6 @@ import CreateHugButton from 'components/CreateHugButton';
 // TODO: Fix button animation starting from far left of button
 
 export default function HomePage({ navigation }) {
-  const {windowWidth, windowHeight} = useContext(DimensionContext);
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [mode, setMode] = useState('light');
@@ -136,10 +134,10 @@ export default function HomePage({ navigation }) {
     return (
       <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
         {/* background */}
-        <Image
+        {/* <Image
                 source={gradient}
                 style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
-            />
+            /> */}
 
           <Button 
             title="create hug" 
