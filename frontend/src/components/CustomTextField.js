@@ -11,7 +11,7 @@ import AppStyles from '../AppStyles'
  * @param {string} placeholder The input placeholder
  * @param {stateHook} setField The field to set in the parent component
  */
-export default function CustomTextField({ titleText, placeholder, setField, secureText=false, required=false }) {
+export default function CustomTextField({ titleText, placeholder, setField, secureText=false, required=false, multiline=false }) {
   return (
     <View>
       <Text style={styles.onboardingText}>
@@ -25,6 +25,7 @@ export default function CustomTextField({ titleText, placeholder, setField, secu
       </Text> 
       <TextInput 
         style={styles.onboardingInput}
+        multiline={multiline}
         placeholder={placeholder}
         secureTextEntry={secureText}
         onChangeText={(val) => setField(val)}
