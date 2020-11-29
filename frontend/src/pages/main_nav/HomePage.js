@@ -217,12 +217,10 @@ export default function HomePage({ navigation }) {
                   Create Hug
                 </Text>
               </Animated.View>
-              
-            </Animated.View>
-          </TouchableWithoutFeedback>
-
-
-        </View>
+            </Text>
+          </Animated.View>
+        </TouchableWithoutFeedback>
       </View>
+     
     )
 }
