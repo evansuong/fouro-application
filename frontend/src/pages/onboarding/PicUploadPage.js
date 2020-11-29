@@ -1,11 +1,8 @@
 import React, { useState, } from 'react';
 import { 
   StyleSheet, 
-  View, 
-  Text, 
-  Image, 
-  TouchableWithoutFeedback,
-  Animated,
+  View,
+  Image,
   Alert,
 } from 'react-native';
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
