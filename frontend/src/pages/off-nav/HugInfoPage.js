@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native'
+import Header from '../../components/Header';
 import { DimensionContext } from '../../contexts/DimensionContext';
 
-export default function HugInfoPage() {
+export default function HugInfoPage({ navigation, route }) {
 
     const { windowWidth, windowHeight } = useContext(DimensionContext)
 
@@ -101,6 +102,7 @@ export default function HugInfoPage() {
     return (
         <ScrollView style={styles.mainContainer}>
             {/* header */}
+            <Header route={route} navigation={navigation} onMainNav={false} />
             <View style={styles.header}>
                 <View>
                     {/* insert first hug picture -- default is friend's prof pic */}

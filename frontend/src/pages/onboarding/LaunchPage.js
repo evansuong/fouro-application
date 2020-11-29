@@ -15,7 +15,7 @@ export default function LaunchPage({ navigation }) {
     <View style={styles.container}>
       <ImageBackground 
         source={background}
-        style={AppStyles.backgroundStyle}
+        style={{position: 'absolute', width: '100%', height: '100%'}}
       >
         <View style={styles.innerContainer}>
           <LinkedButton 

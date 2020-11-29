@@ -6,8 +6,9 @@ import { DimensionContext } from '../contexts/DimensionContext';
 const backIcon = require('assets/back-icon.png');
 const searchIcon = require('assets/magnifyingGlass.png');
 const profileIcon = require('assets/user-icon.png');
-const editIcon = require('assets/edit-icon.png');
+const editIcon = require('assets/user-icon.png');
 const corkboardIcon = require('assets/corkboard-icon.png');
+const dotsIcon = require('assets/dots-icon.png');
 
 
 
@@ -53,7 +54,7 @@ function EditButton(navigation) {
     function onPress() {
         alert('edit button pressed');
     }
-    return buildButtonProps('edit', editIcon, onPress);
+    return buildButtonProps('edit', profileIcon, onPress);
 } 
 
 function CorkboardButton(navigation) {
@@ -63,6 +64,12 @@ function CorkboardButton(navigation) {
     return buildButtonProps('corkboard', corkboardIcon, onPress);
 } 
 
+function RemoveFriendButton(navigation) {
+    function onPress() {
+        alert('remove button pressed');
+    }
+    return buildButtonProps('remove', dotsIcon, onPress);
+} 
 
 
 
@@ -119,9 +126,9 @@ export default function Header(props) {
     const headerButtons = {
         Friends: [SearchButton(navigation)],
         Home: [ProfileButton(navigation), CorkboardButton(navigation)],
-        Notification: [],
-        Profile: [EditButton(navigation)],
-        friendProfile: [],
+        Notification: '',
+        'User Profile Page': [EditButton(navigation)],
+        'Friend Profile': [RemoveFriendButton(navigation)],
     };
 
     let title = ''
@@ -134,8 +141,11 @@ export default function Header(props) {
         buttons = headerButtons[currentRoute]
 
     // update to render off nav header
-    } else if (route.params.page) {
-        buttons = [BackButton(navigation), headerButtons[route.params.page]]
+    } else if (route.name) {
+        console.log(route.name)
+        buttons = [BackButton(navigation), headerButtons[route.name]]
+        console.log(buttons)
+        console.log(buttons.length)
     }
 
     const styles = StyleSheet.create({
@@ -167,7 +177,7 @@ export default function Header(props) {
             {title !== '' && 
                 <Text style={styles.title}>{props.children}</Text>
             }
-            {buttons && buttons.length > 1 ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
+            {buttons && buttons.length > 1 && buttons[1] !== '' ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
         </View>
     )
 }
