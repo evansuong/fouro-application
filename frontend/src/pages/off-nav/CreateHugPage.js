@@ -7,8 +7,8 @@ import {
   Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
-  FlatList, 
   ScrollView,
+  Alert,
 } from 'react-native';
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 import profilePic from 'assets/profilePic.jpg';
@@ -17,6 +17,7 @@ import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+
 
 export default function CreateHugPage({ navigation, friendName='Placeholder', friendPic }) {
     const [message, setMessage] = useState('');
@@ -27,7 +28,25 @@ export default function CreateHugPage({ navigation, friendName='Placeholder', fr
     }, [images])
 
     const callBackend = async () => {
-      console.log('hug submitted');
+      try {
+        let blobArray = [];
+        for (let i = 0; i < images.length; i++) {
+          const splitPicURI = images[i].uri.split('/');
+          let res = await getBlobObj(images[i].uri, splitPicURI[splitPicURI.length - 1]);
+          blobArray.push(res);
+        }
+        // Send hugImagesArray to backend to push to firebase
+        // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
+        // console.log('done', JSON.stringify(blobArray));
+        Alert.alert('Hug created!');
+      } catch (err) {
+        Alert.alert('Hug creation failed. Please try again.')
+      }
+    }
+  
+    const getBlobObj = async (uri, imgName) => {
+      const response = await fetch(uri);
+      return await response.blob();
     }
 
     const pickFromGallery = async () => {
@@ -40,7 +59,7 @@ export default function CreateHugPage({ navigation, friendName='Placeholder', fr
           aspect: [1,1],
           quality: 0.5,
         })
-        console.log(data);
+        // console.log(data);
         if (data.cancelled == false) {
           setImages(prevImages => [...prevImages, data]);
         } else {
@@ -110,27 +129,15 @@ export default function CreateHugPage({ navigation, friendName='Placeholder', fr
                 ))}
                 </View>
               </ScrollView>
-              {/* <FlatList
-                data={images}
-                keyExtractor={item => item.uri}
-                columnWrapperStyle={{justifyContent: 'space-around'}}
-                numColumns={3}
-                renderItem={({ item }) => (
-                  <Image
-                    source={isEmpty(item) || item.cancelled ? profilePic : {uri: `${item.uri}`}}
-                    style={{width: 100, height: 100, marginTop: 10,}}
-                  />
-                )}
-              /> */}
             </View>
           </View>
 
           {
-            images.length > 0 && 
+            images.length > 0 && message.length > 0 &&
             <View>
               <LinkedButton
                 navigation={navigation}
-                link='Home Page'
+                link='Main Nav Page'
                 text='SEND HUG'
                 color='#FB7250'
                 onPress={() => callBackend()}
