@@ -3,7 +3,9 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
-import { BlurView } from "expo-blur";
+import MaskedView from '@react-native-masked-view/masked-view';
+import { LinearGradient } from 'expo-linear-gradient';
+ 
 
 const backIcon = require('assets/back-icon.png');
 const searchIcon = require('assets/magnifyingGlass.png');
@@ -76,14 +78,15 @@ function RemoveFriendButton(navigation) {
 
 
 
-export function HeaderButton({ name, icon, onPress }) {
+export function HeaderButton({ name, icon, onPress, onMainNav }) {
 
     // console.log("buttonName: ", name)
+    console.log(onMainNav)
 
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const styles = {
         btnContainer: {
-            backgroundColor: 'rgba(0, 0, 0, .5)', 
+            backgroundColor: onMainNav ? 'rgba(0, 0, 0, .2)' : 'rgba(0, 0, 0, .4)', 
             borderRadius: 100,
             height: windowWidth / 8.5,
             width: windowWidth / 8.5, 
@@ -99,6 +102,7 @@ export function HeaderButton({ name, icon, onPress }) {
     }
   
     return (
+
         <TouchableOpacity onPress={onPress}>
             <View style={styles.btnContainer}> 
                 <Image style={styles.btnImage} source={icon} />
@@ -154,10 +158,20 @@ export default function Header(props) {
             marginTop: windowHeight / 20,
             position: 'absolute',
             zIndex: 5,
+            backgroundColor: onMainNav ? 'rgba(0, 0, 0, .3)' : 'transparent',
+            borderRadius: 100,
+            padding: 5,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.8,
+            shadowRadius: 2,  
+            elevation: 5
+
         }, 
         title: {
             fontWeight: 'bold',
             fontSize: 30,
+            color: 'white',
         },
         filler: {
             width: windowWidth / 8.5,
@@ -171,14 +185,23 @@ export default function Header(props) {
     // return new header
     return (
         <View style={styles.header}>
-            {/* <BlurView intensity={10} style={{...StyleSheet.absoluteFill, ...styles.header}}> */}
-                {buttons ? <HeaderButton {...buttons[0]}/> : <View style={styles.filler}/>}
-                {
-                    <Text style={styles.title}>{props.children}</Text>
+                {buttons ? 
+                    <HeaderButton {...buttons[0]} onMainNav={onMainNav}/> 
+                    : 
+                    <View style={styles.filler}/>
                 }
-                {buttons && buttons.length > 1 && buttons[1] !== '' ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
-            {/* </BlurView> */}
+                {
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.title}>{props.children}</Text>
+                    </View>
+                }
+                {buttons && buttons.length > 1 && buttons[1] !== '' ? 
+                    <HeaderButton {...buttons[1]} onMainNav={onMainNav}/> 
+                    : 
+                    <View style={styles.filler}/>
+                }
         </View>
+
     )
 }
 

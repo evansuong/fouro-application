@@ -91,7 +91,7 @@ export default function NotificationPage({ navigation, route }) {
             alignItems: 'center',
         },
         filler: {
-            height: windowHeight / 8,
+            height: windowHeight / 7,
         }
     })
 
@@ -100,7 +100,7 @@ export default function NotificationPage({ navigation, route }) {
    
     // map every notification entry to a notification panel element 
     return (
-        <View>
+        <View style={AppStyles.navPageContainer}>
             {/* background */}
             <Image
                 source={gradient}
