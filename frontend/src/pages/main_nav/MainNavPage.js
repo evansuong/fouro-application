@@ -13,7 +13,6 @@ import NotificationPage from './NotificationPage'
 import HomePage from './HomePage'
 import { DimensionContext } from '../../contexts/DimensionContext';
 import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
-import Background from '../../components/Background';
 import customHeader from '../../components/Header';
 
 // TODO: follow the gradient thing

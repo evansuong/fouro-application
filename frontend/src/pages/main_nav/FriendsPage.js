@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
     navPageContainer: {
       display: 'flex',
       backgroundColor: 'transparent',
-      height: '98%',
-      alignItems: 'center'
+      alignItems: 'center',
+      flexShrink: 1
     },
     background: {
         position: 'absolute',

@@ -7,6 +7,7 @@ import FriendHistoryPage from './src/pages/off-nav/FriendHistoryPage';
 import FriendProfilePage from './src/pages/off-nav/FriendProfilePage';
 import CorkboardPage from './src/pages/off-nav/CorkboardPage';
 import HugInfoPage from './src/pages/off-nav/HugInfoPage';
+import UserProfilePage from './src/pages/off-nav/UserProfilePage'
 
 import LoginPage from './src/pages/onboarding/LoginPage';
 import LaunchPage from './src/pages/onboarding/LaunchPage';
@@ -21,8 +22,6 @@ import CreateHugPage from './src/pages/off-nav/CreateHugPage';
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
 import headerOptions from './src/components/Header';
 import AppStyles from './src/AppStyles';
-import UserProfilePage from './src/pages/off-nav/UserProfilePage';
-
 
 export default function App() {
   const Stack = createStackNavigator();

@@ -3,13 +3,23 @@ import { StyleSheet, View, Text, Image, Dimensions } from 'react-native';
 import AppStyles from '../AppStyles';
 import { DimensionContext } from '../contexts/DimensionContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
-export default function UserProfile({ profilePicture, userFirstLast, username }) {
+/**
+ * @param { Image } profilePicture    a resource called with require('pathname')
+ * 
+ * @param { string } userFirstLast    the user's first and last name
+ * 
+ * @param { username } username       the user's username
+ */
+export default function UserProfile({ routeName, profilePicture, userFirstLast, username }) {
   const userFirstLastDummy = userFirstLast
   const usernameDummy = username
   const {windowWidth, windowHeight} = useContext(DimensionContext)
 
-  const userInfoHeight = hp('20%')
+  // const routeName = getFocusedRouteNameFromRoute(route)
+  const userInfoHeight = routeName === 'User Profile Page' ? hp('30%') : hp('20%')
+  // console.log("route name is" + routeName)
   const profPicWidth = userInfoHeight * 0.6
   const nameFontSize = userInfoHeight * 0.17 //0.15 before
   const usernameFontSize = userInfoHeight * 0.12
