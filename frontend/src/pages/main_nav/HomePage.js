@@ -29,6 +29,7 @@ export default function HomePage({ navigation }) {
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [mode, setMode] = useState('light');
+  const { windowWidth, windowHeight } = useContext(DimensionContext)
 
   const width = useRef(new Animated.Value(70)).current;
   const fade = useRef(new Animated.Value(0)).current;
@@ -154,7 +155,6 @@ export default function HomePage({ navigation }) {
             onPress={() => navigation.navigate('Launch Page')}
           />
           <Button
-
             title='welcome page'
             onPress={() => navigation.navigate('Welcome Page')}
           />
