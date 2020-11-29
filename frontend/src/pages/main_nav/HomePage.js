@@ -99,7 +99,7 @@ export default function HomePage({ navigation }) {
   const testData = [
     buildTestData('Vicki', 'do you remember', require('assets/profilePic.jpg'), 1),
     buildTestData('Ricky', 'the 21st night of september Chow', require('assets/profilePic.jpg'), 2),
-    buildTestData('Alex', 'soulja boy tellem', require('assets/profilePic.jpg'), 3),
+    buildTestData('Alex', 'soulja boy tellem', undefined, 3),
     buildTestData('Evan', 'nobody \n \n\npray for\n me if t\nhey n\no\n\n\n\n\n\nt \n there \n \n \n for me', require('assets/profilePic.jpg'), 4),
     buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), 5),
   ]
@@ -108,7 +108,7 @@ export default function HomePage({ navigation }) {
     createHugButtonContainer: {
       flexDirection: 'row',
       position: 'absolute',
-      bottom: 100,
+      bottom: 80,
       // left: windowWidth - 250,
       left: 10,
       borderRadius: 50,
@@ -154,6 +154,15 @@ export default function HomePage({ navigation }) {
             title='launch page'
             onPress={() => navigation.navigate('Launch Page')}
           />
+          <Button
+<<<<<<< HEAD
+            title='pic upload'
+            onPress={() => navigation.navigate('Pic Upload Page')}
+=======
+            title='welcome page'
+            onPress={() => navigation.navigate('Welcome Page')}
+>>>>>>> 9d942999ddc415bd9fc9f6e8313b67a6c8c4349f
+          />
 
         {/* Light and Dark Mode Switch */}
         <View style={styles.switchContainer}>
@@ -168,7 +177,7 @@ export default function HomePage({ navigation }) {
 
         {/* Hug Cards */}
         <TouchableWithoutFeedback
-          onPressIn={() => dismissCreateButton()}
+          onPress={() => dismissCreateButton()}
         >
           <ScrollView 
             contentContainerStyle={{alignItems: 'center'}}
@@ -185,14 +194,6 @@ export default function HomePage({ navigation }) {
           </ScrollView>
         </TouchableWithoutFeedback>
 
-        {/* Trying to modularize create hug button */}
-        {/* <CreateHugButton 
-          navigation={navigation}
-          expand={expanded}
-          left={10}
-          bottom={10}
-          inputMode={mode}
-        /> */}
 
         {/* Create Hug Button */}
         <TouchableWithoutFeedback
@@ -217,6 +218,7 @@ export default function HomePage({ navigation }) {
             
           </Animated.View>
         </TouchableWithoutFeedback>
+
       </View>
     )
 }
