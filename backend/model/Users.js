@@ -1,8 +1,8 @@
 // Users file for Creating, Reading, Updating, and Deleting Users
 // and User Profile Management
-var firebase = require("../firebase/config");
+var firebase = require("../firebase/admin");
 require("firebase/firestore");
-require("firebase/auth");
+//require("firebase/auth");
 
 // Firestore
 const db = firebase.firestore();
@@ -21,12 +21,12 @@ const UsersAPI = {
   /*
    * @Param: string - Current User's uid (currentUser.uid)
    */
-  createNewUser: async function (user_uid) {
+  createNewUser: async function (uid) {
     let created = false;
 
     // initialize local object containing initial user values
     const user = {
-      user_id: user_uid,
+      user_id: uid,
       username: "",
       first_name: "",
       last_name: "",
@@ -36,10 +36,10 @@ const UsersAPI = {
     };
 
     await usersCollection
-      .doc(user_uid)
+      .doc(uid)
       .set(user) // set uid document to new user values
       .then(() => {
-        console.log(`User created with ID: ${user_uid}`);
+        console.log(`User created with ID: ${uid}`);
         created = true;
       })
       .catch((error) => {
@@ -52,8 +52,8 @@ const UsersAPI = {
 
   // returns users profile information in an object
   // takes in signed-in user
-  getUserProfile: async function (user_uid) {
-    var userDocRef = usersCollection.doc(user_uid);
+  getUserProfile: async function (uid) {
+    var userDocRef = usersCollection.doc(uid);
     var userProfile;
 
     // access document
@@ -86,7 +86,7 @@ const UsersAPI = {
   // User and UID remains constant throughout expo session
   // In order to reset UID, close metro bundler and npm start again
   // TODO: Develop a SIGNOUT button ASAP
-  updateUserProfile: async function (user_uid, username, firstName, lastName) {
+  updateUserProfile: async function (uid, username, firstName, lastName) {
     var success = false;
 
     // trim whitespace from username
@@ -103,11 +103,11 @@ const UsersAPI = {
 
     // update document with data
     await usersCollection
-      .doc(user_uid)
+      .doc(uid)
       .set(user, { merge: true }) // set uid document to new user values
       .then(() => {
         console.log(
-          `Updated user with ID: ${user_uid}\n with data: ${JSON.stringify(
+          `Updated user with ID: ${uid}\n with data: ${JSON.stringify(
             user
           )}`
         );
@@ -121,7 +121,7 @@ const UsersAPI = {
     return { out: success };
   },
 
-  uploadUserProfilePicture: async function (user_uid, file) {
+  uploadUserProfilePicture: async function (uid, file) {
     // TODO this function may not work correctly.
     // create a cloud storage refrence
     var storageRef = firebase
@@ -132,15 +132,15 @@ const UsersAPI = {
     var task = storageRef.put(file);
 
     // update user's photo URL to the saved cloud storage url
-    await usersCollection.doc(user_uid).update({
+    await usersCollection.doc(uid).update({
       profile_pic: storageRef,
     });
   },
 };
 
 const HugCountAPI = {
-  getUserHugCount: function (user_uid) {
-    var userDocRef = usersCollection.doc(user_uid);
+  getUserHugCount: function (uid) {
+    var userDocRef = usersCollection.doc(uid);
     var hug_count;
 
     // access document
@@ -164,8 +164,8 @@ const HugCountAPI = {
     return { out: hug_count };
   },
 
-  getUserHugStreak: function (user_uid) {
-    var userDocRef = usersCollection.doc(user_uid);
+  getUserHugStreak: function (uid) {
+    var userDocRef = usersCollection.doc(uid);
     var streak_count;
 
     // access document
@@ -189,13 +189,13 @@ const HugCountAPI = {
     return { out: streak_count };
   },
 
-  increaseHugCount: async function (user_uid) {
+  increaseHugCount: async function (uid) {
     // retrieve hug and streak count
-    var hug_count = this.getUserHugCount(user_uid);
-    var streak_count = this.getUserHugStreak(user_uid);
+    var hug_count = this.getUserHugCount(uid);
+    var streak_count = this.getUserHugStreak(uid);
     var success = false;
 
-    var userDocRef = usersCollection.doc(user_uid);
+    var userDocRef = usersCollection.doc(uid);
 
     // failed to retrieve hug count
     if (hug_count == null || streak_count == null) {
@@ -216,10 +216,10 @@ const HugCountAPI = {
 
       // update document with new data
       await usersCollection
-        .doc(user_uid)
+        .doc(uid)
         .update(user) // set uid document to new user values
         .then(() => {
-          console.log(`Updated user with ID: ${user_uid}\n with data: ${user}`);
+          console.log(`Updated user with ID: ${uid}\n with data: ${user}`);
           success = true;
         })
         .catch((error) => {
