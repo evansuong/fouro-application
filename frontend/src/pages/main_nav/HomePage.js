@@ -35,6 +35,7 @@ export default function HomePage({ navigation, route }) {
   const width = useRef(new Animated.Value(70)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
+  const routeName = route.name;
 
   const gradient = require('assets/gradients/middle.png')
 
@@ -143,7 +144,7 @@ export default function HomePage({ navigation, route }) {
           style={AppStyles.background}
         />
 
-        <Header route={route} navigation={navigation} onMainNav={true}>Hug Feed</Header>
+        <Header routeName={routeName} navigation={navigation} onMainNav={true}>Hug Feed</Header>
 
         <Button 
           title="create hug" 

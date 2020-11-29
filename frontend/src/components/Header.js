@@ -3,6 +3,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
+import { BlurView } from "expo-blur";
+
 const backIcon = require('assets/back-icon.png');
 const searchIcon = require('assets/magnifyingGlass.png');
 const profileIcon = require('assets/user-icon.png');
@@ -111,21 +113,14 @@ export function HeaderButton({ name, icon, onPress }) {
 export default function Header(props) {
     
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const { route, navigation, onMainNav } = props;
+    const { routeName, navigation, onMainNav } = props;
 
     // standardize route param names
-
-    // titles for pages on the main navigation
-    const mainNavTitles = {
-        Friends: 'Friends',
-        Home: 'Hug Feed',
-        Notifications: 'Notifications'
-    };
 
     // collection of headerbuttons to render based on the page
     const headerButtons = {
         'Friends': [SearchButton(navigation)],
-        'Home': [ProfileButton(navigation), CorkboardButton(navigation)],
+        'Hug Feed': [ProfileButton(navigation), CorkboardButton(navigation)],
         'Notification': '',
         'User Profile Page': [EditButton(navigation)],
         'Friend Profile': [RemoveFriendButton(navigation)],
@@ -134,19 +129,17 @@ export default function Header(props) {
         'Corkboard': '',
     };
 
-    let title = ''
     let buttons = []
 
     // update to render main nav header
     if (onMainNav) {
-        let currentRoute = (route.name)
-        title = mainNavTitles[currentRoute]
-        buttons = headerButtons[currentRoute]
+        console.log(routeName)
+        buttons = headerButtons[routeName]
 
     // update to render off nav header
-    } else if (route.name) {
-        console.log(route.name)
-        buttons = [BackButton(navigation), ...headerButtons[route.name]]
+    } else if (routeName) {
+        console.log(routeName)
+        buttons = [BackButton(navigation), ...headerButtons[routeName]]
         console.log(buttons)
         console.log(buttons.length)
     }
@@ -159,6 +152,8 @@ export default function Header(props) {
             justifyContent: 'space-between',
             width: windowWidth / 1.1,
             marginTop: windowHeight / 20,
+            position: 'absolute',
+            zIndex: 5,
         }, 
         title: {
             fontWeight: 'bold',
@@ -170,17 +165,19 @@ export default function Header(props) {
         },
     });
 
-    // buttons && console.log(buttons.length)
+    buttons && console.log(buttons.length)
     // console.log(onMainNav)
   
     // return new header
     return (
         <View style={styles.header}>
-            {buttons ? <HeaderButton {...buttons[0]}/> : <View style={styles.filler}/>}
-            {title !== '' && 
-                <Text style={styles.title}>{props.children}</Text>
-            }
-            {buttons && buttons.length > 1 && buttons[1] !== '' ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
+            {/* <BlurView intensity={10} style={{...StyleSheet.absoluteFill, ...styles.header}}> */}
+                {buttons ? <HeaderButton {...buttons[0]}/> : <View style={styles.filler}/>}
+                {
+                    <Text style={styles.title}>{props.children}</Text>
+                }
+                {buttons && buttons.length > 1 && buttons[1] !== '' ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
+            {/* </BlurView> */}
         </View>
     )
 }

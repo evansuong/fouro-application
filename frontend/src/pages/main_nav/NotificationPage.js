@@ -6,6 +6,7 @@ import { DimensionContext } from '../../contexts/DimensionContext'
 import { useFocusEffect } from '@react-navigation/native';
 import AppStyles from '../../AppStyles';
 import Header from '../../components/Header';
+import App from '../../../App';
 
 // temorary test data to simulate backend notification data 
 const pic = require('../../../assets/profilePic.jpg')
@@ -23,6 +24,7 @@ function buildTestData(type, user, img, id) {
 
 
 const testData = [
+    buildTestData('f', 'Alex Chow', require('../../../assets/profilePic.jpg'), 0),
     buildTestData('r', 'Alex Chow', require('../../../assets/profilePic.jpg'), 0),
     buildTestData('h', 'Evan Suong', require('../../../assets/profilePic.jpg'), 1),
     buildTestData('h', 'Yixuan Zhou', require('../../../assets/profilePic.jpg'), 2),
@@ -36,6 +38,7 @@ export default function NotificationPage({ navigation, route }) {
     const [isFocused, setIsFocused] = useState(false)
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const [notifications, setNotifications] = useState(testData ? testData : {})
+    const routeName = route.name;
     
 
     // check whether the user is on the page (true) or navigates away from the page (false)
@@ -78,6 +81,21 @@ export default function NotificationPage({ navigation, route }) {
         setNotifications(newList)
     }
 
+
+    // notification list styles
+    const styles = StyleSheet.create({
+        notificationList: {
+            marginHorizontal: 5,
+            display: 'flex',
+            flexShrink: 1,
+            alignItems: 'center',
+        },
+        filler: {
+            height: windowHeight / 8,
+        }
+    })
+
+
         
    
     // map every notification entry to a notification panel element 
@@ -88,7 +106,7 @@ export default function NotificationPage({ navigation, route }) {
                 source={gradient}
                 style={AppStyles.background}
             />
-            <Header route={route} navigation={navigation} onMainNav={true}>Notifications</Header>
+            <Header routeName={routeName} navigation={navigation} onMainNav={true}>Notifications</Header>
 
             <View style={styles.notificationList}>
                 {/* actual list */}
@@ -101,6 +119,8 @@ export default function NotificationPage({ navigation, route }) {
                             isFocused={isFocused} 
                             handleAccept={acceptFriendRequest} 
                             handleDecline={declineFriendRequest} />
+                            : data.type === 'f' ?
+                        <View key={'filler'} style={styles.filler}></View>
                             :
                         <NotificationCard 
                             key={data.id} 
@@ -114,15 +134,3 @@ export default function NotificationPage({ navigation, route }) {
         </View>
     )
 } 
-
-// notification list styles
-const styles = StyleSheet.create({
-    notificationList: {
-        marginHorizontal: 5,
-        marginTop: 10,
-        display: 'flex',
-        flexShrink: 1,
-        alignItems: 'center',
-    },
-})
-
