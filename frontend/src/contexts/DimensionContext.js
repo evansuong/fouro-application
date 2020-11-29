@@ -2,7 +2,7 @@
 import { Dimensions } from 'react-native'
 import React, { createContext, useState } from 'react'
 
-const windowDimensions = Dimensions.get('window')
+const windowDimensions = Dimensions.get('screen')
 
 export const DimensionContext = createContext();
 

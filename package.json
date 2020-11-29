@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/evansuong/fouro-application/issues"
   },
-  "homepage": "https://github.com/evansuong/fouro-application#readme"
+  "homepage": "https://github.com/evansuong/fouro-application#readme",
+  "dependencies": {
+    "@react-native-community/slider": "^3.0.3"
+  }
 }

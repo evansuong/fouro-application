@@ -4,7 +4,8 @@ import NotificationCard from 'components/NotificationCard';
 import { DimensionContext } from '../../contexts/DimensionContext'
 
 import { useFocusEffect } from '@react-navigation/native';
-import NotificationHeader from 'components/headers/NotificationsHeader';
+import AppStyles from '../../AppStyles';
+import Header from '../../components/Header';
 
 // temorary test data to simulate backend notification data 
 const pic = require('../../../assets/profilePic.jpg')
@@ -29,7 +30,7 @@ const testData = [
     buildTestData('r', 'Vicki Chen', require('../../../assets/profilePic.jpg'), 4),
 ]
 
-export default function NotificationPage({ navigation }) {
+export default function NotificationPage({ navigation, route }) {
 
     // stores whether the user is on this page (true) or not (false)
     const [isFocused, setIsFocused] = useState(false)
@@ -48,7 +49,7 @@ export default function NotificationPage({ navigation }) {
     function catchHug(id) {
         clearNotification(id)
         navigation.navigate('Hug Info', { 
-            page: 'Hug Info',
+            page: 'hugInfo',
             data: notifications.filter((item) => item.id === id)[0], 
         })
         // signify hug as caught to the database
@@ -61,6 +62,9 @@ export default function NotificationPage({ navigation }) {
 
     function acceptFriendRequest(id) {
         clearNotification(id)
+        navigation.navigate('Friend Profile', {
+            page: 'friendProfile'
+        })
         // add friend to user friend list in database
     }
 
@@ -75,48 +79,50 @@ export default function NotificationPage({ navigation }) {
     }
 
         
-    // notification list styles
-    const styles = StyleSheet.create({
-        notificationList: {
-            marginHorizontal: 5,
-            display: 'flex',
-            alignItems: 'center',
-            minHeight: windowHeight - 20,
-            marginTop: 70,
-        },
-        background: {
-            position: 'absolute'
-        }
-    })
-    
+   
     // map every notification entry to a notification panel element 
     return (
-        <View style={styles.notificationList}>
+        <View>
             {/* background */}
             <Image
                 source={gradient}
-                style={[styles.background, { width: windowWidth, height: windowHeight }]}
+                style={AppStyles.background}
             />
+            <Header route={route} navigation={navigation} onMainNav={true}>Notifications</Header>
 
-            {/* actual list */}
-            <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
-                {notifications.map((data, index) => (
-                    data.type === 'request' ? 
-                    <NotificationCard 
-                        key={data.id} 
-                        notificationData={data} 
-                        isFocused={isFocused} 
-                        handleAccept={acceptFriendRequest} 
-                        handleDecline={declineFriendRequest} />
-                        :
-                    <NotificationCard 
-                        key={data.id} 
-                        notificationData={data} 
-                        isFocused={isFocused} 
-                        handleAccept={catchHug} 
-                        handleDecline={dropHug} />
-                ))}
-            </ScrollView>
+            <View style={styles.notificationList}>
+                {/* actual list */}
+                <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
+                    {notifications.map((data, index) => (
+                        data.type === 'r' ? 
+                        <NotificationCard 
+                            key={data.id} 
+                            notificationData={data} 
+                            isFocused={isFocused} 
+                            handleAccept={acceptFriendRequest} 
+                            handleDecline={declineFriendRequest} />
+                            :
+                        <NotificationCard 
+                            key={data.id} 
+                            notificationData={data} 
+                            isFocused={isFocused} 
+                            handleAccept={catchHug} 
+                            handleDecline={dropHug} />
+                    ))}
+                </ScrollView>
+            </View>                   
         </View>
     )
 } 
+
+// notification list styles
+const styles = StyleSheet.create({
+    notificationList: {
+        marginHorizontal: 5,
+        marginTop: 10,
+        display: 'flex',
+        flexShrink: 1,
+        alignItems: 'center',
+    },
+})
+
