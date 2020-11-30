@@ -18,7 +18,13 @@
 
         npm install
 
-## Testing Functions
+## Starting the backend server
+
+1.  Run the sever
+
+        npm run server
+
+## Testing Backend Functions
 
 1.  In the [./test](./test) folder, create a file that imports your functions from the model
 

@@ -8,7 +8,7 @@ router.use(
 router.use(express.json());
 
 /*
-// Test
+// Test Template
 router.get("/getUser/:id", (req, res) => {
   var json = Users.UserAPI.getUser(req.body.user);
   res.status(200).json(json);

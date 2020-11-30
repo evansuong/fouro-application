@@ -1,5 +1,4 @@
 const express = require("express");
-const { route } = require("./usersRoutes");
 const router = express.Router();
 router.use(
   express.urlencoded({
@@ -8,7 +7,6 @@ router.use(
 );
 router.use(express.json());
 
-//router.get("/signin", (req, res) => {});
 //Routes
 router.get("/getNotifications/:id", (req, res) => {});
 

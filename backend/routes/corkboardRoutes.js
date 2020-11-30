@@ -7,7 +7,6 @@ router.use(
 );
 router.use(express.json());
 
-//router.get("/signin", (req, res) => {});
 //Routes
 router.get("/buildCorkboard/:id", (req, res) => {});
 

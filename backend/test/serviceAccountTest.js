@@ -1,5 +1,8 @@
-// Purely for testing the new config file
-var firebase = require("../firebase/config");
+/*
+ * This file is PURELY for testing to see if Admin SDK Works. This is not production
+ * code nor is this for testing actual functions
+ */
+var firebase = require("../firebase/admin");
 //require("firebase/firestore");
 
 const db = firebase.firestore();
