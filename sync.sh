@@ -1,8 +1,6 @@
 #!/bin/bash
 echo "Starting bash script"
-git stash
 git pull origin master
-git stash pop
 cd frontend
 pwd
 npm i
