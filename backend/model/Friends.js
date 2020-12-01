@@ -8,8 +8,31 @@ require("firebase/firestore");
 const db = firebase.firestore();
 const usersCollection = db.collection("users");
 
+// Friend Color Constants
+const COLOR1 = "#FE5951";
+const COLOR2 = "#FC6C58";
+const COLOR3 = "#FA7D5D";
+const COLOR4 = "#F88E63";
+const COLOR5 = "#F69D68";
+const COLOR6 = "#EFBA7C";
+const COLOR7 = "#EFCF7C";
+const COLOR8 = "#EFD67C";
+
 // Helper Functions
-//calculateFriendColor(hug_count);
+/**
+ * Calculate how long ago the last hug was between user and friend
+ * and returns the proper color for the friends list
+ * @param {timestamp} last_hug_date
+ * @return {string} color
+ */
+function calculateFriendColor(last_hug_date) {
+  // Testing
+  let dateInSeconds = Math.floor(Date.now() / 1000);
+  let hugDateInSeconds = last_hug_date.seconds;
+
+  // Time since last hug in seconds
+  let diff = dateInSeconds - hugDateInSeconds;
+}
 
 // Exported APIs
 const FriendsAPI = {
@@ -52,22 +75,19 @@ const FriendsAPI = {
       .collection("friends")
       .doc(friendId)
       .delete()
-      .then();
-    // For testing output
-    /*
-    function () {
+      .then(function () {
         console.log("Document successfully deleted!");
       })
       .catch(function (error) {
         console.error("Error removing document: ", error);
       });
-    */
   },
 
   /**
    * Check the status of the friend to the user
    * @param {string} userId
    * @param {string} friendId
+   * @returns {JSON} friend status
    */
   getFriendStatus: async function (userId, friendId) {
     let status;
@@ -111,7 +131,45 @@ const FriendsAPI = {
     return { out: status };
   },
 
-  getFriendsList: function (userId) {},
+  /**
+   * Get all the User's friends and return
+   * @param {String} userId
+   * @return {JSON} All the friends in an array
+   */
+  getFriendsList: async function (userId) {
+    let friends = []; // friends array
+    let friendsRef = usersCollection.doc(userId).collection("friends");
+    const friendsSnapshot = await friendsRef.orderBy("last_hug_date").get();
+    // No friends
+    if (friendsSnapshot.empty) {
+      console.log("No matching documents.");
+      return { array: friends };
+    }
+
+    // Friends
+    friendsSnapshot.forEach(async (friendDoc) => {
+      // Get the actual userDocument from the friend stored reference
+      let userRef = friendDoc.get("user_id");
+      let userDoc = await userRef.get();
+      if (!userDoc.exists) {
+        console.log("No such document!");
+      } else {
+        let friend = {
+          user_id: userDoc.get("user_id"), // iffy
+          name: userDoc.get("first_name") + " " + userDoc.get("last_name"),
+          username: userDoc.get("username"),
+          // profile_pic: userDoc.get("profile_pic"), // Storage
+          color: calculateFriendColor(friendDoc.get("last_hug_date")),
+        };
+
+        // Add friend object to array
+        friends.push(friend);
+      }
+    });
+
+    // Return the friends
+    return { array: friends };
+  },
   getFriendProfile: function (userId, friendId) {},
 };
 
