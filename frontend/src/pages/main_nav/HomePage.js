@@ -136,46 +136,73 @@ export default function HomePage({ navigation, route }) {
   })  
 
     return (
-      <View style={AppStyles.navPageContainer}>
-        {/* background */}
-        <Image
-          source={gradient}
-          style={AppStyles.background}
-        />
+      <View style={{...AppStyles.navPageContainer, marginTop: 70}}>
+          {/* background */}
+          <Image
+            source={gradient}
+            style={[styles.background, { width: windowWidth + 1, height: windowHeight }]}
+          />
 
-        <Header route={route} navigation={navigation} onMainNav={true}>Hug Feed</Header>
+          <Button 
+            title="create hug" 
+            onPress={() => navigation.navigate('Create Hug')}
+          />
+          <Button 
+            title="add friend" 
+            onPress={() => navigation.navigate('Add Friend')}
+          />
+          <Button
+            title='launch page'
+            onPress={() => navigation.navigate('Launch Page')}
+          />
+          <Button
+            title='welcome page'
+            onPress={() => navigation.navigate('Welcome Page')}
+          />
+          <Button
+            title='pic upload'
+            onPress={() => navigation.navigate('Pic Upload Page')}
+          />
 
-        <Button 
-          title="create hug" 
-          onPress={() => navigation.navigate('Create Hug')}
-        />
-        <Button
-          title='launch page'
-          onPress={() => navigation.navigate('Launch Page')}
-        />
-        <Button
-          title='welcome page'
-          onPress={() => navigation.navigate('Welcome Page')}
-        />
+        {/* Light and Dark Mode Switch */}
+        <View style={styles.switchContainer}>
+          <Text style={{color: mode == 'light' ? 'black': 'white'}}>
+            {mode == 'light' ? 'Light' : 'Dark'}
+          </Text>
+          <Switch
+            onValueChange={handleToggleSwitch}
+            value={isEnabled}
+          />
+        </View>
 
-      {/* Light and Dark Mode Switch */}
-      <View style={styles.switchContainer}>
-        <Text style={{color: mode == 'light' ? 'black': 'white'}}>
-          {mode == 'light' ? 'Light' : 'Dark'}
-        </Text>
-        <Switch
-          onValueChange={handleToggleSwitch}
-          value={isEnabled}
-        />
-      </View>
+        {/* Hug Cards */}
+        <View style={{
+          display: 'flex',
+          flexShrink: 1,
+        }}>
+          <TouchableWithoutFeedback
+            onPress={() => dismissCreateButton()}
+          >
+            <ScrollView 
+              contentContainerStyle={{alignItems: 'center'}}
+              style={{marginBottom: 70,}}
+            >
+              {testData.map(hugData => (
+                <HugCard 
+                  key={hugData.hugId} 
+                  navigation={navigation}
+                  { ...hugData } 
+                  mode={mode}
+                />
+              ))}
+            </ScrollView>
+          </TouchableWithoutFeedback>
+        </View>
 
-      {/* Hug Cards */}
-      <TouchableWithoutFeedback
-        onPress={() => dismissCreateButton()}
-      >
-        <ScrollView 
-          contentContainerStyle={{alignItems: 'center'}}
-          style={{marginBottom: 70,}}
+
+        {/* Create Hug Button */}
+        {/* <TouchableWithoutFeedback
+          onPressIn={handlePress}
         >
           {testData.map(hugData => (
             <HugCard 
@@ -186,7 +213,7 @@ export default function HomePage({ navigation, route }) {
             />
           ))}
         </ScrollView>
-      </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback> */}
 
 
       {/* Create Hug Button */}

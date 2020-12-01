@@ -6,7 +6,7 @@ import LinkedButton from 'components/LinkedButton';
 import { useIsFocused } from '@react-navigation/native';
 
 
-export default function NamePage({ navigation }) {
+export default function NamePage({ navigation, route }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');

@@ -21,8 +21,6 @@ export default function MainNavPage() {
     const Tab = createMaterialTopTabNavigator();
     
     const { windowWidth, windowHeight } = useContext(DimensionContext);
-    const route = useRoute();
-    const routename =  getFocusedRouteNameFromRoute(route);
 
     const homeFocused = require("assets/homeFocused.png");
     const homeBlurred = require("assets/homeBlurred.png");

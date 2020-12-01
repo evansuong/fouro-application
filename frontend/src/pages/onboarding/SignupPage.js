@@ -9,8 +9,7 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-// import SignupAPI from 'backend/routes/SignUp';
-// import UsersAPI from 'backend/routes/Users';
+import AuthAPI from '../../authentication/Authentication';
 import { useIsFocused } from '@react-navigation/native';
 
 
@@ -29,25 +28,24 @@ export default function SignupPage({ navigation }) {
   }, [])
 
   const submitHandler = async () => {
-    // console.log(emailField, passwordField, passwordConfirmField);
-    // setSigningIn(true);
-    // const [registered, newUser] = await SignupAPI.registerUser(emailField, passwordField);
-    // console.log('30', newUser);
-    // const createdInFS = await SignupAPI.createUserInCollection(newUser, emailField, passwordField);
-    // if (registered && createdInFS) {
-    //   setMounted(false);
-    console.log('hey')
-    navigation.navigate('Name Page');
-    // } else {
-    //   setSigningIn(false);
-    //   console.log(`There was an error signing in. Booleans: 
-    //     ${registered} | ${createdInFS}`);
-    // }
+    console.log(emailField, passwordField, passwordConfirmField);
+    setSigningUp(true);
+    const userJSON = await AuthAPI.registerUser(emailField, passwordField);
+    const user = userJSON.providerData[0];
+    // console.log('30', JSON.stringify(user));
+    if (user) {
+      setMounted(false);
+      console.log('hey')
+      navigation.navigate('Name Page', user);
+    } else {
+      setSigningUp(false);
+      console.log(`There was an error signing in.`);
+    }
   }
 
   const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
-  // const isFocused = useIsFocused();
+  const isFocused = useIsFocused();
 
   const checkLength = () => {
     if (passwordField.length < 6) {
@@ -149,11 +147,11 @@ export default function SignupPage({ navigation }) {
           </View>
         }
         {  
-          // checkEmailFilled() &&
-          // checkPasswordFilled() && 
-          // checkEmailValid() &&
-          // passwordMatch() && 
-          // checkLength() &&
+          checkEmailFilled() &&
+          checkPasswordFilled() && 
+          checkEmailValid() &&
+          passwordMatch() && 
+          checkLength() &&
           <LinkedButton
             text='SUBMIT'
             color='#FFC24A'
