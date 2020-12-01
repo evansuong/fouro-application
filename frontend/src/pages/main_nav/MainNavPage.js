@@ -4,7 +4,7 @@
  * https://reactnavigation.org/docs/stack-navigator/#headershown
  */
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -12,28 +12,28 @@ import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage'
 import HomePage from './HomePage'
 import { DimensionContext } from '../../contexts/DimensionContext';
-import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
-import Background from '../../components/Background';
-import customHeader from '../../components/Header';
+import {getFocusedRouteNameFromRoute, useFocusEffect, useRoute} from '@react-navigation/native';
+
 
 // TODO: follow the gradient thing
 export default function MainNavPage() {
 
-    const Tab = createMaterialTopTabNavigator()
+    const Tab = createMaterialTopTabNavigator();
     
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
     const route = useRoute();
     const routename =  getFocusedRouteNameFromRoute(route);
 
-    const homeFocused = require("assets/homeFocused.png")
-    const homeBlurred = require("assets/homeBlurred.png")
-    const friendsFocused = require("assets/friendsFocused.png")
-    const friendsBlurred = require("assets/friendsBlurred.png")
-    const notifFocused = require("assets/notifFocused.png")
-    const notifBlurred = require("assets/notifBlurred.png")
+    const homeFocused = require("assets/homeFocused.png");
+    const homeBlurred = require("assets/homeBlurred.png");
+    const friendsFocused = require("assets/friendsFocused.png");
+    const friendsBlurred = require("assets/friendsBlurred.png");
+    const notifFocused = require("assets/notifFocused.png");
+    const notifBlurred = require("assets/notifBlurred.png");
 
-    const tabWidth = windowWidth / 3
-    const tabHeight = tabWidth / 2.25
+    const tabWidth = windowWidth / 3;
+    const tabHeight = tabWidth / 2.25;
+
     
     return (
         <>
@@ -75,9 +75,9 @@ export default function MainNavPage() {
                     }
                   }}
                   beforeRemove={() => console.log('remove')}>
-                <Tab.Screen name="Friends" component={FriendsPage} {...customHeader(true, 'Friends')} />
-                <Tab.Screen name="Home" component={HomePage} {...customHeader(true, 'Home')} />
-                <Tab.Screen name="Notifications" component={NotificationPage} {...customHeader(true, 'Notifications')} />
+                <Tab.Screen name="Friends" component={FriendsPage}/>
+                <Tab.Screen name="Home" component={HomePage} />
+                <Tab.Screen name="Notifications" component={NotificationPage} />
             </Tab.Navigator>
         </>
     )

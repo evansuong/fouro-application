@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import UserProfile from '../../components/UserProfile';
-import FriendProfileHeader from '../../components/headers/FriendProfileHeader'
 import HugCard from 'components/HugCard'
 // import { FlatList } from 'react-native-gesture-handler';
 import { DimensionContext } from '../../contexts/DimensionContext'
+import Header from '../../components/Header';
 
 function buildTestData(name, text, img, id) {
     return {
@@ -23,11 +23,11 @@ function buildTestData(name, text, img, id) {
     buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), '5'),
   ]
 
-export default function FriendProfilePage({ navigation }) {
+export default function FriendProfilePage({ navigation, route }) {
     const icon = require("assets/overflowMenuIcon.png");
     const {windowWidth, windowHeight} = useContext(DimensionContext)
 
-    const topMarginSize = windowWidth * 0.01
+    const topMarginSize = windowWidth*0.1;
 
     //const hugButtonWidth = windowWidth - 50;
     //const hugButtonHeight = windowHeight / 8;
@@ -44,7 +44,7 @@ export default function FriendProfilePage({ navigation }) {
         },
         userProfile: {
             // position: 'absolute',
-            // marginTop: topMarginSize, // was 20
+            //marginTop: 20, // was 20
             
             zIndex: -1
         },
@@ -89,13 +89,9 @@ export default function FriendProfilePage({ navigation }) {
 
     return (
 
-        <View style={{ height: '100%', display: "flex", backgroundColor: 'white' }}>
-            {/* <FriendProfileHeader 
-                navigation={navigation}
-                style={styles.header}
-            /> */}
-            
-            <View style={styles.userProfile}>
+        <View style={{ height: '100%', display: "flex", backgroundColor: 'white', alignItems: 'center' }}>
+            <Header route={route} navigation={navigation} onMainNav={false} />
+            <View style={styles.userProfile, {marginTop: -windowHeight / 20}}>
                 {/* user profile information */}
                 <UserProfile 
                     profilePicture={require("assets/profilePic.jpg")}
@@ -116,7 +112,7 @@ export default function FriendProfilePage({ navigation }) {
                 />
                 <TouchableOpacity 
                     style={[styles.hugButton, { height: 40, alignItems: 'center', justifyContent: 'center' }]}
-                    onPress={() => navigation.navigate('Create Hug')}
+                    onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
                 >
                     <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Hug</Text>
                 </TouchableOpacity>
