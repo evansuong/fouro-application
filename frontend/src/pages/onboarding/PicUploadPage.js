@@ -1,11 +1,17 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { 
   StyleSheet, 
   View,
   Image,
   Alert,
+  Animated,
+  ImageBackground
 } from 'react-native';
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
+import BackgroundImg from 'assets/gradients/middle.png';
+import AuthAPI from '../../authentication/Authentication';
+import { UserContext } from '../../contexts/UserContext';
+import { DimensionContext } from '../../contexts/DimensionContext';
 import LinkedButton from 'components/LinkedButton';
 import PicUploadButton from 'components/PicUploadButton';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,16 +19,40 @@ import * as Permissions from 'expo-permissions';
 
 const fetch = require('node-fetch');
 
-export default function ProfileSetupPage({ navigation }) {
+export default function ProfileSetupPage({ navigation, route }) {
   const [uploadPic, setUploadPic] = useState({});
+  const { userData, dispatch } = useContext(UserContext);
+  const [startUp, setStartUp] = useState(true);
+  const fade = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (startUp) {
+      setStartUp(false);
+      fadeIn();
+    }
+  }, [startUp])
 
   const callBackend = async () => {
-    console.log(uploadPic);
-    const splitPicURI = uploadPic.uri.split('/');
-    let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
-    // Send res to backend to push to firebase
-    // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-    // console.log('success', JSON.stringify(res));
+    try {
+      console.log(uploadPic);
+      const splitPicURI = uploadPic.uri.split('/');
+      let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
+      // Send res to backend to push to firebase
+      // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
+      // console.log('success', JSON.stringify(res));
+
+      const userJSON = await AuthAPI.registerUser(emailField, passwordField);
+      let { user } = route.params;
+      user['uid'] = userJSON.uid;
+      
+      dispatch({
+        type: 'SET_USER',
+        payload: user,
+      })
+      navigation.navigate('Welcome Page');
+    } catch (err) {
+      console.log(`Error occured: ${err}`);
+    }
   }
 
   const getBlobObj = async (uri, imgName) => {
@@ -66,41 +96,55 @@ export default function ProfileSetupPage({ navigation }) {
     }
   }
 
+  const fadeIn = () => {
+    Animated.timing(fade, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }
+
   const isEmpty = (obj) => {
     return Object.keys(obj).length == 0;
   }
   
   return (
-    <View>
-      <View style={styles.picContainer}>
-        <Image
-          source={isEmpty(uploadPic) || uploadPic.cancelled ? fillerProfilePic : {uri: `${uploadPic.uri}`}}
-          style={styles.profilePicture}
-        />
-      </View>
+    <Animated.View opacity={fade} style={{flex: 1,}}>
+      <ImageBackground
+        source={BackgroundImg}
+        style={styles.backgroundImg}
+      >
+        <View style={styles.whiteBox}>
+          <View style={styles.picContainer}>
+            <Image
+              source={isEmpty(uploadPic) || uploadPic.cancelled ? fillerProfilePic : {uri: `${uploadPic.uri}`}}
+              style={styles.profilePicture}
+            />
+          </View>
 
-      <View style={styles.buttonContainer}>
-        <PicUploadButton
-          text='Choose a profile picture'
-          onPress={() => pickFromGallery()}
-        />
-        <PicUploadButton
-          text='Take a profile picture'
-          onPress={() => pickFromCamera()}
-        />
-      </View>
+          <View style={styles.buttonContainer}>
+            <PicUploadButton
+              text='Choose a profile picture'
+              onPress={() => pickFromGallery()}
+            />
+            <PicUploadButton
+              text='Take a profile picture'
+              onPress={() => pickFromCamera()}
+            />
+          </View>
 
-      <View style={styles.submit}>
-        <LinkedButton
-          navigation={navigation}
-          link='Welcome Page'
-          text='SUBMIT'
-          // Should this be yellow or grey?
-          color='#FFC24A'
-          onPress={() => callBackend()}
-        />
-      </View>
-    </View>
+          <View style={styles.submit}>
+            <LinkedButton
+              navigation={navigation}
+              text='SUBMIT'
+              // Should this be yellow or grey?
+              color='#FFC24A'
+              onPress={() => callBackend()}
+            />
+          </View>
+        </View>
+      </ImageBackground>
+    </Animated.View>
   );
 }
 
@@ -145,5 +189,16 @@ const styles = StyleSheet.create({
   },
   submit: {
     marginTop: 30,
+  },
+  backgroundImg: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  whiteBox: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingBottom: 30,
+    marginLeft: 20,
+    marginRight: 20,
   }
 })
