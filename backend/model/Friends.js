@@ -9,14 +9,14 @@ const db = firebase.firestore();
 const usersCollection = db.collection("users");
 
 // Friend Color Constants
-const COLOR1 = "#FE5951";
-const COLOR2 = "#FC6C58";
-const COLOR3 = "#FA7D5D";
-const COLOR4 = "#F88E63";
-const COLOR5 = "#F69D68";
-const COLOR6 = "#EFBA7C";
-const COLOR7 = "#EFCF7C";
-const COLOR8 = "#EFD67C";
+const COLOR1 = "#FE5951"; // > 15 days
+const COLOR2 = "#FC6C58"; // > 10 days
+const COLOR3 = "#FA7D5D"; // > 7 days
+const COLOR4 = "#F88E63"; // > 5 days
+const COLOR5 = "#F69D68"; // > 4 days
+const COLOR6 = "#EFBA7C"; // > 3 days
+const COLOR7 = "#EFCF7C"; // > 2 days
+const COLOR8 = "#EFD67C"; // < 2 days
 
 // Helper Functions
 /**
@@ -26,12 +26,52 @@ const COLOR8 = "#EFD67C";
  * @return {string} color
  */
 function calculateFriendColor(last_hug_date) {
-  // Testing
+  // Times
   let dateInSeconds = Math.floor(Date.now() / 1000);
   let hugDateInSeconds = last_hug_date.seconds;
 
   // Time since last hug in seconds
   let diff = dateInSeconds - hugDateInSeconds;
+  // Convert difference to color accordingly
+  if (diff > 1296000) {
+    // > 15 days
+    return COLOR1;
+  } else if (diff > 864000) {
+    // > 10 days
+    return COLOR2;
+  } else if (diff > 604800) {
+    // > 7 days
+    return COLOR3;
+  } else if (diff > 432000) {
+    // > 5 days
+    return COLOR4;
+  } else if (diff > 345600) {
+    // > 4 days
+    return COLOR5;
+  } else if (diff > 259200) {
+    // > 3 days
+    return COLOR6;
+  } else if (diff > 172800) {
+    // > 2 days
+    return COLOR7;
+  } else {
+    return COLOR8; // < 2 days
+  }
+}
+/**
+ * Helper function to get user information out of a Firebase document
+ * and return as a friend object
+ * @param {Document} userDoc
+ * @return {JSON} friend object
+ */
+function userFill(userDoc) {
+  let friend = {
+    user_id: userDoc.get("user_id"),
+    name: userDoc.get("first_name") + " " + userDoc.get("last_name"),
+    username: userDoc.get("username"),
+    profile_pic: userDoc.get("profile_pic"), // Storage
+  };
+  return friend;
 }
 
 // Exported APIs
@@ -146,27 +186,29 @@ const FriendsAPI = {
       return { array: friends };
     }
 
-    // Friends
+    let colors = [];
+    let friendPromises = [];
+
+    // Get all user_id references from friends
     friendsSnapshot.forEach(async (friendDoc) => {
+      friendPromises.push(friendDoc.get("user_id"));
+      colors.push(friendDoc.get("last_hug_date"));
+    });
+
+    //for (let userRef of friendPromises) {
+    for (let i = 0; i < friendPromises.length; i++) {
       // Get the actual userDocument from the friend stored reference
-      let userRef = friendDoc.get("user_id");
-      let userDoc = await userRef.get();
+      let userDoc = await friendPromises[i].get();
       if (!userDoc.exists) {
         console.log("No such document!");
       } else {
-        let friend = {
-          user_id: userDoc.get("user_id"), // iffy
-          name: userDoc.get("first_name") + " " + userDoc.get("last_name"),
-          username: userDoc.get("username"),
-          // profile_pic: userDoc.get("profile_pic"), // Storage
-          color: calculateFriendColor(friendDoc.get("last_hug_date")),
-        };
-
+        // Helper function fill
+        let friend = userFill(userDoc);
+        friend.color = calculateFriendColor(colors[i]);
         // Add friend object to array
         friends.push(friend);
       }
-    });
-
+    }
     // Return the friends
     return { array: friends };
   },

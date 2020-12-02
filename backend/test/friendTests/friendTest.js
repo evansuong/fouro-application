@@ -1,4 +1,4 @@
-let Friends = require("../model/Friends");
+let Friends = require("../../model/Friends");
 
 /*
 Friends.FriendsAPI.addFriend(
@@ -20,3 +20,8 @@ async function statusCheck() {
 }
 statusCheck();
 */
+async function testGetFriend() {
+  let test = await Friends.FriendsAPI.getFriendsList("example@email.com");
+  console.log(test);
+}
+testGetFriend();
