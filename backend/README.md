@@ -3,47 +3,37 @@
 ## Setup
 
 1.  Install [node.js](https://nodejs.org/en/)
-2.  Setup Firebase Configuration from the cafe-fouro Firebase project
 
-    1. Create a file in the [./firebase](./firebase) folder called `config.js`
+2.  Configure Firebase Service Account
 
-    2. Copy the contents of [./firebase/config-template.js](./firebase/config-template.js) into `config.js`:
+    1. Go to the Firebase Project and click Settings > Project Settings
 
-       ```
-       // Firebase App (the core Firebase SDK) is always required and
-       // must be listed before other Firebase SDKs
-       var firebase = require("firebase/app");
+    2. Under the "Service Accounts" tab, click the "Generate New Private Key" button
 
-       // Cafe fouro Firebase Configuration
-       var firebaseConfig = {
-       apiKey: "API-KEY-HERE",
-       authDomain: "AUTH-DOMAIN-HERE",
-       databaseURL: "DATABSE-URL-HERE",
-       projectId: "cafe-fouro",
-       storageBucket: "STORAGE-BUCKET-HERE",
-       messagingSenderId: "MESSAGING-SENDER-ID-HERE",
-       appId: "APP-ID-HERE",
-       };
+    3. Download the JSON file and put it in the [./backend/firebase](./backend/firebase) folder
 
-       module.exports = firebase.initializeApp(firebaseConfig);
-       ```
-
-    3. Go to your Firebase console, open the cafe-fouro project, and navigate to the Project Overview page
-
-    4. Copy the Web app Firebase SDK snippet which should look something like:
-       ```
-        var firebaseConfig = {
-            apiKey: "API-KEY-HERE",
-            authDomain: "AUTH-DOMAIN-HERE",
-            databaseURL: "DATABSE-URL-HERE",
-            projectId: "cafe-fouro",
-            storageBucket: "STORAGE-BUCKET-HERE",
-            messagingSenderId: "MESSAGING-SENDER-ID-HERE",
-            appId: "APP-ID-HERE"
-        };
-       ```
-    5. Replace line 6-14 of `./firebase/config.js` with the project configuration.
+    4. **IMPORTANT**: Rename the file to `serviceAccountKey.json`
 
 3.  Install Node dependencies
 
         npm install
+
+## Starting the backend server
+
+1.  Run the sever
+
+        npm run server
+
+## Testing Backend Functions
+
+1.  In the [./test](./test) folder, create a file that imports your functions from the model
+
+        var modelFile = require("../model/modelFile");
+
+2.  Call your functions and feel free to use `console.log` statements.
+
+3.  Run your file using:
+
+        node modelFile
+
+4.  Verify Firebase Project changes and console log statements

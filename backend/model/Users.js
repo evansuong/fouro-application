@@ -107,9 +107,7 @@ const UsersAPI = {
       .set(user, { merge: true }) // set uid document to new user values
       .then(() => {
         console.log(
-          `Updated user with ID: ${uid}\n with data: ${JSON.stringify(
-            user
-          )}`
+          `Updated user with ID: ${uid}\n with data: ${JSON.stringify(user)}`
         );
         success = true;
       })
