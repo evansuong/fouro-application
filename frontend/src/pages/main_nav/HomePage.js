@@ -137,12 +137,15 @@ export default function HomePage({ navigation, route }) {
   })  
 
     return (
+
       <View style={AppStyles.navPageContainer}>
         {/* background */}
         <Image
           source={gradient}
           style={AppStyles.background}
         />
+       
+     
 
         <Header routeName={routeName} navigation={navigation} onMainNav={true}>Hug Feed</Header>
         {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}

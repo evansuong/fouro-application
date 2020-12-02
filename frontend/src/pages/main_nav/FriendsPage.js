@@ -140,6 +140,7 @@ export default function FriendsPage({ navigation, route }) {
 
             <FlatList
                 data={friends}
+                keyExtractor={item => item.friend_id}
                 renderItem={renderCards}
                 contentContainerStyle={{ paddingTop: 10}}
             />

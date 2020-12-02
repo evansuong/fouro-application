@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-const server = '[web_server_host:port]'
+const server = 'http://localhost:3000'
 
-const API = {}
+const API = {
+  
+}
 
 export default API;
