@@ -54,7 +54,7 @@ export default function LinkedButton({ navigation, link, text, color, onPress })
         navigation.navigate(`${link}`);
       }, 50)
     } else {
-      console.log('no navigation specified');
+      // console.log('no navigation specified');
     }
   }
 
@@ -79,5 +79,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 20,
+    fontFamily: 'EBGaramond_400Regular'
   }
 })

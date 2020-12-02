@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { AppLoading } from 'expo';
 
 import MainNavPage from './src/pages/main_nav/MainNavPage';
 
@@ -20,83 +21,99 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreateHugPage from './src/pages/off-nav/CreateHugPage'; 
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
-import AppStyles from './src/AppStyles';
+import UserContextProvider from './src/contexts/UserContext'; 
+import { useFonts } from 'expo-font'
+import { 
+  EBGaramond_400Regular,
+  EBGaramond_500Medium,
+  EBGaramond_600SemiBold,
+} from '@expo-google-fonts/eb-garamond';
+
 
 export default function App() {
   const Stack = createStackNavigator();
 
   const [mainNavPageTitle, setMainNavPageTitle] = useState("Main")
-  console.log('apprendered')
+  // console.log('apprendered')
+  let [fontsLoaded] = useFonts({
+    EBGaramond_400Regular,
+    EBGaramond_500Medium,
+    EBGaramond_600SemiBold,
+  });
 
-  return (
-    <UserContextProvider>
-      <DimensionContextProvider>
-        <NavigationContainer>
-          <Stack.Navigator 
-            style={styles.appContainer} 
-            /** 
-             * comment out the line below when you need the header for 
-            /* going back to the previous screen. Leave it to see what 
-            /* the app will actually look like
-            * */
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen 
-              name="Main Nav Page" 
-              component={MainNavPage} />
+  if (!fontsLoaded) {
+    return <AppLoading />
+  } else {
+    return (
+      <UserContextProvider>
+        <DimensionContextProvider>
+          <NavigationContainer>
+            <Stack.Navigator 
+              style={styles.appContainer} 
+              /** 
+               * comment out the line below when you need the header for 
+              /* going back to the previous screen. Leave it to see what 
+              /* the app will actually look like
+              * */
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen 
+                name="Main Nav Page" 
+                component={MainNavPage} />
 
-            <Stack.Screen 
-              name="Create Hug" 
-              component={CreateHugPage}/>
+              <Stack.Screen 
+                name="Create Hug" 
+                component={CreateHugPage}/>
 
-            <Stack.Screen 
-              name="Friend History" 
-              component={FriendHistoryPage}/>
+              <Stack.Screen 
+                name="Friend History" 
+                component={FriendHistoryPage}/>
 
-            <Stack.Screen 
-              name="Friend Profile" 
-              component={FriendProfilePage} />
+              <Stack.Screen 
+                name="Friend Profile" 
+                component={FriendProfilePage} />
 
-            <Stack.Screen 
-              name="Corkboard"
-              component={CorkboardPage}/>
+              <Stack.Screen 
+                name="Corkboard"
+                component={CorkboardPage}/>
 
-            <Stack.Screen 
-              name="Hug Info" 
-              component={HugInfoPage} />
+              <Stack.Screen 
+                name="Hug Info" 
+                component={HugInfoPage} />
 
-            <Stack.Screen 
-              name='Login Page' 
-              component={LoginPage} />
+              <Stack.Screen 
+                name='Login Page' 
+                component={LoginPage} />
 
-            <Stack.Screen 
-              name='Signup Page' 
-              component={SignupPage}/>
+              <Stack.Screen 
+                name='Signup Page' 
+                component={SignupPage}/>
 
-            <Stack.Screen 
-              name='Launch Page' 
-              component={LaunchPage}/>
+              <Stack.Screen 
+                name='Launch Page' 
+                component={LaunchPage}/>
 
-            <Stack.Screen 
-              name='Pic Upload Page' 
-              component={PicUploadPage}/>
+              <Stack.Screen 
+                name='Pic Upload Page' 
+                component={PicUploadPage}/>
 
-            <Stack.Screen 
-              name='Name Page' 
-              component={NamePage}/>
+              <Stack.Screen 
+                name='Name Page' 
+                component={NamePage}/>
 
-            <Stack.Screen 
-              name='Welcome Page' 
-              component={WelcomePage}/>
+              <Stack.Screen 
+                name='Welcome Page' 
+                component={WelcomePage}/>
 
-            <Stack.Screen 
-              name='User Profile Page'
-              component={UserProfilePage}/>
-          </Stack.Navigator>
-        </NavigationContainer>    
-      </DimensionContextProvider>
-    </UserContextProvider>   
-  );
+              <Stack.Screen 
+                name='User Profile Page'
+                component={UserProfilePage}/>
+            </Stack.Navigator>
+          </NavigationContainer>    
+        </DimensionContextProvider>
+      </UserContextProvider>   
+    );
+  }
 }
 
 const styles = StyleSheet.create({

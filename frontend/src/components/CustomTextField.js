@@ -40,10 +40,12 @@ const styles = StyleSheet.create({
     marginTop: 25,
     marginBottom: 5,
     marginLeft: 25,
+    fontFamily: 'EBGaramond_400Regular'
   },
   required: {
     fontSize: 18,
     color: 'red',
+    fontFamily: 'EBGaramond_400Regular'
   },
   onboardingInput: {
     marginRight: 20,
