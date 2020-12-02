@@ -16,6 +16,10 @@ const AppStyles = StyleSheet.create({
       width: Dimensions.get('window').width + 1,
       height: Dimensions.get('window').height,
     }, 
+    listContainer: {
+      marginTop: Dimensions.get('window').height / 8,
+      overflow: 'visible',
+    }
   });
   
 export default AppStyles;

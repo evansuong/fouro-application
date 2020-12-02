@@ -11,10 +11,12 @@ export default function UserProfilePage({ navigation, route }) {
     const pfp = require('assets/fillerProfilePic.jpg')
 
     const {windowWidth, windowHeight} = useContext(DimensionContext)
+
     const topMarginSize = windowWidth*0.1;
-    const settingMarginSides = windowWidth * 0.05
-    const settingMarginTopBottom = windowWidth * 0.03
-    const descMargin = windowWidth * 0.03
+    const settingMarginSides = windowWidth * 0.05;
+    const settingMarginTopBottom = windowWidth * 0.03;
+    const descMargin = windowWidth * 0.03;
+    const routeName = route.name;
   
     const styles = StyleSheet.create({
       icon: {
@@ -23,10 +25,8 @@ export default function UserProfilePage({ navigation, route }) {
         height: 50
       },
       setting: {
-        // width:"100%",
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: 'pink',
         flexDirection: 'row',
         justifyContent: "space-between",
         marginLeft: settingMarginSides,
@@ -39,12 +39,18 @@ export default function UserProfilePage({ navigation, route }) {
       },
       desc: {
         marginLeft: descMargin
+      },
+      settingsContainer: {
+        width: '100%',
+        marginTop: settingMarginTopBottom,
+        borderTopWidth: 1,
+        borderColor: '#D4D4D4',
       }
     })
 
     return (
         <View style={{display: 'flex', alignItems: 'center', marginTop: topMarginSize}}>
-          <Header route={route} navigation={navigation} onMainNav={false}/>
+          <Header routeName={routeName} navigation={navigation} onMainNav={false}/>
           <UserProfile
             routeName={'User Profile Page'}
             profilePicture={pfp}
@@ -53,7 +59,7 @@ export default function UserProfilePage({ navigation, route }) {
           />
 
           {/* Settings section */}
-          <View>
+          <View style={styles.settingsContainer}>
 
             <TouchableOpacity style={styles.setting}>
               <View style={styles.iconDescGroup}>
