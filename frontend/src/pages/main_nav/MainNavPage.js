@@ -17,11 +17,13 @@ import { useIsFocused } from '@react-navigation/native';
 
 // TODO: follow the gradient thing
 export default function MainNavPage({ route }) {
+
     const Tab = createMaterialTopTabNavigator();
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const [fromLogin, setFromLogin] = useState(false);
     const isFocused = useIsFocused();
     const { params } = route;
+
 
     const homeFocused = require("assets/homeFocused.png");
     const homeBlurred = require("assets/homeBlurred.png");
@@ -44,12 +46,10 @@ export default function MainNavPage({ route }) {
       }
     }, [isFocused])
 
+
     
     return (
         <>
-            {/* <View style={styles.background}>
-                <Background page={routename}/>
-            </View> */}
             <Tab.Navigator
                 sceneContainerStyle={styles.tabScreen}
                 style={styles.tabNav}
@@ -58,7 +58,7 @@ export default function MainNavPage({ route }) {
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                       let icon;
-                      if (route.name === 'Home') {
+                      if (route.name === 'Hug Feed') {
                         icon = focused ? homeFocused : homeBlurred
                       } else if (route.name === 'Friends') {
                         icon = focused ? friendsFocused : friendsBlurred
@@ -66,6 +66,7 @@ export default function MainNavPage({ route }) {
                         icon = focused ? notifFocused : notifBlurred
                       }
 
+                    //   setCurrentRoute(route.name)
                       return <Image 
                                 source={icon}
                                 resizeMode='stretch'
@@ -74,19 +75,21 @@ export default function MainNavPage({ route }) {
                                     height: tabHeight
                                 }}
                             />
-                    },
-                  })}
-                  tabBarOptions={{
-                    showIcon: true,
-                    showLabel: false,
-                    iconStyle: {
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }
-                  }}
-                  beforeRemove={() => console.log('remove')}>
+                        },
+                    })}
+                    tabBarOptions={{
+                        showIcon: true,
+                        showLabel: false,
+                        iconStyle: {
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }
+                    }}
+                    beforeRemove={() => console.log('remove')}
+                    style={{zIndex: -1}}
+                    >
                 <Tab.Screen name="Friends" component={FriendsPage}/>
-                <Tab.Screen name="Home" component={HomePage} />
+                <Tab.Screen name="Hug Feed" component={HomePage} />
                 <Tab.Screen name="Notifications" component={NotificationPage} />
             </Tab.Navigator>
         </>
