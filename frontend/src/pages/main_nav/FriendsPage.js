@@ -9,10 +9,12 @@ export default function FriendsPage({ navigation, route }) {
 
     const gradient = require('assets/gradients/left.png')
     const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const routeName = route.name;
 
     const friends = 
     //  BACKEND TODO: replace this list with a fetch call or firestore equivalent
-        [{
+        [[],
+        {
             friend_id: '1',
             friend_first: 'Alex',
             friend_last: 'Chow',
@@ -102,20 +104,30 @@ export default function FriendsPage({ navigation, route }) {
         }
         ]
 
-    const renderCards = friend => (
+
+    const renderCards = friend => {
+        console.log(friend)
         // NOTE: Depending on how the data is retrieved from firebase/firestore,
         // we'll need to rewrite how we get each friend
         //console.log(friend.item.friend_first)
-        <FriendCard
-            profilePicture={friend.item.friend_profile_picture}
-            friendName={friend.item.friend_first + " " + friend.item.friend_last}
-            friendColorString={friend.item.friend_color}
-            key={friend.item.friend_id}
-            navigation={navigation}
-            height={windowHeight / 15}
-            width={windowWidth - 40}
-        />
-    )
+        if (friend.index === 0) {
+            return <View style={{ height: windowHeight / 8 }}/>
+
+        } else {
+            return  <FriendCard
+                        profilePicture={friend.item.friend_profile_picture}
+                        friendName={friend.item.friend_first + " " + friend.item.friend_last}
+                        friendColorString={friend.item.friend_color}
+                        key={friend.item.friend_id}
+                        navigation={navigation}
+                        height={windowHeight / 15}
+                        width={windowWidth - 40}
+                    /> 
+        }
+        
+       
+    
+    }
 
     return (
         <View style={{...styles.navPageContainer}}>
@@ -124,12 +136,12 @@ export default function FriendsPage({ navigation, route }) {
                 source={gradient}
                 style={[styles.background, { width: windowWidth, height: windowHeight }]}
             />
-            <Header route={route} navigation={navigation} onMainNav={true}>Friends</Header>
+            <Header routeName={routeName} navigation={navigation} onMainNav={true}>Friends</Header>
 
             <FlatList
                 data={friends}
                 renderItem={renderCards}
-                style={{ paddingTop: 10, paddingBottom: 10 }}
+                contentContainerStyle={{ paddingTop: 10}}
             />
         </View>
     )
@@ -144,5 +156,5 @@ const styles = StyleSheet.create({
     },
     background: {
         position: 'absolute',
-    }
+    },
 });

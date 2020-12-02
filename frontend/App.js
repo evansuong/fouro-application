@@ -29,73 +29,73 @@ export default function App() {
   console.log('apprendered')
 
   return (
-    <DimensionContextProvider>
-      <NavigationContainer>
-        <Stack.Navigator 
-          style={styles.appContainer} 
+    <UserContextProvider>
+      <DimensionContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator 
+            style={styles.appContainer} 
+            /** 
+             * comment out the line below when you need the header for 
+            /* going back to the previous screen. Leave it to see what 
+            /* the app will actually look like
+            * */
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen 
+              name="Main Nav Page" 
+              component={MainNavPage} />
 
-          /** 
-           * comment out the line below when you need the header for 
-          /* going back to the previous screen. Leave it to see what 
-          /* the app will actually look like
-          * */
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen 
-            name="Main Nav Page" 
-            component={MainNavPage} />
+            <Stack.Screen 
+              name="Create Hug" 
+              component={CreateHugPage}/>
 
-          <Stack.Screen 
-            name="Create Hug" 
-            component={CreateHugPage}/>
+            <Stack.Screen 
+              name="Friend History" 
+              component={FriendHistoryPage}/>
 
-          <Stack.Screen 
-            name="Friend History" 
-            component={FriendHistoryPage}/>
+            <Stack.Screen 
+              name="Friend Profile" 
+              component={FriendProfilePage} />
 
-          <Stack.Screen 
-            name="Friend Profile" 
-            component={FriendProfilePage} />
+            <Stack.Screen 
+              name="Corkboard"
+              component={CorkboardPage}/>
 
-          <Stack.Screen 
-            name="Corkboard"
-            component={CorkboardPage}/>
+            <Stack.Screen 
+              name="Hug Info" 
+              component={HugInfoPage} />
 
-          <Stack.Screen 
-            name="Hug Info" 
-            component={HugInfoPage} />
+            <Stack.Screen 
+              name='Login Page' 
+              component={LoginPage} />
 
-          <Stack.Screen 
-            name='Login Page' 
-            component={LoginPage} />
+            <Stack.Screen 
+              name='Signup Page' 
+              component={SignupPage}/>
 
-          <Stack.Screen 
-            name='Signup Page' 
-            component={SignupPage}/>
+            <Stack.Screen 
+              name='Launch Page' 
+              component={LaunchPage}/>
 
-          <Stack.Screen 
-            name='Launch Page' 
-            component={LaunchPage}/>
+            <Stack.Screen 
+              name='Pic Upload Page' 
+              component={PicUploadPage}/>
 
-          <Stack.Screen 
-            name='Pic Upload Page' 
-            component={PicUploadPage}/>
+            <Stack.Screen 
+              name='Name Page' 
+              component={NamePage}/>
 
-          <Stack.Screen 
-            name='Name Page' 
-            component={NamePage}/>
+            <Stack.Screen 
+              name='Welcome Page' 
+              component={WelcomePage}/>
 
-          <Stack.Screen 
-            name='Welcome Page' 
-            component={WelcomePage}/>
-
-          <Stack.Screen 
-            name='User Profile Page'
-            component={UserProfilePage}/>
-        </Stack.Navigator>
-      </NavigationContainer>    
-    </DimensionContextProvider>
-      
+            <Stack.Screen 
+              name='User Profile Page'
+              component={UserProfilePage}/>
+          </Stack.Navigator>
+        </NavigationContainer>    
+      </DimensionContextProvider>
+    </UserContextProvider>   
   );
 }
 
