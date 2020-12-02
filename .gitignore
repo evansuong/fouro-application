@@ -2,9 +2,10 @@ node_modules
 .env
 <<<<<<< HEAD
 .expo/
+<<<<<<< HEAD
 admin.js
 =======
 config.*
 .expo/
 serviceAccountKey.*
->>>>>>> 279d48cc953844de5900ae1cea96a7977f2d2daf
+serviceAccountKey.json

@@ -4,13 +4,16 @@
   "description": "",
   "main": "./test/main.js",
   "dependencies": {
-    "@google-cloud/storage": "^5.5.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "firebase": "^8.0.2",
-    "firebase-admin": "^9.4.1"
+    "firebase-admin": "^9.4.1",
+    "nodemon": "^2.0.6"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node ./test/main.js"
+    "start": "node ./server/server.js",
+    "server": "nodemon ./server/server.js"
   },
   "keywords": [],
   "author": "",

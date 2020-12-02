@@ -1,7 +1,6 @@
 // SignUp used for signing up users into Firebase Authentication
-
-import "firebase/auth";
 import firebase from "./config";
+import "firebase/auth";
 
 const AuthAPI = {
   registerUser: async function (email, password) {
@@ -43,9 +42,9 @@ const AuthAPI = {
         current_user = null;
       });
 
-      return new Promise((resolve, reject) => {
-        resolve(current_user);
-      });
+    return new Promise((resolve, reject) => {
+      resolve(current_user);
+    });
   },
 
   loginUser: async function (email, password) {
@@ -87,9 +86,9 @@ const AuthAPI = {
         console.log(error);
         current_user = null;
       });
-      return new Promise((resolve, reject) => {
-        resolve(current_user);
-      });
+    return new Promise((resolve, reject) => {
+      resolve(current_user);
+    });
   },
 
   logout: function () {
@@ -109,7 +108,6 @@ const AuthAPI = {
   checkLoggedIn: function () {
     return firebase.auth().currentUser ? true : false; // currentUser is null if nobody is signed in.
   },
-  
 };
 
 export default AuthAPI;

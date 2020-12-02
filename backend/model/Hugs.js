@@ -1,6 +1,6 @@
 // Hugs file for Creating, Reading, Updating, and Deleting Hugs
-const admin = require("firebase-admin");
-const firebase = require("../firebase/admin");
+var firebase = require("../firebase/admin");
+// const admin = require("firebase-admin");
 require("firebase/firestore");
 require("firebase/auth");
 require("firebase/storage");
