@@ -38,19 +38,17 @@ const testData = [
 
 export default function CorkboardPage({ navigation, route }) {
     
-
+    const routeName = route.name;
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const margin = windowWidth * 0.03
 
     return (
         <View style={{ alignItems: 'center' }}>
-            
-
             <Image
                 source={corkboardImg}
                 style={styles.corkboardImage}
             />
-            <Header route={route} navigation={navigation} onMainNav={false}/>
+            <Header routeName={routeName} navigation={navigation} onMainNav={false}/>
 
             {/* Hugs list as a grid */}
             <FlatList
