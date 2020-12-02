@@ -4,26 +4,26 @@
  * https://reactnavigation.org/docs/stack-navigator/#headershown
  */
 
-import React, { useContext, useEffect } from 'react';
-import { StyleSheet, View, Image, Dimensions } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { StyleSheet, Image, Alert } from 'react-native';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage'
 import HomePage from './HomePage'
 import { DimensionContext } from '../../contexts/DimensionContext';
-import {getFocusedRouteNameFromRoute, useFocusEffect, useRoute} from '@react-navigation/native';
-import Header from '../../components/Header';
+import { useIsFocused } from '@react-navigation/native';
 
 
 // TODO: follow the gradient thing
-export default function MainNavPage({ navigation }) {
+export default function MainNavPage({ route }) {
 
     const Tab = createMaterialTopTabNavigator();
-    
     const { windowWidth, windowHeight } = useContext(DimensionContext);
-    const route = useRoute();
-    const routeName =  getFocusedRouteNameFromRoute(route);
+    const [fromLogin, setFromLogin] = useState(false);
+    const isFocused = useIsFocused();
+    const { params } = route;
+
 
     const homeFocused = require("assets/homeFocused.png");
     const homeBlurred = require("assets/homeBlurred.png");
@@ -34,6 +34,19 @@ export default function MainNavPage({ navigation }) {
 
     const tabWidth = windowWidth / 3;
     const tabHeight = tabWidth / 2.25;
+
+    useEffect(() => {
+      if (typeof params !== 'undefined' && params.loggedIn !== 'undefined') {
+        if (!fromLogin) {
+          setFromLogin(true)
+          setTimeout(() => {
+            Alert.alert('Logged In!');
+          }, 10)
+        }
+      }
+    }, [isFocused])
+
+
     
     return (
         <>
