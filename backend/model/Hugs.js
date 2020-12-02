@@ -1,12 +1,15 @@
 // Hugs file for Creating, Reading, Updating, and Deleting Hugs
-var firebase = require("../firebase/admin");
+const admin = require("firebase-admin");
+const firebase = require("../firebase/admin");
 require("firebase/firestore");
 require("firebase/auth");
 require("firebase/storage");
+require("@google-cloud/storage");
 
-//import users
-var Users = require("../model/Users");
+//import
+const Users = require("../model/Users");
 const Notifications = require("./Notifications");
+const bucket = admin.storage().bucket();
 
 // Firestore
 const db = firebase.firestore();
@@ -20,13 +23,13 @@ const HugsAPI = {
         var currUser = db.collection("users").doc(currentUser);
         // const currUser = firebase.auth().currentUser;
         // Set the date of the hug (also used to ID image)
-        var dateTime = db.dateTime.now();
-        var dateTimeString = dateTime.toString();
+        let dateInSeconds = Math.floor(Date.now() / 1000);
+        var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
         // Image: byte array
         // Create a root reference in firebase storage
         var storageRef = firebase.storage().ref();
         // Create a unique image ID
-        var imageName = "hug_images/" + dateTimeString;
+        var imageName = "hug_images/" + Date().now();
         // Create a reference to the hug image (use when we download?)
         // var hugImageRef = storageRef.child(imageName)
         // Convert the byte array image to Uint8Array
@@ -309,13 +312,12 @@ const UpdateHugAPI = {
     },
 
     deleteImageFromPath: function (pathString) {
-        var storage = firebase.storage();
-        var storageRef = storage.ref();
         storageRef.child(pathString).delete().then();
     },
 };
 
 const ViewHugAPI = {
+    // TODO: MAKE SURE OUTPUTS STRING JSON
     getHugById: function (hugId) {
         db.collection("hugs")
             .doc(hugId)
@@ -348,8 +350,8 @@ const ViewHugAPI = {
                 querySnapshot.forEach(function (doc) {
                     results = [...results, doc.data()];
                 });
-                //res.json(results)
-                return results;
+                var feed = { userHugs: results }; // no quotes needed?
+                return feed;
             });
         // PAGINATED VERSION
         // var first = db
@@ -375,7 +377,31 @@ const ViewHugAPI = {
         // });
     },
 
-    getSharedHugs: function (currUser, targetUser) {},
+    getSharedHugs: function (currUser, targetUser) {
+        // Set current user
+        var currUser = db.collection("users").doc(currentUser);
+        // GET ALL VERSION
+        var results = [];
+        db.collection("users")
+            .doc(currUser.id)
+            .collection("user_hugs")
+            .get()
+            .then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    senderId = doc.get("sender_id");
+                    receiverId = doc.get("receiver_id");
+                    // adds any hug with both users to the results array
+                    if (
+                        (senderId === currUser && receiverId === targetUser) ||
+                        (senderId === targetUser && receiverId === currUser)
+                    ) {
+                        results = [...results, doc.data()];
+                    }
+                });
+                var sharedHugs = { sharedHugs: results }; //no quotes needed?
+                return sharedHugs;
+            });
+    },
 };
 
 // Export the module
