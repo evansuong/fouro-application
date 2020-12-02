@@ -23,6 +23,7 @@ import Header from '../../components/Header';
 export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
+    const routeName = route.name
 
     useEffect(() => {
       console.log(images);
@@ -82,7 +83,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         console.log('dismissed keyboard')
       }}>
         <View>
-          <Header route={route} navigation={navigation} onMainNav={false} />
+          <Header routeName={routeName} navigation={navigation} onMainNav={false} />
           <View style={styles.mainContainer}>
             {/* Friend Info */}
             <View style={{alignItems: 'center',}}>

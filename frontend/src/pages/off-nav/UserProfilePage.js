@@ -11,10 +11,12 @@ export default function UserProfilePage({ navigation, route }) {
     const pfp = require('assets/fillerProfilePic.jpg')
 
     const {windowWidth, windowHeight} = useContext(DimensionContext)
-    const topMarginSize = windowWidth*0.0;
-    const settingMarginSides = windowWidth * 0.05
-    const settingMarginTopBottom = windowWidth * 0.03
-    const descMargin = windowWidth * 0.03
+
+    const topMarginSize = windowWidth*0.1;
+    const settingMarginSides = windowWidth * 0.05;
+    const settingMarginTopBottom = windowWidth * 0.03;
+    const descMargin = windowWidth * 0.03;
+    const routeName = route.name;
   
     const styles = StyleSheet.create({
       icon: {
@@ -48,7 +50,7 @@ export default function UserProfilePage({ navigation, route }) {
 
     return (
         <View style={{display: 'flex', alignItems: 'center', marginTop: topMarginSize}}>
-          <Header route={route} navigation={navigation} onMainNav={false}/>
+          <Header routeName={routeName} navigation={navigation} onMainNav={false}/>
           <UserProfile
             routeName={'User Profile Page'}
             profilePicture={pfp}

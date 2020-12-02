@@ -21,7 +21,6 @@ import Panel from 'components/StreakPanel';
 import CreateHugButton from 'components/CreateHugButton';
 import { DimensionContext } from '../../contexts/DimensionContext'; 
 import Header from '../../components/Header';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 // TODO: Move create hug button to the right side of the screen.
 // TODO: Fix button animation starting from far left of button
@@ -35,6 +34,7 @@ export default function HomePage({ navigation, route }) {
   const width = useRef(new Animated.Value(70)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
+  const routeName = route.name;
 
   const gradient = require('assets/gradients/middle.png')
 
@@ -144,8 +144,9 @@ export default function HomePage({ navigation, route }) {
           style={AppStyles.background}
         />
 
-        <Header route={route} navigation={navigation} onMainNav={true}>Hug Feed</Header>
-
+        <Header routeName={routeName} navigation={navigation} onMainNav={true}>Hug Feed</Header>
+        {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
+        <View style={{marginTop: 100}}></View>
         <Button 
           title="create hug" 
           onPress={() => navigation.navigate('Create Hug')}
