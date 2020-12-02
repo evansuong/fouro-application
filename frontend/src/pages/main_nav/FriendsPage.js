@@ -129,7 +129,7 @@ export default function FriendsPage({ navigation, route }) {
             <FlatList
                 data={friends}
                 renderItem={renderCards}
-                style={{ paddingTop: 10, paddingBottom: 10 }}
+                contentContainerStyle={{ paddingTop: 10}}
             />
         </View>
     )

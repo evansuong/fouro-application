@@ -109,15 +109,16 @@ export default function HomePage({ navigation, route }) {
     createHugButtonContainer: {
       flexDirection: 'row',
       position: 'absolute',
-      bottom: 80,
+      bottom: 10,
       // left: windowWidth - 250,
       left: 10,
       borderRadius: 50,
       height: 70,
       backgroundColor: mode == 'light' ? 'white': 'rgba(0,0,0,0.5)',
       color: mode == 'light' ? 'black': 'white',
-      borderColor: mode == 'light' ? 'black' : 'white',
+      // borderColor: mode == 'light' ? 'black' : 'white',
       borderWidth: 2,
+      alignItems: 'center'
     },
     createHugText: {
       fontSize: 50,
@@ -169,49 +170,50 @@ export default function HomePage({ navigation, route }) {
         />
       </View>
 
-      {/* Hug Cards */}
-      <TouchableWithoutFeedback
-        onPress={() => dismissCreateButton()}
-      >
-        <ScrollView 
-          contentContainerStyle={{alignItems: 'center'}}
-          style={{marginBottom: 70,}}
+      
+        {/* Hug Cards */}
+        <TouchableWithoutFeedback
+          onPress={() => dismissCreateButton()}
         >
-          {testData.map(hugData => (
-            <HugCard 
-              key={hugData.hugId} 
-              navigation={navigation}
-              { ...hugData } 
-              mode={mode}
-            />
-          ))}
-        </ScrollView>
-      </TouchableWithoutFeedback>
+          <ScrollView 
+            contentContainerStyle={{alignItems: 'center', paddingBottom: 10}}
+            overScrollMode='always'
+          >
+            {testData.map(hugData => (
+              <HugCard 
+                key={hugData.hugId} 
+                navigation={navigation}
+                { ...hugData } 
+                mode={mode}
+              />
+            ))}
+          </ScrollView>
+        </TouchableWithoutFeedback>
 
 
-      {/* Create Hug Button */}
-      <TouchableWithoutFeedback
-        onPressIn={handlePress}
-      >
-        <Animated.View style={[styles.createHugButtonContainer, {
-          width:width
-        }]}>
-          <Text style={[styles.createHugText, {
-            marginLeft: 17.5
+        {/* Create Hug Button */}
+        <TouchableWithoutFeedback
+          onPressIn={handlePress}
+        >
+          <Animated.View style={[styles.createHugButtonContainer, {
+            width:width
           }]}>
-            +
-          </Text>
-          <Animated.View opacity={fade}>
             <Text style={[styles.createHugText, {
-              marginTop: 18,
-              fontSize: 25
+              marginLeft: 17.5
             }]}>
-              Create Hug
+              +
             </Text>
+            <Animated.View opacity={fade}>
+              <Text style={[styles.createHugText, {
+                // marginTop: 18,
+                fontSize: 25
+              }]}>
+                Create Hug
+              </Text>
+            </Animated.View>
+            
           </Animated.View>
-          
-        </Animated.View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
     </View>
   )
 }
