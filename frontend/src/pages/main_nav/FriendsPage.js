@@ -106,7 +106,7 @@ export default function FriendsPage({ navigation, route }) {
 
 
     const renderCards = friend => {
-        console.log(friend)
+        // console.log(friend)
         // NOTE: Depending on how the data is retrieved from firebase/firestore,
         // we'll need to rewrite how we get each friend
         //console.log(friend.item.friend_first)
