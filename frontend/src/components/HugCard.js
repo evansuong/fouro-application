@@ -10,19 +10,11 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
   const {windowWidth, windowHeight} = useContext(DimensionContext)
 
   const hugCardWidth = windowWidth - 20;
-  const hugCardHeight = windowHeight / 5.5;
-  const hugDescMaxHeight = hugCardHeight / 1.5;
+  const hugCardHeight = 145 // windowHeight / 5.5;
   const hugImageWidth = hugImage ? hugCardWidth / 2.5 : 0;
   const hugImageHeight = hugCardHeight;
   const hugDescWidth = hugCardWidth - hugImageWidth - 30;/// 1.5; //hugCardWidth - hugImageWidth
-  const pinHeight = hugCardWidth / 13;
-  
-  const pinPress = () => {
-    console.log('pinning hug');
-    // Navigate to corkboard
-    navigation.navigate('Corkboard')
-    // and add hug to the corkboard
-  }
+  const nameFontSize = hugCardWidth * 0.05
 
   const styles = StyleSheet.create({
     outerContainer: {
@@ -36,14 +28,14 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
     },
     nameBar: {
       display: 'flex',
-      backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
+      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
       borderTopLeftRadius: 20,
       paddingLeft: 5,
       width: hugCardWidth - hugImageWidth,
     },
     nameBarNoImg: {
       display: 'flex',
-      backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
+      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       paddingLeft: 5,
@@ -69,21 +61,21 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
           height: 5,
         },
         shadowOpacity: 0.2,
-        shadowRadius: 20,
-        elevation: 7,
+        shadowRadius: 2,
+        elevation: 5,
         borderRadius: 20,
         backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0)' : 'white',
-        marginBottom: 5,
-        marginTop: 5,
+        marginBottom: 10,
         width: hugCardWidth, 
         height: hugCardHeight,
     },
     textBodyContainer: {
         display: 'flex',
         justifyContent: 'space-between',
-        backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
-        // backgroundColor: 'yellow',
-        height: hugCardHeight - 40,
+        // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
+        // backgroundColor: 'white',
+        flexShrink: 1,
+        marginBottom: 7,
         width: hugCardWidth - hugImageWidth,
         flexDirection: 'row',
         borderBottomLeftRadius: 20,
@@ -91,19 +83,21 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
     textBodyContainerNoImg: {
       display: 'flex',
       justifyContent: 'space-between',
-      backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
+      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
       // backgroundColor: 'yellow',
-      height: hugCardHeight - 40,
+      // height: hugCardHeight - 40,
+      flexShrink: 1,
       width: hugCardWidth - hugImageWidth,
       flexDirection: 'row',
       borderBottomLeftRadius: 20,
       borderBottomRightRadius: 20,
     },
     textContainer: {
-      marginLeft: 15,
+      marginLeft: 12,
       width: hugDescWidth,
       overflow: 'hidden',
-      maxHeight: hugDescMaxHeight,
+      flexShrink: 1,
+      // maxHeight: hugDescMaxHeight - 10,
       // backgroundColor: 'blue',
     },
     pinIcon: {
@@ -119,10 +113,11 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
         height: hugImageHeight,
     },
     name: {
-        marginTop: 10,
-        marginLeft: 10,
+        marginTop: 7,
+        marginLeft: 7,
         marginBottom: 5,
-        fontSize: 20,
+        fontSize: 17,
+        fontWeight: 'bold',
         color: mode == 'dark' ? 'white' : 'black',
     },
     hugText: {
@@ -133,7 +128,10 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
   
   return (
     /* container */
-      <View style={styles.hugCardContainer}>
+      <TouchableOpacity 
+        style={styles.hugCardContainer}
+        onPress={() => { navigation.navigate("Hug Info") }}
+      >
 
         <View className='title-description'>
           {/* Name Bar */}
@@ -192,6 +190,6 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
             style={styles.imageContainer}
           />  
         </View>
-      </View>
+      </TouchableOpacity>
   )
 }
