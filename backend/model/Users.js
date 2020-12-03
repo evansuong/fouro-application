@@ -159,7 +159,7 @@ const UsersAPI = {
 };
 
 const HugCountAPI = {
-  getUserHugCount: async function (uid) {
+  getUserCount: async function (uid) {
     var userDocRef = usersCollection.doc(uid);
     var hug_count;
 
@@ -171,6 +171,7 @@ const HugCountAPI = {
           // set userProfile to retrieved data
           // not sure this is how to retrieve data
           hug_count = userDoc.get("day_hug_count");
+          streak_count = userDoc.get("current_streak");
         } else {
           // no data under uid
           hug_count = null;
@@ -181,38 +182,15 @@ const HugCountAPI = {
         hug_count = null;
       });
 
-    return { out: hug_count };
-  },
-
-  getUserHugStreak: async function (uid) {
-    var userDocRef = usersCollection.doc(uid);
-    var streak_count;
-
-    // access document
-    await userDocRef
-      .get()
-      .then(function (userDoc) {
-        if (userDoc.exists) {
-          // set userProfile to retrieved data
-          // not sure this is how to retrieve data
-          streak_count = userDoc.get("current_streak");
-        } else {
-          // no data under uid
-          streak_count = null;
-        }
-      })
-      .catch(function (error) {
-        console.log("Error getting document: ", error);
-        streak_count = null;
-      });
-
-    return { out: streak_count };
+    return { hug : hug_count, streak : streak_count };
   },
 
   increaseHugCount: async function (uid) {
     // retrieve hug and streak count
-    var hug_count = this.getUserHugCount(uid);
-    var streak_count = this.getUserHugStreak(uid);
+
+    var json = this.getUserCount(uid);
+    var hug_count = (await json).hug
+    var streak_count = (await json).streak
     var success = false;
 
     var userDocRef = usersCollection.doc(uid);
