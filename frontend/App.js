@@ -5,7 +5,7 @@ import { AppLoading } from 'expo';
 import MainNavPage from './src/pages/main_nav/MainNavPage';
 
 import FriendHistoryPage from './src/pages/off-nav/FriendHistoryPage';
-import FriendProfilePage from './src/pages/off-nav/FriendProfilePage';
+import OtherUserProfilePage from './src/pages/off-nav/OtherUserProfilePage';
 import CorkboardPage from './src/pages/off-nav/CorkboardPage';
 import HugInfoPage from './src/pages/off-nav/HugInfoPage';
 import UserProfilePage from './src/pages/off-nav/UserProfilePage'
@@ -71,7 +71,7 @@ export default function App() {
 
               <Stack.Screen 
                 name="Friend Profile" 
-                component={FriendProfilePage} />
+                component={OtherUserProfilePage} />
 
               <Stack.Screen 
                 name="Corkboard"
