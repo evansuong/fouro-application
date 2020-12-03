@@ -10,7 +10,18 @@ const db = firebase.firestore();
 const users = db.collection("users");
 // Firestore
 const NotificationsAPI = {
-    getNotifications: function () {
+    getNotifications: async function (uid) {
+        // UNPAGINATED VERSION (this is more preferable for frontend)
+        // var notificationCollection = usersCollection
+        //   .doc(uid)
+        //   .collection("notifications")
+        //   .orderBy("date_time")
+        // const notificationSnapshot = await notificationCollection.get();
+        // let notifications = [];
+        // notificationSnapshot.forEach(doc => {
+        //   notifications = [...notifications, doc.data()];
+        // });
+        // return notifications
         // PAGINATED VERSION
         var first = db
             .doc(currUser.uid)

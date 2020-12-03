@@ -80,10 +80,10 @@ export default function NamePage({ navigation, route }) {
     // }
     // await UsersAPI.updateUserProfile(username, firstName, lastName);
     let { user } = route.params;
-    user['username'] = username
-    user['firstName'] = firstName
-    user['lastName'] = lastName
-    
+    user['username'] = username.trim();
+    user['firstName'] = firstName.trim();
+    user['lastName'] = lastName.trim();
+    console.log('user in namePage: ', user);
     navigation.navigate('Pic Upload Page', { user: user });
   }
 

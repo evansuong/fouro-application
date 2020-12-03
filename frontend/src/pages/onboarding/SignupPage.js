@@ -14,6 +14,7 @@ import LinkedButton from 'components/LinkedButton';
 import { useIsFocused } from '@react-navigation/native';
 import { DimensionContext } from '../../contexts/DimensionContext';
 import BackgroundImg from 'assets/gradients/middle.png';
+import API from '../../API';
 
 
 export default function SignupPage({ navigation }) {
@@ -69,13 +70,21 @@ export default function SignupPage({ navigation }) {
   }
 
   const submitHandler = async () => {
-    console.log(emailField, passwordField, passwordConfirmField);
+    // console.log('loading');
+    // const response = await API.getUserProfile('1');
+    // const post = await response.data;
+    // console.log(post);
+
+    const emailFieldTrim = emailField.trim();
+    const passwordFieldTrim = passwordField.trim();
+    const passwordConfirmFieldTrim = passwordConfirmField.trim();
+    console.log(emailFieldTrim, passwordFieldTrim, passwordConfirmFieldTrim);
     setSigningUp(true);
     // check if user with that email already exists (waiting for backend)
     const data = {
       user: {
-        email: emailField,
-        password: passwordField,
+        email: emailFieldTrim,
+        password: passwordFieldTrim,
       }
     }
 

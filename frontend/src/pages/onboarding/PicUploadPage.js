@@ -10,6 +10,7 @@ import {
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 import BackgroundImg from 'assets/gradients/middle.png';
 import AuthAPI from '../../authentication/Authentication';
+import API from '../../API';
 import { UserContext } from '../../contexts/UserContext';
 import { DimensionContext } from '../../contexts/DimensionContext';
 import LinkedButton from 'components/LinkedButton';
@@ -34,24 +35,44 @@ export default function ProfileSetupPage({ navigation, route }) {
 
   const callBackend = async () => {
     try {
-      console.log(uploadPic);
-      const splitPicURI = uploadPic.uri.split('/');
-      let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
-      // Send res to backend to push to firebase
-      // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-      // console.log('success', JSON.stringify(res));
-
-      const userJSON = await AuthAPI.registerUser(emailField, passwordField);
       let { user } = route.params;
+      // Register user with user param
+      const userJSON = await AuthAPI.registerUser(user.email, user.password);
+
+      // delete email and password from user param and add uid.
+      delete user['email'];
+      delete user['password'];
       user['uid'] = userJSON.uid;
-      
+
+      // uid, username, firstname, lastname; add user to context
+      console.log('53', user);
       dispatch({
         type: 'SET_USER',
         payload: user,
       })
-      navigation.navigate('Welcome Page');
+
+      console.log('dispatched');
+      // createUser
+      const createUserResponse = await API.createUser(user);
+      console.log('created user');
+
+      // uploadUserProfilePicture
+      // console.log(uploadPic);
+      // const splitPicURI = uploadPic.uri.split('/');
+      // let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
+      // Send res to backend to push to firebase
+      // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
+      // console.log('success', JSON.stringify(res));
+      // const request = {
+      //   uid: user['uid'],
+      //   blob: res,
+      // }
+      // const pfpResponse = await API.uploadUserProfilePicture(request);
+      // console.log('createUserResponse: ', createUserResponse)
+      // console.log('pfpResponse: ', pfpResponse);
+      // navigation.navigate('Welcome Page');
     } catch (err) {
-      console.log(`Error occured: ${err}`);
+      console.log(err);
     }
   }
 
@@ -70,8 +91,10 @@ export default function ProfileSetupPage({ navigation, route }) {
         aspect: [1,1],
         quality: 0.5,
       })
-      console.log(data);
-      setUploadPic(data);
+      // console.log(data);
+      if (data.cancelled == false) {
+        setUploadPic(data);
+      }
     } else {
       console.log('access denied');
       Alert.alert('You need to give up permission to work');
@@ -88,8 +111,10 @@ export default function ProfileSetupPage({ navigation, route }) {
         aspect: [1,1],
         quality: 0.5,
       })
-      console.log(data);
-      setUploadPic(data);
+      // console.log(data);
+      if (data.cancelled == false) {
+        setUploadPic(data);
+      }
     } else {
       console.log('access denied');
       Alert.alert('You need to give up permission to work');
@@ -102,6 +127,12 @@ export default function ProfileSetupPage({ navigation, route }) {
       duration: 1000,
       useNativeDriver: false,
     }).start();
+  }
+
+  const uploadedPic = () => {
+    return typeof uploadPic !== 'undefined' && 
+      uploadPic &&
+      uploadPic.cancelled == false
   }
 
   const isEmpty = (obj) => {
@@ -133,15 +164,16 @@ export default function ProfileSetupPage({ navigation, route }) {
             />
           </View>
 
-          <View style={styles.submit}>
-            <LinkedButton
-              navigation={navigation}
-              text='SUBMIT'
-              // Should this be yellow or grey?
-              color='#FFC24A'
-              onPress={() => callBackend()}
-            />
-          </View>
+          { uploadedPic() && 
+            <View style={styles.submit}>
+              <LinkedButton
+                text='SUBMIT'
+                // Should this be yellow or grey?
+                color='#FFC24A'
+                onPress={() => callBackend()}
+              />
+            </View>
+          }
         </View>
       </ImageBackground>
     </Animated.View>

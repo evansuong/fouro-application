@@ -21,15 +21,15 @@ const UsersAPI = {
   /*
    * @Param: string - Current User's uid (currentUser.uid)
    */
-  createNewUser: async function (uid) {
+  createNewUser: async function (uid, username, firstName, lastName) {
     let created = false;
 
     // initialize local object containing initial user values
     const user = {
       user_id: uid,
-      username: "",
-      first_name: "",
-      last_name: "",
+      username: username,
+      first_name: firstName,
+      last_name: lastName,
       profile_pic: "",
       day_hug_count: 0,
       current_streak: 0,
@@ -52,6 +52,7 @@ const UsersAPI = {
 
   // returns users profile information in an object
   // takes in signed-in user
+  // TODO: FIX. Look at usersRoutes.js
   getUserProfile: async function (uid) {
     var userDocRef = usersCollection.doc(uid);
     var userProfile;
@@ -88,43 +89,65 @@ const UsersAPI = {
   // TODO: Develop a SIGNOUT button ASAP
   updateUserProfile: async function (uid, username, firstName, lastName) {
     var success = false;
+    const userRef = usersCollection.doc(uid);
+    const user = await userRef.get();
+    const userData = user.data();
+    if (!user.exists) {
+      success = false;
+    } else {
+      // trim whitespace from username
+      username = username.trim();
+      firstName = firstName.trim();
+      lastName = lastName.trim();
 
-    // trim whitespace from username
-    username = username.trim();
-    firstName = firstName.trim();
-    lastName = lastName.trim();
+      // initialize local object containing new user values
+      const user = {
+        username: typeof username !== 'undefined' ?
+          username
+          :
+          userData['username'],
+        first_name: typeof firstName !== 'undefined' ?
+        firstName.trim() 
+        : 
+        userData['first_name'],
+        last_name: typeof lastName !== 'undefined' ?
+        lastName.trim() 
+        : 
+        userData['last_name'],
+      };
 
-    // initialize local object containing new user values
-    const user = {
-      username: username,
-      first_name: firstName,
-      last_name: lastName,
-    };
-
-    // update document with data
-    await usersCollection
-      .doc(uid)
-      .set(user, { merge: true }) // set uid document to new user values
-      .then(() => {
-        console.log(
-          `Updated user with ID: ${uid}\n with data: ${JSON.stringify(user)}`
-        );
-        success = true;
-      })
-      .catch((error) => {
-        console.log(`Error adding user: ${error}`);
-        success = false;
-      });
+      // update document with data
+      // await usersCollection
+      //   .doc(uid)
+      //   .set(user, { merge: true }) // set uid document to new user values
+      await userRef // alternative?
+        .update(user)
+        .then(() => {
+          console.log(
+            `Updated user with ID: ${uid}\n with data: ${JSON.stringify(user)}`
+          );
+          success = true;
+        })
+        .catch((error) => {
+          console.log(`Error adding user: ${error}`);
+          success = false;
+        });
+    }
 
     return { out: success };
   },
 
   uploadUserProfilePicture: async function (uid, file) {
-    // TODO this function may not work correctly.
+    // TODO: this function may not work correctly.
     // create a cloud storage refrence
-    var storageRef = firebase
+    var storageRef = await firebase
       .storage()
       .ref("profile_pictures/" + user.uid + "/" + file.name);
+    // TODO: This should have a child call I think
+    // var storageRef = firebase
+    //   .storage()
+    //   .ref()
+    //   .child(`profile_pictures/${uid}`);
 
     // save to cloud storage
     var task = storageRef.put(file);
@@ -137,12 +160,12 @@ const UsersAPI = {
 };
 
 const HugCountAPI = {
-  getUserHugCount: function (uid) {
+  getUserHugCount: async function (uid) {
     var userDocRef = usersCollection.doc(uid);
     var hug_count;
 
     // access document
-    userDocRef
+    await userDocRef
       .get()
       .then(function (userDoc) {
         if (userDoc.exists) {
@@ -162,12 +185,12 @@ const HugCountAPI = {
     return { out: hug_count };
   },
 
-  getUserHugStreak: function (uid) {
+  getUserHugStreak: async function (uid) {
     var userDocRef = usersCollection.doc(uid);
     var streak_count;
 
     // access document
-    userDocRef
+    await userDocRef
       .get()
       .then(function (userDoc) {
         if (userDoc.exists) {
