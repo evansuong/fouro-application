@@ -150,10 +150,6 @@ export default function HomePage({ navigation, route }) {
         <Header routeName={routeName} navigation={navigation} onMainNav={true}>Hug Feed</Header>
         {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
         <View style={{marginTop: 100}}></View>
-        <Button 
-          title="create hug" 
-          onPress={() => navigation.navigate('Create Hug')}
-        />
         <Button
           title='launch page'
           onPress={() => navigation.navigate('Launch Page')}
@@ -180,7 +176,7 @@ export default function HomePage({ navigation, route }) {
           onPress={() => dismissCreateButton()}
         >
           <ScrollView 
-            contentContainerStyle={{alignItems: 'center', paddingBottom: 10}}
+            contentContainerStyle={{alignItems: 'center', paddingTop: 10, width: windowWidth }}
             overScrollMode='always'
           >
             {testData.map(hugData => (
