@@ -66,8 +66,7 @@ const UsersAPI = {
           // not sure this is how to retrieve data
           userProfile = {
             username: userDoc.get("username"),
-            first_name: userDoc.get("first_name"),
-            last_name: userDoc.get("last_name"),
+            name: userDoc.get("first_name") + " " + userDoc.get("last_name"),
             profile_pic: userDoc.get("profile_pic"),
           };
         } else {
