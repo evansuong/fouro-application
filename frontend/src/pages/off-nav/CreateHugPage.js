@@ -79,7 +79,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         console.log('dismissed keyboard')
       }}>
         <View>
-          <Header routeName={routeName} navigation={navigation} onMainNav={false} />
+          <Header routeName={routeName} navigation={navigation} onMainNav={false}/>
           <View style={styles.mainContainer}>
             {/* Friend Info */}
             <View style={{alignItems: 'center',}}>

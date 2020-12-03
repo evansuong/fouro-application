@@ -11,11 +11,10 @@ import {
 } from 'react-native';
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import AuthAPI from '../../authentication/Authentication';
 import { useIsFocused } from '@react-navigation/native';
-import { UserContext } from '../../contexts/UserContext';
 import { DimensionContext } from '../../contexts/DimensionContext';
 import BackgroundImg from 'assets/gradients/middle.png';
+import API from '../../API';
 
 
 export default function SignupPage({ navigation }) {
@@ -27,7 +26,6 @@ export default function SignupPage({ navigation }) {
   const [userExists, setUserExists] = useState(false);
   const [startUp, setStartUp] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const { userData, dispatch } = useContext(UserContext);
   const { windowWidth, windowHeight } = useContext(DimensionContext)
   const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
@@ -38,6 +36,8 @@ export default function SignupPage({ navigation }) {
       fadeIn();
     }
     if (!isFocused) {
+      setSigningUp(false);
+      setStartUp(false);
       setMounted(false);
     }
 
@@ -70,25 +70,30 @@ export default function SignupPage({ navigation }) {
   }
 
   const submitHandler = async () => {
-    console.log(emailField, passwordField, passwordConfirmField);
-    setSigningUp(true);
-    const userJSON = await AuthAPI.registerUser(emailField, passwordField);
-    let userData = { 
-      uid: userJSON.uid,
-    }
-    
-    dispatch({
-      type: 'SET_USER',
-      payload: userData,
-    })
+    // console.log('loading');
+    // const response = await API.getUserProfile('1');
+    // const post = await response.data;
+    // console.log(post);
 
-    if (userData) {
+    const emailFieldTrim = emailField.trim();
+    const passwordFieldTrim = passwordField.trim();
+    const passwordConfirmFieldTrim = passwordConfirmField.trim();
+    console.log(emailFieldTrim, passwordFieldTrim, passwordConfirmFieldTrim);
+    setSigningUp(true);
+    // check if user with that email already exists (waiting for backend)
+    const data = {
+      user: {
+        email: emailFieldTrim,
+        password: passwordFieldTrim,
+      }
+    }
+
+    if (data) {
       setMounted(false);
-      console.log('hey')
-      navigation.navigate('Name Page');
+      navigation.navigate('Name Page', data);
     } else {
       setSigningUp(false);
-      console.log(`There was an error signing in.`);
+      console.log(`There was an error signing up.`);
     }
   }
 

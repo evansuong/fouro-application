@@ -71,7 +71,8 @@ export default function LoginPage({ navigation }) {
 
   const submitHandler = async () => {
     setLoggingIn(true);
-    const signedinJSON = await AuthAPI.loginUser(emailField, passwordField);
+    const signedinJSON = 
+      await AuthAPI.loginUser(emailField.trim(), passwordField.trim());
     const user = signedinJSON.providerData[0];
     if (user) {
       setMounted(false);
