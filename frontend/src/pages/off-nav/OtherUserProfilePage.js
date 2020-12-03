@@ -115,29 +115,29 @@ export default function OtherUserProfilePage({ navigation, route }) {
     renderItem={renderHug}
             keyExtractor={(item) => item.hugId}
             />
-            let hugButton = 
-                <TouchableOpacity 
-                    style={[styles.hugButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
-                    onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
-                >
-                    <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Hug</Text>
-                </TouchableOpacity>
+        let hugButton = 
+            <TouchableOpacity 
+                style={[styles.hugButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
+                onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
+            >
+                <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Hug</Text>
+            </TouchableOpacity>
 
         //TODO: fix redirection and change to pending on click
         let sendFriendRequestButton = 
-        <TouchableOpacity 
-            style={[styles.sendFriendRequestButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
-            onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
-            >
-            <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Send Friend Request</Text>
-        </TouchableOpacity>
+            <TouchableOpacity 
+                style={[styles.sendFriendRequestButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
+                onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
+                >
+                <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Send Friend Request</Text>
+            </TouchableOpacity>
 
         let pendingButton = 
-        <View 
-            style={[styles.pendingButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
-            >
-            <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Pending</Text>
-        </View>
+            <View 
+                style={[styles.pendingButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
+                >
+                <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Pending</Text>
+            </View>
 
 let button = hugButton
 let containerStyle = {}
