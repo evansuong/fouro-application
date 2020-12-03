@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -24,10 +24,6 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
     const routeName = route.name
-
-    useEffect(() => {
-      console.log(images);
-    }, [images])
 
     const callBackend = async () => {
       try {
@@ -69,7 +65,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         }
       } else {
         console.log('access denied');
-        Alert.alert('You need to give up permission to work');
+        Alert.alert('You need to give permission to upload a picture!');
       }
     }
 
