@@ -26,7 +26,9 @@ function buildButtonProps(name, icon, onPress) {
     }
 }
 
-
+function expandSearch() {
+    console.log('expanding search')
+}
 
 // button functions return button objects to be passed into headerButton
 function BackButton(navigation) {
@@ -42,14 +44,22 @@ function BackButton(navigation) {
 
 function SearchButton(navigation) {
     function onPress() {
-        alert('search button pressed');
+        navigation()
     }
-    return buildButtonProps('search', searchIcon, onPress);
+    return buildButtonProps('search', searchIcon, onPress);    
+}
+
+
+function ExpandedSearchButton(navigation) {
+    function onPress() {
+        navigation()
+    }
+    return buildButtonProps('expanded search', searchIcon, onPress);    
 }
 
 function ProfileButton(navigation) {
     function onPress() {
-        navigation.replace('User Profile Page', { page: 'Profile' });
+        navigation.navigate('User Profile Page', { page: 'Profile' });
     }
     return buildButtonProps('profile', profileIcon, onPress);
 }
@@ -76,20 +86,22 @@ function RemoveFriendButton(navigation) {
 }
 
 
-
-
 export function HeaderButton({ name, icon, onPress, onMainNav }) {
 
     // console.log("buttonName: ", name)
-    console.log(onMainNav)
-
     const { windowWidth, windowHeight } = useContext(DimensionContext);
+
+    let width = windowWidth / 8.5;
+    if (name === 'expanded search') {
+        width = windowWidth / 2
+    }
+
     const styles = {
         btnContainer: {
             backgroundColor: onMainNav ? 'rgba(0, 0, 0, .2)' : 'rgba(0, 0, 0, .4)', 
             borderRadius: 100,
             height: windowWidth / 8.5,
-            width: windowWidth / 8.5, 
+            width: width,
             display: 'flex', 
             justifyContent: 'center', 
             alignItems: 'center',
@@ -128,6 +140,7 @@ export default function Header(props) {
         'Notification': '',
         'User Profile Page': [EditButton(navigation)],
         'Friend Profile': [RemoveFriendButton(navigation)],
+        'Search Page': ['', ExpandedSearchButton(navigation)],
         'Hug Info': '',
         'Create Hug': '',
         'Corkboard': '',
@@ -185,21 +198,21 @@ export default function Header(props) {
     // return new header
     return (
         <View style={styles.header}>
-                {buttons && buttons[0] !== ''? 
-                    <HeaderButton {...buttons[0]} onMainNav={onMainNav}/> 
-                    : 
-                    <View style={styles.filler}/>
-                }
-                {
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}>{props.children}</Text>
-                    </View>
-                }
-                {buttons && buttons.length > 1 && buttons[1] !== '' ? 
-                    <HeaderButton {...buttons[1]} onMainNav={onMainNav}/> 
-                    : 
-                    <View style={styles.filler}/>
-                }
+            {buttons && buttons[0] !== ''? 
+                <HeaderButton {...buttons[0]} onMainNav={onMainNav}/> 
+                : 
+                <View style={styles.filler}/>
+            }
+            {
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>{props.children}</Text>
+                </View>
+            }
+            {buttons && buttons.length > 1 && buttons[1] !== '' ? 
+                <HeaderButton {...buttons[1]} onMainNav={onMainNav}/> 
+                : 
+                <View style={styles.filler}/>
+            }
         </View>
 
     )

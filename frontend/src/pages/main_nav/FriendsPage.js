@@ -1,15 +1,17 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, Text, Button, StyleSheet, FlatList, Dimensions, Image } from 'react-native'
 import AppStyles from '../../AppStyles'
 import FriendCard from '../../components/FriendCard'
 import Header from '../../components/Header'
 import { DimensionContext } from '../../contexts/DimensionContext'
+import SearchPage from '../off-nav/SearchPage'
 
 export default function FriendsPage({ navigation, route }) {
 
+    const [searching, setSearching] = useState(false);
     const gradient = require('assets/gradients/left.png')
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const routeName = route.name;
+    const routeName = searching? 'Search Page' : route.name;
 
     const friends = 
     //  BACKEND TODO: replace this list with a fetch call or firestore equivalent
@@ -104,6 +106,11 @@ export default function FriendsPage({ navigation, route }) {
         }
         ]
 
+    function toggleSearching() {
+        setSearching(!searching)
+        return !searching
+    }
+
 
     const renderCards = friend => {
         // console.log(friend)
@@ -131,16 +138,24 @@ export default function FriendsPage({ navigation, route }) {
             />
 
             <View style={{height: windowWidth * 0.27 }}/>
-            <Header routeName={routeName} navigation={navigation} onMainNav={true}>Friends</Header>
-            
-            <View style={{display: 'flex', flexShrink: 1}}>
+            <Header routeName={routeName} navigation={toggleSearching} onMainNav={true}>Friends</Header>
+
+            {
+                searching ? 
+                <SearchPage></SearchPage>
+                :
+                <View style={{display: 'flex', flexShrink: 1}}>
                 <FlatList
                     data={friends}
                     keyExtractor={item => item.friend_id}
                     renderItem={renderCards}
                     contentContainerStyle={{ width: windowWidth, alignItems: 'center', marginTop: 5, paddingBottom: 5 }}
                 />
-            </View>
+                </View>
+
+            }
+            
+            
         </View>
     )
 }
