@@ -38,7 +38,9 @@ export default function ProfileSetupPage({ navigation, route }) {
       let uid = userData.uid;
       console.log('uploading')
       // Register user with user param
-      const response = await API.uploadUserProfilePicture(uid, {blob:uploadPic});
+      const splitPicURI = uploadPic.uri.split('/');
+      let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
+      const response = await API.uploadUserProfilePicture(uid, {blob:res});
 
       if(response.status) {
         console.log('yay')

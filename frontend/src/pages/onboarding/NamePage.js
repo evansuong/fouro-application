@@ -84,22 +84,27 @@ export default function NamePage({ navigation, route }) {
     //   return;
     // }
     // await UsersAPI.updateUserProfile(username, firstName, lastName);
-    
-    console.log('adfadfadf')
-    console.log('user in namePage: ', userData.uid);
+    let signUpData = route.params
+    console.log(signUpData)
+
     let userToCreate = {
-      uid: userData.uid,
       username: username.trim(),
       firstName: firstName.trim(),
       lastName: lastName.trim(),
     }
-    let response = await API.createUser(userToCreate)
-    console.log('response', response)
-    if (response.status) {
-      navigation.navigate('Pic Upload Page');
-    } else {
-      alert('something went wrong try again')
-    }
+
+    navigation.navigate('Pic Upload Page', { 
+      signUpData: signUpData,
+      profileData: profileData
+    })
+
+    // let response = await API.createUser(userToCreate)
+    // console.log('response', response)
+    // if (response.status) {
+    //   navigation.navigate('Pic Upload Page');
+    // } else {
+    //   alert('something went wrong try again')
+    // }
   }
 
   const timeout = () => {

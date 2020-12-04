@@ -73,22 +73,23 @@ export default function SignupPage({ navigation }) {
     }).start();
   }
 
-  const submitHandler = async () => {
+  const submitHandler = () => {
     const emailFieldTrim = emailField.trim();
     const passwordFieldTrim = passwordField.trim();
     const passwordConfirmFieldTrim = passwordConfirmField.trim();
     console.log(emailFieldTrim, passwordFieldTrim, passwordConfirmFieldTrim);
     setSigningUp(true);
     // check if user with that email already exists (waiting for backend)
-    const data = {
+    const signUpData = {
       user: {
         email: emailFieldTrim,
         password: passwordFieldTrim,
       }
     }
     
-    let response = await AuthAPI.registerUser(emailField.trim(), passwordField.trim())
-    processSignupResponse(response)
+    navigation.navigate('Name Page', { signUpData: signUpData });
+    // let response = await AuthAPI.registerUser(emailField.trim(), passwordField.trim())
+    // processSignupResponse(response)
   }
 
   const processSignupResponse = (response) => {

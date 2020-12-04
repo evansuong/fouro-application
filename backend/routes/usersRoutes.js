@@ -119,6 +119,8 @@ router.get("/getUserCounts/:id", async (req, res) => {
 router.post('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
   const uid = req.params.id;
   const { blob } = req.body;
+  console.log(uid)
+  console.log(blob)
   if (!uid || !blob) {
     res.status(400).send('Request has missing fields');
     return;
