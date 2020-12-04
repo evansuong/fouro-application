@@ -2,8 +2,9 @@
 // and User Profile Management
 var firebase = require("../firebase/admin");
 var firebase2 = require('../firebase/config');
-require("firebase/firestore");
-//require("firebase/auth");
+require("firebase/auth");
+const fetch = require('node-fetch');
+
 
 // Firestore
 const db = firebase.firestore();
@@ -147,27 +148,34 @@ const UsersAPI = {
     // TODO: This should have a child call I think
     // TODO: NEED TO GET URL https://firebase.google.com/docs/storage/web/download-files#download_data_via_url
     var storageRef = firebase2.storage().ref();
-    var profilePicRef = storageRef.child(`${uid}`)
+    var profilePicRef = storageRef.child(`profile_pictures/${uid}`)
       // .ref()
       // .child(`${uid}`);
       // .ref(`profile_pictures/${uid}/${file._data.name}`)
       // .child(`profile_pictures/${uid}/${file._data.name}`);
 
       // console.log('storageRefffff: ', storageRef);
-      console.log('fullpath: ', profilePicRef.fullPath);
       // console.log('bucket: ', storageRef.bucket);
 
       // const downloadURL = await storageRef.getDownloadURL();
       // console.log('downloadURL: ', downloadURL);
 
     // save to cloud storage
-    console.log("fileeeeeeee:", file);
-    await profilePicRef.put(file, { contentType: 'application/octet-stream' })
-      .then((snapshot) => {
-        console.log('Uploaded a blob');
-      })
-    console.log('saved');
+    let img = file.dataUrl
+    // let img = Object.keys(file)[0]
+    console.log(img)
+    img = img.replace(/\s/g, '');
 
+    await profilePicRef.putString(img)
+    .then((snapshot) => {
+      console.log('Uploaded a blob');
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
+   
+    console.log('hi')
     // update user's photo URL to the saved cloud storage url
     await usersCollection.doc(uid).update({
       profile_pic: profilePicRef.fullPath,

@@ -11,7 +11,7 @@ var firebaseConfig = {
   projectId: "cafe-fouro",
   storageBucket: "cafe-fouro.appspot.com",
   messagingSenderId: "821811898298",
-  appId: "1:821811898298:web:a51f0c82e843a6126a9f83",
+  appId: "1:821811898298:web:a51f0c82e843a6126a9f83"
 };
 
 module.exports = firebase.initializeApp(firebaseConfig);
