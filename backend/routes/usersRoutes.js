@@ -116,16 +116,16 @@ router.get("/getUserCounts/:id", async (req, res) => {
 });
 
 // TODO: BROKEN
-router.post('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
+router.put('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
   const uid = req.params.id;
   const { blob } = req.body;
   if (!uid || !blob) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
-    // const response = await UsersAPI.uploadUserProfilePicture(
-    //   uid, blob
-    // )
+    const response = await UsersAPI.uploadUserProfilePicture(
+      uid, blob
+    )
     res.status(200).json({ out: 'success' })
   }
 })
