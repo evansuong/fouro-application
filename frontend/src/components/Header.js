@@ -123,7 +123,7 @@ export default function Header(props) {
 
     // collection of headerbuttons to render based on the page
     const headerButtons = {
-        'Friends': [SearchButton(navigation)],
+        'Friends': ['', SearchButton(navigation)],
         'Hug Feed': [ProfileButton(navigation), CorkboardButton(navigation)],
         'Notification': '',
         'User Profile Page': [EditButton(navigation)],
@@ -166,7 +166,6 @@ export default function Header(props) {
             shadowOpacity: 0.8,
             shadowRadius: 2,  
             elevation: onMainNav ? 5 : 0
-
         }, 
         title: {
             fontWeight: 'bold',
@@ -185,7 +184,7 @@ export default function Header(props) {
     // return new header
     return (
         <View style={styles.header}>
-                {buttons ? 
+                {buttons && buttons[0] !== ''? 
                     <HeaderButton {...buttons[0]} onMainNav={onMainNav}/> 
                     : 
                     <View style={styles.filler}/>

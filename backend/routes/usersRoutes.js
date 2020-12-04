@@ -63,6 +63,8 @@ router.get('/testRoute', async (req, res) => {
 router.post("/createNewUser/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { username, firstName, lastName } = req.body;
+  console.log(username, firstName, lastName)
+  console.log(uid)
 
   if (!username || !firstName || !lastName) {
     res.status(400).send('Request has missing fields');
@@ -133,6 +135,8 @@ router.get("/getUserCounts/:id", async (req, res) => {
 router.put('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
   const uid = req.params.id;
   const { blob } = req.body;
+  console.log(uid)
+  console.log(blob)
   if (!uid || !blob) {
     res.status(400).send('Request has missing fields');
     return;

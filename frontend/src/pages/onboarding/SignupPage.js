@@ -12,9 +12,10 @@ import {
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
 import { useIsFocused } from '@react-navigation/native';
-import { DimensionContext } from '../../contexts/DimensionContext';
 import BackgroundImg from 'assets/gradients/middle.png';
-import API from '../../API';
+import AuthAPI from '../../authentication/Authentication';
+import { UserContext } from '../../contexts/UserContext';
+import { DimensionContext } from '../../contexts/DimensionContext';
 
 
 export default function SignupPage({ navigation }) {
@@ -28,7 +29,10 @@ export default function SignupPage({ navigation }) {
   const [userExists, setUserExists] = useState(false);
   const [startUp, setStartUp] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const { windowWidth, windowHeight } = useContext(DimensionContext)
+
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { dispatch } = useContext(UserContext);
+
   const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
 
@@ -86,22 +90,18 @@ export default function SignupPage({ navigation }) {
     // check if user with that email already exists (waiting for backend)
     const checkUserResponse = await API.checkUserExists(emailField);
 
-
-    const data = {
+    const signUpData = {
       user: {
         email: emailFieldTrim,
         password: passwordFieldTrim,
       }
     }
-
-    if (data) {
-      setMounted(false);
-      navigation.navigate('Name Page', data);
-    } else {
-      setSigningUp(false);
-      console.log(`There was an error signing up.`);
-    }
+    
+    navigation.navigate('Name Page', { signUpData: signUpData.user });
+  
   }
+
+  
 
   const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
