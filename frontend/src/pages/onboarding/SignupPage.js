@@ -77,8 +77,8 @@ export default function SignupPage({ navigation }) {
 
   const submitHandler = async () => {
     // console.log('loading');
-    const response = await API.getUserProfile(emailField);
-    console.log('response status: ', response.statusCode);
+    // const response = await API.getUserProfile(emailField);
+    // console.log('response status: ', response.statusCode);
     // const post = await response.data;
     // console.log(post);
 
@@ -88,7 +88,9 @@ export default function SignupPage({ navigation }) {
     console.log(emailFieldTrim, passwordFieldTrim, passwordConfirmFieldTrim);
     setSigningUp(true);
     // check if user with that email already exists (waiting for backend)
-    const checkUserResponse = await API.checkUserExists(emailField);
+    // const checkUserResponse = await API.checkUserExists(emailField);
+    // const checkUserData = checkUserResponse.data;
+    // console.log('checkUserData', checkUserData);
 
     const signUpData = {
       user: {

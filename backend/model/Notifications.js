@@ -12,7 +12,7 @@ const users = db.collection("users");
 const NotificationsAPI = {
     getNotifications: async function (uid) {
         // UNPAGINATED VERSION (this is more preferable for frontend)
-        // var notificationCollection = usersCollection
+        // var notificationCollection = users
         //   .doc(uid)
         //   .collection("notifications")
         //   .orderBy("date_time")
@@ -21,10 +21,12 @@ const NotificationsAPI = {
         // notificationSnapshot.forEach(doc => {
         //   notifications = [...notifications, doc.data()];
         // });
-        // return notifications
+        // return notifications;
         // PAGINATED VERSION
-        var first = db
-            .doc(currUser.uid)
+        // Set current user
+        const currUser = firebase.auth().currentUser;
+        var first = users
+            .doc(uid)
             .collection("notifications")
             .orderBy("date_time")
             .limit(5);
@@ -36,8 +38,8 @@ const NotificationsAPI = {
 
             // Construct a new query starting at this document,
             // get the next 25 cities.
-            var next = db
-                .doc(currUser.uid)
+            var next = users
+                .doc(uid)
                 .collection("notifications")
                 .orderBy("date_time")
                 .limit(5);
@@ -50,40 +52,43 @@ const NotificationsAPI = {
 };
 
 const RequestsAPI = {
-    sendFriendRequest: function (userId) {
+    sendFriendRequest: async function (user_id, friend_id) {
         //Set current user
-        const currUser = firebase.auth().currentUser;
+        // const currUser = firebase.auth().currentUser;
         //Gets the time that the notification is sent
-        var dateTime = db.dateTime.now();
-        //navigates to current users notification collection and updates with 
+        var dateTime = new Date();
+        // var dateTime = db.dateTime.now();
+        // navigates to current users notification collection and updates with 
         // the current time, friend_id, and type
-        db
-            .collection("users")
-            .doc(userId)
+        await users
+            .doc(friend_id)
             .collection("notifications")
             .add({
                 type : "friend",
                 date_time : dateTime,
-                friend_id : currUser.uid
-                
+                sender : user_id,
+                recipient: friend_id
             });
+        return({ out: true });
     },
 
-    sendHugRequest(friendId, hugId) {
-         //Set current user
-         const currUser = firebase.auth().currentUser;
-         //Gets the time that the notification is sent
-         var dateTime = db.dateTime.now();
-         db
-            .collection("users")
-            .doc(friendId)
+    sendHugRequest: async function(user_id, friend_id, hug_id) {
+        // Set current user
+        // const currUser = firebase.auth().currentUser;
+        // Gets the time that the notification is sent
+        var dateTime = new Date();
+        // var dateTime = db.dateTime.now();
+        await users
+            .doc(friend_id)
             .collection("notifications")
             .add({
                 type : "hug",
-                hug_id : hugId,
+                hug_id : hug_id,
                 date_time : dateTime,
-                user_id : currUser.uid
+                sender : user_id,
+                recipient: friend_id
             });
+        return({ out: true });
     },
 }
 

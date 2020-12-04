@@ -56,15 +56,15 @@ export default function ProfileSetupPage({ navigation, route }) {
       }
 
       // Register user with user param
-      const splitPicURI = uploadPic.uri.split('/');
-      let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
-      const response = await API.uploadUserProfilePicture(uid, { blob:res });
+      // const splitPicURI = uploadPic.uri.split('/');
+      // let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
+      // const response = await API.uploadUserProfilePicture(uid, { blob:res });
 
-      if(response.status) {
-        console.log('yay')
-      } else {
-        console.log('bad')
-      }
+      // if(response.status) {
+      //   console.log('yay')
+      // } else {
+      //   console.log('bad')
+      // }
 
       // uploadUserProfilePicture
       console.log(uploadPic);
@@ -72,8 +72,11 @@ export default function ProfileSetupPage({ navigation, route }) {
       // const blob = Blob.build(readFileOut, { type: 'application/octet;BASE64'});
 
       // const splitPicURI = uploadPic.uri.split('/');
+      console.log('uri: ', uploadPic.uri);
       const imgResponse = await fetch(uploadPic.uri);
+      console.log('imgResponse: ', imgResponse);
       const blob =  await imgResponse.blob();
+      console.log('blob: ', JSON.stringify(blob));
       // console.log(typeof blob);
       // console.log(blob.size);
       // console.log(blob.type);
@@ -82,7 +85,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       // let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
       // Send res to backend to push to firebase
       // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-      console.log('success', JSON.stringify(blob));
+      // console.log('success', JSON.stringify(blob));
       const request = {
         uid: user['uid'],
         blob: blob,
