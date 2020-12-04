@@ -1,6 +1,7 @@
 // Users file for Creating, Reading, Updating, and Deleting Users
 // and User Profile Management
 var firebase = require("../firebase/admin");
+var firebase2 = require('../firebase/config');
 require("firebase/firestore");
 //require("firebase/auth");
 
@@ -140,21 +141,36 @@ const UsersAPI = {
   uploadUserProfilePicture: async function (uid, file) {
     // TODO: this function may not work correctly.
     // create a cloud storage refrence
-    var storageRef = await firebase
-      .storage()
-      .ref("profile_pictures/" + user.uid + "/" + file.name);
-    // TODO: This should have a child call I think
-    // var storageRef = firebase
+    // var storageRef = await firebase2
     //   .storage()
-    //   .ref()
-    //   .child(`profile_pictures/${uid}`);
+    //   .ref("profile_pictures/" + uid + "/" + file._data.name);
+    // TODO: This should have a child call I think
+    // TODO: NEED TO GET URL https://firebase.google.com/docs/storage/web/download-files#download_data_via_url
+    var storageRef = firebase2.storage().ref();
+    var profilePicRef = storageRef.child(`${uid}`)
+      // .ref()
+      // .child(`${uid}`);
+      // .ref(`profile_pictures/${uid}/${file._data.name}`)
+      // .child(`profile_pictures/${uid}/${file._data.name}`);
+
+      // console.log('storageRefffff: ', storageRef);
+      console.log('fullpath: ', profilePicRef.fullPath);
+      // console.log('bucket: ', storageRef.bucket);
+
+      // const downloadURL = await storageRef.getDownloadURL();
+      // console.log('downloadURL: ', downloadURL);
 
     // save to cloud storage
-    var task = storageRef.put(file);
+    console.log("fileeeeeeee:", file);
+    await profilePicRef.put(file, { contentType: 'application/octet-stream' })
+      .then((snapshot) => {
+        console.log('Uploaded a blob');
+      })
+    console.log('saved');
 
     // update user's photo URL to the saved cloud storage url
     await usersCollection.doc(uid).update({
-      profile_pic: storageRef,
+      profile_pic: profilePicRef.fullPath,
     });
   },
 };
