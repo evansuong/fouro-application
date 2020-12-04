@@ -6,7 +6,6 @@ import { DimensionContext } from '../../contexts/DimensionContext'
 import { useFocusEffect } from '@react-navigation/native';
 import AppStyles from '../../AppStyles';
 import Header from '../../components/Header';
-import App from '../../../App';
 
 // temorary test data to simulate backend notification data 
 const pic = require('../../../assets/profilePic.jpg')

@@ -123,7 +123,7 @@ export default function Header(props) {
 
     // collection of headerbuttons to render based on the page
     const headerButtons = {
-        'Friends': [SearchButton(navigation)],
+        'Friends': ['', SearchButton(navigation)],
         'Hug Feed': [ProfileButton(navigation), CorkboardButton(navigation)],
         'Notification': '',
         'User Profile Page': [EditButton(navigation)],
@@ -137,15 +137,15 @@ export default function Header(props) {
 
     // update to render main nav header
     if (onMainNav) {
-        console.log(routeName)
+        // console.log(routeName)
         buttons = headerButtons[routeName]
 
     // update to render off nav header
     } else if (routeName) {
-        console.log(routeName)
+        // console.log(routeName)
         buttons = [BackButton(navigation), ...headerButtons[routeName]]
-        console.log(buttons)
-        console.log(buttons.length)
+        // console.log(buttons)
+        // console.log(buttons.length)
     }
 
     const styles = StyleSheet.create({
@@ -166,7 +166,6 @@ export default function Header(props) {
             shadowOpacity: 0.8,
             shadowRadius: 2,  
             elevation: onMainNav ? 5 : 0
-
         }, 
         title: {
             fontWeight: 'bold',
@@ -179,13 +178,13 @@ export default function Header(props) {
         },
     });
 
-    buttons && console.log(buttons.length)
+    // buttons && console.log(buttons.length)
     // console.log(onMainNav)
   
     // return new header
     return (
         <View style={styles.header}>
-                {buttons ? 
+                {buttons && buttons[0] !== ''? 
                     <HeaderButton {...buttons[0]} onMainNav={onMainNav}/> 
                     : 
                     <View style={styles.filler}/>

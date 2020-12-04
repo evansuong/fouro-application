@@ -15,17 +15,23 @@ import LinkedButton from 'components/LinkedButton';
 import AuthAPI from '../../authentication/Authentication';
 import BackgroundImg from 'assets/gradients/middle.png';
 import { DimensionContext } from '../../contexts/DimensionContext';
+import { UserContext } from '../../contexts/UserContext';
 
 
 export default function LoginPage({ navigation }) {
+  // user info
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
-  const [error, setError] = useState(false);
+
+  // component state
   const [loggingIn, setLoggingIn] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [startUp, setStartUp] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  // contexts
   const {windowWidth, windowHeight} = useContext(DimensionContext);
+  const {dispatch} = useContext(UserContext)
   const fade = useRef(new Animated.Value(0)).current;
 
   // const { user } = useContext(User)
@@ -71,15 +77,21 @@ export default function LoginPage({ navigation }) {
 
   const submitHandler = async () => {
     setLoggingIn(true);
-    const signedinJSON = 
-      await AuthAPI.loginUser(emailField.trim(), passwordField.trim());
-    const user = signedinJSON.providerData[0];
-    if (user) {
+    let response = await AuthAPI.loginUser(emailField.trim(), passwordField.trim())
+    processLoginResponse(response)
+  }
+
+  const processLoginResponse = (response) => {
+    if (response.status) {
       setMounted(false);
+      dispatch({
+        type: "SET_USER",
+        payload: response.data,
+      });
       navigation.navigate('Main Nav Page', { loggedIn: true });
     } else {
-      setError(true);
       setLoggingIn(false);
+      alert("No users found with those credentials")
     }
   }
 
@@ -176,14 +188,6 @@ export default function LoginPage({ navigation }) {
                 color='#FB7250'
                 onPress={() => submitHandler()}
               />
-            }
-            {
-              error && timeout() &&
-              <View style={styles.textContainer}>
-                <Text style={styles.errorText}>
-                  There is no user profile with those credentials!
-                </Text>
-              </View>
             }
             {
               loggingIn &&

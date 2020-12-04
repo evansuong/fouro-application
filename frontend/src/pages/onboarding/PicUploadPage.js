@@ -35,26 +35,36 @@ export default function ProfileSetupPage({ navigation, route }) {
 
   const callBackend = async () => {
     try {
-      let { user } = route.params;
+      const { signupData, profileData } = route.params;
+      // register user
+      const { email, password } = signupData;
+
+      let registerResponse = await AuthAPI.registerUser(email, password)
+      processSignupResponse(registerResponse);
+
+      console.log(registerResponse)
+      let uid = registerResponse.data.uid;
+      console.log('uid', uid)
+
+      // create profile
+      let profileResponse = await API.createUser({ uid: uid, ...profileData})
+      console.log('response', profileResponse)
+      if (profileResponse.status) {
+        console.log('yay')
+      } else {
+        alert('something went wrong try again')
+      }
+
       // Register user with user param
-      const userJSON = await AuthAPI.registerUser(user.email, user.password);
+      const splitPicURI = uploadPic.uri.split('/');
+      let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
+      const response = await API.uploadUserProfilePicture(uid, { blob:res });
 
-      // delete email and password from user param and add uid.
-      delete user['email'];
-      delete user['password'];
-      user['uid'] = userJSON.uid;
-
-      // uid, username, firstname, lastname; add user to context
-      console.log('53', user);
-      dispatch({
-        type: 'SET_USER',
-        payload: user,
-      })
-
-      console.log('dispatched');
-      // createUser
-      const createUserResponse = await API.createUser(user);
-      console.log('created user');
+      if(response.status) {
+        console.log('yay')
+      } else {
+        console.log('bad')
+      }
 
       // uploadUserProfilePicture
       // console.log(uploadPic);
@@ -73,6 +83,18 @@ export default function ProfileSetupPage({ navigation, route }) {
       // navigation.navigate('Welcome Page');
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  const processSignupResponse = (response) => {
+    if (response.status) {
+      console.log('yay')
+      dispatch({
+        type: "SET_USER",
+        payload: response.data,
+      });
+    } else {
+      alert(response.data);
     }
   }
 
@@ -97,7 +119,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       }
     } else {
       console.log('access denied');
-      Alert.alert('You need to give up permission to work');
+      Alert.alert('You need to give up permission to work'); 
     }
   }
 
