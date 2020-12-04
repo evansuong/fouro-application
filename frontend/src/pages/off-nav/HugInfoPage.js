@@ -7,6 +7,7 @@ export default function HugInfoPage({ navigation, route }) {
 
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const routeName = route.name;
+    const { hugId, time, completed, senderId, recieverId, descriptionSender, descriptionReceiver, images } = route.params.data;
 
     const friendMessage = "Hello this is the incoming message for the hug. it is poggers. stan bts. " +
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" +
@@ -26,7 +27,7 @@ export default function HugInfoPage({ navigation, route }) {
         mainContainer: {
             backgroundColor: 'white',
             marginTop: statusBarHeight,
-            paddingBottom: statusBarHeight
+            paddingBottom: statusBarHeight,
         },
         header: {
             backgroundColor: 'white',
@@ -116,11 +117,10 @@ export default function HugInfoPage({ navigation, route }) {
             <Header routeName={routeName} navigation={navigation} onMainNav={false} />
 
             <ScrollView style={styles.mainContainer}>
-                
                 <View style={styles.header}>
                     <View>
                         {/* insert first hug picture -- default is friend's prof pic */}
-                        <Image source={{ uri: "https://picsum.photos/200/200"}} style={styles.imageContainer}/>
+                        <Image source={images[0]} style={styles.imageContainer}/>
                     </View>  
                 </View>
 
@@ -128,13 +128,13 @@ export default function HugInfoPage({ navigation, route }) {
                 <View style={styles.notificationContent}>    
                     <View style={{ ...styles.textAreaFriend, maxWidth: textContainerWidth }}>
                         {/* Text from friend */}
-                        <Text style={styles.username}>{friendUsername}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{friendMessage}</Text>
+                        <Text style={styles.username}>{senderId}</Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>{descriptionSender}</Text>
                     </View>
                     <View style={{ ...styles.textAreaUser, maxWidth: textContainerWidth }}>
                         {/* Text from user */}
-                        <Text style={styles.username}>{myUsername}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{userMessage}</Text>
+                        <Text style={styles.username}>{'me, import from usercntext'}</Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>{descriptionReceiver}</Text>
                     </View>  
                 </View>
             
@@ -142,10 +142,11 @@ export default function HugInfoPage({ navigation, route }) {
                 {/* more hug imgs */}
                 <View style={styles.images}>
                     <ScrollView horizontal={true} style={{backgroundColor:'white'}}>
-                        <Image source={{ uri: "https://picsum.photos/200/300"}} style={styles.imageContainer}/>
-                        <Image source={{ uri: "https://picsum.photos/200/400"}} style={styles.imageContainer}/>
-                        <Image source={{ uri: "https://picsum.photos/200/500"}} style={styles.imageContainer}/>
-                        <Image source={{ uri: "https://picsum.photos/200/100"}} style={styles.imageContainer}/>
+                        {images.map(img => (
+                            <Image source={img} style={styles.imageContainer}/>
+                        ))}
+                        
+                       
                     </ScrollView>
                 </View>
 
