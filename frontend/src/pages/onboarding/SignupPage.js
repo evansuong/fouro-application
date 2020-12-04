@@ -12,21 +12,25 @@ import {
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
 import { useIsFocused } from '@react-navigation/native';
-import { DimensionContext } from '../../contexts/DimensionContext';
 import BackgroundImg from 'assets/gradients/middle.png';
-import API from '../../API';
+import AuthAPI from '../../authentication/Authentication';
+import { UserContext } from '../../contexts/UserContext';
+import { DimensionContext } from '../../contexts/DimensionContext';
 
 
 export default function SignupPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('');
+  const [passwordField, setPasswordField] = useState('password');
+  const [passwordConfirmField, setPasswordConfirmField] = useState('password'); // TODO return these to blank
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
   const [startUp, setStartUp] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const { windowWidth, windowHeight } = useContext(DimensionContext)
+
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { dispatch } = useContext(UserContext);
+
   const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
 
@@ -70,11 +74,6 @@ export default function SignupPage({ navigation }) {
   }
 
   const submitHandler = async () => {
-    // console.log('loading');
-    // const response = await API.getUserProfile('1');
-    // const post = await response.data;
-    // console.log(post);
-
     const emailFieldTrim = emailField.trim();
     const passwordFieldTrim = passwordField.trim();
     const passwordConfirmFieldTrim = passwordConfirmField.trim();
@@ -87,13 +86,22 @@ export default function SignupPage({ navigation }) {
         password: passwordFieldTrim,
       }
     }
+    
+    let response = await AuthAPI.registerUser(emailField.trim(), passwordField.trim())
+    processSignupResponse(response)
+  }
 
-    if (data) {
+  const processSignupResponse = (response) => {
+    if (response.status) {
       setMounted(false);
-      navigation.navigate('Name Page', data);
+      dispatch({
+        type: "SET_USER",
+        payload: response.data,
+      });
+      navigation.navigate('Name Page');
     } else {
       setSigningUp(false);
-      console.log(`There was an error signing up.`);
+      alert(response.data);
     }
   }
 

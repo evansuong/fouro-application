@@ -35,26 +35,16 @@ export default function ProfileSetupPage({ navigation, route }) {
 
   const callBackend = async () => {
     try {
-      let { user } = route.params;
+      let uid = userData.uid;
+      console.log('uploading')
       // Register user with user param
-      const userJSON = await AuthAPI.registerUser(user.email, user.password);
+      const response = await API.uploadUserProfilePicture(uid, {blob:uploadPic});
 
-      // delete email and password from user param and add uid.
-      delete user['email'];
-      delete user['password'];
-      user['uid'] = userJSON.uid;
-
-      // uid, username, firstname, lastname; add user to context
-      console.log('53', user);
-      dispatch({
-        type: 'SET_USER',
-        payload: user,
-      })
-
-      console.log('dispatched');
-      // createUser
-      const createUserResponse = await API.createUser(user);
-      console.log('created user');
+      if(response.status) {
+        console.log('yay')
+      } else {
+        console.log('bad')
+      }
 
       // uploadUserProfilePicture
       // console.log(uploadPic);
@@ -97,7 +87,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       }
     } else {
       console.log('access denied');
-      Alert.alert('You need to give up permission to work');
+      Alert.alert('You need to give up permission to work'); 
     }
   }
 

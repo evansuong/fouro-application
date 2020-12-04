@@ -13,17 +13,22 @@ import LinkedButton from 'components/LinkedButton';
 import { useIsFocused } from '@react-navigation/native';
 import BackgroundImg from 'assets/gradients/middle.png';
 import { DimensionContext } from '../../contexts/DimensionContext';
+import API from '../../API';
+import { UserContext } from '../../contexts/UserContext';
 
 
 export default function NamePage({ navigation, route }) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('t'); // TODO reutrn these back to black
+  const [lastName, setLastName] = useState('t');
+  const [username, setUsername] = useState('t');
   const [userExists, setUserExists] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const { windowWidth, windowHeight } = useContext(DimensionContext)
+
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { userData } = useContext(UserContext);
+
   const fade = useRef(new Animated.Value(0)).current;
   const isFocused = useIsFocused();
 
@@ -79,12 +84,22 @@ export default function NamePage({ navigation, route }) {
     //   return;
     // }
     // await UsersAPI.updateUserProfile(username, firstName, lastName);
-    let { user } = route.params;
-    user['username'] = username.trim();
-    user['firstName'] = firstName.trim();
-    user['lastName'] = lastName.trim();
-    console.log('user in namePage: ', user);
-    navigation.navigate('Pic Upload Page', { user: user });
+    
+    console.log('adfadfadf')
+    console.log('user in namePage: ', userData.uid);
+    let userToCreate = {
+      uid: userData.uid,
+      username: username.trim(),
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+    }
+    let response = await API.createUser(userToCreate)
+    console.log('response', response)
+    if (response.status) {
+      navigation.navigate('Pic Upload Page');
+    } else {
+      alert('something went wrong try again')
+    }
   }
 
   const timeout = () => {
