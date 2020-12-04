@@ -4,7 +4,7 @@ var firebase = require("../firebase/admin");
 require("firebase/firestore");
 require("firebase/storage");
 const cors = require("cors");
-const { UsersAPI } = require('../model/Users');
+
 const { NotificationsAPI, RequestsAPI } = require("../model/Notifications");
 
 const db = firebase.firestore();
@@ -62,16 +62,6 @@ router.get("/getNotifications/:id", async (req, res) => {
     return;
   } else {
     const notifResponse = await NotificationsAPI.getNotifications(uid);
-    // let users = []; // { friendName, friendPFP }
-    for (let i = 0; i < notifResponse.length; i++) {
-      const userId = notifResponse[i].friend;
-      const userResponse = await UsersAPI.getUserProfile(userId);
-      const newUser = {
-        friendName: userResponse.name,
-        friendPfp: userResponse.profile_pic
-      }
-      notifResponse[i]['friendInfo'] = newUser;
-    }
     res.status(200).json({ notifications: notifResponse });
   }
 });

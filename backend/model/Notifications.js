@@ -4,6 +4,10 @@ var firebase = require("../firebase/admin");
 require("firebase/firestore");
 require("firebase/auth");
 
+const admin = require("firebase-admin");
+
+const { UsersAPI } = require('../model/Users');
+
 
 // Firestore
 const db = firebase.firestore();
@@ -21,18 +25,28 @@ const NotificationsAPI = {
         notificationSnapshot.forEach(doc => {
           notifications = [...notifications, doc.data()];
         });
+        for (let i = 0; i < notifications.length; i++) {
+          const userId = notifications[i].friend;
+          const userResponse = await UsersAPI.getUserProfile(userId);
+          const newUser = {
+            friendName: userResponse.name,
+            friendPfp: userResponse.profile_pic
+          }
+          notifications[i]['friendInfo'] = newUser;
+        }
         return notifications;
     },
 
     deleteNotification: function (requestId) {
         requestId.delete().then();
-    },
+    }
 };
 
 const RequestsAPI = {
     sendFriendRequest: async function (user_id, friend_id) {
         //Gets the time that the notification is sent
-        var dateTime = new Date();
+        let dateInSeconds = Math.floor(Date.now() / 1000);
+        var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
 
         // navigates to current users notification collection and updates with 
         // the current time, friend_id, and type
@@ -50,7 +64,8 @@ const RequestsAPI = {
 
     sendHugRequest: async function(user_id, friend_id, hug_id) {
         // Gets the time that the notification is sent
-        var dateTime = new Date();
+        let dateInSeconds = Math.floor(Date.now() / 1000);
+        var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
         
         const newHugCollectionRef = 
           users.doc(friend_id).collection('notifications').doc(`${hug_id}`);
