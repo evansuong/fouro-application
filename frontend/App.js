@@ -55,7 +55,7 @@ export default function App() {
               /* the app will actually look like
               * */
               screenOptions={{ headerShown: false }}
-              initialRouteName="Signup Page"
+              initialRouteName="Main Nav Page"
             >
               <Stack.Screen 
                 name="Main Nav Page" 
