@@ -81,7 +81,7 @@ function RemoveFriendButton(navigation) {
 export function HeaderButton({ name, icon, onPress, onMainNav }) {
 
     // console.log("buttonName: ", name)
-    console.log(onMainNav)
+    // console.log(onMainNav)
 
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const styles = {
@@ -137,15 +137,15 @@ export default function Header(props) {
 
     // update to render main nav header
     if (onMainNav) {
-        console.log(routeName)
+        // console.log(routeName)
         buttons = headerButtons[routeName]
 
     // update to render off nav header
     } else if (routeName) {
-        console.log(routeName)
+        // console.log(routeName)
         buttons = [BackButton(navigation), ...headerButtons[routeName]]
-        console.log(buttons)
-        console.log(buttons.length)
+        // console.log(buttons)
+        // console.log(buttons.length)
     }
 
     const styles = StyleSheet.create({
@@ -179,7 +179,7 @@ export default function Header(props) {
         },
     });
 
-    buttons && console.log(buttons.length)
+    // buttons && console.log(buttons.length)
     // console.log(onMainNav)
   
     // return new header

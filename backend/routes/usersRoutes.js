@@ -61,7 +61,6 @@ router.get('/testRoute', async (req, res) => {
 
 // Routes
 router.post("/createNewUser/:id", checkBody, async (req, res) => {
-  console.log('creating');
   const uid = req.params.id;
   const { username, firstName, lastName } = req.body;
 
@@ -81,6 +80,21 @@ router.get("/getUserProfile/:id", async (req, res) => {
   const response = await UsersAPI.getUserProfile(uid);
   res.status(200).json(response);
 });
+
+router.get('checkUserExists', checkBody, async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    res.status(400).send('Request has missing fields');
+    return;
+  } else {
+    const response = await UsersAPI.checkUserExists(email);
+    if (response.out) {
+      res.status(200).json({ out: response.out });
+    } else {
+      res.status(400).json({ out: response.out });
+    }
+  }
+})
 
 router.put("/updateUserProfile/:id", checkBody, async (req, res) => {
   const uid = req.params.id;

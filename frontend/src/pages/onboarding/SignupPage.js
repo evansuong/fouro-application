@@ -19,8 +19,10 @@ import API from '../../API';
 
 export default function SignupPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('');
+  const [passwordField, setPasswordField] = useState('gggggg');
+  const [passwordConfirmField, setPasswordConfirmField] = useState('gggggg');
+  // const [passwordField, setPasswordField] = useState('');
+  // const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
@@ -71,7 +73,8 @@ export default function SignupPage({ navigation }) {
 
   const submitHandler = async () => {
     // console.log('loading');
-    // const response = await API.getUserProfile('1');
+    const response = await API.getUserProfile(emailField);
+    console.log('response status: ', response.statusCode);
     // const post = await response.data;
     // console.log(post);
 
@@ -81,6 +84,9 @@ export default function SignupPage({ navigation }) {
     console.log(emailFieldTrim, passwordFieldTrim, passwordConfirmFieldTrim);
     setSigningUp(true);
     // check if user with that email already exists (waiting for backend)
+    const checkUserResponse = await API.checkUserExists(emailField);
+
+
     const data = {
       user: {
         email: emailFieldTrim,

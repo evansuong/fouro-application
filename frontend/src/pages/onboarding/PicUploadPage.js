@@ -37,9 +37,11 @@ export default function ProfileSetupPage({ navigation, route }) {
     try {
       let { user } = route.params;
       // Register user with user param
-      const userJSON = await AuthAPI.registerUser(user.email, user.password);
+      const userJSON = await AuthAPI.registerUser(
+        user.email, user.password
+      );
 
-      // delete email and password from user param and add uid.
+      // delete email and password from user param and add uid, pfp.
       delete user['email'];
       delete user['password'];
       user['uid'] = userJSON.uid;
@@ -50,26 +52,35 @@ export default function ProfileSetupPage({ navigation, route }) {
         type: 'SET_USER',
         payload: user,
       })
-
       console.log('dispatched');
+
       // createUser
       const createUserResponse = await API.createUser(user);
-      console.log('created user');
+      const createUserData = createUserResponse.data;
+      console.log('created user: ', createUserData);
 
       // uploadUserProfilePicture
-      // console.log(uploadPic);
+      console.log(uploadPic);
+      // const readFileOut = fs.readFile(uploadPic.uri, 'base64');
+      // const blob = Blob.build(readFileOut, { type: 'application/octet;BASE64'});
+
       // const splitPicURI = uploadPic.uri.split('/');
+      const imgResponse = await fetch(uploadPic.uri);
+      const blob =  await imgResponse.blob();
+      // console.log(typeof blob);
+      // console.log(blob.size);
+      // console.log(blob.type);
+      // console.log(blob.text());
+      
       // let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
       // Send res to backend to push to firebase
       // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-      // console.log('success', JSON.stringify(res));
-      // const request = {
-      //   uid: user['uid'],
-      //   blob: res,
-      // }
-      // const pfpResponse = await API.uploadUserProfilePicture(request);
-      // console.log('createUserResponse: ', createUserResponse)
-      // console.log('pfpResponse: ', pfpResponse);
+      console.log('success', JSON.stringify(blob));
+      const request = {
+        uid: user['uid'],
+        blob: blob,
+      }
+      const pfpResponse = await API.uploadUserProfilePicture(request);
       // navigation.navigate('Welcome Page');
     } catch (err) {
       console.log(err);

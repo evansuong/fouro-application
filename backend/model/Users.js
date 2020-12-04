@@ -84,6 +84,16 @@ const UsersAPI = {
     return userProfile;
   },
 
+  checkUserExists: async function(email) {
+    let success = false;
+    const userRef = usersCollection.where('email', '==', email);
+    const user = await userRef.get();
+    if (!user.exists) {
+      success = true;
+    }
+    return { out: status };
+  },
+
   // TODO: Need to fix for testing purposes
   // User and UID remains constant throughout expo session
   // In order to reset UID, close metro bundler and npm start again

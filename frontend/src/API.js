@@ -11,20 +11,13 @@ const API = {
     return axios.get(`${server}/users/getUserProfile/${uid}`);
   },
   createUser: function(user) {
-    console.log('in axios api');
-    axios.post(`${server}/users/createNewUser`, user, { timeout: 20000 })
-    .then(response => {
-      console.log(response.data);
-      return;
-    })
-    .catch(err => {
-      console.log(err.code);
-      console.log(err.message);
-      console.log(err.stack);
-    });
+    return axios.post(`${server}/users/createNewUser/${user.uid}`, user);
   },
   uploadUserProfilePicture: function(request) {
-    return axios.post(`${server}/users/uploadUserProfilePicture`, request);
+    return axios.put(
+      `${server}/users/uploadUserProfilePicture/${request.uid}`, 
+      request
+    );
   }
 }
 

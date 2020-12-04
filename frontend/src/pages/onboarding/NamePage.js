@@ -16,9 +16,12 @@ import { DimensionContext } from '../../contexts/DimensionContext';
 
 
 export default function NamePage({ navigation, route }) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('V');
+  const [lastName, setLastName] = useState('V');
+  const [username, setUsername] = useState('V');
+  // const [firstName, setFirstName] = useState('');
+  // const [lastName, setLastName] = useState('');
+  // const [username, setUsername] = useState('');
   const [userExists, setUserExists] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [startUp, setStartUp] = useState(true);
