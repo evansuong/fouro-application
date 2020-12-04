@@ -11,20 +11,27 @@ const db = firebase.firestore();
 const usersCollection = db.collection("users");
 
 const UsersAPI = {
-  // FOR TESTING PURPOSES ONLY, NOT A FUNCTION
-  addUser: function (username, first, last) {
-    usersCollection.doc(username).set({
-      first: first,
-      last: last,
-    });
-  },
-
   // Profile pic, friends, hugs, chatrooms, corkboard_id
   /*
    * @Param: string - Current User's uid (currentUser.uid)
    */
   createNewUser: async function (uid, username, firstName, lastName) {
     let created = false;
+    
+    // trim whitespace from username
+    username = username.trim().toLowerCase();
+    firstName = firstName.trim();
+    lastName = lastName.trim();
+      
+    // Check if username matches [a-z 0-9]
+    var str = "";
+    for (var i = 0; i < username.length; i++) {
+      var ch = username.charAt(i);  
+      if ((ch >= 'a' && ch <= 'z') || (ch == '.') || (ch == '_') || (ch == '-')) {
+        str += ch;
+      }
+    }
+    username = str;
 
     // initialize local object containing initial user values
     const user = {
@@ -97,9 +104,20 @@ const UsersAPI = {
       success = false;
     } else {
       // trim whitespace from username
-      username = username.trim();
+      username = username.trim().toLowerCase();
       firstName = firstName.trim();
       lastName = lastName.trim();
+      
+      // Check if username matches [a-z 0-9]
+      var str = "";
+      for (var i = 0; i < username.length; i++) {
+        var ch = username.charAt(i);
+        
+        if ((ch >= 'a' && ch <= 'z') || (ch == '.') || (ch == '_') || (ch == '-')) {
+          str += ch;
+        }
+      }
+      username = str;
 
       // initialize local object containing new user values
       const user = {
