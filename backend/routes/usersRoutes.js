@@ -103,18 +103,14 @@ router.put("/updateUserProfile/:id", checkBody, async (req, res) => {
   }
 });
 
-// TODO: BROKEN. WAITING FOR HUG COUNT AND STREAK INTERLACE.
+// VERIFIED
 router.get("/getUserCounts/:id", async (req, res) => {
   const uid = req.params.id;
   if (!uid) {
     res.status(400).send('Request has missing fields');
   } else {
-    const hugResponse = await HugCountAPI.getUserHugCount(uid);
-    const streakResponse = await HugCountAPI.getUserHugStreak(uid);
-    res.status(200).json({
-      current_streak: hugResponse.out,
-      day_hug_count: streakResponse.out
-    });
+    const countResponse = await HugCountAPI.getUserCount(uid);
+    res.status(200).json(countResponse);
   }
 });
 

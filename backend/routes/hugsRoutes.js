@@ -53,11 +53,12 @@ router.post("/createHug/:id", checkBody, async (req, res) => {
   }
 });
 
+// TODO: BROKEN (SEE ABOVE)
 router.post("/respondToHug/:id", checkBody, (req, res) => {
   const uid = req.params.id;
-  const { friend_id, message, blobs } = req.body;
+  const { hugId, message, blobs } = req.body;
 
-  if (!friend_id || !message || !blobs) {
+  if (!hugId || !message || !blobs) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
@@ -69,11 +70,12 @@ router.post("/respondToHug/:id", checkBody, (req, res) => {
   }
 });
 
+// TODO: BROKEN (SEE ABOVE)
 router.post("/dropAHug/:id", checkBody, (req, res) => {
   const uid = req.params.id;
   const { requestId, hugId } = req.body;
 
-  if (!friend_id || !message || !blobs) {
+  if (!requestId || !hugId) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
@@ -85,26 +87,23 @@ router.post("/dropAHug/:id", checkBody, (req, res) => {
   }
 });
 
+// TODO: BROKEN (SEE ABOVE)
 router.get("/getUserHugs/:id", (req, res) => {
   const uid = req.params.id;
 
-  if (!friend_id || !message || !blobs) {
-    res.status(400).send('Request has missing fields');
-    return;
-  } else {
-    try {
-      
-    } catch(err) {
-      res.status(400).send(`An error occurred: ${err}`);
-    }
+  try {
+    
+  } catch(err) {
+    res.status(400).send(`An error occurred: ${err}`);
   }
 });
 
-router.get("/getHug/:id", checkBody, (req, res) => {
+// TODO: BROKEN (SEE ABOVE)
+router.get("/getHugById/:id", checkBody, (req, res) => {
   const uid = req.params.id;
-  const { friend_id, message, blobs } = req.body;
+  const { hugId } = req.body;
 
-  if (!friend_id || !message || !blobs) {
+  if (!hugId) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
