@@ -119,6 +119,7 @@ export default function NotificationPage({ navigation, route }) {
 const styles = StyleSheet.create({
     notificationList: {
         marginHorizontal: 5,
+        marginTop: 10,
         display: 'flex',
         flexShrink: 1,
         alignItems: 'center',

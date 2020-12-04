@@ -8,6 +8,7 @@ const searchIcon = require('assets/magnifyingGlass.png');
 const profileIcon = require('assets/user-icon.png');
 const editIcon = require('assets/edit-icon.png');
 const corkboardIcon = require('assets/corkboard-icon.png');
+const dotsIcon = require('assets/dots-icon.png');
 
 
 
@@ -58,11 +59,17 @@ function EditButton(navigation) {
 
 function CorkboardButton(navigation) {
     function onPress() {
-        alert('corkboard button pressed');
+        navigation.navigate('Corkboard');
     }
     return buildButtonProps('corkboard', corkboardIcon, onPress);
 } 
 
+function RemoveFriendButton(navigation) {
+    function onPress() {
+        alert('remove friend button pressed')
+    }
+    return buildButtonProps('remove', dotsIcon, onPress);
+} 
 
 
 
@@ -100,7 +107,7 @@ export function HeaderButton({ name, icon, onPress }) {
 
 
 
-// header template
+// TODO: ALLOW ON PRESS FUNCTIONS TO BE PASSED IN AS PROPS
 export default function Header(props) {
     
     const { windowWidth, windowHeight } = useContext(DimensionContext)
@@ -117,11 +124,14 @@ export default function Header(props) {
 
     // collection of headerbuttons to render based on the page
     const headerButtons = {
-        Friends: [SearchButton(navigation)],
-        Home: [ProfileButton(navigation), CorkboardButton(navigation)],
-        Notification: [],
-        Profile: [EditButton(navigation)],
-        friendProfile: [],
+        'Friends': [SearchButton(navigation)],
+        'Home': [ProfileButton(navigation), CorkboardButton(navigation)],
+        'Notification': '',
+        'User Profile Page': [EditButton(navigation)],
+        'Friend Profile': [RemoveFriendButton(navigation)],
+        'Hug Info': '',
+        'Create Hug': '',
+        'Corkboard': '',
     };
 
     let title = ''
@@ -134,8 +144,11 @@ export default function Header(props) {
         buttons = headerButtons[currentRoute]
 
     // update to render off nav header
-    } else if (route.params.page) {
-        buttons = [BackButton(navigation), headerButtons[route.params.page]]
+    } else if (route.name) {
+        console.log(route.name)
+        buttons = [BackButton(navigation), ...headerButtons[route.name]]
+        console.log(buttons)
+        console.log(buttons.length)
     }
 
     const styles = StyleSheet.create({
@@ -167,7 +180,7 @@ export default function Header(props) {
             {title !== '' && 
                 <Text style={styles.title}>{props.children}</Text>
             }
-            {buttons && buttons.length > 1 ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
+            {buttons && buttons.length > 1 && buttons[1] !== '' ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
         </View>
     )
 }

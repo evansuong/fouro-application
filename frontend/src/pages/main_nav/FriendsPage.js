@@ -10,9 +10,6 @@ export default function FriendsPage({ navigation, route }) {
     const gradient = require('assets/gradients/left.png')
     const { windowWidth, windowHeight } = useContext(DimensionContext)
 
-
-    
-
     const friends = 
     //  BACKEND TODO: replace this list with a fetch call or firestore equivalent
         [{
@@ -121,15 +118,13 @@ export default function FriendsPage({ navigation, route }) {
     )
 
     return (
-        <View style={AppStyles.navPageContainer}>
-
+        <View style={{...styles.navPageContainer}}>
             {/* background */}
             <Image
                 source={gradient}
-                style={AppStyles.background}
+                style={[styles.background, { width: windowWidth, height: windowHeight }]}
             />
             <Header route={route} navigation={navigation} onMainNav={true}>Friends</Header>
-
 
             <FlatList
                 data={friends}
@@ -139,3 +134,15 @@ export default function FriendsPage({ navigation, route }) {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    navPageContainer: {
+      display: 'flex',
+      backgroundColor: 'transparent',
+      alignItems: 'center',
+      flexShrink: 1
+    },
+    background: {
+        position: 'absolute',
+    }
+});

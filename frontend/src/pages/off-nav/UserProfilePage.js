@@ -2,10 +2,11 @@ import React, {useContext} from 'react'
 import { Button, Text, View, StyleSheet, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import AppStyles from '../../AppStyles'
+import Header from '../../components/Header'
 import UserProfile from '../../components/UserProfile'
 import { DimensionContext } from '../../contexts/DimensionContext'
 
-export default function UserProfilePage( { navigation } ) {
+export default function UserProfilePage({ navigation, route }) {
   
     const pfp = require('assets/fillerProfilePic.jpg')
 
@@ -42,39 +43,40 @@ export default function UserProfilePage( { navigation } ) {
     })
 
     return (
-        <View style={{display: 'flex', marginTop: topMarginSize}}>
-            <UserProfile
-              routeName={'User Profile Page'}
-              profilePicture={pfp}
-              userFirstLast={'Dummy One'}
-              username={'iamnumberone'}
-            />
+        <View style={{display: 'flex', alignItems: 'center', marginTop: topMarginSize}}>
+          <Header route={route} navigation={navigation} onMainNav={false}/>
+          <UserProfile
+            routeName={'User Profile Page'}
+            profilePicture={pfp}
+            userFirstLast={'Dummy One'}
+            username={'iamnumberone'}
+          />
 
-            {/* Settings section */}
-            <View>
+          {/* Settings section */}
+          <View>
 
-              <TouchableOpacity style={styles.setting}>
-                <View style={styles.iconDescGroup}>
-                  <Image 
-                    source={require('assets/resetPassword.png')}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.desc}>Reset Password</Text>
-                </View>
-                <Text>{">"}</Text>
-              </TouchableOpacity>
+            <TouchableOpacity style={styles.setting}>
+              <View style={styles.iconDescGroup}>
+                <Image 
+                  source={require('assets/resetPassword.png')}
+                  style={styles.icon}
+                />
+                <Text style={styles.desc}>Reset Password</Text>
+              </View>
+              <Text>{">"}</Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity style={styles.setting}>
-                <View style={styles.iconDescGroup}>
-                  <Image 
-                    source={require('assets/resetPassword.png')}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.desc}>Delete Account</Text>
-                </View>
-                <Text>{">"}</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={styles.setting}>
+              <View style={styles.iconDescGroup}>
+                <Image 
+                  source={require('assets/resetPassword.png')}
+                  style={styles.icon}
+                />
+                <Text style={styles.desc}>Delete Account</Text>
+              </View>
+              <Text>{">"}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
     )
 }

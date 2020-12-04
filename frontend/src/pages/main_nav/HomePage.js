@@ -147,15 +147,15 @@ export default function HomePage({ navigation, route }) {
 
         <Button 
           title="create hug" 
-          onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
+          onPress={() => navigation.navigate('Create Hug')}
         />
         <Button
           title='launch page'
-          onPress={() => navigation.navigate('Launch Page', { page: 'launchPage' })}
+          onPress={() => navigation.navigate('Launch Page')}
         />
         <Button
           title='welcome page'
-          onPress={() => navigation.navigate('Welcome Page', { page: 'welcomePage' })}
+          onPress={() => navigation.navigate('Welcome Page')}
         />
 
       {/* Light and Dark Mode Switch */}
