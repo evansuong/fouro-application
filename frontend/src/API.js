@@ -14,6 +14,7 @@ const API = {
   createUser: async function(user) {
     console.log('in axios api');
     let response = {}
+    console.log(user.uid)
     await axios.post(`${server}/users/createNewUser/${user.uid}`, user, { timeout: 20000 })
     .then(res => {
       response = {
@@ -26,7 +27,7 @@ const API = {
       console.log(err.message);
       console.log(err.stack);
       response = {
-        status: true,
+        status: false,
         data: err.code
       }
     });

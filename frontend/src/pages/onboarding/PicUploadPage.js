@@ -35,12 +35,30 @@ export default function ProfileSetupPage({ navigation, route }) {
 
   const callBackend = async () => {
     try {
-      let uid = userData.uid;
-      console.log('uploading')
+      const { signupData, profileData } = route.params;
+      // register user
+      const { email, password } = signupData;
+
+      let registerResponse = await AuthAPI.registerUser(email, password)
+      processSignupResponse(registerResponse);
+
+      console.log(registerResponse)
+      let uid = registerResponse.data.uid;
+      console.log('uid', uid)
+
+      // create profile
+      let profileResponse = await API.createUser({ uid: uid, ...profileData})
+      console.log('response', profileResponse)
+      if (profileResponse.status) {
+        console.log('yay')
+      } else {
+        alert('something went wrong try again')
+      }
+
       // Register user with user param
       const splitPicURI = uploadPic.uri.split('/');
       let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
-      const response = await API.uploadUserProfilePicture(uid, {blob:res});
+      const response = await API.uploadUserProfilePicture(uid, { blob:res });
 
       if(response.status) {
         console.log('yay')
@@ -65,6 +83,18 @@ export default function ProfileSetupPage({ navigation, route }) {
       // navigation.navigate('Welcome Page');
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  const processSignupResponse = (response) => {
+    if (response.status) {
+      console.log('yay')
+      dispatch({
+        type: "SET_USER",
+        payload: response.data,
+      });
+    } else {
+      alert(response.data);
     }
   }
 

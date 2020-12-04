@@ -87,24 +87,11 @@ export default function SignupPage({ navigation }) {
       }
     }
     
-    navigation.navigate('Name Page', { signUpData: signUpData });
-    // let response = await AuthAPI.registerUser(emailField.trim(), passwordField.trim())
-    // processSignupResponse(response)
+    navigation.navigate('Name Page', { signUpData: signUpData.user });
+  
   }
 
-  const processSignupResponse = (response) => {
-    if (response.status) {
-      setMounted(false);
-      dispatch({
-        type: "SET_USER",
-        payload: response.data,
-      });
-      navigation.navigate('Name Page');
-    } else {
-      setSigningUp(false);
-      alert(response.data);
-    }
-  }
+  
 
   const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 

@@ -62,8 +62,11 @@ router.get('/testRoute', async (req, res) => {
 // Routes
 router.post("/createNewUser/:id", checkBody, async (req, res) => {
   console.log('creating');
+
   const uid = req.params.id;
   const { username, firstName, lastName } = req.body;
+  console.log(username, firstName, lastName)
+  console.log(uid)
 
   if (!username || !firstName || !lastName) {
     res.status(400).send('Request has missing fields');

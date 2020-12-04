@@ -84,27 +84,19 @@ export default function NamePage({ navigation, route }) {
     //   return;
     // }
     // await UsersAPI.updateUserProfile(username, firstName, lastName);
-    let signUpData = route.params
+    let { signUpData } = route.params
     console.log(signUpData)
 
-    let userToCreate = {
+    let profileData = {
       username: username.trim(),
       firstName: firstName.trim(),
       lastName: lastName.trim(),
     }
 
     navigation.navigate('Pic Upload Page', { 
-      signUpData: signUpData,
-      profileData: profileData
-    })
-
-    // let response = await API.createUser(userToCreate)
-    // console.log('response', response)
-    // if (response.status) {
-    //   navigation.navigate('Pic Upload Page');
-    // } else {
-    //   alert('something went wrong try again')
-    // }
+      signupData: {...signUpData},
+      profileData: {...profileData}
+    });
   }
 
   const timeout = () => {
