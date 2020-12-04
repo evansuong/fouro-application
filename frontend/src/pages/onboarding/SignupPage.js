@@ -76,34 +76,31 @@ export default function SignupPage({ navigation }) {
   }
 
   const submitHandler = async () => {
-    // console.log('loading');
-    // const response = await API.getUserProfile(emailField);
-    // console.log('response status: ', response.statusCode);
-    // const post = await response.data;
-    // console.log(post);
-
     const emailFieldTrim = emailField.trim();
     const passwordFieldTrim = passwordField.trim();
     const passwordConfirmFieldTrim = passwordConfirmField.trim();
     console.log(emailFieldTrim, passwordFieldTrim, passwordConfirmFieldTrim);
     setSigningUp(true);
     // check if user with that email already exists (waiting for backend)
-    // const checkUserResponse = await API.checkUserExists(emailField);
-    // const checkUserData = checkUserResponse.data;
-    // console.log('checkUserData', checkUserData);
-
-    const signUpData = {
-      user: {
-        email: emailFieldTrim,
-        password: passwordFieldTrim,
-      }
-    }
     
-    navigation.navigate('Name Page', { signUpData: signUpData.user });
-  
+    
+    let response = await AuthAPI.registerUser(emailField.trim(), passwordField.trim())
+    processSignupResponse(response)
   }
 
-  
+  const processSignupResponse = (response) => {
+    if (response.status) {
+      setMounted(false);
+      dispatch({
+        type: "SET_USER",
+        payload: response.data,
+      });
+      navigation.navigate('Name Page');
+    } else {
+      setSigningUp(false);
+      alert(response.data);
+    }
+  }
 
   const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 

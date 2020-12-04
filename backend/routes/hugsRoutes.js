@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { HugsAPI, UpdateHugAPI, ViewHugAPI } = '../model/Hugs';
+const { HugsAPI, UpdateHugAPI, ViewHugAPI } = require('../model/Hugs');
 
 router.use(
   express.urlencoded({
@@ -33,7 +33,7 @@ async function retrieveUserData(req, res, uid) {
 
 // Routes
 // TODO: BROKEN. WORKING ON UPLOADING BLOB 
-router.post("/createHug/:id", checkBody, (req, res) => {
+router.post("/createHug/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { friend_id, message, blobs } = req.body;
 
@@ -42,7 +42,11 @@ router.post("/createHug/:id", checkBody, (req, res) => {
     return;
   } else {
     try {
-      
+      const response = await HugsAPI.createHug(
+        uid, friend_id, message, blobs
+      );
+      console.log('response:', response);
+      res.status(200).json(response);
     } catch(err) {
       res.status(400).send(`An error occurred: ${err}`);
     }

@@ -9,7 +9,7 @@ require("@google-cloud/storage");
 //import
 const Users = require("../model/Users");
 const Notifications = require("./Notifications");
-const bucket = admin.storage().bucket();
+// const bucket = admin.storage().bucket();
 
 // Firestore
 const db = firebase.firestore();
@@ -18,16 +18,17 @@ const users = db.collection("users");
 const HugsAPI = {
     // The user that calls this function is the sender
     // TODO: More error handling and monitor upload progress?
-    createHug: function (currentUser, friendId, message, image) {
+    createHug: async function (currentUser, friendId, message, image) {
         // Set current user
-        var currUser = db.collection("users").doc(currentUser);
+        var currUser = users.doc(currentUser);
         // const currUser = firebase.auth().currentUser;
         // Set the date of the hug (also used to ID image)
         let dateInSeconds = Math.floor(Date.now() / 1000);
-        var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
+        var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
+        console.log('dateTime', dateTime);
         // Image: byte array
         // Create a root reference in firebase storage
-        var storageRef = firebase.storage().ref();
+        var storageRef = await firebase.storage().ref();
         // Create a unique image ID
         var imageName = "hug_images/" + Date().now();
         // Create a reference to the hug image (use when we download?)
@@ -35,7 +36,7 @@ const HugsAPI = {
         // Convert the byte array image to Uint8Array
         var bytes = new Uint8Array(image);
         // TODO: not sure if var is needed
-        var uploadTask = storageRef.child(imageName).put(bytes);
+        var uploadTask = await storageRef.child(imageName).put(bytes);
         // Save a reference to the top level hug with an autoID (I think)
         var topLevelHug = db.collection("hugs").doc(); //possible problems if we make a doc every time
         // Listen for state changes, errors, and completion of the upload
@@ -109,7 +110,7 @@ const HugsAPI = {
         // Add fields to currUser's hug auto-ID document
 
         // MAKE SURE THIS HAPPENS AFTER WE MADE THE TOP LEVEL HUG
-        users
+        await users
             .doc(currUser.id)
             .collection("user_hugs")
             .doc(topLevelHug)
@@ -125,7 +126,7 @@ const HugsAPI = {
             .catch(function (error) {
                 console.error("Error adding document: ", error);
             });
-        friendId
+        await friendId
             .collection("user_hugs")
             .doc(topLevelHug)
             .set({
@@ -140,28 +141,29 @@ const HugsAPI = {
             .catch(function (error) {
                 console.error("Error adding document: ", error);
             });
+        return { out: true }
     },
 
     // hugId is the global hug.
     dropHug: function (currentUser, requestId, hugId) {
         // Set current user
-        var currUser = db.collection("users").doc(currentUser);
+        var currUser = users.doc(currentUser);
         // Set ref for top level hug
         var topLevelHug = db.collection("hugs").doc(hugId);
         // delete requestId
-        db.collection("users")
+        users
             .doc(currUser.id)
             .collection("notifications")
             .doc(requestId)
             .delete()
             .then();
         // delete the sender's user_hug
-        db.collection("users")
+        users
             .doc(db.collection("hugs").doc(hugId).get("sender_id"))
             .delete()
             .then();
         // delete the receiver's user_hug
-        db.collection("users")
+        users
             .doc(db.collection("hugs").doc(hugId).get("receiver_id"))
             .delete()
             .then();
@@ -190,7 +192,7 @@ const UpdateHugAPI = {
     // currentUser must be the receiver of a hug
     respondToHug: function (currentUser, hugId, message, image) {
         // Set current user
-        var currUser = db.collection("users").doc(currentUser);
+        var currUser = users.doc(currentUser);
         // Process the image
         // Create a root reference
         var storageRef = firebase.storage().ref();
@@ -339,10 +341,10 @@ const ViewHugAPI = {
     // TODO: delete one of the versions. not sure how to return multiple docs?
     getUserHugs: function (currentUser) {
         // Set current user
-        var currUser = db.collection("users").doc(currentUser);
+        var currUser = users.doc(currentUser);
         // GET ALL VERSION
         var results = [];
-        db.collection("users")
+        users
             .doc(currUser.id)
             .collection("user_hugs")
             .get()
@@ -379,10 +381,10 @@ const ViewHugAPI = {
 
     getSharedHugs: function (currUser, targetUser) {
         // Set current user
-        var currUser = db.collection("users").doc(currentUser);
+        var currUser = users.doc(currentUser);
         // GET ALL VERSION
         var results = [];
-        db.collection("users")
+        users
             .doc(currUser.id)
             .collection("user_hugs")
             .get()

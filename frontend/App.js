@@ -3,8 +3,6 @@ import { StyleSheet } from 'react-native';
 import { AppLoading } from 'expo';
 
 import MainNavPage from './src/pages/main_nav/MainNavPage';
-
-import FriendHistoryPage from './src/pages/off-nav/FriendHistoryPage';
 import OtherUserProfilePage from './src/pages/off-nav/OtherUserProfilePage';
 import CorkboardPage from './src/pages/off-nav/CorkboardPage';
 import HugInfoPage from './src/pages/off-nav/HugInfoPage';
@@ -16,6 +14,7 @@ import SignupPage from './src/pages/onboarding/SignupPage';
 import PicUploadPage from './src/pages/onboarding/PicUploadPage';
 import NamePage from './src/pages/onboarding/NamePage';
 import WelcomePage from './src/pages/onboarding/WelcomePage';
+import ResetPasswordPage from './src/pages/off-nav/ResetPasswordPage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -67,10 +66,6 @@ export default function App() {
                 component={CreateHugPage}/>
 
               <Stack.Screen 
-                name="Friend History" 
-                component={FriendHistoryPage}/>
-
-              <Stack.Screen 
                 name="Friend Profile" 
                 component={OtherUserProfilePage} />
 
@@ -109,6 +104,10 @@ export default function App() {
               <Stack.Screen 
                 name='User Profile Page'
                 component={UserProfilePage}/>
+
+              <Stack.Screen 
+                name='Reset Password Page'
+                component={ResetPasswordPage}/>
             </Stack.Navigator>
           </NavigationContainer>    
         </DimensionContextProvider>

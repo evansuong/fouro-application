@@ -73,7 +73,7 @@ function RemoveFriendButton(navigation) {
         alert('remove friend button pressed')
     }
     return buildButtonProps('remove', dotsIcon, onPress);
-} 
+}
 
 
 
@@ -131,6 +131,7 @@ export default function Header(props) {
         'Hug Info': '',
         'Create Hug': '',
         'Corkboard': '',
+        'Reset Password Page': '',
     };
 
     let buttons = []

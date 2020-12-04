@@ -83,21 +83,6 @@ router.get("/getUserProfile/:id", async (req, res) => {
   res.status(200).json(response);
 });
 
-// router.get('checkUserExists', checkBody, async (req, res) => {
-//   const { email } = req.body;
-//   if (!email) {
-//     res.status(400).send('Request has missing fields');
-//     return;
-//   } else {
-//     const response = await UsersAPI.checkUserExists(email);
-//     if (response.out) {
-//       res.status(200).json({ out: response.out });
-//     } else {
-//       res.status(400).json({ out: response.out });
-//     }
-//   }
-// })
-
 // VERIFIED
 router.put("/updateUserProfile/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
@@ -135,10 +120,11 @@ router.get("/getUserCounts/:id", async (req, res) => {
 
 // TODO: BROKEN. WORKING ON UPLOADING BLOB 
 router.put('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
+  console.log('adfdafdasf')
   const uid = req.params.id;
-  const { blob } = req.body;
-  console.log(uid)
+  const blob = req.body;
   console.log(blob)
+  console.log(uid)
   if (!uid || !blob) {
     res.status(400).send('Request has missing fields');
     return;

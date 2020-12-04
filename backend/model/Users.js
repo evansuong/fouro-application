@@ -2,8 +2,9 @@
 // and User Profile Management
 var firebase = require("../firebase/admin");
 var firebase2 = require('../firebase/config');
-require("firebase/firestore");
-//require("firebase/auth");
+require("firebase/auth");
+const fetch = require('node-fetch');
+
 
 // Firestore
 const db = firebase.firestore();
@@ -67,8 +68,7 @@ const UsersAPI = {
           // not sure this is how to retrieve data
           userProfile = {
             username: userDoc.get("username"),
-            first_name: userDoc.get("first_name"),
-            last_name: userDoc.get("last_name"),
+            name: userDoc.get("first_name") + " " + userDoc.get("last_name"),
             profile_pic: userDoc.get("profile_pic"),
           };
         } else {
@@ -157,27 +157,34 @@ const UsersAPI = {
     // TODO: This should have a child call I think
     // TODO: NEED TO GET URL https://firebase.google.com/docs/storage/web/download-files#download_data_via_url
     var storageRef = firebase2.storage().ref();
-    var profilePicRef = storageRef.child(`${uid}`)
+    var profilePicRef = storageRef.child(`profile_pictures/${uid}`)
       // .ref()
       // .child(`${uid}`);
       // .ref(`profile_pictures/${uid}/${file._data.name}`)
       // .child(`profile_pictures/${uid}/${file._data.name}`);
 
       // console.log('storageRefffff: ', storageRef);
-      console.log('fullpath: ', profilePicRef.fullPath);
       // console.log('bucket: ', storageRef.bucket);
 
       // const downloadURL = await storageRef.getDownloadURL();
       // console.log('downloadURL: ', downloadURL);
 
     // save to cloud storage
-    console.log("fileeeeeeee:", file);
-    await profilePicRef.put(file, { contentType: 'application/octet-stream' })
-      .then((snapshot) => {
-        console.log('Uploaded a blob');
-      })
-    console.log('saved');
+    let img = file.dataUrl
+    // let img = Object.keys(file)[0]
+    console.log(img)
+    img = img.replace(/\s/g, '');
 
+    await profilePicRef.putString(img)
+    .then((snapshot) => {
+      console.log('Uploaded a blob');
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
+   
+    console.log('hi')
     // update user's photo URL to the saved cloud storage url
     await usersCollection.doc(uid).update({
       profile_pic: profilePicRef.fullPath,
@@ -186,7 +193,7 @@ const UsersAPI = {
 };
 
 const HugCountAPI = {
-  getUserHugCount: async function (uid) {
+  getUserCount: async function (uid) {
     var userDocRef = usersCollection.doc(uid);
     var hug_count;
 
@@ -198,6 +205,7 @@ const HugCountAPI = {
           // set userProfile to retrieved data
           // not sure this is how to retrieve data
           hug_count = userDoc.get("day_hug_count");
+          streak_count = userDoc.get("current_streak");
         } else {
           // no data under uid
           hug_count = null;
@@ -208,38 +216,15 @@ const HugCountAPI = {
         hug_count = null;
       });
 
-    return { out: hug_count };
-  },
-
-  getUserHugStreak: async function (uid) {
-    var userDocRef = usersCollection.doc(uid);
-    var streak_count;
-
-    // access document
-    await userDocRef
-      .get()
-      .then(function (userDoc) {
-        if (userDoc.exists) {
-          // set userProfile to retrieved data
-          // not sure this is how to retrieve data
-          streak_count = userDoc.get("current_streak");
-        } else {
-          // no data under uid
-          streak_count = null;
-        }
-      })
-      .catch(function (error) {
-        console.log("Error getting document: ", error);
-        streak_count = null;
-      });
-
-    return { out: streak_count };
+    return { hug : hug_count, streak : streak_count };
   },
 
   increaseHugCount: async function (uid) {
     // retrieve hug and streak count
-    var hug_count = this.getUserHugCount(uid);
-    var streak_count = this.getUserHugStreak(uid);
+
+    var json = this.getUserCount(uid);
+    var hug_count = (await json).hug
+    var streak_count = (await json).streak
     var success = false;
 
     var userDocRef = usersCollection.doc(uid);

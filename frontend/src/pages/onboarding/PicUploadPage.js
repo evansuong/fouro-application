@@ -18,6 +18,7 @@ import PicUploadButton from 'components/PicUploadButton';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 
+
 const fetch = require('node-fetch');
 
 export default function ProfileSetupPage({ navigation, route }) {
@@ -34,31 +35,33 @@ export default function ProfileSetupPage({ navigation, route }) {
   }, [startUp])
 
   const callBackend = async () => {
-    try {
-      const { signupData, profileData } = route.params;
-      // register user
-      const { email, password } = signupData;
 
-      let registerResponse = await AuthAPI.registerUser(email, password)
-      processSignupResponse(registerResponse);
-
-      console.log(registerResponse)
-      let uid = registerResponse.data.uid;
-      console.log('uid', uid)
-
-      // create profile
-      let profileResponse = await API.createUser({ uid: uid, ...profileData})
-      console.log('response', profileResponse)
-      if (profileResponse.status) {
-        console.log('yay')
-      } else {
-        alert('something went wrong try again')
-      }
-
+  
+    function toDataURL(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    }
+    
+    toDataURL('https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0', function(dataUrl) {
+      console.log(dataUrl)
+      const request = {dataUrl: dataUrl}
+      API.uploadUserProfilePicture('zE51j8mkbreXCT2QDevz4Daid5I2', request);
+    })
+ 
+   
+      console.log('uploading')
       // Register user with user param
       // const splitPicURI = uploadPic.uri.split('/');
-      // let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
-      // const response = await API.uploadUserProfilePicture(uid, { blob:res });
+      // 
 
       // if(response.status) {
       //   console.log('yay')
@@ -92,26 +95,11 @@ export default function ProfileSetupPage({ navigation, route }) {
       }
       const pfpResponse = await API.uploadUserProfilePicture(request);
       // navigation.navigate('Welcome Page');
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const processSignupResponse = (response) => {
-    if (response.status) {
-      console.log('yay')
-      dispatch({
-        type: "SET_USER",
-        payload: response.data,
-      });
-    } else {
-      alert(response.data);
-    }
+   
   }
 
   const getBlobObj = async (uri, imgName) => {
-    const response = await fetch(uri);
-    return await response.blob();
+    
   }
 
   const pickFromGallery = async () => {
@@ -122,7 +110,10 @@ export default function ProfileSetupPage({ navigation, route }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1,1],
-        quality: 0.5,
+        quality: 0.1,
+        maxWidth: 512,
+        maxHeight: 512,
+
       })
       // console.log(data);
       if (data.cancelled == false) {
@@ -142,7 +133,9 @@ export default function ProfileSetupPage({ navigation, route }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1,1],
-        quality: 0.5,
+        quality: 0.1,
+        maxWidth: 512,
+        maxHeight: 512,
       })
       // console.log(data);
       if (data.cancelled == false) {

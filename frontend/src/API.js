@@ -7,9 +7,27 @@ const API = {
     console.log('in axios');
     return axios.get(`${server}/users/testRoute`);
   },
-  getUserProfile: function(uid) {
+  getUserProfile: async function(uid) {
     console.log('herre')
-    return axios.get(`${server}/users/getUserProfile/${uid}`);
+    let response = {}
+    console.log(user.uid)
+    await axios.post(`${server}/users/createNewUser/${user.uid}`, user, { timeout: 20000 })
+    .then(res => {
+      response = {
+        status: true,
+        data: res.data
+      }
+    })
+    .catch(err => {
+      console.log(err.code);
+      console.log(err.message);
+      console.log(err.stack);
+      response = {
+        status: false,
+        data: err.code
+      }
+    });
+    return response
   },
   createUser: async function(user) {
     console.log('in axios api');
@@ -36,7 +54,7 @@ const API = {
   },
   uploadUserProfilePicture: async function(uid, request) {
     let response = {}
-    await axios.post(`${server}/users/uploadUserProfilePicture/${uid}`, request)
+    await axios.put(`${server}/users/uploadUserProfilePicture/${uid}`, request)
     .then(res => {
       response = {
         status: true,
@@ -46,7 +64,7 @@ const API = {
     .catch(err => {
       console.log(err.code);
       console.log(err.message);
-      console.log(err.stack);
+      //console.log(err.stack);
       response = {
         status: true,
         data: err.code

@@ -4,6 +4,7 @@ var firebase = require("../firebase/admin");
 require("firebase/firestore");
 require("firebase/storage");
 const cors = require("cors");
+const { UsersAPI } = require('../model/Users');
 const { NotificationsAPI, RequestsAPI } = require("../model/Notifications");
 
 const db = firebase.firestore();
@@ -53,15 +54,25 @@ async function notificationCollectionLength(req, uid) {
 }
 
 //Routes
-// TODO: BROKEN. NOTIFICATIONS ARE NOT BEING RETREIVED.
+// VERIFIED
 router.get("/getNotifications/:id", async (req, res) => {
   const uid = req.params.id;
   if (!uid) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
-    const response = await NotificationsAPI.getNotifications(uid);
-    res.status(200).json({ notifications: response });
+    const notifResponse = await NotificationsAPI.getNotifications(uid);
+    // let users = []; // { friendName, friendPFP }
+    for (let i = 0; i < notifResponse.length; i++) {
+      const userId = notifResponse[i].friend;
+      const userResponse = await UsersAPI.getUserProfile(userId);
+      const newUser = {
+        friendName: userResponse.name,
+        friendPfp: userResponse.profile_pic
+      }
+      notifResponse[i]['friendInfo'] = newUser;
+    }
+    res.status(200).json({ notifications: notifResponse });
   }
 });
 
@@ -70,7 +81,7 @@ router.post("/deleteNotification/:id", checkBody, async (req, res) => {
 
 });
 
-// TODO: BROKEN. FIX DATETIME
+// VERIFIED
 router.post("/sendFriendRequest/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { friend_id } = req.body;
@@ -97,9 +108,8 @@ router.post("/sendFriendRequest/:id", checkBody, async (req, res) => {
   }
 });
 
-// TODO: BROKEN. FIX DATETIME. FIX REFERENCE IS NOT HUGID (ITS RANDOM).
-// TODO: SEND OR CREATE HUG REQUEST?
-router.post("/createHugRequest/:id", checkBody, async (req, res) => {
+// VERIFIED
+router.post("/sendHugRequest/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { friend_id, hug_id } = req.body;
   if (!uid || !friend_id || !hug_id) {
