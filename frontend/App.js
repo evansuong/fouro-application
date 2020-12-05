@@ -48,14 +48,14 @@ export default function App() {
         <DimensionContextProvider>
           <NavigationContainer>
             <Stack.Navigator 
-              style={styles.appContainer} 
+              style={styles.appContainer}
+              initialRouteName='Main Nav Page'
               /** 
                * comment out the line below when you need the header for 
               /* going back to the previous screen. Leave it to see what 
               /* the app will actually look like
               * */
               screenOptions={{ headerShown: false }}
-              initialRouteName="Main Nav Page"
             >
               <Stack.Screen 
                 name="Main Nav Page" 

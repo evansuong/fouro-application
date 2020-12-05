@@ -81,7 +81,7 @@ function RemoveFriendButton(navigation) {
 export function HeaderButton({ name, icon, onPress, onMainNav }) {
 
     // console.log("buttonName: ", name)
-    console.log(onMainNav)
+    // console.log(onMainNav)
 
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const styles = {

@@ -60,13 +60,10 @@ router.get('/testRoute', async (req, res) => {
 })
 
 // Routes
+// VERIFIED
 router.post("/createNewUser/:id", checkBody, async (req, res) => {
-  console.log('creating');
-
   const uid = req.params.id;
   const { username, firstName, lastName } = req.body;
-  console.log(username, firstName, lastName)
-  console.log(uid)
 
   if (!username || !firstName || !lastName) {
     res.status(400).send('Request has missing fields');
@@ -79,12 +76,14 @@ router.post("/createNewUser/:id", checkBody, async (req, res) => {
   }
 });
 
+// VERIFIED
 router.get("/getUserProfile/:id", async (req, res) => {
   const uid = req.params.id;
   const response = await UsersAPI.getUserProfile(uid);
   res.status(200).json(response);
 });
 
+// VERIFIED
 router.put("/updateUserProfile/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { username, firstName, lastName } = req.body;
@@ -99,26 +98,23 @@ router.put("/updateUserProfile/:id", checkBody, async (req, res) => {
     if (response.out) {
       res.status(200).json({ out: true });
     } else {
-      res.status(400).json({ out: false});
+      res.status(400).json({ out: false });
     }
   }
 });
 
+// VERIFIED
 router.get("/getUserCounts/:id", async (req, res) => {
   const uid = req.params.id;
   if (!uid) {
     res.status(400).send('Request has missing fields');
   } else {
-    const hugResponse = await HugCountAPI.getUserHugCount(uid);
-    const streakResponse = await HugCountAPI.getUserHugStreak(uid);
-    res.status(200).json({
-      current_streak: hugResponse.out,
-      day_hug_count: streakResponse.out
-    });
+    const countResponse = await HugCountAPI.getUserCount(uid);
+    res.status(200).json(countResponse);
   }
 });
 
-// TODO: BROKEN
+// TODO: BROKEN. WORKING ON UPLOADING BLOB 
 router.put('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
   console.log('adfdafdasf')
   const uid = req.params.id;
