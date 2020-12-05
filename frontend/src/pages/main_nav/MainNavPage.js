@@ -54,7 +54,7 @@ export default function MainNavPage({ route }) {
                 sceneContainerStyle={styles.tabScreen}
                 style={styles.tabNav}
                 tabBarPosition="bottom"
-                initialRouteName="Home"
+                initialRouteName="Hug Feed"
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                       let icon;

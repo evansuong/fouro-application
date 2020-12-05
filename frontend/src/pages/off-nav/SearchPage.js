@@ -26,7 +26,7 @@ export default function SearchPage({ input, navigation }) {
             if (searchFriends) {
                 setUserList(testFriendData.filter(user => user.name === input ))
             } else {
-                setUserList(testStrangerData.filter(user => user.name === input ))
+                setUserList(testStrangerData.filter(user => user.username === input ))
             }
         }
     }, [input, searchFriends])
@@ -34,28 +34,32 @@ export default function SearchPage({ input, navigation }) {
     console.log('render')
 
 
+    // when we actually pass info to the OtherUserProfilePage, just append isStranger and isPending to the end
     const testFriendData = [
-        {name: 'e', image: pic, isStranger: false, isPending: false},
-        {name: 'ev', image: pic, isStranger: false, isPending: false},
-        {name: 'eva', image: pic, isStranger: false, isPending: false},
-        {name: 'evan', image: pic, isStranger: false, isPending: false},
-        {name: 'evans', image: pic, isStranger: false, isPending: false},  
-        {name: 'evansu', image: pic, isStranger: false, isPending: false},
-        {name: 'evansuo', image: pic, isStranger: false, isPending: false},
-        {name: 'evansuon', image: pic, isStranger: false, isPending: false},
-        {name: 'evansuong', image: pic, isStranger: false, isPending: false},
+        {user_id: 1, name: 'e', username: 'a', pfp: pic, isStranger: false, isPending: false},
+        {user_id: 2, name: 'eva', username: 'al', pfp: pic, isStranger: false, isPending: false},
+        {user_id: 3, name: 'eva', username: 'ale', pfp: pic, isStranger: false, isPending: false},
+        {user_id: 4, name: 'evan', username: 'alex', pfp: pic, isStranger: false, isPending: false},
+        {user_id: 5, name: 'evans', username: 'alexc',pfp: pic, isStranger: false, isPending: false},  
+        {user_id: 6, name: 'evansu', username: 'alexch', pfp: pic, isStranger: false, isPending: false},
+        {user_id: 7, name: 'evansuo', username: 'alexchow',pfp: pic, isStranger: false, isPending: false},
+        {user_id: 8, name: 'evansuon', username: 'alexchowmein',pfp: pic, isStranger: false, isPending: false},
+        {user_id: 9, name: 'evansuong', username: 'alexchowmei', pfp: pic, isStranger: false, isPending: false},
+        {user_id: 10, name: 'evansuong', username: 'alexchowmen', pfp: pic, isStranger: false, isPending: false},
     ]
 
+    // again, pass 
     const testStrangerData = [
-        {name: 's', image: pic, isStranger: true, isPending: false},
-        {name: 'su', image: pic, isStranger: true, isPending: true},
-        {name: 'suo', image: pic, isStranger: true, isPending: false},
-        {name: 'suon', image: pic, isStranger: true, isPending: false},
-        {name: 'suong', image: pic, isStranger: true, isPending: true},
-        {name: 'suonge', image: pic, isStranger: true, isPending: false},
-        {name: 'suongev', image: pic, isStranger: true, isPending: true},
-        {name: 'suongeva', image: pic, isStranger: true, isPending: true},
-        {name: 'suongevan', image: pic, isStranger: true, isPending: false},
+        {user_id: 1, name: 's', username: 'a', pfp: pic, isStranger: true, isPending: false},
+        {user_id: 2, name: 'su', username: 'al', pfp: pic, isStranger: true, isPending: true},
+        {user_id: 3, name: 'suo', username: 'ale', pfp: pic, isStranger: true, isPending: false},
+        {user_id: 4, name: 'suon', username: 'alex', pfp: pic, isStranger: true, isPending: false},
+        {user_id: 5, name: 'suong', username: 'alexc', pfp: pic, isStranger: true, isPending: true},
+        {user_id: 6, name: 'suonge', username: 'alexch', pfp: pic, isStranger: true, isPending: false},
+        {user_id: 7, name: 'suongev', username: 'alexcho', pfp: pic, isStranger: true, isPending: true},
+        {user_id: 8, name: 'suongeva', username: 'alexchow', pfp: pic, isStranger: true, isPending: true},
+        {user_id: 9, name: 'suongevan', username: 'alexchowm', pfp: pic, isStranger: true, isPending: false},
+        {user_id: 10, name: 'suongevan', username: 'alexchowme', pfp: pic, isStranger: true, isPending: false},
     ]
 
     function searchStrangersList({ route }) {
@@ -64,16 +68,17 @@ export default function SearchPage({ input, navigation }) {
             setSearchFriends(false)
         })
 
-        function viewFriend(userData) {
+        function viewUser(userData) {
+            // TODO: change this route name to Other User Profile
             navigation.navigate('Friend Profile', userData)
         }
 
         return (
             <ScrollView>
             {userList.map(userData => (
-                <TouchableOpacity key={userData.name} onPress={() => viewFriend(userData)}>
+                <TouchableOpacity key={userData.user_id} onPress={() => viewUser(userData)}>
                     <View style={styles.userCard}>
-                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
+                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.pfp}/>
                         <Text style={styles.userText}>{userData.name}</Text>
                     </View>
                 </TouchableOpacity>
@@ -97,7 +102,7 @@ export default function SearchPage({ input, navigation }) {
             {userList.map(userData => (
                 <TouchableOpacity key={userData.name} onPress={() => viewFriend(userData)}>
                     <View style={styles.userCard}>
-                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
+                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.pfp}/>
                         <Text style={styles.userText}>{userData.name}</Text>
                     </View>
                 </TouchableOpacity>
