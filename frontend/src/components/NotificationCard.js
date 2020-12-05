@@ -12,10 +12,11 @@ const HIDDEN = 0;
 
 /**
  */
-export default function NotificationCard({ notificationData, isFocused, handleAccept, handleDecline }) {
+export default function NotificationCard({ callId, notificationData, isFocused, handleAccept, handleDecline }) {
 
     // prop destructuring: { notification type, user that generated notif, sender pp, notification id }
-    const { type, user, image, id } = notificationData;
+    const { id, type, time, friend, friendId, hugId } = notificationData;  
+    const { profPic, name } = friend;
 
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
@@ -155,19 +156,11 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             borderWidth: 1,
         },
         image: {
-            height: windowWidth / 8,
-            width: windowWidth / 8,
+            height: windowWidth / 7,
+            width: windowWidth / 7,
             borderRadius: 100,
         },
-        imageContainer: {
-            marginRight: windowWidth / 100,
-            marginTop: windowWidth / 100,
-            shadowColor: '#444',
-            shadowOffset: { height: 2 },
-            shadowOpacity: 0.8,
-            shadowRadius: 2,
-            elevation: 1,
-        },
+        
     }) 
     
 
@@ -188,7 +181,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                             <View style={styles.textArea}>
                                 <View>
                                     <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                                        {user}
+                                        {name}
                                     </Text>  
                                     <Text>
                                         {notificationMessage}
@@ -196,11 +189,11 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                                 </View>
                                 
                                 <Text style={{ fontSize: 12, color: '#bbbbbb' }}>
-                                    23m ago
+                                    { time }
                                 </Text>
                             </View>
-                            <View style={styles.imageContainer}>
-                                <Image style={styles.image} source={image} />
+                            <View>
+                                <Image style={styles.image} source={profPic} />
                             </View>
                         </View>
                         
@@ -211,7 +204,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                             {/* accept button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => handleAccept(id)}
+                                onPress={() => handleAccept(callId, id)}
                             >
                                 <Animated.View 
                                     style={{ ...styles.buttonContainer, ...styles.acceptButtonContainer }} 
@@ -226,7 +219,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                             {/* decline button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => handleDecline(id)}
+                                onPress={() => handleDecline(callId, id)}
                             >
                                 <Animated.View 
                                     style={{ ...styles.buttonContainer, ...styles.declineButtonContainer}} 

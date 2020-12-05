@@ -1,30 +1,9 @@
 # CSE 110 Project: fouro-application
 
-Fouro is ... (insert short paragraph here)
-
-## Team Care and Friendship Everyday (CAFE)
-
-Alana Klopstein - Project Manager
-
-Alex Chow - Software Dev Lead
-
-Eman Sherif - Software Architect
-
-Evan Serrano - Business Analyst
-
-Evan Suong - User Interface Specialist
-
-Rickesh Khilnani - Senior System Analyst
-
-Terry Feng - Database Specialist
-
-Tyus Liu - Software Dev Lead
-
-Vicki Chen - Quality Assurance Lead
-
-Vivian Tang - Quality Assurance Lead
-
-Vuk Radovanovic - Algorithm Specialist
+Fouro is an iOS/Android application that allows you to send virtual hugs to friends and feel close
+and connected to others. Fouro will help remind you to reach out to friends you haven't connected with
+in a while as well as serve as a platform to share and store memories together. Send and receive hugs 
+with friends and stay socially connected to loved ones around you!
 
 ## Setup
 
@@ -88,11 +67,11 @@ When working, make sure to work on your own feature branch
 
 1.  Create a new branch of the form [feature-name]/[your-name](this copies all the files from your current branch to the new branch)
 
-        git branch feature-name/first-last
+        git branch team/feature-name
 
 2.  Navigate to your branch
 
-        git checkout feature-name/first-last
+        git checkout team/feature-name
 
 3.  Do some coding and commit the changes
 
@@ -101,8 +80,32 @@ When working, make sure to work on your own feature branch
 
 4.  Push to the branch you created
 
-        git push origin featurename/yourname
+        git push origin team/feature-name
 
 5.  Create a pull request on Github by going to your branch and clicking on "pull request"
 
 6.  Make the pull request and one of us will look over the code and merge it to the `master` branch to save the changes
+
+## Team Care and Friendship Everyday (CAFE)
+
+Alana Klopstein - Project Manager
+
+Alex Chow - Software Dev Lead
+
+Eman Sherif - Software Architect
+
+Evan Serrano - Business Analyst
+
+Evan Suong - User Interface Specialist
+
+Rickesh Khilnani - Senior System Analyst
+
+Terry Feng - Database Specialist
+
+Tyus Liu - Software Dev Lead
+
+Vicki Chen - Quality Assurance Lead
+
+Vivian Tang - Quality Assurance Lead
+
+Vuk Radovanovic - Algorithm Specialist
