@@ -21,7 +21,7 @@ function checkBody(req, res, next) {
 
 // Routes
 // TODO: NOT TESTED
-router.post("/removeFriend/:id", checkBody, async (req, res) => {
+router.delete("/removeFriend/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { friendId } = req.body;
 

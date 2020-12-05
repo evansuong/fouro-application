@@ -13,7 +13,7 @@ import LinkedButton from 'components/LinkedButton';
 import { useIsFocused } from '@react-navigation/native';
 import BackgroundImg from 'assets/gradients/middle.png';
 import { DimensionContext } from '../../contexts/DimensionContext';
-import API from '../../API';
+import { CreateAPI } from '../../API';
 import { UserContext } from '../../contexts/UserContext';
 
 
@@ -88,8 +88,6 @@ export default function NamePage({ navigation, route }) {
     // }
     // await UsersAPI.updateUserProfile(username, firstName, lastName);
     
-    console.log('adfadfadf')
-    console.log('user in namePage: ', userData.uid);
     let userToCreate = {
       uid: userData.uid,
       username: username.trim(),
@@ -97,10 +95,7 @@ export default function NamePage({ navigation, route }) {
       lastName: lastName.trim(),
     }
 
-    
-
-    let response = await API.createUser(userToCreate)
-    console.log('response', response)
+    let response = await CreateAPI.createUser(userToCreate.uid, userToCreate)
     if (response.status) {
       navigation.navigate('Pic Upload Page');
     } else {

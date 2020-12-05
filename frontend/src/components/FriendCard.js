@@ -9,6 +9,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { DimensionContext } from '../contexts/DimensionContext'
+import { UserContext } from '../contexts/UserContext';
 /**
  * A single friend card to be used in the list of friends on the friends
  * page
@@ -27,28 +28,30 @@ export default function FriendCard(props) {
 
   const { profilePicture, friendName, friendColorString, navigation, height, width} = props;
   const { windowWidth, windowHeight } = useContext(DimensionContext)
-  const pfpWidth = windowWidth * 0.12
-  const cardHeight = pfpWidth + 10
+  const pfpWidth = windowWidth * 0.11
+  const cardHeight = pfpWidth + 15
   const friendColor = { backgroundColor: friendColorString }
   const containerDimensions = { width: width, height: height }
+  const { userData } = useContext(UserContext);
+  const { isLightTheme } = userData;
 
   const styles = StyleSheet.create({
     pfpContainer: {
-      marginLeft: 20,
+      marginLeft: 5,
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 100,
       width: pfpWidth + 5,
       height: pfpWidth + 5,
-      backgroundColor: 'pink'
+      backgroundColor: isLightTheme ? 'pink' : friendColorString,
     },
     pfpContainer2: {
       marginRight: 20,
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 100,
-      width: 45,
-      height: 45
+      width: 40,
+      height: 40
     },
     friendCardContainer: {
       display: 'flex',
@@ -58,6 +61,7 @@ export default function FriendCard(props) {
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 100,
+      backgroundColor: isLightTheme ? friendColorString : 'rgb(40, 40, 40)',
   
       /* iOS shadow*/
       shadowColor: '#000',
@@ -76,14 +80,15 @@ export default function FriendCard(props) {
     friendText: {
       fontSize: 20,
       marginLeft: 20,
-      color: 'white',
+      color: isLightTheme ? 'white' : friendColorString,
+      fontWeight: '500',
     }
   });
 
   return (
     /* the card itself */
     <TouchableOpacity 
-      style={[styles.friendCardContainer, friendColor]}
+      style={styles.friendCardContainer}
       onPress={() => { navigation.navigate("Friend Profile", { page: "friendProfile", data: props }) }}
     >
 

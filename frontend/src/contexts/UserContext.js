@@ -8,7 +8,7 @@ export const UserContext = createContext();
 
 export default function UserContextProvider(props) {
 
-  const [userData, dispatch] = useReducer(userReducer, {});
+  const [userData, dispatch] = useReducer(userReducer, { isLightTheme: true, currentUser: {} });
   
   return (
       <UserContext.Provider value={{ userData, dispatch }}> 

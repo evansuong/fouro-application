@@ -179,8 +179,8 @@ export default function SignupPage({ navigation }) {
     },
     titleText: {
       marginBottom: 40,
-      fontSize: 50,
-      fontFamily: 'EBGaramond_500Medium'
+      fontSize: 40,
+      fontFamily: 'Montserrat_500Medium'
     },
     whiteBox: {
       backgroundColor: 'rgba(255,255,255,0.2)',

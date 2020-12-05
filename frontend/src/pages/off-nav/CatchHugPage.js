@@ -26,8 +26,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
     const {windowWidth, windowHeight} = useContext(DimensionContext);
-    const routeName = route.name;
-    // const {friendName, friendPfp} = route.params;
+    const routeName = route.name
 
     const callBackend = async () => {
       try {
@@ -110,8 +109,6 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         height: windowHeight / 5,
         overflow: 'hidden',
         marginTop: windowHeight / 80,
-        // borderTopWidth: 1,
-        // borderBottomWidth: 1,
       },
       backgroundImg: {
         // flex: 1,
@@ -149,11 +146,11 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.headerText}>
-                Create Hug
+                Catch Hug
               </Text>
               <Text style={styles.helperHeaderText}>
-                Add a message and images so that you can save a memorable
-                event with {friendName}
+                Add to the caught hug with a message and images of your 
+                own!
               </Text>
             </View>
 
@@ -195,9 +192,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
               {/* Images Array */}
               <View style={styles.picContainer}>
                 <ScrollView horizontal={true}>
-                  <View onStartShouldSetResponder={() => true} style={{
-                    flexDirection: 'row'
-                  }}>
+                  <View onStartShouldSetResponder={() => true} style={{flexDirection: 'row'}}>
                   {images.map((item) => (
                     <Image
                       key={item.uri}
