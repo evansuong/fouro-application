@@ -157,6 +157,7 @@ const UsersAPI = {
   },
 
   uploadUserProfilePicture: async function (uid, file) {
+    console.log('here');
     // TODO: this function may not work correctly.
     // create a cloud storage refrence
     // var storageRef = await firebase2

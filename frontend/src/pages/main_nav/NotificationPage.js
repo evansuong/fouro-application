@@ -1,38 +1,88 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, PickerIOSItem, LayoutAnimation, Image } from 'react-native';
-import NotificationCard from 'components/NotificationCard';
-import { DimensionContext } from '../../contexts/DimensionContext'
+import React, { useContext, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  PickerIOSItem,
+  LayoutAnimation,
+  Image,
+} from "react-native";
+import NotificationCard from "components/NotificationCard";
+import { DimensionContext } from "../../contexts/DimensionContext";
 
-import { useFocusEffect } from '@react-navigation/native';
-import AppStyles from '../../AppStyles';
-import Header from '../../components/Header';
+import { useFocusEffect } from "@react-navigation/native";
+import AppStyles from "../../AppStyles";
+import Header from "../../components/Header";
 
-// temorary test data to simulate backend notification data 
-const pic = require('../../../assets/profilePic.jpg')
-const gradient = require('assets/gradients/right.png')
-   
-function buildTestData(type, user, img, id) {
-    return {
-        type: type,
-        user: user,
-        image: img,
-        id: id,
-    }
+// temorary test data to simulate backend notification data
+const pic = require("../../../assets/profilePic.jpg");
+const gradient = require("assets/gradients/right.png");
+
+function buildTestHugData(
+  hugId,
+  completed,
+  dateTime,
+  img,
+  receiverDescription,
+  receiverId,
+  senderDescription,
+  senderId
+) {
+  return {
+    hugId: hugId,
+    completed: completed,
+    dateTime: dateTime,
+    images: [img, img, img],
+    receiverDescription: receiverDescription,
+    receiverId: receiverId,
+    senderDescription: senderDescription,
+    senderId: senderId,
+  };
 }
 
+function buildTestData(id, type, time, friend, img, friendId, hug) {
+  return {
+    id: id,
+    type: type,
+    time: time,
+    friend: {
+      name: friend,
+      profPic: img,
+    },
+    friendId: friendId,
+    hugId: hug,
+  };
+}
 
+const testDes1 =
+  "are you ready kids, aye aye captain, i cant hear you, aye aye captin";
+const testDes2 =
+"ohhhhhhhhhhhhhhhhh who lives in a pineapple under the sea spongebb squarepants";
+
+const image = require("../../../assets/profilePic.jpg")
 
 const testData = [
-    buildTestData('f', 'Alex Chow', require('../../../assets/profilePic.jpg'), 0),
-    buildTestData('r', 'Alex Chow', require('../../../assets/profilePic.jpg'), 0),
-    buildTestData('h', 'Evan Suong', require('../../../assets/profilePic.jpg'), 1),
-    buildTestData('h', 'Yixuan Zhou', require('../../../assets/profilePic.jpg'), 2),
-    buildTestData('r', 'Tyus Liu', require('../../../assets/profilePic.jpg'), 3),
-    buildTestData('r', 'Vicki Chen', require('../../../assets/profilePic.jpg'), 4),
-]
+  buildTestData(1, "h", "April 20, 2020", "@Alex", image, 1, 1),
+  buildTestData(2, "r", "April 20, 2020", "@Alana", image, 2, 2),
+  buildTestData(3, "h", "April 20, 2020", "@Tyus", image, 3, 3),
+  buildTestData(4, "r", "April 20, 2020", "@Gary", image, 4, 4),
+  buildTestData(5, "h", "April 20, 2020", "@AlexChow", image, 5, 5),
+  buildTestData(6, "h", "April 20, 2020", "@TyusLiu", image, 6, 6),
+  buildTestData(7, "h", "April 20, 2020", "@VickiChen", image, 7, 7),
+];
+
+
+const testHugData = [
+  buildTestHugData(1, true, "April 20, 2020", image, testDes1, "@Evan", testDes2, "@Alex",),
+  buildTestHugData(3, true, "April 22, 2020", image, testDes1, "@Alex", testDes2, "@Tyus",),
+  buildTestHugData(5, true, "April 22, 2020", image, testDes1, "@Vicki", testDes2, "@AlexChow",),
+  buildTestHugData(6, true, "April 22, 2020", image, testDes1, "@Vivian", testDes2, "@TyusLiu",),
+  buildTestHugData(7, true, "April 22, 2020", image, testDes1, "@Alana", testDes2, "@VickiChen",),
+];
 
 export default function NotificationPage({ navigation, route }) {
-
+ 
     // stores whether the user is on this page (true) or not (false)
     const [isFocused, setIsFocused] = useState(false)
     const { windowWidth, windowHeight } = useContext(DimensionContext)
@@ -48,34 +98,44 @@ export default function NotificationPage({ navigation, route }) {
         }
     }, []);  
 
-    function catchHug(id) {
+
+    // add a filler item to move the list down
+    useEffect(() => {
+        if (notifications[0].type !== 'f') setNotifications([{ type: 'f' }, ...notifications])
+    }, [])
+
+
+    function catchHug(hugId, id) {
         clearNotification(id)
-        navigation.navigate('Hug Info', { 
+        console.log(id)
+
+        navigation.navigate('Catch Hug Page', { 
             page: 'hugInfo',
-            data: notifications.filter((item) => item.id === id)[0], 
+            data: testHugData.filter((item) => item.hugId === hugId)[0], 
         })
         // signify hug as caught to the database
     }
 
-    function dropHug(id) {
+    function dropHug(hugId, id) {
         clearNotification(id)
         // remove hug from database
     }
 
-    function acceptFriendRequest(id) {
+    function acceptFriendRequest(friendId, id) {
         clearNotification(id)
         navigation.navigate('Friend Profile', {
-            page: 'friendProfile'
+            page: 'friendProfile',
+            data: notifications.filter((item) => item.friendId === id)[0],
         })
         // add friend to user friend list in database
     }
 
-    function declineFriendRequest(id) {
+    function declineFriendRequest(friendId, id) {
         clearNotification(id)
         // remove friend reauest fron database
     }
 
-    function clearNotification(id) {
+    function clearNotification(id, type) {
         const newList = notifications.filter((item) => item.id !== id);
         setNotifications(newList)
     }
@@ -114,6 +174,7 @@ export default function NotificationPage({ navigation, route }) {
                         data.type === 'r' ? 
                         <NotificationCard 
                             key={data.id} 
+                            callId={data.friendId}
                             notificationData={data} 
                             isFocused={isFocused} 
                             handleAccept={acceptFriendRequest} 
@@ -123,6 +184,7 @@ export default function NotificationPage({ navigation, route }) {
                             :
                         <NotificationCard 
                             key={data.id} 
+                            callId={data.hugId}
                             notificationData={data} 
                             isFocused={isFocused} 
                             handleAccept={catchHug} 

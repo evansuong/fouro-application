@@ -8,13 +8,19 @@ export default function HugInfoPage({ navigation, route }) {
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const routeName = route.name;
 
-    const friendMessage = "Hello this is the incoming message for the hug. it is poggers. stan bts. " +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
-    const friendUsername = "@vivntng"
-    const userMessage = "Hiiiiiii this is the responding msg for vivian's hug. thanks for keeping me in ur thots" +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
-    const myUsername = "@alvna"
+    // TODO: uncomment line below when pulling data from firestore or whatever and delete the following test block
+    // const { hugId, completed, dateTime, images, receiverDescription, receiverId, senderDescription, senderId } = route.params.data
+    
+    // TODO: delete the following test block
+    const hugId = 1
+    const completed = true
+    const dateTime = "April 1, 2021"
+    const images = [require("assets/profilePic.jpg"), require("assets/profilePic.jpg"), require("assets/profilePic.jpg")]
+    const receiverDescription = "omae wa mou shindeiru"
+    const senderDescription = "Roses are red, violets are blue"
+    const receiverId = "@EvanSuong"
+    const senderId ="@AlexChow"
+    // console.log("route params data: ", route.params.data)
 
     // sizing
     const textContainerWidth = windowWidth / 1.1;
@@ -26,7 +32,7 @@ export default function HugInfoPage({ navigation, route }) {
         mainContainer: {
             backgroundColor: 'white',
             marginTop: statusBarHeight,
-            paddingBottom: statusBarHeight
+            paddingBottom: statusBarHeight,
         },
         header: {
             backgroundColor: 'white',
@@ -116,11 +122,10 @@ export default function HugInfoPage({ navigation, route }) {
             <Header routeName={routeName} navigation={navigation} onMainNav={false} />
 
             <ScrollView style={styles.mainContainer}>
-                
                 <View style={styles.header}>
                     <View>
                         {/* insert first hug picture -- default is friend's prof pic */}
-                        <Image source={{ uri: "https://picsum.photos/200/200"}} style={styles.imageContainer}/>
+                        <Image source={images[0]} style={styles.imageContainer}/>
                     </View>  
                 </View>
 
@@ -128,13 +133,13 @@ export default function HugInfoPage({ navigation, route }) {
                 <View style={styles.notificationContent}>    
                     <View style={{ ...styles.textAreaFriend, maxWidth: textContainerWidth }}>
                         {/* Text from friend */}
-                        <Text style={styles.username}>{friendUsername}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{friendMessage}</Text>
+                        <Text style={styles.username}>{senderId}</Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>{senderDescription}</Text>
                     </View>
                     <View style={{ ...styles.textAreaUser, maxWidth: textContainerWidth }}>
                         {/* Text from user */}
-                        <Text style={styles.username}>{myUsername}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{userMessage}</Text>
+                        <Text style={styles.username}>{receiverId}</Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>{receiverDescription}</Text>
                     </View>  
                 </View>
             
@@ -142,10 +147,9 @@ export default function HugInfoPage({ navigation, route }) {
                 {/* more hug imgs */}
                 <View style={styles.images}>
                     <ScrollView horizontal={true} style={{backgroundColor:'white'}}>
-                        <Image source={{ uri: "https://picsum.photos/200/300"}} style={styles.imageContainer}/>
-                        <Image source={{ uri: "https://picsum.photos/200/400"}} style={styles.imageContainer}/>
-                        <Image source={{ uri: "https://picsum.photos/200/500"}} style={styles.imageContainer}/>
-                        <Image source={{ uri: "https://picsum.photos/200/100"}} style={styles.imageContainer}/>
+                        {images.map(img => (
+                            <Image source={img} style={styles.imageContainer}/>
+                        ))}
                     </ScrollView>
                 </View>
 

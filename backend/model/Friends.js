@@ -1,9 +1,11 @@
 // Friends file for Creating, Reading, Updating, and Deleting
 // Friends and Friend Management
-
 var admin = require("firebase-admin");
 var firebase = require("../firebase/admin");
 require("firebase/firestore");
+
+// Backend function imports
+// var Hugs = require("./Hugs");
 
 // Firestore
 const db = firebase.firestore();
@@ -19,6 +21,16 @@ const COLOR6 = "#EFBA7C"; // > 3 days
 const COLOR7 = "#EFCF7C"; // > 2 days
 const COLOR8 = "#EFD67C"; // < 2 days
 
+// Time Constants
+const SECOND = 1000;
+const DAY15 = 1296000;
+const DAY12 = 864000;
+const DAY7 = 604800;
+const DAY5 = 432000;
+const DAY4 = 345600;
+const DAY3 = 259200;
+const DAY2 = 172800;
+
 // Helper Functions
 /**
  * Calculate how long ago the last hug was between user and friend
@@ -28,35 +40,35 @@ const COLOR8 = "#EFD67C"; // < 2 days
  */
 function calculateFriendColor(last_hug_date) {
   // Times
-  let dateInSeconds = Math.floor(Date.now() / 1000);
+  let dateInSeconds = Math.floor(Date.now() / SECOND);
   let hugDateInSeconds = last_hug_date.seconds;
 
   // Time since last hug in seconds
   let diff = dateInSeconds - hugDateInSeconds;
   // Convert difference to color accordingly
-  if (diff > 1296000) {
+  if (diff > DAY15) {
     // > 15 days
     return COLOR1;
-  } else if (diff > 864000) {
+  } else if (diff > DAY12) {
     // > 10 days
     return COLOR2;
-  } else if (diff > 604800) {
+  } else if (diff > DAY7) {
     // > 7 days
     return COLOR3;
-  } else if (diff > 432000) {
+  } else if (diff > DAY5) {
     // > 5 days
     return COLOR4;
-  } else if (diff > 345600) {
+  } else if (diff > DAY4) {
     // > 4 days
     return COLOR5;
-  } else if (diff > 259200) {
+  } else if (diff > DAY3) {
     // > 3 days
     return COLOR6;
-  } else if (diff > 172800) {
+  } else if (diff > DAY2) {
     // > 2 days
     return COLOR7;
   } else {
-    return COLOR8; // < 2 days
+    return COLOR8; // <= 2 days
   }
 }
 /**
@@ -67,7 +79,7 @@ function calculateFriendColor(last_hug_date) {
  */
 function userFill(userDoc) {
   let friend = {
-    user_id: userDoc.get("user_id"),
+    user_id: userDoc.id,
     name: userDoc.get("first_name") + " " + userDoc.get("last_name"),
     username: userDoc.get("username"),
     profile_pic: userDoc.get("profile_pic"), // Storage
@@ -83,16 +95,15 @@ const FriendsAPI = {
    * @param {string} friendId
    */
   addFriend: function (userId, friendId) {
-    // Get time in millis, convert to seconds
-    let dateInSeconds = Math.floor(Date.now() / 1000);
     // Add friend to user
     usersCollection
       .doc(userId)
       .collection("friends")
       .doc(friendId)
       .set({
-        last_hug_date: new admin.firestore.Timestamp(dateInSeconds, 0), // seconds, nanoseconds
-        user_uid: usersCollection.doc(friendId),
+        // Priority new friend to top of list
+        last_hug_date: new admin.firestore.Timestamp(0, 0), // seconds, nanoseconds
+        user_id: usersCollection.doc(friendId),
       });
     // Add user to friend
     usersCollection
@@ -100,8 +111,9 @@ const FriendsAPI = {
       .collection("friends")
       .doc(userId)
       .set({
-        last_hug_date: new admin.firestore.Timestamp(dateInSeconds, 0), // seconds, nanoseconds
-        user_uid: usersCollection.doc(userId),
+        // Priority new friend to top of list
+        last_hug_date: new admin.firestore.Timestamp(0, 0), // seconds, nanoseconds
+        user_id: usersCollection.doc(userId),
       });
   },
 
@@ -111,10 +123,24 @@ const FriendsAPI = {
    * @param {string} friendId
    */
   removeFriend: function (userId, friendId) {
+    // Remove friend from user
     usersCollection
       .doc(userId)
       .collection("friends")
       .doc(friendId)
+      .delete()
+      .then(function () {
+        console.log("Document successfully deleted!");
+      })
+      .catch(function (error) {
+        console.error("Error removing document: ", error);
+      });
+
+    // Remove user from friend
+    usersCollection
+      .doc(friendId)
+      .collection("friends")
+      .doc(userId)
       .delete()
       .then(function () {
         console.log("Document successfully deleted!");
@@ -139,11 +165,13 @@ const FriendsAPI = {
       .doc(userId)
       .collection("friends")
       .doc(friendId);
+
     await friendRef
       .get()
       .then(async (doc) => {
         // Friend is found
         if (doc.exists) {
+          console.log("HI");
           status = "friend";
         } else {
           // If Pending
@@ -169,7 +197,7 @@ const FriendsAPI = {
         console.log("Error getting document:", error);
       });
 
-    return { out: status };
+    return { status: status };
   },
 
   /**
@@ -184,19 +212,20 @@ const FriendsAPI = {
     // No friends
     if (friendsSnapshot.empty) {
       console.log("No matching documents.");
-      return { array: friends };
+      return { friends: friends };
     }
 
     let colors = [];
     let friendPromises = [];
 
     // Get all user_id references from friends
-    friendsSnapshot.forEach(async (friendDoc) => {
+    await friendsSnapshot.forEach(async (friendDoc) => {
       friendPromises.push(friendDoc.get("user_id"));
+      console.log(friendDoc.get("user_id"));
       colors.push(friendDoc.get("last_hug_date"));
     });
 
-    //for (let userRef of friendPromises) {
+    // Resolve promises
     for (let i = 0; i < friendPromises.length; i++) {
       // Get the actual userDocument from the friend stored reference
       let userDoc = await friendPromises[i].get();
@@ -211,14 +240,91 @@ const FriendsAPI = {
       }
     }
     // Return the friends
-    return { array: friends };
+    return { friends: friends };
   },
-  getFriendProfile: function (userId, friendId) {},
+
+  /**
+   * Get all shared hugs between user and friend
+   * @param {string} userId
+   * @param {string} friendId
+   */
+  getFriendProfile: function (userId, friendId) {
+    // return Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
+  },
 };
 
 const FriendSearchAPI = {
-  searchFriends: function (userId, string) {},
-  searchUsers: function (userId, string) {},
+  /**
+   * Search through the user's friends for all friend's first_name
+   * that match the query string
+   * @param {string} userId
+   * @param {string} query
+   */
+  searchFriends: async function (userId, query) {
+    // Clean and format input query
+    let nameQuery = query.trim();
+    nameQuery =
+      nameQuery.charAt(0).toUpperCase() + nameQuery.slice(1).toLowerCase();
+
+    let userFriendsRef = usersCollection.doc(userId).collection("friends");
+
+    let friendPromises = [];
+    // Search through user's friends
+    const friendsSnapshot = await userFriendsRef.get();
+    // No friends
+    if (friendsSnapshot.empty) {
+      console.log("No matching documents.");
+      return { friends: friends };
+    }
+    // Get all user_id references from friends
+    friendsSnapshot.forEach(async (friendDoc) => {
+      friendPromises.push(friendDoc.get("user_id"));
+    });
+
+    let friends = [];
+    // Resolve Promises and get user documents
+    for (let i = 0; i < friendPromises.length; i++) {
+      // Get the actual userDoc from the friend stored reference
+      let userDoc = await friendPromises[i].get();
+      if (!userDoc.exists) {
+        console.log("No such document!");
+      } else if (userDoc.get("first_name") === nameQuery) {
+        // If first_name matches nameQuery
+        let friend = userFill(userDoc);
+        // Add friend object to array
+        friends.push(friend);
+      }
+    }
+    return { friends: friends };
+  },
+
+  /**
+   * Search through all users for users' usernames that match
+   * the query username
+   * @param {string} userId
+   * @param {string} query
+   */
+  searchUsers: async function (query) {
+    // Clean and format input query
+    let usernameQuery = query.trim();
+    usernameQuery = usernameQuery.toLowerCase();
+
+    let user;
+    // Get all user matches in firestore
+    let userSnapshot = await usersCollection
+      .where("username", "==", usernameQuery)
+      .get();
+    // No matches
+    if (userSnapshot.empty) {
+      console.log("No matching documents.");
+      return { user: "none" };
+    }
+    // Go through the snapshot
+    userSnapshot.forEach((userDoc) => {
+      user = userFill(userDoc);
+    });
+    return { user: user };
+  },
 };
 
 // Export the module

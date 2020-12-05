@@ -43,7 +43,7 @@ export default function CorkboardPage({ navigation, route }) {
     const margin = windowWidth * 0.03
 
     return (
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center'}}>
             <Image
                 source={corkboardImg}
                 style={styles.corkboardImage}
@@ -62,7 +62,9 @@ export default function CorkboardPage({ navigation, route }) {
                         friendName={hug.item.friendName}
                     />
                 )}
-                contentContainerStyle={{paddingBottom: margin, paddingTop: margin}}
+                contentContainerStyle={{
+                  paddingBottom: margin, paddingTop: margin + windowWidth * 0.2
+                }}
                 numColumns={2}
             />
 

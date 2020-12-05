@@ -20,8 +20,10 @@ import { DimensionContext } from '../../contexts/DimensionContext';
 
 export default function SignupPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('password');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('password'); // TODO return these to blank
+  const [passwordField, setPasswordField] = useState('gggggg');
+  const [passwordConfirmField, setPasswordConfirmField] = useState('gggggg');
+  // const [passwordField, setPasswordField] = useState('');
+  // const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
@@ -177,8 +179,8 @@ export default function SignupPage({ navigation }) {
     },
     titleText: {
       marginBottom: 40,
-      fontSize: 50,
-      fontFamily: 'EBGaramond_500Medium'
+      fontSize: 40,
+      fontFamily: 'Montserrat_500Medium'
     },
     whiteBox: {
       backgroundColor: 'rgba(255,255,255,0.2)',

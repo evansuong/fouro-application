@@ -54,7 +54,7 @@ export default function MainNavPage({ route }) {
                 sceneContainerStyle={styles.tabScreen}
                 style={styles.tabNav}
                 tabBarPosition="bottom"
-                initialRouteName="Home"
+                initialRouteName="Hug Feed"
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                       let icon;
@@ -82,7 +82,13 @@ export default function MainNavPage({ route }) {
                         showLabel: false,
                         iconStyle: {
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                        },
+                        style: {
+                          backgroundColor: '#F38977'
+                        },
+                        indicatorStyle: {
+                          backgroundColor: 'transparent'
                         }
                     }}
                     beforeRemove={() => console.log('remove')}
