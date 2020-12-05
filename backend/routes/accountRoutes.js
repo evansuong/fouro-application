@@ -11,7 +11,7 @@ router.use(express.json());
 
 // Routes
 // TODO: NOT TESTED
-router.post("/changePassword/:id", (req, res) => {
+router.put("/changePassword/:id", (req, res) => {
   let response = ManageAccountAPI.changePassword(
     req.params.id,
     req.body.newPassword
@@ -20,7 +20,7 @@ router.post("/changePassword/:id", (req, res) => {
 });
 
 // VERIFIED
-router.post("/deleteAccount/:id", (req, res) => {
+router.delete("/deleteAccount/:id", (req, res) => {
   console.log(req.params.id);
   let response = ManageAccountAPI.deleteAccount(req.params.id);
   res.status(200).json(response);

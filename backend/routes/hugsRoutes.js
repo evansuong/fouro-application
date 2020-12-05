@@ -71,7 +71,7 @@ router.post("/respondToHug/:id", checkBody, (req, res) => {
 });
 
 // TODO: BROKEN (SEE ABOVE)
-router.post("/dropAHug/:id", checkBody, (req, res) => {
+router.delete("/dropAHug/:id", checkBody, (req, res) => {
   const uid = req.params.id;
   const { requestId, hugId } = req.body;
 

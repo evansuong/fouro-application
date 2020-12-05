@@ -116,11 +116,10 @@ router.get("/getUserCounts/:id", async (req, res) => {
 
 // TODO: BROKEN. WORKING ON UPLOADING BLOB 
 router.put('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
-  console.log('adfdafdasf')
+  console.log('In route');
   const uid = req.params.id;
-  const blob = req.body;
-  console.log(blob)
-  console.log(uid)
+  const { blob } = req.body;
+  
   if (!uid || !blob) {
     res.status(400).send('Request has missing fields');
     return;

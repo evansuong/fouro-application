@@ -54,7 +54,7 @@ async function notificationCollectionLength(req, uid) {
 }
 
 //Routes
-// VERIFIED
+// TODO: BROKEN. DOES NOT USE FIREBASE REFERENCES
 router.get("/getNotifications/:id", async (req, res) => {
   const uid = req.params.id;
   if (!uid) {
@@ -66,8 +66,8 @@ router.get("/getNotifications/:id", async (req, res) => {
   }
 });
 
-// TODO: NOT STARTED
-router.post("/deleteNotification/:id", checkBody, async (req, res) => {
+// TODO: NOT STARTED. MISSING JSON REQUEST
+router.delete("/deleteNotification/:id", checkBody, async (req, res) => {
 
 });
 

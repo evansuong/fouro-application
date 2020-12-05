@@ -35,7 +35,7 @@ router.get("/buildCorkboard/:id", async (req, res) => {
 });
 
 // TODO: NOT TESTED
-router.post("/pin/:id", checkBody, async (req, res) => {
+router.put("/pin/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { userHugId } = req.body;
 
@@ -53,7 +53,7 @@ router.post("/pin/:id", checkBody, async (req, res) => {
 });
 
 // TODO: NOT TESTED
-router.post("/unpin/:id", checkBody, async (req, res) => {
+router.put("/unpin/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { userHugId } = req.body;
 
