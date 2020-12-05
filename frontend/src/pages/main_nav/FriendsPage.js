@@ -11,7 +11,7 @@ export default function FriendsPage({ navigation, route }) {
     const [searching, setSearching] = useState(false);
     const gradient = require('assets/gradients/left.png')
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const routeName = searching? 'Search Page' : route.name;
+    const routeName = searching ? 'Search Page' : route.name;
 
     const friends = 
     //  BACKEND TODO: replace this list with a fetch call or firestore equivalent
@@ -138,12 +138,8 @@ export default function FriendsPage({ navigation, route }) {
             />
 
             <View style={{height: windowWidth * 0.27 }}/>
-            <Header routeName={routeName} navigation={toggleSearching} onMainNav={true}>Friends</Header>
-
+            <Header routeName={routeName} navigation={navigation} onMainNav={true}>Friends</Header>
             {
-                searching ? 
-                <SearchPage></SearchPage>
-                :
                 <View style={{display: 'flex', flexShrink: 1}}>
                 <FlatList
                     data={friends}
@@ -152,10 +148,7 @@ export default function FriendsPage({ navigation, route }) {
                     contentContainerStyle={{ width: windowWidth, alignItems: 'center', marginTop: 5, paddingBottom: 5 }}
                 />
                 </View>
-
-            }
-            
-            
+            } 
         </View>
     )
 }
