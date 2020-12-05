@@ -1,12 +1,19 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
-import { View, Text, StyleSheet, Animated, Image, TouchableOpacity } from 'react-native'
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Animated, 
+  Image, 
+  TouchableOpacity 
+} from 'react-native'
 import { DimensionContext } from '../contexts/DimensionContext';
 
 
 const COLLAPSED_CARD_HEIGHT_PROPORTION = 4.6;
 const EXPANDED_CARD_HEIGHT_PROPORTION = 2.7;
 const EXPAND_ANIMATION_DURATION_MS = 150;
-const FADE_ANIMATION_DURATION_MS = 100;
+const FADE_ANIMATION_DURATION_MS = 300;
 const VISIBLE = 1;
 const HIDDEN = 0;
 
@@ -26,6 +33,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
     // animated value to animate panel expansion and collapse
     const height = useRef(new Animated.Value(windowWidth / COLLAPSED_CARD_HEIGHT_PROPORTION)).current;
     const fade = useRef(new Animated.Value(0)).current;
+    const marginL = useRef(new Animated.Value(0)).current;
 
     const notificationMessage = type === 'r' ? "sent you a friend request" : "sent you a hug!"
     const acceptBtnText = type === 'r' ? 'Accept' : 'Catch'
@@ -47,6 +55,14 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
         } else {
             expand();
         }
+    }
+
+    function handleDisappear() {
+      Animated.timing(marginL, {
+        toValue: windowWidth * 1.3,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
     }
 
     // expand animation definition
@@ -73,7 +89,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
         }).start();
         Animated.timing(fade, {
             toValue: HIDDEN,
-            duration: FADE_ANIMATION_DURATION_MS,
+            duration: FADE_ANIMATION_DURATION_MS * 0.3,
             useNativeDriver: false,
         }).start();
     }
@@ -166,7 +182,9 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
 
 
     return (
+      <Animated.View style={{marginLeft: marginL}}>
         <View style={{ ...styles.hugPanelContainer, display: 'flex' }}>
+          
             <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
                 
                 {/* body */}
@@ -217,24 +235,30 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                             </TouchableOpacity>
 
                             {/* decline button */}
-                            <TouchableOpacity 
-                                disabled={!expanded} 
-                                onPress={() => handleDecline(callId, id)}
-                            >
-                                <Animated.View 
-                                    style={{ ...styles.buttonContainer, ...styles.declineButtonContainer}} 
-                                    opacity={fade}
-                                >
-                                    <Text style={{ ...styles.buttonText, ...styles.declineButtonText} }>
-                                        {declineBtnText}
-                                    </Text>    
-                                </Animated.View>
-                            </TouchableOpacity>
+                              <TouchableOpacity 
+                                  disabled={!expanded} 
+                                  onPress={() => {
+                                    handleDisappear();
+                                    setTimeout(() => {
+                                      handleDecline(callId, id);
+                                    }, 500);
+                                  }}
+                              >
+                                  <Animated.View 
+                                      style={{ ...styles.buttonContainer, ...styles.declineButtonContainer}} 
+                                      opacity={fade}
+                                  >
+                                      <Text style={{ ...styles.buttonText, ...styles.declineButtonText} }>
+                                          {declineBtnText}
+                                      </Text>    
+                                  </Animated.View>
+                              </TouchableOpacity>
                         </View>
                     </View>
                 </Animated.View>
             </TouchableOpacity>
         </View>
+      </Animated.View>
     )
 }
         

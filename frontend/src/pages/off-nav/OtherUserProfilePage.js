@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import UserProfile from '../../components/UserProfile';
 import HugCard from 'components/HugCard'
-// import { FlatList } from 'react-native-gesture-handler';
 import { DimensionContext } from '../../contexts/DimensionContext'
-import Header from '../../components/Header';
+import Header from 'components/Header';
+import LinkedButton from 'components/LinkedButton'
 
 function buildTestData(name, text, img, id) {
     return {
@@ -29,7 +29,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
     const routeName = route.name;
     const { isStranger, isPending } = route.params;
 
-    const topMarginSize = windowWidth*0.1;
+    const topMarginSize = windowWidth * 0.1;
 
     //const hugButtonWidth = windowWidth - 50;
     //const hugButtonHeight = windowHeight / 8;
@@ -83,58 +83,87 @@ export default function OtherUserProfilePage({ navigation, route }) {
             alignItems: 'center',
             borderRadius: 20,
             margin: 10,
+            width: windowWidth / 1.2, 
+            height: 40,
+            justifyContent: 'center',
+            marginBottom: 30,
         },
         pendingButtonStyle: {
             backgroundColor: '#999999',
             alignItems: 'center',
             borderRadius: 20,
             margin: 10,
+            width: windowWidth, 
+            height: 40, 
+            alignItems: 'center', 
+            justifyContent: 'center'
         },
         sendFriendRequestButtonStyle: {
             backgroundColor: '#F69D68',
             alignItems: 'center',
             borderRadius: 20,
             margin: 10,
+            width: windowWidth, 
+            height: 40, 
+            alignItems: 'center', 
+            justifyContent: 'center'
         },
         friendSharedHugs: {
             display: "flex", 
             flexShrink: 1,
+        },
+        generalText: {
+          fontSize: 25, 
+          color: 'white', 
+          justifyContent: 'center'
+        },
+        button: {
+          width: windowWidth / 1.2, 
+          marginBottom: windowHeight / 30
         }
     });
     
-    let sharedHugsContainer = 
-    <View style={styles.sharedHugsTitleContainer}>
-            <Text style={styles.sharedHugsTitle}>Shared Hugs</Text>
-        </View>
-    let sharedHugsFlatList = 
-    <FlatList
-    contentContainerStyle={styles.sharedHugsContainer}
-    data={testData}
-    renderItem={renderHug}
-            keyExtractor={(item) => item.hugId}
+        let sharedHugsContainer = 
+            <View style={styles.sharedHugsTitleContainer}>
+                <Text style={styles.sharedHugsTitle}>
+                  Shared Hugs
+                </Text>
+            </View>
+        let sharedHugsFlatList = 
+            <FlatList
+              contentContainerStyle={styles.sharedHugsContainer}
+              data={testData}
+              renderItem={renderHug}
+              keyExtractor={(item) => item.hugId}
             />
         let hugButton = 
             <TouchableOpacity 
-                style={[styles.hugButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
+                style={styles.hugButtonStyle}
                 onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
             >
-                <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Hug</Text>
+                <Text style={styles.generalText}>
+                  Hug
+                </Text>
             </TouchableOpacity>
 
         //TODO: fix redirection and change to pending on click
         let sendFriendRequestButton = 
             <TouchableOpacity 
-                style={[styles.sendFriendRequestButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
+                style={styles.sendFriendRequestButtonStyle}
                 onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
                 >
-                <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Send Friend Request</Text>
+                <Text style={styles.generalText}>
+                  Send Friend Request
+                </Text>
             </TouchableOpacity>
 
         let pendingButton = 
             <View 
-                style={[styles.pendingButtonStyle, { width: windowWidth, height: 40, alignItems: 'center', justifyContent: 'center' }]}
+                style={styles.pendingButtonStyle}
                 >
-                <Text style={{fontSize: 25, color: 'white', justifyContent: 'center'}}>Pending</Text>
+                <Text style={styles.generalText}>
+                  Pending
+                </Text>
             </View>
 
 let button = hugButton
@@ -164,7 +193,15 @@ if(isStranger) {
             <View style={[styles.friendSharedHugs, containerStyle]}>
                 {sharedHugsContainer}
                 {sharedHugsFlatList}
-                {button}
+                {/* {button} */}
+            </View>
+            <View style={styles.button}>
+              <LinkedButton
+                navigation={navigation}
+                link='Create Hug'
+                text='Hug'
+                color='#FB7250'
+              />
             </View>
             
         </View>

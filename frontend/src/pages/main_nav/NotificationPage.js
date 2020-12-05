@@ -89,7 +89,7 @@ export default function NotificationPage({ navigation, route }) {
         clearNotification(id)
         console.log(id)
 
-        navigation.navigate('Hug Info', { 
+        navigation.navigate('Catch Hug Page', { 
             page: 'hugInfo',
             data: testHugData.filter((item) => item.hugId === hugId)[0], 
         })

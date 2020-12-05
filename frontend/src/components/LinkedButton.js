@@ -18,13 +18,13 @@ export default function LinkedButton({ navigation, link, text, color, onPress })
       width: 5,
       height: 6,
     },
-    shadowOpacity: 0.41,
-    shadowRadius: 5,
+    shadowOpacity: 0.22,
+    shadowRadius: 3,
     elevation: 14,
     backgroundColor: `${color}`,
     marginLeft: 30,
     marginRight: 30,
-    marginTop: 20,
+    marginTop: 10,
     borderRadius: 100,
     display: 'flex',
     justifyContent: 'center',
@@ -37,7 +37,7 @@ export default function LinkedButton({ navigation, link, text, color, onPress })
   //comment
   function handlePressIn() {
     Animated.spring(animatedValue, {
-      toValue: 0.8,
+      toValue: 0.95,
       useNativeDriver: true,
     }).start()
   }
@@ -51,7 +51,7 @@ export default function LinkedButton({ navigation, link, text, color, onPress })
     }).start()
     if (navigation != undefined) {
       setTimeout(() => {
-        navigation.navigate(`${link}`);
+        navigation.navigate(link);
       }, 50)
     } else {
       // console.log('no navigation specified');

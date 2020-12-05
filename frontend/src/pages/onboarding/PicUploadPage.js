@@ -10,14 +10,16 @@ import {
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 import BackgroundImg from 'assets/gradients/middle.png';
 import AuthAPI from '../../authentication/Authentication';
-import API from '../../API';
+import { PutAPI } from '../../API';
 import { UserContext } from '../../contexts/UserContext';
 import { DimensionContext } from '../../contexts/DimensionContext';
 import LinkedButton from 'components/LinkedButton';
 import PicUploadButton from 'components/PicUploadButton';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import * as FileSystem from 'expo-file-system';
 
+// const fs = require('fs');
 
 const fetch = require('node-fetch');
 
@@ -35,60 +37,61 @@ export default function ProfileSetupPage({ navigation, route }) {
   }, [startUp])
 
   const callBackend = async () => {
-
-  
-    function toDataURL(url, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        var reader = new FileReader();
-        reader.onloadend = function() {
-          callback(reader.result);
-        }
-        reader.readAsDataURL(xhr.response);
-      };
-      xhr.open('GET', url);
-      xhr.responseType = 'blob';
-      xhr.send();
-    }
+    // function toDataURL(url, callback) {
+    //   var xhr = new XMLHttpRequest();
+    //   xhr.onload = function() {
+    //     var reader = new FileReader();
+    //     reader.onloadend = function() {
+    //       callback(reader.result);
+    //     }
+    //     reader.readAsDataURL(xhr.response);
+    //   };
+    //   xhr.open('GET', url);
+    //   xhr.responseType = 'blob';
+    //   xhr.send();
+    // }
     
-    toDataURL('https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0', function(dataUrl) {
-      console.log(dataUrl)
-      const request = {dataUrl: dataUrl}
-      API.uploadUserProfilePicture('zE51j8mkbreXCT2QDevz4Daid5I2', request);
-    })
- 
-   
-      console.log('uploading')
-      // Register user with user param
-      // const splitPicURI = uploadPic.uri.split('/');
-      // 
-
-      // if(response.status) {
-      //   console.log('yay')
-      // } else {
-      //   console.log('bad')
-      // }
+    // toDataURL('https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0', function(dataUrl) {
+    //   console.log(dataUrl)
+    //   const request = {dataUrl: dataUrl}
+    //   API.uploadUserProfilePicture('zE51j8mkbreXCT2QDevz4Daid5I2', request);
+    // })
 
       // uploadUserProfilePicture
-      // console.log(uploadPic);
+      console.log(uploadPic);
+      // ImagePicker.showImagePicker
+      const base64 = await FileSystem.readAsStringAsync(
+        uploadPic.uri, { encoding: 'base64'}
+      );
+      console.log('base64: ', base64);
+      // const readFileOut = fs.readFile(uploadPic.uri, 'base64');
+      // const blob = Blob.build(readFileOut, { type: 'application/octet;BASE64'});
+
       // const splitPicURI = uploadPic.uri.split('/');
+      console.log('uri: ', uploadPic.uri);
+      const imgResponse = await fetch(uploadPic.uri);
+      const blob =  await imgResponse.blob();
+      console.log('blob: ', JSON.stringify(blob));
+
+      
+      // console.log(typeof blob);
+      // console.log(blob.size);
+      // console.log(blob.type);
+      // console.log(blob.text());
+      
       // let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
       // Send res to backend to push to firebase
       // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-      // console.log('success', JSON.stringify(res));
-      // const request = {
-      //   uid: user['uid'],
-      //   blob: res,
-      // }
-      // const pfpResponse = await API.uploadUserProfilePicture(request);
-      // console.log('createUserResponse: ', createUserResponse)
-      // console.log('pfpResponse: ', pfpResponse);
+      // console.log('success', JSON.stringify(blob));
+      // console.log('userData: ', userData);
+      const request = {
+        uid: userData.uid,
+        blob: blob,
+      }
+      console.log('request: ', JSON.stringify(request));
+      const pfpResponse = await PutAPI.uploadUserProfilePicture(request.uid, request);
       // navigation.navigate('Welcome Page');
    
-  }
-
-  const getBlobObj = async (uri, imgName) => {
-    
   }
 
   const pickFromGallery = async () => {
@@ -102,7 +105,6 @@ export default function ProfileSetupPage({ navigation, route }) {
         quality: 0.1,
         maxWidth: 512,
         maxHeight: 512,
-
       })
       // console.log(data);
       if (data.cancelled == false) {

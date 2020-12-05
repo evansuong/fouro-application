@@ -19,6 +19,7 @@ import ResetPasswordPage from './src/pages/off-nav/ResetPasswordPage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreateHugPage from './src/pages/off-nav/CreateHugPage'; 
+import CatchHugPage from './src/pages/off-nav/CatchHugPage';
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
 import UserContextProvider from './src/contexts/UserContext'; 
 import { useFonts } from 'expo-font'
@@ -57,14 +58,13 @@ export default function App() {
         <DimensionContextProvider>
           <NavigationContainer>
             <Stack.Navigator 
-              style={styles.appContainer} 
+              style={styles.appContainer}
               /** 
                * comment out the line below when you need the header for 
               /* going back to the previous screen. Leave it to see what 
               /* the app will actually look like
               * */
               screenOptions={{ headerShown: false }}
-              initialRouteName="Main Nav Page"
             >
               <Stack.Screen 
                 name="Main Nav Page" 
@@ -117,6 +117,10 @@ export default function App() {
               <Stack.Screen 
                 name='Reset Password Page'
                 component={ResetPasswordPage}/>
+
+              <Stack.Screen 
+                name='Catch Hug Page'
+                component={CatchHugPage}/>
             </Stack.Navigator>
           </NavigationContainer>    
         </DimensionContextProvider>
