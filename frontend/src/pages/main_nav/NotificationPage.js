@@ -82,6 +82,7 @@ const testHugData = [
 ];
 
 export default function NotificationPage({ navigation, route }) {
+
   // stores whether the user is on this page (true) or not (false)
   const [isFocused, setIsFocused] = useState(false);
   const { windowWidth, windowHeight } = useContext(DimensionContext);

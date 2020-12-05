@@ -27,7 +27,6 @@ import {
   EBGaramond_500Medium,
   EBGaramond_600SemiBold,
 } from '@expo-google-fonts/eb-garamond';
-import SearchPage from './src/pages/off-nav/SearchPage';
 
 
 export default function App() {
@@ -109,6 +108,7 @@ export default function App() {
               <Stack.Screen 
                 name='Reset Password Page'
                 component={ResetPasswordPage}/>
+
             </Stack.Navigator>
           </NavigationContainer>    
         </DimensionContextProvider>

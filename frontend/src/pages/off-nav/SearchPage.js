@@ -4,6 +4,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { DimensionContext } from '../../contexts/DimensionContext';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
+import { UserContext } from '../../contexts/UserContext';
 
 
 
@@ -11,7 +12,10 @@ const pic = require('assets/fillerProfilePic.jpg')
 
 export default function SearchPage({ input, navigation }) {
 
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    const { isLightTheme } = userData;
+
     const [userList, setUserList] = useState([]);
     const [searchFriends, setSearchFriends] = useState(true);
     const Tab = createMaterialTopTabNavigator();
@@ -68,18 +72,22 @@ export default function SearchPage({ input, navigation }) {
             setSearchFriends(false)
         })
 
-        function viewUser(userData) {
+        function viewFriend(userData) {
             // TODO: change this route name to Other User Profile
             navigation.navigate('Friend Profile', userData)
         }
 
+        let textColor = isLightTheme ? '#000' : '#FFF';
+        let borderColor = isLightTheme ? '#FFF' : '#555';
+        let backgroundColor = isLightTheme ? '#FFF' : '#333'
+
         return (
-            <ScrollView>
+            <ScrollView style={{ backgroundColor: backgroundColor }}>
             {userList.map(userData => (
-                <TouchableOpacity key={userData.user_id} onPress={() => viewUser(userData)}>
-                    <View style={styles.userCard}>
-                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.pfp}/>
-                        <Text style={styles.userText}>{userData.name}</Text>
+                <TouchableOpacity key={userData.name} onPress={() => viewFriend(userData)}>
+                    <View style={{...styles.userCard, borderBottomColor: borderColor}}>
+                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
+                        <Text style={{...styles.userText, textColor: textColor}}>{userData.name}</Text>
                     </View>
                 </TouchableOpacity>
             ))}
@@ -93,17 +101,21 @@ export default function SearchPage({ input, navigation }) {
             setSearchFriends(true)
         })
 
-        function viewFriend(userData) {
+        function viewUser(userData) {
             navigation.navigate('Friend Profile', userData)
         }
 
+        let textColor = isLightTheme ? '#000' : '#FFF';
+        let borderColor = isLightTheme ? '#FFF' : '#555';
+        let backgroundColor = isLightTheme ? '#FFF' : '#333'
+
         return (
-            <ScrollView>
+            <ScrollView style={{backgroundColor: backgroundColor}}>
             {userList.map(userData => (
-                <TouchableOpacity key={userData.name} onPress={() => viewFriend(userData)}>
-                    <View style={styles.userCard}>
-                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.pfp}/>
-                        <Text style={styles.userText}>{userData.name}</Text>
+                <TouchableOpacity key={userData.name} onPress={() => viewUser(userData)}>
+                    <View style={{...styles.userCard, borderBottomColor: borderColor }}>
+                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
+                        <Text style={{...styles.userText, color: textColor }}>{userData.name}</Text>
                     </View>
                 </TouchableOpacity>
             ))}
@@ -111,9 +123,21 @@ export default function SearchPage({ input, navigation }) {
         )
     }
 
+    let backgroundColor = isLightTheme ? '#FFF' : '#rgb(40, 40, 40)';
+
+
+
     return (
         <View style={{ width: windowWidth / 1.1, height: windowHeight / 1.4 }}>
-            <Tab.Navigator style={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}>
+            <Tab.Navigator 
+                style={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+                tabBarOptions={{
+                    activeTintColor: isLightTheme ? 'purple' : '#E57777',
+                    style: { backgroundColor: backgroundColor },
+                    indicatorStyle: { 
+                        backgroundColor: isLightTheme ? 'purple' : '#E57777',
+                    }
+                }}>
                 <Tab.Screen name="Friends" component={searchFriendList}/>
                 <Tab.Screen name="Users" component={searchStrangersList}/>
             </Tab.Navigator>
