@@ -27,6 +27,7 @@ import {
   EBGaramond_500Medium,
   EBGaramond_600SemiBold,
 } from '@expo-google-fonts/eb-garamond';
+import SearchPage from './src/pages/off-nav/SearchPage';
 
 
 export default function App() {

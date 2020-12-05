@@ -5,10 +5,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
+import { TextInput } from 'react-native-paper';
+import SearchPage from '../pages/off-nav/SearchPage';
+import { set } from 'react-native-reanimated';
  
 
 const backIcon = require('assets/back-icon.png');
-const searchIcon = require('assets/magnifyingGlass.png');
+const searchIcon = require('assets/search-icon.png');
+const searchIconDark = require('assets/search-icon-dark.png');
 const profileIcon = require('assets/user-icon.png');
 const editIcon = require('assets/edit-icon.png');
 const corkboardIcon = require('assets/corkboard-icon.png');
@@ -27,7 +31,6 @@ function buildButtonProps(name, icon, onPress) {
 }
 
 
-
 // button functions return button objects to be passed into headerButton
 function BackButton(navigation) {
     function onPress() {
@@ -40,16 +43,25 @@ function BackButton(navigation) {
     return buildButtonProps('back', backIcon, onPress);
 }
 
+function ExitSearchButton(navigation) {
+    function onPress() {
+        navigation()
+    }
+    return buildButtonProps('search', backIcon, onPress);    
+}
+
 function SearchButton(navigation) {
     function onPress() {
-        alert('search button pressed');
+        navigation()
     }
-    return buildButtonProps('search', searchIcon, onPress);
+    return buildButtonProps('search', searchIcon, onPress);    
 }
+
+
 
 function ProfileButton(navigation) {
     function onPress() {
-        navigation.replace('User Profile Page', { page: 'Profile' });
+        navigation.navigate('User Profile Page', { page: 'Profile' });
     }
     return buildButtonProps('profile', profileIcon, onPress);
 }
@@ -81,22 +93,38 @@ function RemoveFriendButton(navigation) {
 export function HeaderButton({ name, icon, onPress, onMainNav }) {
 
     // console.log("buttonName: ", name)
-    console.log(onMainNav)
-
     const { windowWidth, windowHeight } = useContext(DimensionContext);
-    const styles = {
+
+    let width = windowWidth / 8.5;
+    
+    const styles = name === 'expanded search' ? {
         btnContainer: {
             backgroundColor: onMainNav ? 'rgba(0, 0, 0, .2)' : 'rgba(0, 0, 0, .4)', 
             borderRadius: 100,
             height: windowWidth / 8.5,
-            width: windowWidth / 8.5, 
+            width: windowWidth / 1.1,
+            display: 'flex', 
+            justifyContent: 'right', 
+            alignItems: 'center',
+        },
+        btnImage: {
+            width: windowWidth / 15,
+            height: windowWidth / 15,
+            overflow: 'visible',
+        }
+    } : {
+        btnContainer: {
+            backgroundColor: onMainNav ? 'rgba(0, 0, 0, .2)' : 'rgba(0, 0, 0, .4)', 
+            borderRadius: 100,
+            height: windowWidth / 8.5,
+            width: width,
             display: 'flex', 
             justifyContent: 'center', 
             alignItems: 'center',
         },
         btnImage: {
-            width: '50%',
-            height: '50%',
+            width: windowWidth / 15,
+            height: windowWidth / 15,
             overflow: 'visible',
         }
     }
@@ -118,56 +146,68 @@ export default function Header(props) {
     
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const { routeName, navigation, onMainNav } = props;
+    const [searching, setSearching] = useState(false);
+    const [searchInput, setSearchInput] = useState();
 
-    // standardize route param names
+    function enableSearch() { setSearching(true) }
+    function disableSearch() { setSearching(false) }
 
     // collection of headerbuttons to render based on the page
     const headerButtons = {
-        'Friends': ['', SearchButton(navigation)],
+        'Friends': searching ? [ExitSearchButton(disableSearch)] : ['', SearchButton(enableSearch)],
         'Hug Feed': [ProfileButton(navigation), CorkboardButton(navigation)],
         'Notification': '',
         'User Profile Page': [EditButton(navigation)],
         'Friend Profile': [RemoveFriendButton(navigation)],
-        'Hug Info': '',
         'Create Hug': '',
         'Corkboard': '',
+        'Hug Info': '',
         'Reset Password Page': '',
     };
 
+    // setting button list for header 
     let buttons = []
-
     // update to render main nav header
     if (onMainNav) {
-        // console.log(routeName)
         buttons = headerButtons[routeName]
-
     // update to render off nav header
     } else if (routeName) {
-        // console.log(routeName)
         buttons = [BackButton(navigation), ...headerButtons[routeName]]
-        // console.log(buttons)
-        // console.log(buttons.length)
     }
 
+
+    // styling
+    let backgroundColor = searching ? 'rgba(255, 255, 255, .85)': onMainNav ? 'rgba(0, 0, 0, .3)' : 'transparent';
+    let borderRadius = searching ? 20 : 100;
+
     const styles = StyleSheet.create({
-        header: {
+        headerContainer: {
             display: 'flex',
-            flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            width: windowWidth / 1.1,
             marginTop: windowHeight / 20,
             position: 'absolute',
             zIndex: 5,
-            backgroundColor: onMainNav ? 'rgba(0, 0, 0, .3)' : 'transparent',
-            borderRadius: 100,
-            padding: 5,
+            backgroundColor: backgroundColor,
+            borderRadius: borderRadius,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.8,
             shadowRadius: 2,  
             elevation: onMainNav ? 5 : 0
         }, 
+        header: {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: searching ? '#FFF' : 'transparent',
+            width: windowWidth / 1.1,
+            padding: searching ? 0 : 4,
+            paddingTop: searching ? 15 : 4,
+            paddingHorizontal: searching ? 15 : 4,
+            borderTopRightRadius: borderRadius,
+            borderTopLeftRadius: borderRadius,
+        },
         title: {
             fontWeight: 'bold',
             fontSize: 30,
@@ -177,31 +217,56 @@ export default function Header(props) {
             width: windowWidth / 8.5,
             height: windowWidth / 8.5,
         },
-    });
-
-    // buttons && console.log(buttons.length)
-    // console.log(onMainNav)
-  
+        searchPage: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        input: {
+            backgroundColor: '#EEE',
+            width: windowWidth / 1.5,
+            height: windowWidth / 10,
+            borderRadius: 5, 
+            borderStyle: 'solid',
+            borderWidth: 1,
+            borderColor: '#EEE'
+        },
+    });        
+    
     // return new header
     return (
-        <View style={styles.header}>
+        <View style={styles.headerContainer}>
+            <View style={styles.header}>
                 {buttons && buttons[0] !== ''? 
                     <HeaderButton {...buttons[0]} onMainNav={onMainNav}/> 
                     : 
                     <View style={styles.filler}/>
                 }
-                {
+                {searching ?
+                    <TextInput
+                        keyboardType='web-search' 
+                        style={styles.input}
+                        onChangeText={(val) => setSearchInput(val)}
+                        autoCapitalize='none'
+                    />
+                    :
                     <View style={styles.titleContainer}>
-                        <Text style={styles.title}>{props.children}</Text>
+                        <Text style={styles.title}>{buttons && buttons.length > 2 ? <></> : props.children}</Text>
                     </View>
                 }
                 {buttons && buttons.length > 1 && buttons[1] !== '' ? 
                     <HeaderButton {...buttons[1]} onMainNav={onMainNav}/> 
                     : 
+                    searching ? 
+                    <></>
+                    :
                     <View style={styles.filler}/>
                 }
+                
+            </View>
+            {searching &&
+                <SearchPage navigation={navigation} input={searchInput}></SearchPage> 
+            }
         </View>
-
     )
 }
 
