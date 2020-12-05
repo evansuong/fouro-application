@@ -1,5 +1,12 @@
 const { FriendSearchAPI } = require("../../model/Friends");
 let Friends = require("../../model/Friends");
+const firebase = require("../../firebase/admin");
+
+const db = firebase.firestore();
+let docRef = db.collection("users").doc("example@email.com");
+
+console.log(docRef);
+console.log(docRef.id);
 
 //Friends.FriendSearchAPI.searchFriends("hi", "hHasdlkj");
 
