@@ -27,6 +27,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
     const icon = require("assets/overflowMenuIcon.png");
     const {windowWidth, windowHeight} = useContext(DimensionContext)
     const routeName = route.name;
+    const { isStranger, isPending } = route.params;
 
     const topMarginSize = windowWidth*0.1;
 
@@ -100,9 +101,6 @@ export default function OtherUserProfilePage({ navigation, route }) {
             flexShrink: 1,
         }
     });
-    
-    const isStranger = false;
-    const isPending = true;
     
     let sharedHugsContainer = 
     <View style={styles.sharedHugsTitleContainer}>

@@ -145,8 +145,6 @@ export default function HugInfoPage({ navigation, route }) {
                         {images.map(img => (
                             <Image source={img} style={styles.imageContainer}/>
                         ))}
-                        
-                       
                     </ScrollView>
                 </View>
 

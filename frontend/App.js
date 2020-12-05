@@ -27,6 +27,7 @@ import {
   EBGaramond_500Medium,
   EBGaramond_600SemiBold,
 } from '@expo-google-fonts/eb-garamond';
+import SearchPage from './src/pages/off-nav/SearchPage';
 
 
 export default function App() {
@@ -48,14 +49,14 @@ export default function App() {
         <DimensionContextProvider>
           <NavigationContainer>
             <Stack.Navigator 
-              style={styles.appContainer} 
+              style={styles.appContainer}
+              initialRouteName='Main Nav Page'
               /** 
                * comment out the line below when you need the header for 
               /* going back to the previous screen. Leave it to see what 
               /* the app will actually look like
               * */
               screenOptions={{ headerShown: false }}
-              initialRouteName="Main Nav Page"
             >
               <Stack.Screen 
                 name="Main Nav Page" 
