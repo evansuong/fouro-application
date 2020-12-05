@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cors = require("cors");
+const { FriendsAPI, FriendSearchAPI } = require("../model/Friends");
 
 router.use(
   express.urlencoded({
@@ -29,7 +30,7 @@ router.post("/removeFriend/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-
+      let response = FriendsAPI.removeFriend(uid, friendId);
       res.status(200).json(response);
     } catch(err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -47,7 +48,7 @@ router.get("/getFriendStatus/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-      
+      let response = FriendsAPI.addFriend(uid, friendId);
       res.status(200).json(response);
     } catch(err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -60,7 +61,7 @@ router.get("/getFriends/:id", async (req, res) => {
   const uid = req.params.id;
   
   try {
-      
+    let response = FriendsAPI.getFriendsList(uid);
     res.status(200).json(response);
   } catch(err) {
     res.status(400).send(`An error occurred: ${err}`);
@@ -77,7 +78,8 @@ router.get("/getFriendProfile/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-      
+      // TODO: waiting on Hugs API
+      let response = FriendsAPI.getFriendProfile(uid, friendId);
       res.status(200).json(response);
     } catch(err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -95,7 +97,7 @@ router.get("/searchFriends/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-      
+      let response = FriendSearchAPI.searchFriends(uid, name);
       res.status(200).json(response);
     } catch(err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -105,15 +107,14 @@ router.get("/searchFriends/:id", checkBody, async (req, res) => {
 
 // TODO: NOT TESTED
 router.get("/searchUsers/:id", checkBody, async (req, res) => {
-  const uid = req.params.id;
-  const { name } = req.body; // could also be username
+  const { username } = req.body; // could also be username
 
-  if (!name) { // could also be username
+  if (!username) { // could also be username
     res.status(400).send('Request has missing fields');
     return;
   } else {
     try {
-      
+      let response = FriendSearchAPI.searchUsers(username);
       res.status(200).json(response);
     } catch(err) {
       res.status(400).send(`An error occurred: ${err}`);
