@@ -1,14 +1,12 @@
 // ManageAccount file used for managing Firebase Authentication
 // and user accounts
 var firebase = require("../firebase/admin");
+var authentication = require("../firebase/config");
 var admin = require("firebase-admin");
 require("firebase/auth");
 
 const ManageAccountAPI = {
-  // Is this getting exported too?
-  // -terry
-  user: firebase.auth().currentUser,
-
+  
   //update password from within the app.
   changePassword: function (uid, newPassword) {
     var successful;
@@ -24,6 +22,29 @@ const ManageAccountAPI = {
 
     return { out: successful };
   },
+
+
+  //"forgot password" to be used outside of the app/
+  forgotPassword: function (email) {
+    authentication.sendPasswordResetEmail(email).then(function() {
+      response = {
+        status: true,
+        data: ""
+      };
+    }).catch(function(error) {
+      response = {
+        status: false,
+        data: error.message
+      };
+    })
+
+    return response;
+  },
+
+
+
+
+
 
   // delete user account and all corresponding data
   deleteAccount: function (uid) {
