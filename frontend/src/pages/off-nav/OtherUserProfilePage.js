@@ -27,6 +27,9 @@ export default function OtherUserProfilePage({ navigation, route }) {
     const icon = require("assets/overflowMenuIcon.png");
     const {windowWidth, windowHeight} = useContext(DimensionContext)
     const routeName = route.name;
+
+    // TODO: replace with a call to getFriendStatus to get the status as a string
+    //       e.g., "stranger", "friend", "pending"
     const { isStranger, isPending } = route.params;
 
     const topMarginSize = windowWidth*0.1;
