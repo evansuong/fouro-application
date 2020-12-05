@@ -1,11 +1,5 @@
 node_modules
 .env
-<<<<<<< HEAD
 .expo/
-<<<<<<< HEAD
-admin.js
-=======
-config.*
 .expo/
-serviceAccountKey.*
 serviceAccountKey.json
