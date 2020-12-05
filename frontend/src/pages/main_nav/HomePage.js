@@ -114,15 +114,29 @@ export default function HomePage({ navigation, route }) {
       left: 10,
       borderRadius: 50,
       height: 70,
-      backgroundColor: mode == 'light' ? 'white': 'rgba(0,0,0,0.5)',
+      backgroundColor: mode == 'light' ? 'rgba(255,255,255,0.8)': 'rgba(0,0,0,0.5)',
       color: mode == 'light' ? 'black': 'white',
-      // borderColor: mode == 'light' ? 'black' : 'white',
-      borderWidth: 2,
-      alignItems: 'center'
+      alignItems: 'center',
+      shadowColor: 'black',
+      shadowOffset: {
+        width: 10,
+        height: 10,
+      },
+      shadowOpacity: 0.5,
+      shadowRadius: 10,
+      elevation: 14, 
     },
     createHugText: {
       fontSize: 50,
       color: mode == 'light' ? 'black': 'white',
+      shadowColor: 'black',
+      shadowOffset: {
+        width: 10,
+        height: 10,
+      },
+      shadowOpacity: 0.5,
+      shadowRadius: 10,
+      elevation: 14, 
     },
     switchContainer: {
       flexDirection: 'row',

@@ -71,6 +71,7 @@ export default function HomePage({ navigation, expandState, left, bottom, inputM
 
   const styles = StyleSheet.create({
     createHugButtonContainer: {
+      display: 'flex',
       flexDirection: 'row',
       position: 'absolute',
       // bottom: 10,
@@ -80,10 +81,8 @@ export default function HomePage({ navigation, expandState, left, bottom, inputM
       left: left,
       borderRadius: 50,
       height: 70,
-      backgroundColor: mode == 'light' ? 'white': 'rgba(0,0,0,0.5)',
+      backgroundColor: mode == 'light' ? 'rgba(255,255,255,0.5)': 'rgba(0,0,0,0.5)',
       color: mode == 'light' ? 'black': 'white',
-      borderColor: mode == 'light' ? 'black' : 'white',
-      borderWidth: 2,
     },
     createHugText: {
       fontSize: 50,
