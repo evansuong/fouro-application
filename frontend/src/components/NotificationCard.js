@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Animated, Image, TouchableOpacity } from 'react-native'
 import { DimensionContext } from '../contexts/DimensionContext';
+import { UserContext } from '../contexts/UserContext';
 
 
 const COLLAPSED_CARD_HEIGHT_PROPORTION = 4.6;
@@ -21,7 +22,9 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
 
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    const { isLightTheme } = userData;
     
     // animated value to animate panel expansion and collapse
     const height = useRef(new Animated.Value(windowWidth / COLLAPSED_CARD_HEIGHT_PROPORTION)).current;
@@ -78,112 +81,47 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
         }).start();
     }
 
-    const styles = StyleSheet.create({
-        hugPanelContainer: {
-            display: 'flex',
-            justifyContent: 'center',
-            
-            backgroundColor: '#ffffff', 
-            borderRadius: 10,
+ 
 
-            margin: windowWidth / 75,
-            width: windowWidth / 1.1,
 
-            shadowColor: '#444',
-            shadowOffset: { height: 2 },
-            shadowOpacity: 0.8,
-            shadowRadius: 2,
-            elevation: 1,
-        },
-        cardColor: {
-            backgroundColor: type === 'r' ? '#8677E5' : '#E57777', 
-            width: windowWidth / 30,
-            height: '100%',
-            borderTopLeftRadius: 10,
-            borderBottomLeftRadius: 10,
-        },  
-        bodyContainer: {
-            display: 'flex',
-            flexDirection: 'row',
-        },
-        notificationContent: {
-            padding: windowWidth / 30,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            height: windowWidth / 4.7,
-        },
-        footer: {
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            padding: 10,
-            paddingTop: 0,
-        },
-        textArea: {
-            color: '#000',
-            fontSize: 18,
-            marginHorizontal: 10,
-            flex: 1,
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-        },
-        buttonText: {
-            fontSize: 15,  
-        },
-        acceptButtonText: {
-            color: "white",
-        },  
-        declineButtonText: {
-            color: type === 'r' ? '#8677E5' : '#E57777', 
-        },
-        buttonContainer: {
-            borderRadius: 100,
-            height: windowWidth / 10,
-            width: windowWidth / 2.8,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: windowWidth / 50,
-        },
-        acceptButtonContainer: {
-            backgroundColor: type === 'r' ? '#8677E5' : '#E57777', 
-        },
-        declineButtonContainer:{
-            backgroundColor: '#FFFFFF',
-            borderColor: type === 'r' ? '#8677E5' : '#E57777', 
-            borderStyle: 'solid', 
-            borderWidth: 1,
-        },
-        image: {
-            height: windowWidth / 7,
-            width: windowWidth / 7,
-            borderRadius: 100,
-        },
-        
-    }) 
-    
+    let notifColor = type === 'r' ? '#8677E5' : '#E57777';
+    let backgroundColor = isLightTheme ? '#ffffff' : "rgb(45, 40, 40)";
+    let textColor = isLightTheme ? '#000' : '#EEE';
 
 
     return (
-        <View style={{ ...styles.hugPanelContainer, display: 'flex' }}>
+        <View style={{ 
+            ...styles.hugPanelContainer, 
+            display: 'flex', 
+            backgroundColor: backgroundColor,
+            margin: windowWidth / 75,
+            width: windowWidth / 1.1,
+        }}>
             <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
                 
                 {/* body */}
                 <Animated.View style={{ height: height, ...styles.bodyContainer }}>
 
                     {/* card color */}
-                    <View style={styles.cardColor}><Text></Text></View>
+                    <View style={{
+                        ...styles.cardColor, 
+                        backgroundColor: notifColor, 
+                        width: windowWidth / 30 
+                    }}><Text></Text></View>
 
                     {/* notification content */}
                     <View style={{ padding: 0 }}>
-                        <View style={styles.notificationContent}>
+                        <View style={{
+                            ...styles.notificationContent,
+                            height: windowWidth / 4.7,
+                            padding: windowWidth / 30,
+                        }}>
                             <View style={styles.textArea}>
                                 <View>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 16, color: textColor }}>
                                         {name}
                                     </Text>  
-                                    <Text>
+                                    <Text style={{ color: textColor }}>
                                         {notificationMessage}
                                     </Text>
                                 </View>
@@ -193,7 +131,14 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                                 </Text>
                             </View>
                             <View>
-                                <Image style={styles.image} source={profPic} />
+                                <Image 
+                                style={{
+                                    ...styles.image, 
+                                    borderColor: notifColor,
+                                    height: windowWidth / 7,
+                                    width: windowWidth / 7,
+                                }} 
+                                source={profPic} />
                             </View>
                         </View>
                         
@@ -207,10 +152,20 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                                 onPress={() => handleAccept(callId, id)}
                             >
                                 <Animated.View 
-                                    style={{ ...styles.buttonContainer, ...styles.acceptButtonContainer }} 
+                                    style={{ 
+                                        ...styles.buttonContainer, 
+                                        ...styles.acceptButtonContainer,
+                                        backgroundColor: notifColor,
+                                        height: windowWidth / 10,
+                                        width: windowWidth / 2.8,
+                                        margin: windowWidth / 50,
+                                    }} 
                                     opacity={fade}
                                 >
-                                    <Text style={{ ...styles.buttonText, ...styles.acceptButtonText }}>
+                                    <Text style={{ 
+                                        ...styles.buttonText, 
+                                        ...styles.acceptButtonText 
+                                    }}>
                                         {acceptBtnText}
                                     </Text>    
                                 </Animated.View>
@@ -222,10 +177,22 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                                 onPress={() => handleDecline(callId, id)}
                             >
                                 <Animated.View 
-                                    style={{ ...styles.buttonContainer, ...styles.declineButtonContainer}} 
+                                    style={{ 
+                                        ...styles.buttonContainer, 
+                                        ...styles.declineButtonContainer, 
+                                        borderColor: notifColor,
+                                        backgroundColor: backgroundColor,
+                                        height: windowWidth / 10,
+                                        width: windowWidth / 2.8,
+                                        margin: windowWidth / 50,
+                                    }} 
                                     opacity={fade}
                                 >
-                                    <Text style={{ ...styles.buttonText, ...styles.declineButtonText} }>
+                                    <Text style={{ 
+                                        ...styles.buttonText, 
+                                        ...styles.declineButtonText, 
+                                        color: notifColor,
+                                    }}>
                                         {declineBtnText}
                                     </Text>    
                                 </Animated.View>
@@ -238,3 +205,63 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
     )
 }
         
+const styles = StyleSheet.create({
+    hugPanelContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        borderRadius: 10,
+        shadowColor: '#444',
+        shadowOffset: { height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 1,
+    },
+    cardColor: {
+        height: '100%',
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+    },  
+    bodyContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    notificationContent: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    footer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        padding: 10,
+        paddingTop: 0,
+    },
+    textArea: {
+        fontSize: 18,
+        marginHorizontal: 10,
+        flex: 1,
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    buttonText: {
+        fontSize: 15,  
+    },
+    acceptButtonText: {
+        color: "white",
+    },  
+    buttonContainer: {
+        borderRadius: 100,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    declineButtonContainer:{
+        borderStyle: 'solid', 
+        borderWidth: 1,
+    },
+    image: {
+        borderRadius: 100,
+        borderWidth: 2,
+    },
+}) 

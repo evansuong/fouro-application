@@ -8,10 +8,9 @@ import SearchPage from '../off-nav/SearchPage'
 
 export default function FriendsPage({ navigation, route }) {
 
-    const [searching, setSearching] = useState(false);
     const gradient = require('assets/gradients/left.png')
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const routeName = searching ? 'Search Page' : route.name;
+    const routeName = route.name;
 
     const friends = 
     //  BACKEND TODO: replace this list with a fetch call or firestore equivalent
@@ -105,11 +104,6 @@ export default function FriendsPage({ navigation, route }) {
             friend_color: '#A4B8B9'
         }
         ]
-
-    function toggleSearching() {
-        setSearching(!searching)
-        return !searching
-    }
 
 
     const renderCards = friend => {

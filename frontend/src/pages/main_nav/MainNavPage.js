@@ -82,7 +82,13 @@ export default function MainNavPage({ route }) {
                         showLabel: false,
                         iconStyle: {
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                        },
+                        style: {
+                          backgroundColor: '#F38977'
+                        },
+                        indicatorStyle: {
+                          backgroundColor: 'transparent'
                         }
                     }}
                     beforeRemove={() => console.log('remove')}

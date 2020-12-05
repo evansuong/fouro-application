@@ -118,24 +118,7 @@ export default function NotificationPage({ navigation, route }) {
     function clearNotification(id, type) {
         const newList = notifications.filter((item) => item.id !== id);
         setNotifications(newList)
-    }
-
-
-    // notification list styles
-    const styles = StyleSheet.create({
-        notificationList: {
-            marginHorizontal: 5,
-            display: 'flex',
-            flexShrink: 1,
-            alignItems: 'center',
-        },
-        filler: {
-            height: windowHeight / 7,
-        }
-    })
-
-
-        
+    }   
    
     // map every notification entry to a notification panel element 
     return (
@@ -160,7 +143,7 @@ export default function NotificationPage({ navigation, route }) {
                             handleAccept={acceptFriendRequest} 
                             handleDecline={declineFriendRequest} />
                             : data.type === 'f' ?
-                        <View key={'filler'} style={styles.filler}></View>
+                        <View key={'filler'} style={{ height: windowHeight / 7 }}></View>
                             :
                         <NotificationCard 
                             key={data.id} 
@@ -175,3 +158,14 @@ export default function NotificationPage({ navigation, route }) {
         </View>
     )
 } 
+
+
+// notification list styles
+const styles = StyleSheet.create({
+    notificationList: {
+        marginHorizontal: 5,
+        display: 'flex',
+        flexShrink: 1,
+        alignItems: 'center',
+    },
+})

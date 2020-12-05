@@ -5,11 +5,13 @@ import Header from "../../components/Header";
 import Setting from "../../components/Setting";
 import UserProfile from "../../components/UserProfile";
 import { DimensionContext } from "../../contexts/DimensionContext";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function UserProfilePage({ navigation, route }) {
   const pfp = require("assets/fillerProfilePic.jpg");
 
   const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { dispatch } = useContext(UserContext);
 
   const topMarginSize = windowWidth * 0.1;
   const settingMarginTopBottom = windowWidth * 0.03;
@@ -44,6 +46,12 @@ export default function UserProfilePage({ navigation, route }) {
     navigation.navigate('Reset Password Page')
   }
 
+  function toggleTheme() {
+    dispatch({
+      type: "TOGGLE_THEME",
+    })
+  }
+
   return (
     <View style={{ display: "flex", alignItems: "center" }}>
       <Header routeName={routeName} navigation={navigation} onMainNav={false} />
@@ -74,6 +82,15 @@ export default function UserProfilePage({ navigation, route }) {
               windowWidth={windowWidth}
               windowHeight={windowHeight}
             />
+
+            <Setting
+              icon={require("assets/deleteAccount.png")}
+              text="Toggle Theme"
+              textColor="black"
+              onPress={toggleTheme}
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
+              />
           </View>
 
           <TouchableOpacity style={styles.button}>
