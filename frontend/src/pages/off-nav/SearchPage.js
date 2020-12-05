@@ -72,7 +72,7 @@ export default function SearchPage({ input, navigation }) {
             setSearchFriends(false)
         })
 
-        function viewUser(userData) {
+        function viewFriend(userData) {
             // TODO: change this route name to Other User Profile
             navigation.navigate('Friend Profile', userData)
         }
@@ -87,7 +87,7 @@ export default function SearchPage({ input, navigation }) {
                 <TouchableOpacity key={userData.name} onPress={() => viewFriend(userData)}>
                     <View style={{...styles.userCard, borderBottomColor: borderColor}}>
                         <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
-                        <Text style={{...styles.userText, textColor}}>{userData.name}</Text>
+                        <Text style={{...styles.userText, textColor: textColor}}>{userData.name}</Text>
                     </View>
                 </TouchableOpacity>
             ))}
@@ -101,7 +101,7 @@ export default function SearchPage({ input, navigation }) {
             setSearchFriends(true)
         })
 
-        function viewFriend(userData) {
+        function viewUser(userData) {
             navigation.navigate('Friend Profile', userData)
         }
 
@@ -112,7 +112,7 @@ export default function SearchPage({ input, navigation }) {
         return (
             <ScrollView style={{backgroundColor: backgroundColor}}>
             {userList.map(userData => (
-                <TouchableOpacity key={userData.name} onPress={() => viewFriend(userData)}>
+                <TouchableOpacity key={userData.name} onPress={() => viewUser(userData)}>
                     <View style={{...styles.userCard, borderBottomColor: borderColor }}>
                         <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
                         <Text style={{...styles.userText, color: textColor }}>{userData.name}</Text>
@@ -123,7 +123,7 @@ export default function SearchPage({ input, navigation }) {
         )
     }
 
-    let backgroundColor = isLightTheme ? '#FFF' : '#555';
+    let backgroundColor = isLightTheme ? '#FFF' : '#rgb(40, 40, 40)';
 
 
 
@@ -133,7 +133,7 @@ export default function SearchPage({ input, navigation }) {
                 style={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
                 tabBarOptions={{
                     activeTintColor: isLightTheme ? 'purple' : '#E57777',
-                    style: { backgroundColor: isLightTheme ? '#FFF' : 'rgb(50, 50, 50)' },
+                    style: { backgroundColor: backgroundColor },
                     indicatorStyle: { 
                         backgroundColor: isLightTheme ? 'purple' : '#E57777',
                     }
