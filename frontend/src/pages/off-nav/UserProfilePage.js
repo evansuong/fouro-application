@@ -33,7 +33,8 @@ export default function UserProfilePage({ navigation, route }) {
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
-      margin: buttonMargin
+      margin: buttonMargin,
+      marginBottom: windowHeight / 20,
     },
     buttonText: {
       color: 'white',

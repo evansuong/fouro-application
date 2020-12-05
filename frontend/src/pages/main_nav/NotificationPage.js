@@ -82,112 +82,116 @@ const testHugData = [
 ];
 
 export default function NotificationPage({ navigation, route }) {
+ 
+    // stores whether the user is on this page (true) or not (false)
+    const [isFocused, setIsFocused] = useState(false)
+    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const [notifications, setNotifications] = useState(testData ? testData : {})
+    const routeName = route.name;
+    
 
-  // stores whether the user is on this page (true) or not (false)
-  const [isFocused, setIsFocused] = useState(false);
-  const { windowWidth, windowHeight } = useContext(DimensionContext);
-  const [notifications, setNotifications] = useState(testData ? testData : {});
-  const routeName = route.name;
+    // check whether the user is on the page (true) or navigates away from the page (false)
+    useFocusEffect(() => {
+        setIsFocused(true)
+        return () => {
+           setIsFocused(false)
+        }
+    }, []);  
 
-  // check whether the user is on the page (true) or navigates away from the page (false)
-  useFocusEffect(() => {
-    setIsFocused(true);
-    return () => {
-      setIsFocused(false);
-    };
-  }, []);
 
-  // add a filler item to move the list down
-  useEffect(() => {
-    if (notifications[0].type !== "f")
-      setNotifications([{ type: "f" }, ...notifications]);
-  }, []);
+    // add a filler item to move the list down
+    useEffect(() => {
+        if (notifications[0].type !== 'f') setNotifications([{ type: 'f' }, ...notifications])
+    }, [])
 
-  function catchHug(hugId, id) {
-    clearNotification(id);
-    console.log(id);
 
-    navigation.navigate("Hug Info", {
-      page: "hugInfo",
-      data: testHugData.filter((item) => item.hugId === hugId)[0],
-    });
-    // signify hug as caught to the database
-  }
+    function catchHug(hugId, id) {
+        clearNotification(id)
+        console.log(id)
 
-  function dropHug(hugId, id) {
-    clearNotification(id);
-    // remove hug from database
-  }
+        navigation.navigate('Catch Hug Page', { 
+            page: 'hugInfo',
+            data: testHugData.filter((item) => item.hugId === hugId)[0], 
+        })
+        // signify hug as caught to the database
+    }
 
-  function acceptFriendRequest(friendId, id) {
-    clearNotification(id);
-    navigation.navigate("Friend Profile", {
-      page: "friendProfile",
-      data: notifications.filter((item) => item.friendId === id)[0],
-    });
-    // add friend to user friend list in database
-  }
+    function dropHug(hugId, id) {
+        clearNotification(id)
+        // remove hug from database
+    }
 
-  function declineFriendRequest(friendId, id) {
-    clearNotification(id);
-    // remove friend reauest fron database
-  }
+    function acceptFriendRequest(friendId, id) {
+        clearNotification(id)
+        navigation.navigate('Friend Profile', {
+            page: 'friendProfile',
+            data: notifications.filter((item) => item.friendId === id)[0],
+        })
+        // add friend to user friend list in database
+    }
 
-  function clearNotification(id, type) {
-    const newList = notifications.filter((item) => item.id !== id);
-    setNotifications(newList);
-  }
+    function declineFriendRequest(friendId, id) {
+        clearNotification(id)
+        // remove friend reauest fron database
+    }
 
-  // notification list styles
-  const styles = StyleSheet.create({
-    notificationList: {
-      marginHorizontal: 5,
-      display: "flex",
-      flexShrink: 1,
-      alignItems: "center",
-    },
-    filler: {
-      height: windowHeight / 7,
-    },
-  });
+    function clearNotification(id, type) {
+        const newList = notifications.filter((item) => item.id !== id);
+        setNotifications(newList)
+    }
 
-  // map every notification entry to a notification panel element
-  return (
-    <View style={AppStyles.navPageContainer}>
-      {/* background */}
-      <Image source={gradient} style={AppStyles.background} />
-      <Header routeName={routeName} navigation={navigation} onMainNav={true}>
-        Notifications
-      </Header>
 
-      <View style={styles.notificationList}>
-        {/* actual list */}
-        <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
-          {notifications.map((data, index) =>
-            data.type === "r" ? (
-              <NotificationCard
-                key={data.id}
-                callId={data.friendId}
-                notificationData={data}
-                isFocused={isFocused}
-                handleAccept={acceptFriendRequest}
-                handleDecline={declineFriendRequest}
-              />
-            ) : data.type === "f" ? (
-              <View key={"filler"} style={styles.filler}></View>
-            ) : (
-              <NotificationCard
-                key={data.id}
-                callId={data.hugId}
-                notificationData={data}
-                isFocused={isFocused}
-                handleAccept={catchHug}
-                handleDecline={dropHug}
-              />
-            )
-          )}
-        </ScrollView>
-      </View>
-    </View>
-  );
-}
+    // notification list styles
+    const styles = StyleSheet.create({
+        notificationList: {
+            marginHorizontal: 5,
+            display: 'flex',
+            flexShrink: 1,
+            alignItems: 'center',
+        },
+        filler: {
+            height: windowHeight / 7,
+        }
+    })
+
+
+        
+   
+    // map every notification entry to a notification panel element 
+    return (
+        <View style={AppStyles.navPageContainer}>
+            {/* background */}
+            <Image
+                source={gradient}
+                style={AppStyles.background}
+            />
+            <Header routeName={routeName} navigation={navigation} onMainNav={true}>Notifications</Header>
+
+            <View style={styles.notificationList}>
+                {/* actual list */}
+                <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
+                    {notifications.map((data, index) => (
+                        data.type === 'r' ? 
+                        <NotificationCard 
+                            key={data.id} 
+                            callId={data.friendId}
+                            notificationData={data} 
+                            isFocused={isFocused} 
+                            handleAccept={acceptFriendRequest} 
+                            handleDecline={declineFriendRequest} />
+                            : data.type === 'f' ?
+                        <View key={'filler'} style={styles.filler}></View>
+                            :
+                        <NotificationCard 
+                            key={data.id} 
+                            callId={data.hugId}
+                            notificationData={data} 
+                            isFocused={isFocused} 
+                            handleAccept={catchHug} 
+                            handleDecline={dropHug} />
+                    ))}
+                </ScrollView>
+            </View>                   
+        </View>
+    )
+} 

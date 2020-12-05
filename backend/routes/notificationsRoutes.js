@@ -4,6 +4,7 @@ var firebase = require("../firebase/admin");
 require("firebase/firestore");
 require("firebase/storage");
 const cors = require("cors");
+
 const { NotificationsAPI, RequestsAPI } = require("../model/Notifications");
 
 const db = firebase.firestore();
@@ -19,7 +20,7 @@ router.use(cors());
 
 
 async function retrieveUserData(req, res, uid) {
-  const userRef = await usersCollection.doc(uid)
+  const userRef = usersCollection.doc(uid)
   const user = await userRef.get();
   if (!user.exists) {
     res.status(400).send('No user with the provided UID was found');
@@ -53,51 +54,75 @@ async function notificationCollectionLength(req, uid) {
 }
 
 //Routes
+// TODO: BROKEN. DOES NOT USE FIREBASE REFERENCES
 router.get("/getNotifications/:id", async (req, res) => {
   const uid = req.params.id;
   if (!uid) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
-    const response = NotificationsAPI.getNotifications(uid);
-    res.status(200).json({ notifications: response });
+    const notifResponse = await NotificationsAPI.getNotifications(uid);
+    res.status(200).json({ notifications: notifResponse });
   }
 });
 
-router.post("/deleteNotification/:id", async (req, res) => {
+// TODO: NOT STARTED. MISSING JSON REQUEST
+router.delete("/deleteNotification/:id", checkBody, async (req, res) => {
 
 });
 
-router.post("/sendFriendRequest", checkBody, async (req, res) => {
-  const { uid, friend_id } = req.body;
+// VERIFIED
+router.post("/sendFriendRequest/:id", checkBody, async (req, res) => {
+  const uid = req.params.id;
+  const { friend_id } = req.body;
   if (!uid || !friend_id) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
-    // TODO: DOES NOT BELONG HERE. BUT WE NEED TO RETREIVE USER
-    // INFORMATION FOR BOTH SENDER AND RECEIVER SO WE CAN ADD
-    // A PENDING AND RECEIVED NOTIFICATION FOR BOTH
-
-    // Retrieve both users
-    // const senderData = await retrieveUserData(req, res, uid);
-    // if (!senderData) {
-    //   return;
-    // }
-    // const senderRef = req.body.userRef;
-    // const receiverData = await retrieveUserData(req, res, friend_id);
-    // if (!receiverData) {
-    //   return;
-    // }
-    // const receiverRef = req.body.userRef;
-    // console.log('users retrieved');
-
-    // const senderNotifLength = await notificationCollectionLength(req, uid);
-    // const senderNotificationSnapshot = req.body.notificationSnapshot;
-    // const receiverNotifLength = await notificationCollectionLength(req, friend_id);
-    // const receiverNotificationSnapshot = req.body.notificationSnapshot;
+    try {
+      const userData = await retrieveUserData(req, res, uid);
+      if (!userData) {
+        res.status(400).send('Sender user not found');
+        return;
+      }
+      const friendData = await retrieveUserData(req, res, friend_id);
+      if (!friendData) {
+        res.status(400).send('Receiving user not found');
+        return;
+      }
+      const response = await RequestsAPI.sendFriendRequest(uid, friend_id);
+      res.status(200).json({ response: response.out });
+    } catch (err) {
+      res.status(400).send(`An error occurred: ${err}`);
+    }
   }
 });
 
-router.post("/createHugRequest/:id", (req, res) => {});
+// VERIFIED
+router.post("/sendHugRequest/:id", checkBody, async (req, res) => {
+  const uid = req.params.id;
+  const { friend_id, hug_id } = req.body;
+  if (!uid || !friend_id || !hug_id) {
+    res.status(400).send('Request has missing fields');
+    return;
+  } else {
+    try {
+      const userData = await retrieveUserData(req, res, uid);
+      if (!userData) {
+        res.status(400).send('Sender user not found');
+        return;
+      }
+      const friendData = await retrieveUserData(req, res, friend_id);
+      if (!friendData) {
+        res.status(400).send('Receiving user not found');
+        return;
+      }
+      const response = await RequestsAPI.sendHugRequest(uid, friend_id, hug_id);
+      res.status(200).json({ response: response.out });
+    } catch (err) {
+      res.status(400).send(`An error occurred: ${err}`);
+    }
+  }
+});
 
 module.exports = router;

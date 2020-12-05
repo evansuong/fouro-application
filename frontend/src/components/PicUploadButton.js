@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   StyleSheet,
-  View,
   Text,
   TouchableWithoutFeedback,
   Animated,
 } from 'react-native';
+import { DimensionContext } from 'contexts/DimensionContext';
 
 export default function PicUploadButton({ navigation, text, onPress }) {
   const [animatedValue, newAnimatedValue] = useState(new Animated.Value(1));
+  const {windowWidth, windowHeight} = useContext(DimensionContext);
 
   function handlePressIn() {
     Animated.spring(animatedValue, {
-      toValue: 0.8,
+      toValue: 0.95,
       useNativeDriver: true,
     }).start();
   }
@@ -30,6 +31,34 @@ export default function PicUploadButton({ navigation, text, onPress }) {
     transform: [{ scale: animatedValue }],
   }
 
+  const styles = StyleSheet.create({
+    buttonText: {
+      fontSize: 13,
+      textAlign: 'center',
+      fontFamily: 'Montserrat_400Regular',
+    },
+    button: {
+      display: 'flex',
+      marginTop: 20,
+      width: windowWidth / 2.2,
+      height: windowHeight / 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+      // Shadows do not work on rgba values
+      backgroundColor: '#ccc7c6',
+      borderWidth: 1,
+      borderRadius: 10,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 5,
+        height: 5,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 3,
+      elevation: 10,  
+    },
+  })
+
   return (
     <TouchableWithoutFeedback
       onPressIn={handlePressIn}
@@ -44,30 +73,3 @@ export default function PicUploadButton({ navigation, text, onPress }) {
     </TouchableWithoutFeedback>
   );
 }
-
-const styles = StyleSheet.create({
-  buttonText: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  button: {
-    display: 'flex',
-    marginTop: 30,
-    width: 175,
-    height: 75,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // Shadows do not work on rgba values
-    backgroundColor: '#ccc7c6',
-    borderWidth: 1,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    shadowOpacity: 0.41,
-    shadowRadius: 7,
-    elevation: 10,  
-  },
-})

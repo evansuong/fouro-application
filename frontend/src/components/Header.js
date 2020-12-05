@@ -104,6 +104,8 @@ function RemoveFriendButton(navigation, isLightTheme) {
 export function HeaderButton({ name, icon, onPress, onMainNav, isLightTheme }) {
 
     // console.log("buttonName: ", name)
+    // console.log(onMainNav)
+
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     console.log(isLightTheme)
 
