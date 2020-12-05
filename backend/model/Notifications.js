@@ -51,12 +51,11 @@ const RequestsAPI = {
         // navigates to current users notification collection and updates with 
         // the current time, friend_id, and type
         const newFriendCollectionRef = 
-          users.doc(friend_id).collection('notifications').doc(`${user_id}`);
+          users.doc(friend_id).collection('notifications').doc(user_id);
         const newFriendRequest = {
           type : "friend",
           date_time : dateTime,
-          user : user_id,
-          friend : friend_id
+          user_id : user_id, // sender
         }
         await newFriendCollectionRef.set(newFriendRequest);
         return({ out: true });
@@ -68,14 +67,13 @@ const RequestsAPI = {
         var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
         
         const newHugCollectionRef = 
-          users.doc(friend_id).collection('notifications').doc(`${hug_id}`);
+          users.doc(friend_id).collection('notifications').doc(hug_id);
 
         const newHug = {
           type : "hug",
           hug_id : hug_id,
           date_time : dateTime,
-          user : user_id,
-          friend : friend_id
+          user_id : user_id, // sender
         }
         await newHugCollectionRef.set(newHug);
         return({ out: true });
