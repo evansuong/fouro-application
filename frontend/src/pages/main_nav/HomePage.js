@@ -18,7 +18,7 @@ import { FlatList } from 'react-native-gesture-handler';
 
 import HugCard from 'components/HugCard'
 import Panel from 'components/StreakPanel';
-import CreateHugButton from 'components/CreateHugButton';
+// import CreateHugButton from 'components/CreateHugButton';
 import { DimensionContext } from '../../contexts/DimensionContext'; 
 import Header from '../../components/Header';
 
@@ -71,7 +71,7 @@ export default function HomePage({ navigation, route }) {
 
   function expand() {
     Animated.spring(width, {
-      toValue: 200,
+      toValue: 175,
       duration: animationDuration,
       bounciness: 1,
       speed: 1,
@@ -110,33 +110,25 @@ export default function HomePage({ navigation, route }) {
       flexDirection: 'row',
       position: 'absolute',
       bottom: 10,
-      // left: windowWidth - 250,
-      left: 10,
+      right: 10,
       borderRadius: 50,
       height: 70,
-      backgroundColor: mode == 'light' ? 'rgba(255,255,255,0.8)': 'rgba(0,0,0,0.5)',
-      color: mode == 'light' ? 'black': 'white',
+      backgroundColor: mode == 'light' ? '#FB7250': 'rgba(0,0,0,0.5)',
+      color: 'white',
+      display: 'flex',
+      justifyContent: 'space-evenly',
       alignItems: 'center',
-      shadowColor: 'black',
-      shadowOffset: {
-        width: 10,
-        height: 10,
-      },
+      padding: expanded ? 15 : 0,
+      paddingLeft: expanded ? 15 : '48%',
+      shadowColor: '#000',
+      shadowOffset: { height: 2, width: 1 },
       shadowOpacity: 0.5,
-      shadowRadius: 10,
-      elevation: 14, 
+      shadowRadius: 2,  
+      elevation: 2,
     },
     createHugText: {
-      fontSize: 50,
-      color: mode == 'light' ? 'black': 'white',
-      shadowColor: 'black',
-      shadowOffset: {
-        width: 10,
-        height: 10,
-      },
-      shadowOpacity: 0.5,
-      shadowRadius: 10,
-      elevation: 14, 
+      fontSize: 25,
+      color: '#FFF',
     },
     switchContainer: {
       flexDirection: 'row',
@@ -159,7 +151,9 @@ export default function HomePage({ navigation, route }) {
           style={AppStyles.background}
         />
        
-     
+        <TouchableOpacity onPress={() => console.log('hey')}>
+          <Text>+</Text>
+        </TouchableOpacity>
 
         <Header routeName={routeName} navigation={navigation} onMainNav={true}>Hug Feed</Header>
         {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
@@ -207,25 +201,18 @@ export default function HomePage({ navigation, route }) {
 
         {/* Create Hug Button */}
         <TouchableWithoutFeedback
-          onPressIn={handlePress}
+          onPress={handlePress}
         >
-          <Animated.View style={[styles.createHugButtonContainer, {
-            width:width
-          }]}>
-            <Text style={[styles.createHugText, {
-              marginLeft: 17.5
-            }]}>
+          <Animated.View style={{...styles.createHugButtonContainer, width:width }}>
+            <Text style={styles.createHugText}>
               +
             </Text>
+
             <Animated.View opacity={fade}>
-              <Text style={[styles.createHugText, {
-                // marginTop: 18,
-                fontSize: 25
-              }]}>
+              <Text style={styles.createHugText}>
                 Create Hug
               </Text>
             </Animated.View>
-            
           </Animated.View>
         </TouchableWithoutFeedback>
     </View>
