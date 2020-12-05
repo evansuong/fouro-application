@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
-import Header from '../../components/Header'
 import { DimensionContext } from '../../contexts/DimensionContext';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';

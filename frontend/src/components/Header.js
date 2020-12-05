@@ -226,7 +226,9 @@ export default function Header(props) {
             width: windowWidth / 1.5,
             height: windowWidth / 10,
             borderRadius: 5, 
-            borderBottomColor: 'pink',
+            borderStyle: 'solid',
+            borderWidth: 1,
+            borderColor: '#EEE'
         },
     });        
     
