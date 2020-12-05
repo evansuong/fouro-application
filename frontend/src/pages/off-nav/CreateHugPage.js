@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -23,10 +23,7 @@ import Header from '../../components/Header';
 export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
-
-    useEffect(() => {
-      console.log(images);
-    }, [images])
+    const routeName = route.name
 
     const callBackend = async () => {
       try {
@@ -68,7 +65,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         }
       } else {
         console.log('access denied');
-        Alert.alert('You need to give up permission to work');
+        Alert.alert('You need to give permission to upload a picture!');
       }
     }
 
@@ -82,7 +79,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         console.log('dismissed keyboard')
       }}>
         <View>
-          <Header route={route} navigation={navigation} onMainNav={false} />
+          <Header routeName={routeName} navigation={navigation} onMainNav={false}/>
           <View style={styles.mainContainer}>
             {/* Friend Info */}
             <View style={{alignItems: 'center',}}>

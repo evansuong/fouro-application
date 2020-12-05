@@ -21,8 +21,8 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
   const userInfoHeight = routeName === 'User Profile Page' ? hp('30%') : hp('20%')
   // console.log("route name is" + routeName)
   const profPicWidth = userInfoHeight * 0.6
-  const nameFontSize = userInfoHeight * 0.17 //0.15 before
-  const usernameFontSize = userInfoHeight * 0.12
+  const nameFontSize = userInfoHeight * 0.15 //0.15 before
+  const usernameFontSize = userInfoHeight * 0.09
   const marginSize = userInfoHeight * 0.01
 
   return (

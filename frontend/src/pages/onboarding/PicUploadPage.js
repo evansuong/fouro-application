@@ -1,33 +1,94 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { 
   StyleSheet, 
   View,
   Image,
   Alert,
+  Animated,
+  ImageBackground
 } from 'react-native';
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
+import BackgroundImg from 'assets/gradients/middle.png';
+import AuthAPI from '../../authentication/Authentication';
+import API from '../../API';
+import { UserContext } from '../../contexts/UserContext';
+import { DimensionContext } from '../../contexts/DimensionContext';
 import LinkedButton from 'components/LinkedButton';
 import PicUploadButton from 'components/PicUploadButton';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 
+
 const fetch = require('node-fetch');
 
-export default function ProfileSetupPage({ navigation }) {
+export default function ProfileSetupPage({ navigation, route }) {
   const [uploadPic, setUploadPic] = useState({});
+  const { userData, dispatch } = useContext(UserContext);
+  const [startUp, setStartUp] = useState(true);
+  const fade = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (startUp) {
+      setStartUp(false);
+      fadeIn();
+    }
+  }, [startUp])
 
   const callBackend = async () => {
-    console.log(uploadPic);
-    const splitPicURI = uploadPic.uri.split('/');
-    let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
-    // Send res to backend to push to firebase
-    // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-    // console.log('success', JSON.stringify(res));
+
+  
+    function toDataURL(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    }
+    
+    toDataURL('https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0', function(dataUrl) {
+      console.log(dataUrl)
+      const request = {dataUrl: dataUrl}
+      API.uploadUserProfilePicture('zE51j8mkbreXCT2QDevz4Daid5I2', request);
+    })
+ 
+   
+      console.log('uploading')
+      // Register user with user param
+      // const splitPicURI = uploadPic.uri.split('/');
+      // 
+
+      // if(response.status) {
+      //   console.log('yay')
+      // } else {
+      //   console.log('bad')
+      // }
+
+      // uploadUserProfilePicture
+      // console.log(uploadPic);
+      // const splitPicURI = uploadPic.uri.split('/');
+      // let res = await getBlobObj(uploadPic.uri, splitPicURI[splitPicURI.length - 1]);
+      // Send res to backend to push to firebase
+      // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
+      // console.log('success', JSON.stringify(res));
+      // const request = {
+      //   uid: user['uid'],
+      //   blob: res,
+      // }
+      // const pfpResponse = await API.uploadUserProfilePicture(request);
+      // console.log('createUserResponse: ', createUserResponse)
+      // console.log('pfpResponse: ', pfpResponse);
+      // navigation.navigate('Welcome Page');
+   
   }
 
   const getBlobObj = async (uri, imgName) => {
-    const response = await fetch(uri);
-    return await response.blob();
+    
   }
 
   const pickFromGallery = async () => {
@@ -38,13 +99,18 @@ export default function ProfileSetupPage({ navigation }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1,1],
-        quality: 0.5,
+        quality: 0.1,
+        maxWidth: 512,
+        maxHeight: 512,
+
       })
-      console.log(data);
-      setUploadPic(data);
+      // console.log(data);
+      if (data.cancelled == false) {
+        setUploadPic(data);
+      }
     } else {
       console.log('access denied');
-      Alert.alert('You need to give up permission to work');
+      Alert.alert('You need to give up permission to work'); 
     }
   }
 
@@ -56,14 +122,32 @@ export default function ProfileSetupPage({ navigation }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1,1],
-        quality: 0.5,
+        quality: 0.1,
+        maxWidth: 512,
+        maxHeight: 512,
       })
-      console.log(data);
-      setUploadPic(data);
+      // console.log(data);
+      if (data.cancelled == false) {
+        setUploadPic(data);
+      }
     } else {
       console.log('access denied');
       Alert.alert('You need to give up permission to work');
     }
+  }
+
+  const fadeIn = () => {
+    Animated.timing(fade, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }
+
+  const uploadedPic = () => {
+    return typeof uploadPic !== 'undefined' && 
+      uploadPic &&
+      uploadPic.cancelled == false
   }
 
   const isEmpty = (obj) => {
@@ -71,36 +155,43 @@ export default function ProfileSetupPage({ navigation }) {
   }
   
   return (
-    <View>
-      <View style={styles.picContainer}>
-        <Image
-          source={isEmpty(uploadPic) || uploadPic.cancelled ? fillerProfilePic : {uri: `${uploadPic.uri}`}}
-          style={styles.profilePicture}
-        />
-      </View>
+    <Animated.View opacity={fade} style={{flex: 1,}}>
+      <ImageBackground
+        source={BackgroundImg}
+        style={styles.backgroundImg}
+      >
+        <View style={styles.whiteBox}>
+          <View style={styles.picContainer}>
+            <Image
+              source={isEmpty(uploadPic) || uploadPic.cancelled ? fillerProfilePic : {uri: `${uploadPic.uri}`}}
+              style={styles.profilePicture}
+            />
+          </View>
 
-      <View style={styles.buttonContainer}>
-        <PicUploadButton
-          text='Choose a profile picture'
-          onPress={() => pickFromGallery()}
-        />
-        <PicUploadButton
-          text='Take a profile picture'
-          onPress={() => pickFromCamera()}
-        />
-      </View>
+          <View style={styles.buttonContainer}>
+            <PicUploadButton
+              text='Choose a profile picture'
+              onPress={() => pickFromGallery()}
+            />
+            <PicUploadButton
+              text='Take a profile picture'
+              onPress={() => pickFromCamera()}
+            />
+          </View>
 
-      <View style={styles.submit}>
-        <LinkedButton
-          navigation={navigation}
-          link='Welcome Page'
-          text='SUBMIT'
-          // Should this be yellow or grey?
-          color='#FFC24A'
-          onPress={() => callBackend()}
-        />
-      </View>
-    </View>
+          { uploadedPic() && 
+            <View style={styles.submit}>
+              <LinkedButton
+                text='SUBMIT'
+                // Should this be yellow or grey?
+                color='#FFC24A'
+                onPress={() => callBackend()}
+              />
+            </View>
+          }
+        </View>
+      </ImageBackground>
+    </Animated.View>
   );
 }
 
@@ -145,5 +236,16 @@ const styles = StyleSheet.create({
   },
   submit: {
     marginTop: 30,
+  },
+  backgroundImg: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  whiteBox: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingBottom: 30,
+    marginLeft: 20,
+    marginRight: 20,
   }
 })

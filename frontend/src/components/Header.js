@@ -3,6 +3,10 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
+import MaskedView from '@react-native-masked-view/masked-view';
+import { LinearGradient } from 'expo-linear-gradient';
+ 
+
 const backIcon = require('assets/back-icon.png');
 const searchIcon = require('assets/magnifyingGlass.png');
 const profileIcon = require('assets/user-icon.png');
@@ -69,19 +73,20 @@ function RemoveFriendButton(navigation) {
         alert('remove friend button pressed')
     }
     return buildButtonProps('remove', dotsIcon, onPress);
-} 
+}
 
 
 
 
-export function HeaderButton({ name, icon, onPress }) {
+export function HeaderButton({ name, icon, onPress, onMainNav }) {
 
     // console.log("buttonName: ", name)
+    console.log(onMainNav)
 
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const styles = {
         btnContainer: {
-            backgroundColor: 'rgba(0, 0, 0, .5)', 
+            backgroundColor: onMainNav ? 'rgba(0, 0, 0, .2)' : 'rgba(0, 0, 0, .4)', 
             borderRadius: 100,
             height: windowWidth / 8.5,
             width: windowWidth / 8.5, 
@@ -97,6 +102,7 @@ export function HeaderButton({ name, icon, onPress }) {
     }
   
     return (
+
         <TouchableOpacity onPress={onPress}>
             <View style={styles.btnContainer}> 
                 <Image style={styles.btnImage} source={icon} />
@@ -111,44 +117,36 @@ export function HeaderButton({ name, icon, onPress }) {
 export default function Header(props) {
     
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const { route, navigation, onMainNav } = props;
+    const { routeName, navigation, onMainNav } = props;
 
     // standardize route param names
 
-    // titles for pages on the main navigation
-    const mainNavTitles = {
-        Friends: 'Friends',
-        Home: 'Hug Feed',
-        Notifications: 'Notifications'
-    };
-
     // collection of headerbuttons to render based on the page
     const headerButtons = {
-        'Friends': [SearchButton(navigation)],
-        'Home': [ProfileButton(navigation), CorkboardButton(navigation)],
+        'Friends': ['', SearchButton(navigation)],
+        'Hug Feed': [ProfileButton(navigation), CorkboardButton(navigation)],
         'Notification': '',
         'User Profile Page': [EditButton(navigation)],
         'Friend Profile': [RemoveFriendButton(navigation)],
         'Hug Info': '',
         'Create Hug': '',
         'Corkboard': '',
+        'Reset Password Page': '',
     };
 
-    let title = ''
     let buttons = []
 
     // update to render main nav header
     if (onMainNav) {
-        let currentRoute = (route.name)
-        title = mainNavTitles[currentRoute]
-        buttons = headerButtons[currentRoute]
+        // console.log(routeName)
+        buttons = headerButtons[routeName]
 
     // update to render off nav header
-    } else if (route.name) {
-        console.log(route.name)
-        buttons = [BackButton(navigation), ...headerButtons[route.name]]
-        console.log(buttons)
-        console.log(buttons.length)
+    } else if (routeName) {
+        // console.log(routeName)
+        buttons = [BackButton(navigation), ...headerButtons[routeName]]
+        // console.log(buttons)
+        // console.log(buttons.length)
     }
 
     const styles = StyleSheet.create({
@@ -159,10 +157,21 @@ export default function Header(props) {
             justifyContent: 'space-between',
             width: windowWidth / 1.1,
             marginTop: windowHeight / 20,
+            position: 'absolute',
+            zIndex: 5,
+            backgroundColor: onMainNav ? 'rgba(0, 0, 0, .3)' : 'transparent',
+            borderRadius: 100,
+            padding: 5,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.8,
+            shadowRadius: 2,  
+            elevation: onMainNav ? 5 : 0
         }, 
         title: {
             fontWeight: 'bold',
             fontSize: 30,
+            color: 'white',
         },
         filler: {
             width: windowWidth / 8.5,
@@ -176,12 +185,23 @@ export default function Header(props) {
     // return new header
     return (
         <View style={styles.header}>
-            {buttons ? <HeaderButton {...buttons[0]}/> : <View style={styles.filler}/>}
-            {title !== '' && 
-                <Text style={styles.title}>{props.children}</Text>
-            }
-            {buttons && buttons.length > 1 && buttons[1] !== '' ? <HeaderButton {...buttons[1]}/> : <View style={styles.filler}/>}
+                {buttons && buttons[0] !== ''? 
+                    <HeaderButton {...buttons[0]} onMainNav={onMainNav}/> 
+                    : 
+                    <View style={styles.filler}/>
+                }
+                {
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.title}>{props.children}</Text>
+                    </View>
+                }
+                {buttons && buttons.length > 1 && buttons[1] !== '' ? 
+                    <HeaderButton {...buttons[1]} onMainNav={onMainNav}/> 
+                    : 
+                    <View style={styles.filler}/>
+                }
         </View>
+
     )
 }
 

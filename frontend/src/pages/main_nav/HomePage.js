@@ -21,7 +21,6 @@ import Panel from 'components/StreakPanel';
 import CreateHugButton from 'components/CreateHugButton';
 import { DimensionContext } from '../../contexts/DimensionContext'; 
 import Header from '../../components/Header';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 // TODO: Move create hug button to the right side of the screen.
 // TODO: Fix button animation starting from far left of button
@@ -35,6 +34,7 @@ export default function HomePage({ navigation, route }) {
   const width = useRef(new Animated.Value(70)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
+  const routeName = route.name;
 
   const gradient = require('assets/gradients/middle.png')
 
@@ -109,15 +109,16 @@ export default function HomePage({ navigation, route }) {
     createHugButtonContainer: {
       flexDirection: 'row',
       position: 'absolute',
-      bottom: 80,
+      bottom: 10,
       // left: windowWidth - 250,
       left: 10,
       borderRadius: 50,
       height: 70,
       backgroundColor: mode == 'light' ? 'white': 'rgba(0,0,0,0.5)',
       color: mode == 'light' ? 'black': 'white',
-      borderColor: mode == 'light' ? 'black' : 'white',
+      // borderColor: mode == 'light' ? 'black' : 'white',
       borderWidth: 2,
+      alignItems: 'center'
     },
     createHugText: {
       fontSize: 50,
@@ -136,19 +137,19 @@ export default function HomePage({ navigation, route }) {
   })  
 
     return (
+
       <View style={AppStyles.navPageContainer}>
         {/* background */}
         <Image
           source={gradient}
           style={AppStyles.background}
         />
+       
+     
 
-        <Header route={route} navigation={navigation} onMainNav={true}>Hug Feed</Header>
-
-        <Button 
-          title="create hug" 
-          onPress={() => navigation.navigate('Create Hug')}
-        />
+        <Header routeName={routeName} navigation={navigation} onMainNav={true}>Hug Feed</Header>
+        {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
+        <View style={{marginTop: 100}}></View>
         <Button
           title='launch page'
           onPress={() => navigation.navigate('Launch Page')}
@@ -169,49 +170,50 @@ export default function HomePage({ navigation, route }) {
         />
       </View>
 
-      {/* Hug Cards */}
-      <TouchableWithoutFeedback
-        onPress={() => dismissCreateButton()}
-      >
-        <ScrollView 
-          contentContainerStyle={{alignItems: 'center'}}
-          style={{marginBottom: 70,}}
+      
+        {/* Hug Cards */}
+        <TouchableWithoutFeedback
+          onPress={() => dismissCreateButton()}
         >
-          {testData.map(hugData => (
-            <HugCard 
-              key={hugData.hugId} 
-              navigation={navigation}
-              { ...hugData } 
-              mode={mode}
-            />
-          ))}
-        </ScrollView>
-      </TouchableWithoutFeedback>
+          <ScrollView 
+            contentContainerStyle={{alignItems: 'center', paddingTop: 10, width: windowWidth }}
+            overScrollMode='always'
+          >
+            {testData.map(hugData => (
+              <HugCard 
+                key={hugData.hugId} 
+                navigation={navigation}
+                { ...hugData } 
+                mode={mode}
+              />
+            ))}
+          </ScrollView>
+        </TouchableWithoutFeedback>
 
 
-      {/* Create Hug Button */}
-      <TouchableWithoutFeedback
-        onPressIn={handlePress}
-      >
-        <Animated.View style={[styles.createHugButtonContainer, {
-          width:width
-        }]}>
-          <Text style={[styles.createHugText, {
-            marginLeft: 17.5
+        {/* Create Hug Button */}
+        <TouchableWithoutFeedback
+          onPressIn={handlePress}
+        >
+          <Animated.View style={[styles.createHugButtonContainer, {
+            width:width
           }]}>
-            +
-          </Text>
-          <Animated.View opacity={fade}>
             <Text style={[styles.createHugText, {
-              marginTop: 18,
-              fontSize: 25
+              marginLeft: 17.5
             }]}>
-              Create Hug
+              +
             </Text>
+            <Animated.View opacity={fade}>
+              <Text style={[styles.createHugText, {
+                // marginTop: 18,
+                fontSize: 25
+              }]}>
+                Create Hug
+              </Text>
+            </Animated.View>
+            
           </Animated.View>
-          
-        </Animated.View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
     </View>
   )
 }

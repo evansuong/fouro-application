@@ -4,25 +4,26 @@
  * https://reactnavigation.org/docs/stack-navigator/#headershown
  */
 
-import React, { useContext, useEffect } from 'react';
-import { StyleSheet, View, Image, Dimensions } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { StyleSheet, Image, Alert } from 'react-native';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage'
 import HomePage from './HomePage'
 import { DimensionContext } from '../../contexts/DimensionContext';
-import {getFocusedRouteNameFromRoute, useFocusEffect, useRoute} from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 
 // TODO: follow the gradient thing
-export default function MainNavPage() {
+export default function MainNavPage({ route }) {
 
     const Tab = createMaterialTopTabNavigator();
-    
     const { windowWidth, windowHeight } = useContext(DimensionContext);
-    const route = useRoute();
-    const routename =  getFocusedRouteNameFromRoute(route);
+    const [fromLogin, setFromLogin] = useState(false);
+    const isFocused = useIsFocused();
+    const { params } = route;
+
 
     const homeFocused = require("assets/homeFocused.png");
     const homeBlurred = require("assets/homeBlurred.png");
@@ -34,12 +35,21 @@ export default function MainNavPage() {
     const tabWidth = windowWidth / 3;
     const tabHeight = tabWidth / 2.25;
 
+    useEffect(() => {
+      if (typeof params !== 'undefined' && params.loggedIn !== 'undefined') {
+        if (!fromLogin) {
+          setFromLogin(true)
+          setTimeout(() => {
+            Alert.alert('Logged In!');
+          }, 10)
+        }
+      }
+    }, [isFocused])
+
+
     
     return (
         <>
-            {/* <View style={styles.background}>
-                <Background page={routename}/>
-            </View> */}
             <Tab.Navigator
                 sceneContainerStyle={styles.tabScreen}
                 style={styles.tabNav}
@@ -48,7 +58,7 @@ export default function MainNavPage() {
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                       let icon;
-                      if (route.name === 'Home') {
+                      if (route.name === 'Hug Feed') {
                         icon = focused ? homeFocused : homeBlurred
                       } else if (route.name === 'Friends') {
                         icon = focused ? friendsFocused : friendsBlurred
@@ -56,6 +66,7 @@ export default function MainNavPage() {
                         icon = focused ? notifFocused : notifBlurred
                       }
 
+                    //   setCurrentRoute(route.name)
                       return <Image 
                                 source={icon}
                                 resizeMode='stretch'
@@ -64,19 +75,21 @@ export default function MainNavPage() {
                                     height: tabHeight
                                 }}
                             />
-                    },
-                  })}
-                  tabBarOptions={{
-                    showIcon: true,
-                    showLabel: false,
-                    iconStyle: {
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }
-                  }}
-                  beforeRemove={() => console.log('remove')}>
+                        },
+                    })}
+                    tabBarOptions={{
+                        showIcon: true,
+                        showLabel: false,
+                        iconStyle: {
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }
+                    }}
+                    beforeRemove={() => console.log('remove')}
+                    style={{zIndex: -1}}
+                    >
                 <Tab.Screen name="Friends" component={FriendsPage}/>
-                <Tab.Screen name="Home" component={HomePage} />
+                <Tab.Screen name="Hug Feed" component={HomePage} />
                 <Tab.Screen name="Notifications" component={NotificationPage} />
             </Tab.Navigator>
         </>

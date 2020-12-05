@@ -1,82 +1,87 @@
-import React, {useContext} from 'react'
-import { Button, Text, View, StyleSheet, Image } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import AppStyles from '../../AppStyles'
-import Header from '../../components/Header'
-import UserProfile from '../../components/UserProfile'
-import { DimensionContext } from '../../contexts/DimensionContext'
+import React, { useContext } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Header from "../../components/Header";
+import Setting from "../../components/Setting";
+import UserProfile from "../../components/UserProfile";
+import { DimensionContext } from "../../contexts/DimensionContext";
 
 export default function UserProfilePage({ navigation, route }) {
-  
-    const pfp = require('assets/fillerProfilePic.jpg')
+  const pfp = require("assets/fillerProfilePic.jpg");
 
-    const {windowWidth, windowHeight} = useContext(DimensionContext)
-    const topMarginSize = windowWidth*0.1;
-    const settingMarginSides = windowWidth * 0.05
-    const settingMarginTopBottom = windowWidth * 0.03
-    const descMargin = windowWidth * 0.03
-  
-    const styles = StyleSheet.create({
-      icon: {
-        resizeMode: 'contain',
-        width: 50,
-        height: 50
-      },
-      setting: {
-        // width:"100%",
-        alignItems: 'center',
-        justifyContent: 'center',
-        // backgroundColor: 'pink',
-        flexDirection: 'row',
-        justifyContent: "space-between",
-        marginLeft: settingMarginSides,
-        marginRight: settingMarginSides,
-        marginTop: settingMarginTopBottom,
-      },      
-      iconDescGroup: {
-        flexDirection: 'row',
-        alignItems: 'center'
-      },
-      desc: {
-        marginLeft: descMargin
-      }
-    })
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
 
-    return (
-        <View style={{display: 'flex', alignItems: 'center', marginTop: topMarginSize}}>
-          <Header route={route} navigation={navigation} onMainNav={false}/>
-          <UserProfile
-            routeName={'User Profile Page'}
-            profilePicture={pfp}
-            userFirstLast={'Dummy One'}
-            username={'iamnumberone'}
-          />
+  const topMarginSize = windowWidth * 0.1;
+  const settingMarginTopBottom = windowWidth * 0.03;
+  const buttonMargin = 10
+  const buttonHeight = 50
+  const routeName = route.name;
 
+  const styles = StyleSheet.create({
+    settingsContainer: {
+      width: windowWidth,
+      marginTop: settingMarginTopBottom,
+      borderTopWidth: 1,
+      borderColor: "#D4D4D4",
+    },
+    button: {
+      backgroundColor: 'orange',
+      height: buttonHeight,
+      width: windowWidth - buttonMargin,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: buttonMargin
+    },
+    buttonText: {
+      color: 'white',
+      fontSize: windowWidth * 0.05,
+      fontWeight: 'bold'
+    }
+  });
+
+  function goToResetPwdPage() {
+    navigation.navigate('Reset Password Page')
+  }
+
+  return (
+    <View style={{ display: "flex", alignItems: "center" }}>
+      <Header routeName={routeName} navigation={navigation} onMainNav={false} />
+
+      <View style={{ marginTop: topMarginSize }}>
+        <UserProfile
+          routeName={"User Profile Page"}
+          profilePicture={pfp}
+          userFirstLast={"Dummy One"}
+          username={"iamnumberone"}
+        />
+
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
           {/* Settings section */}
-          <View>
+          <View style={styles.settingsContainer}>
+            <Setting
+              icon={require("assets/resetPassword.png")}
+              text="Reset Password"
+              onPress={goToResetPwdPage}
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
+            />
 
-            <TouchableOpacity style={styles.setting}>
-              <View style={styles.iconDescGroup}>
-                <Image 
-                  source={require('assets/resetPassword.png')}
-                  style={styles.icon}
-                />
-                <Text style={styles.desc}>Reset Password</Text>
-              </View>
-              <Text>{">"}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.setting}>
-              <View style={styles.iconDescGroup}>
-                <Image 
-                  source={require('assets/resetPassword.png')}
-                  style={styles.icon}
-                />
-                <Text style={styles.desc}>Delete Account</Text>
-              </View>
-              <Text>{">"}</Text>
-            </TouchableOpacity>
+            <Setting
+              icon={require("assets/deleteAccount.png")}
+              text="Delete Account"
+              textColor="red"
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
+            />
           </View>
+
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>LOG OUT</Text>
+          </TouchableOpacity>
+
         </View>
-    )
+      </View>
+    </View>
+  );
 }

@@ -1,7 +1,7 @@
 // usersMain.js used to run and test Users functions
 var firebase = require("../firebase/config");
 require("firebase/auth");
-var login = require("../model/account/LogIn");
+var login = require("../model/account/Login");
 var signup = require("../model/account/SignUp");
 var Users = require("../model/Users");
 
