@@ -30,7 +30,21 @@ export default function OtherUserProfilePage({ navigation, route }) {
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
-    const { isStranger, isPending } = route.params;
+    let status = 'friend';
+    const isStranger = status === 'friend' ? true : false;
+    const isPending = status === 'friend' ? status === 'pending' ? true : false : false;
+    
+   
+    
+    const { friendData } = route.params;
+    const { color, id, name, profile_pic, username } = friendData;
+    
+    console.log(friendData)
+
+    // TODO: replace with getFriendProfile to get all shared hugs
+    const friendProfile = { 
+        sharedHugs: [],
+    }
 
     const topMarginSize = windowWidth * 0.1;
 
@@ -169,15 +183,15 @@ export default function OtherUserProfilePage({ navigation, route }) {
                 </Text>
             </View>
 
-let button = hugButton
-let containerStyle = {}
+    let button = hugButton
+    let containerStyle = {}
 
-if(isStranger) {
-    sharedHugsContainer = <></>
-    sharedHugsFlatList = <></>
-    button = isPending && isStranger ? pendingButton : sendFriendRequestButton
-    containerStyle = { position: 'absolute', bottom: 0 }
-}
+    if(isStranger) {
+        sharedHugsContainer = <></>
+        sharedHugsFlatList = <></>
+        button = isPending && isStranger ? pendingButton : sendFriendRequestButton
+        containerStyle = { position: 'absolute', bottom: 0 }
+    }
 
     return (
 
@@ -186,9 +200,9 @@ if(isStranger) {
             <View style={styles.userProfile, {marginTop:topMarginSize}}>
                 {/* user profile information */}
                 <UserProfile 
-                    profilePicture={require("assets/profilePic.jpg")}
-                    userFirstLast = "vicki chen"
-                    username = "vickichn"
+                    profilePicture={profile_pic}
+                    userFirstLast = {name}
+                    username = {username}
                 />
             </View>
 
