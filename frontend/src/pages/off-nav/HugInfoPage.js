@@ -7,15 +7,20 @@ export default function HugInfoPage({ navigation, route }) {
 
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const routeName = route.name;
-    const { hugId, time, completed, senderId, recieverId, descriptionSender, descriptionReceiver, images } = route.params.data;
 
-    const friendMessage = "Hello this is the incoming message for the hug. it is poggers. stan bts. " +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
-    const friendUsername = "@vivntng"
-    const userMessage = "Hiiiiiii this is the responding msg for vivian's hug. thanks for keeping me in ur thots" +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
-    const myUsername = "@alvna"
+    // TODO: uncomment line below when pulling data from firestore or whatever and delete the following test block
+    // const { hugId, completed, dateTime, images, receiverDescription, receiverId, senderDescription, senderId } = route.params.data
+    
+    // TODO: delete the following test block
+    const hugId = 1
+    const completed = true
+    const dateTime = "April 1, 2021"
+    const images = [require("assets/profilePic.jpg"), require("assets/profilePic.jpg"), require("assets/profilePic.jpg")]
+    const receiverDescription = "omae wa mou shindeiru"
+    const senderDescription = "Roses are red, violets are blue"
+    const receiverId = "@EvanSuong"
+    const senderId ="@AlexChow"
+    // console.log("route params data: ", route.params.data)
 
     // sizing
     const textContainerWidth = windowWidth / 1.1;
@@ -129,12 +134,12 @@ export default function HugInfoPage({ navigation, route }) {
                     <View style={{ ...styles.textAreaFriend, maxWidth: textContainerWidth }}>
                         {/* Text from friend */}
                         <Text style={styles.username}>{senderId}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{descriptionSender}</Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>{senderDescription}</Text>
                     </View>
                     <View style={{ ...styles.textAreaUser, maxWidth: textContainerWidth }}>
                         {/* Text from user */}
-                        <Text style={styles.username}>{'me, import from usercntext'}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{descriptionReceiver}</Text>
+                        <Text style={styles.username}>{receiverId}</Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>{receiverDescription}</Text>
                     </View>  
                 </View>
             
