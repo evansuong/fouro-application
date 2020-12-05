@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -15,6 +15,7 @@ import profilePic from 'assets/profilePic.jpg';
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
+import { DimensionContext } from 'contexts/DimensionContext';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import Header from '../../components/Header';
@@ -23,6 +24,7 @@ import Header from '../../components/Header';
 export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
+    const {windowWidth, windowHeight} = useContext(DimensionContext);
     const routeName = route.name
 
     const callBackend = async () => {
@@ -72,6 +74,42 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
     const isEmpty = (obj) => {
       return Object.keys(obj).length == 0;
     }
+
+    const styles = StyleSheet.create({
+      mainContainer: {
+        marginTop: windowHeight / 8,
+        overflow: 'hidden',
+      },
+      profilePic: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        marginLeft: 30,
+      },
+      friendInfoContainer: {
+        marginTop: 20,
+        flexDirection: 'row',
+        width: windowWidth,
+        alignItems: 'center',
+      },
+      friendTextContainer: {
+        alignItems: 'center',
+        marginLeft: 20,
+        padding: 10,
+        borderBottomWidth: 2,
+        borderColor: 'black',
+        width: windowWidth / 1.8,
+      },
+      friendText: {
+        fontSize: 15,
+      },
+      picContainer: {
+        width: windowWidth,
+        height: 250,
+        overflow: 'hidden',
+        marginTop: 10,
+      }
+    });
 
     return (
       <TouchableWithoutFeedback onPress={() => {
@@ -147,39 +185,3 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
       </TouchableWithoutFeedback>
     )
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    maxHeight: Dimensions.get('window').height - 200, 
-    overflow: 'hidden',
-  },
-  profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginLeft: 30,
-  },
-  friendInfoContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    width: Dimensions.get('window').width,
-    alignItems: 'center',
-  },
-  friendTextContainer: {
-    alignItems: 'center',
-    marginLeft: 20,
-    padding: 10,
-    borderBottomWidth: 2,
-    borderColor: 'black',
-    width: Dimensions.get('window').width / 1.8,
-  },
-  friendText: {
-    fontSize: 15,
-  },
-  picContainer: {
-    width: Dimensions.get('window').width,
-    height: 250,
-    overflow: 'hidden',
-    marginTop: 10,
-  }
-});

@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     textAlign: 'center',
+    fontFamily: 'Montserrat_400Regular',
   },
   button: {
     display: 'flex',

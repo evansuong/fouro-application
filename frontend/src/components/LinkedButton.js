@@ -79,6 +79,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 20,
-    fontFamily: 'EBGaramond_400Regular'
+    fontFamily: 'Montserrat_400Regular'
   }
 })

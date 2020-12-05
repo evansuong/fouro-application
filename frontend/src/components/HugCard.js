@@ -29,9 +29,10 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
     nameBar: {
       display: 'flex',
       // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
+
       borderTopLeftRadius: 20,
       paddingLeft: 5,
-      width: hugCardWidth - hugImageWidth,
+      width: hugCardWidth - hugImageWidth
     },
     nameBarNoImg: {
       display: 'flex',
@@ -39,7 +40,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       paddingLeft: 5,
-      width: hugCardWidth - hugImageWidth,
+      width: hugCardWidth - hugImageWidth
     },
     outerImageContainer: {
       // marginRight: 10,
@@ -119,10 +120,12 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
         fontSize: 17,
         fontWeight: 'bold',
         color: mode == 'dark' ? 'white' : 'black',
+        fontFamily: 'Montserrat_600SemiBold'
     },
     hugText: {
         fontSize: 15,
         color: mode == 'dark' ? 'white' : 'black',
+        fontFamily: 'Montserrat_400Regular'
     },
   })
   

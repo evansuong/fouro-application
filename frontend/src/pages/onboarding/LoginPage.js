@@ -147,8 +147,8 @@ export default function LoginPage({ navigation }) {
     },
     titleText: {
       marginBottom: 40,
-      fontSize: 50,
-      fontFamily: 'EBGaramond_500Medium'
+      fontSize: 40,
+      fontFamily: 'Montserrat_500Medium'
     }
   });
 

@@ -27,18 +27,26 @@ import {
   EBGaramond_500Medium,
   EBGaramond_600SemiBold,
 } from '@expo-google-fonts/eb-garamond';
+import {
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold
+} from '@expo-google-fonts/montserrat'
 import SearchPage from './src/pages/off-nav/SearchPage';
 
 
 export default function App() {
   const Stack = createStackNavigator();
 
-  const [mainNavPageTitle, setMainNavPageTitle] = useState("Main")
+  const [mainNavPageTitle, setMainNavPageTitle] = useState("Main");
   // console.log('apprendered')
   let [fontsLoaded] = useFonts({
     EBGaramond_400Regular,
     EBGaramond_500Medium,
     EBGaramond_600SemiBold,
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_600SemiBold
   });
 
   if (!fontsLoaded) {
