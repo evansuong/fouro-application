@@ -84,7 +84,7 @@ export default function SearchPage({ input, navigation }) {
         return (
             <ScrollView style={{ backgroundColor: backgroundColor }}>
             {userList.map(userData => (
-                <TouchableOpacity key={userData.name} onPress={() => viewFriend(userData)}>
+                <TouchableOpacity key={userData.user_id} onPress={() => viewFriend(userData)}>
                     <View style={{...styles.userCard, borderBottomColor: borderColor}}>
                         <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
                         <Text style={{...styles.userText, textColor: textColor}}>{userData.name}</Text>
@@ -112,7 +112,7 @@ export default function SearchPage({ input, navigation }) {
         return (
             <ScrollView style={{backgroundColor: backgroundColor}}>
             {userList.map(userData => (
-                <TouchableOpacity key={userData.name} onPress={() => viewUser(userData)}>
+                <TouchableOpacity key={userData.user_id} onPress={() => viewUser(userData)}>
                     <View style={{...styles.userCard, borderBottomColor: borderColor }}>
                         <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
                         <Text style={{...styles.userText, color: textColor }}>{userData.name}</Text>

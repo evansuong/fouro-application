@@ -5,17 +5,23 @@ import { DimensionContext } from '../contexts/DimensionContext'
 import { UserContext } from '../contexts/UserContext';
 
 // TODO: Haven't tested undefined hugImage
+// TODO: need severe refactoring -
+//       1) reduce the amount of containers for hugText
+//       2) merge no image and image hug cards' styles with flexShrink a const ? 1 : 0
 
 export default function HugCard({ navigation, name, hugText, hugImage, hugId }) {
-
+  
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
   const { isLightTheme } = userData;
+  
+  const SPACING_SMALL = 5
+  const SPACING_MEDIUM = 10;
+  const HUG_CARD_HEIGHT = 145
 
   const hugCardWidth = windowWidth - 20;
-  const hugCardHeight = 145 // windowHeight / 5.5;
   const hugImageWidth = hugImage ? hugCardWidth / 2.5 : 0;
-  const hugImageHeight = hugCardHeight;
+  const hugImageHeight = HUG_CARD_HEIGHT;
   const hugDescWidth = hugCardWidth - hugImageWidth - 30;/// 1.5; //hugCardWidth - hugImageWidth
   const nameFontSize = hugCardWidth * 0.05
 
@@ -26,31 +32,28 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
       flexDirection: 'row',
       borderBottomLeftRadius: 10, 
       borderBottomRightRadius: 10,
-      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
       backgroundColor: 'red',
     },
     nameBar: {
       display: 'flex',
-      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
       borderTopLeftRadius: 10,
-      paddingLeft: 5,
+      paddingLeft: SPACING_SMALL,
       width: hugCardWidth - hugImageWidth,
       backgroundColor: isLightTheme ? '#d9d9d9' : 'rgb(33, 30, 31)'
     },
     nameBarNoImg: {
       display: 'flex',
-      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
-      paddingLeft: 5,
+      paddingLeft: SPACING_SMALL,
       width: hugCardWidth - hugImageWidth,
       backgroundColor: isLightTheme ? '#d9d9d9' : 'rgb(33, 30, 31)'
     },
     outerImageContainer: {
       // marginRight: 10,
-      // marginTop: mode == 'light' ? hugCardHeight / 30 : hugCardHeight / 8,
+      // marginTop: mode == 'light' ? HUG_CARD_HEIGHT / 30 : HUG_CARD_HEIGHT / 8,
       backgroundColor: 'pink', 
-      height: hugCardHeight,
+      height: HUG_CARD_HEIGHT,
     },
     pinContainer: {
       alignItems: 'center',
@@ -70,42 +73,44 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
         elevation: 5,
         borderRadius: 10,
         backgroundColor: isLightTheme ? 'rgb(255, 255, 255)' : 'rgb(43, 40, 41)',
-        marginBottom: 10,
+        marginBottom: SPACING_MEDIUM,
         width: hugCardWidth, 
-        height: hugCardHeight,
+        height: HUG_CARD_HEIGHT,
     },
     textBodyContainer: {
         display: 'flex',
         justifyContent: 'space-between',
         // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
-        // backgroundColor: 'white',
+        // backgroundColor: 'purple',
         flexShrink: 1,
-        marginBottom: 7,
         width: hugCardWidth - hugImageWidth,
         flexDirection: 'row',
         borderBottomLeftRadius: 10,
-        padding: 10,
+        paddingLeft: SPACING_MEDIUM,
+        paddingRight: SPACING_MEDIUM,
+        paddingTop: SPACING_SMALL,
+        paddingBottom: SPACING_SMALL
     },
     textBodyContainerNoImg: {
       display: 'flex',
       justifyContent: 'space-between',
       // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
       // backgroundColor: 'yellow',
-      // height: hugCardHeight - 40,
-      flexShrink: 1,
+      // height: HUG_CARD_HEIGHT - 40,
+      // flexShrink: 1,
       width: hugCardWidth - hugImageWidth,
       flexDirection: 'row',
       borderBottomLeftRadius: 10,
       borderBottomRightRadius: 10,
-      padding: 10,
+      padding: SPACING_MEDIUM,
     },
     textContainer: {
-      marginLeft: 12,
+      marginLeft: SPACING_SMALL,
       width: hugDescWidth,
       overflow: 'hidden',
-      flexShrink: 1,
+      // flexShrink: 1,
       // maxHeight: hugDescMaxHeight - 10,
-      // backgroundColor: 'blue',
+      // backgroundColor: 'yellow',
     },
     pinIcon: {
         borderRadius: 50,
@@ -121,7 +126,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
     },
     name: {
         padding: 7,
-        paddingHorizontal: 10,
+        paddingHorizontal: SPACING_MEDIUM,
         fontSize: 17,
         fontWeight: 'bold',
         color: isLightTheme ? '#000' : '#EEE',
@@ -129,6 +134,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
     hugText: {
         fontSize: 15,
         color: isLightTheme ? '#000' : '#EEE',
+        fontFamily: 'Montserrat_400Regular',
     },
   })
   
