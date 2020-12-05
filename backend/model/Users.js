@@ -35,7 +35,6 @@ const UsersAPI = {
 
     // initialize local object containing initial user values
     const user = {
-      user_id: uid,
       username: username,
       first_name: firstName,
       last_name: lastName,
