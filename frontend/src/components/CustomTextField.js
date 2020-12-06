@@ -36,16 +36,16 @@ export default function CustomTextField({ titleText, placeholder, setField, secu
 
 const styles = StyleSheet.create({
   onboardingText: {
-    fontSize: 18,
+    fontSize: 15,
     marginTop: 25,
     marginBottom: 5,
     marginLeft: 25,
-    fontFamily: 'EBGaramond_400Regular'
+    fontFamily: 'Montserrat_400Regular'
   },
   required: {
-    fontSize: 18,
+    fontSize: 15,
     color: 'red',
-    fontFamily: 'EBGaramond_400Regular'
+    fontFamily: 'Montserrat_400Regular'
   },
   onboardingInput: {
     marginRight: 20,

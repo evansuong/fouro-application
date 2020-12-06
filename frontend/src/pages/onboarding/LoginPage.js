@@ -10,12 +10,18 @@ import {
   Animated
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+// APIs
+import AuthAPI from '../../authentication/Authentication';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import AuthAPI from '../../authentication/Authentication';
+// Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
-import { DimensionContext } from '../../contexts/DimensionContext';
-import { UserContext } from '../../contexts/UserContext';
+import { ReadAPI } from '../../API';
+
 
 
 export default function LoginPage({ navigation }) {
@@ -26,19 +32,17 @@ export default function LoginPage({ navigation }) {
   // component state
   const [loggingIn, setLoggingIn] = useState(false);
   const [mounted, setMounted] = useState(true);
-  const [startUp, setStartUp] = useState(false);
+  const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   // contexts
-  const {windowWidth, windowHeight} = useContext(DimensionContext);
-  const {dispatch} = useContext(UserContext)
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { userData, dispatch } = useContext(UserContext)
   const fade = useRef(new Animated.Value(0)).current;
-
-  // const { user } = useContext(User)
 
   useEffect(() => {
     if (!startUp) {
-      setStartUp(true);
+      setStartUp(false);
       fadeIn();
     }
     if (!isFocused) {
@@ -81,14 +85,20 @@ export default function LoginPage({ navigation }) {
     processLoginResponse(response)
   }
 
-  const processLoginResponse = (response) => {
+  const processLoginResponse = async (response) => {
     if (response.status) {
       setMounted(false);
-      dispatch({
-        type: "SET_USER",
-        payload: response.data,
-      });
-      navigation.navigate('Main Nav Page', { loggedIn: true });
+      const { status, data } = await ReadAPI.getUserProfile(userData.uid);
+      if (status) {
+        dispatch({
+          type: "SET_USER",
+          payload: data,
+        });
+        navigation.navigate('Main Nav Page', { loggedIn: true });
+      } else {
+        Alert.alert('An error occurred');
+        console.log(data);
+      }
     } else {
       setLoggingIn(false);
       alert("No users found with those credentials")
@@ -147,8 +157,8 @@ export default function LoginPage({ navigation }) {
     },
     titleText: {
       marginBottom: 40,
-      fontSize: 50,
-      fontFamily: 'EBGaramond_500Medium'
+      fontSize: 40,
+      fontFamily: 'Montserrat_500Medium'
     }
   });
 

@@ -8,22 +8,25 @@ import {
   Animated,
   ImageBackground,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
-import CustomTextField from 'components/CustomTextField';
-import LinkedButton from 'components/LinkedButton';
 import { useIsFocused } from '@react-navigation/native';
-import BackgroundImg from 'assets/gradients/middle.png';
+// APIs
 import AuthAPI from '../../authentication/Authentication';
+// Contexts
 import { UserContext } from '../../contexts/UserContext';
 import { DimensionContext } from '../../contexts/DimensionContext';
+// Custom Components
+import CustomTextField from 'components/CustomTextField';
+import LinkedButton from 'components/LinkedButton';
+// Images
+import BackgroundImg from 'assets/gradients/middle.png';
 
 
 export default function SignupPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('gggggg');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('gggggg');
-  // const [passwordField, setPasswordField] = useState('');
-  // const [passwordConfirmField, setPasswordConfirmField] = useState('');
+  const [passwordField, setPasswordField] = useState('');
+  const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
@@ -84,8 +87,14 @@ export default function SignupPage({ navigation }) {
     // check if user with that email already exists (waiting for backend)
     
     
-    let response = await AuthAPI.registerUser(emailField.trim(), passwordField.trim())
-    processSignupResponse(response)
+    let { status, data } = 
+      await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
+    if (status) {
+      processSignupResponse(data);
+    } else {
+      Alert.alert('An error occurred');
+      console.log(data);
+    }
   }
 
   const processSignupResponse = (response) => {
@@ -179,8 +188,8 @@ export default function SignupPage({ navigation }) {
     },
     titleText: {
       marginBottom: 40,
-      fontSize: 50,
-      fontFamily: 'EBGaramond_500Medium'
+      fontSize: 40,
+      fontFamily: 'Montserrat_500Medium'
     },
     whiteBox: {
       backgroundColor: 'rgba(255,255,255,0.2)',
@@ -260,7 +269,7 @@ export default function SignupPage({ navigation }) {
               passwordMatch() && 
               checkLength() &&
               <LinkedButton
-                text='SIGN UP'
+                text='NEXT'
                 color='#FFC24A'
                 onPress={() => submitHandler()}
               />

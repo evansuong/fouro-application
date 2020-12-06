@@ -7,15 +7,21 @@ export default function HugInfoPage({ navigation, route }) {
 
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const routeName = route.name;
-    const { hugId, time, completed, senderId, recieverId, descriptionSender, descriptionReceiver, images } = route.params.data;
+    const hug_id = route.params;
 
-    const friendMessage = "Hello this is the incoming message for the hug. it is poggers. stan bts. " +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
-    const friendUsername = "@vivntng"
-    const userMessage = "Hiiiiiii this is the responding msg for vivian's hug. thanks for keeping me in ur thots" +
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
-    const myUsername = "@alvna"
+    // TODO: uncomment line below when pulling data from firestore or whatever and delete the following test block
+    //       hugId will be passed in and we fetch the hug info with that hugId
+    // const { hugId, completed, dateTime, images, receiverDescription, receiverId, senderDescription, senderId } = route.params.data
+    
+    // TODO: delete the following test block
+    const hugId = 1
+    const completed = true
+    const dateTime = "April 1, 2021"
+    const images = [require("assets/profilePic.jpg"), require("assets/profilePic.jpg"), require("assets/profilePic.jpg")]
+    const receiverDescription = "omae wa mou shindeiru"
+    const senderDescription = "Roses are red, violets are blue"
+    const receiverId = "@EvanSuong"
+    const senderId = "@AlexChow"
 
     // sizing
     const textContainerWidth = windowWidth / 1.1;
@@ -36,8 +42,8 @@ export default function HugInfoPage({ navigation, route }) {
             paddingVertical: 5,
             paddingHorizontal: 10,
             display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center'
         },
         body: {
             backgroundColor: 'white',
@@ -61,6 +67,9 @@ export default function HugInfoPage({ navigation, route }) {
             flex: 1,
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
+        },
+        hugDateText: {
+            marginBottom: 10,
         },
         images: {
             flexDirection: 'row',
@@ -118,10 +127,11 @@ export default function HugInfoPage({ navigation, route }) {
 
             <ScrollView style={styles.mainContainer}>
                 <View style={styles.header}>
-                    <View>
+                        {/* hug date */}
+                        <Text style={styles.hugDateText}>{dateTime}</Text>
+
                         {/* insert first hug picture -- default is friend's prof pic */}
                         <Image source={images[0]} style={styles.imageContainer}/>
-                    </View>  
                 </View>
 
             
@@ -129,12 +139,12 @@ export default function HugInfoPage({ navigation, route }) {
                     <View style={{ ...styles.textAreaFriend, maxWidth: textContainerWidth }}>
                         {/* Text from friend */}
                         <Text style={styles.username}>{senderId}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{descriptionSender}</Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>{senderDescription}</Text>
                     </View>
                     <View style={{ ...styles.textAreaUser, maxWidth: textContainerWidth }}>
                         {/* Text from user */}
-                        <Text style={styles.username}>{'me, import from usercntext'}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{descriptionReceiver}</Text>
+                        <Text style={styles.username}>{receiverId}</Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>{receiverDescription}</Text>
                     </View>  
                 </View>
             
@@ -145,8 +155,6 @@ export default function HugInfoPage({ navigation, route }) {
                         {images.map(img => (
                             <Image source={img} style={styles.imageContainer}/>
                         ))}
-                        
-                       
                     </ScrollView>
                 </View>
 

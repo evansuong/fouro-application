@@ -4,34 +4,29 @@ import {
   Button, 
   Text, 
   View, 
-  Dimensions, 
   ScrollView,
   Animated,
   TouchableWithoutFeedback,
-  TouchableOpacity,
-  Switch,
-  Image
-} from 'react-native'
-
-import AppStyles from '../../AppStyles'
-import { FlatList } from 'react-native-gesture-handler';
-
-import HugCard from 'components/HugCard'
+  Image,
+} from 'react-native';
+import AppStyles from '../../AppStyles';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import HugCard from 'components/HugCard';
 import Panel from 'components/StreakPanel';
-import CreateHugButton from 'components/CreateHugButton';
-import { DimensionContext } from '../../contexts/DimensionContext'; 
-import Header from '../../components/Header';
+import Header from 'components/Header';
 
-// TODO: Move create hug button to the right side of the screen.
-// TODO: Fix button animation starting from far left of button
 
 export default function HomePage({ navigation, route }) {
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
-  const [mode, setMode] = useState('light');
-  const { windowWidth, windowHeight } = useContext(DimensionContext)
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { userData } = useContext(UserContext);
+  const { isLightTheme } = userData;
 
-  const width = useRef(new Animated.Value(70)).current;
+  const width = useRef(new Animated.Value(60)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
   const routeName = route.name;
@@ -40,10 +35,10 @@ export default function HomePage({ navigation, route }) {
 
   function buildTestData(name, text, img, id) {
     return {
-      name: name,
-      hugText: text,
-      hugImage: img,
-      hugId: id,
+      friend_name: name,
+      message: text,
+      image: img,
+      hug_id: id,
     }
   }
 
@@ -57,13 +52,6 @@ export default function HomePage({ navigation, route }) {
     }
   }
 
-  function handleToggleSwitch() {
-    setIsEnabled(!isEnabled);
-    setMode((prevMode) => 
-      prevMode == 'light' ? setMode('dark') : setMode('light')
-    );
-  }
-
   function dismissCreateButton() {
     setExpanded(false);
     collapse();
@@ -71,7 +59,7 @@ export default function HomePage({ navigation, route }) {
 
   function expand() {
     Animated.spring(width, {
-      toValue: 200,
+      toValue: 175,
       duration: animationDuration,
       bounciness: 1,
       speed: 1,
@@ -86,7 +74,7 @@ export default function HomePage({ navigation, route }) {
 
   function collapse() {
     Animated.spring(width, {
-      toValue: 70,
+      toValue: 60,
       duration: animationDuration,
       useNativeDriver: false,
     }).start();
@@ -97,44 +85,20 @@ export default function HomePage({ navigation, route }) {
     }).start();
   }
 
+  const pic = "https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb"
+
   const testData = [
-    buildTestData('Vicki', 'do you remember', require('assets/profilePic.jpg'), 1),
-    buildTestData('Ricky', 'the 21st night of september Chow', require('assets/profilePic.jpg'), 2),
+    buildTestData('Vicki', 'do you remember', pic, 1), 
+    buildTestData('Ricky', 'the 21st night of september Chow', pic, 2),
     buildTestData('Alex', 'soulja boy tellem', undefined, 3),
-    buildTestData('Evan', 'nobody \n \n\npray for\n me if t\nhey n\no\n\n\n\n\n\nt \n there \n \n \n for me', require('assets/profilePic.jpg'), 4),
-    buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), 5),
+    buildTestData('Evan', 'nobody \n \n\npray for\n me if t\nhey n\no\n\n\n\n\n\nt \n there \n \n \n for me', pic, 4),
+    buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', pic, 5),
   ]
 
-  const styles = StyleSheet.create({
-    createHugButtonContainer: {
-      flexDirection: 'row',
-      position: 'absolute',
-      bottom: 10,
-      // left: windowWidth - 250,
-      left: 10,
-      borderRadius: 50,
-      height: 70,
-      backgroundColor: mode == 'light' ? 'white': 'rgba(0,0,0,0.5)',
-      color: mode == 'light' ? 'black': 'white',
-      // borderColor: mode == 'light' ? 'black' : 'white',
-      borderWidth: 2,
-      alignItems: 'center'
-    },
-    createHugText: {
-      fontSize: 50,
-      color: mode == 'light' ? 'black': 'white',
-    },
-    switchContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      width: windowWidth / 4,
-      marginLeft: windowWidth / 2.7,
-    },
-    background: {
-      position: 'absolute',
-    }
-  })  
+  let backgroundColor = isLightTheme ? '#FB7250': 'rgba(0,0,0,0.5)';
+  let padding = expanded ? 15 : 0;
+  let paddingLeft = expanded ? 15 : '48%';
+
 
     return (
 
@@ -144,10 +108,9 @@ export default function HomePage({ navigation, route }) {
           source={gradient}
           style={AppStyles.background}
         />
-       
-     
 
         <Header routeName={routeName} navigation={navigation} onMainNav={true}>Hug Feed</Header>
+
         {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
         <View style={{marginTop: 100}}></View>
         <Button
@@ -159,17 +122,10 @@ export default function HomePage({ navigation, route }) {
           onPress={() => navigation.navigate('Welcome Page')}
         />
 
-      {/* Light and Dark Mode Switch */}
-      <View style={styles.switchContainer}>
-        <Text style={{color: mode == 'light' ? 'black': 'white'}}>
-          {mode == 'light' ? 'Light' : 'Dark'}
-        </Text>
-        <Switch
-          onValueChange={handleToggleSwitch}
-          value={isEnabled}
+        <Button
+          title='upload page'
+          onPress={() => navigation.navigate('upload')}
         />
-      </View>
-
       
         {/* Hug Cards */}
         <TouchableWithoutFeedback
@@ -181,10 +137,9 @@ export default function HomePage({ navigation, route }) {
           >
             {testData.map(hugData => (
               <HugCard 
-                key={hugData.hugId} 
+                key={hugData.hug_id} 
                 navigation={navigation}
-                { ...hugData } 
-                mode={mode}
+                data={hugData}
               />
             ))}
           </ScrollView>
@@ -193,27 +148,55 @@ export default function HomePage({ navigation, route }) {
 
         {/* Create Hug Button */}
         <TouchableWithoutFeedback
-          onPressIn={handlePress}
+          onPress={handlePress}
         >
-          <Animated.View style={[styles.createHugButtonContainer, {
-            width:width
-          }]}>
-            <Text style={[styles.createHugText, {
-              marginLeft: 17.5
-            }]}>
+          <Animated.View style={{
+            ...styles.createHugButtonContainer, 
+            width:width, backgroundColor: 
+            backgroundColor, 
+            padding: padding, 
+            paddingLeft: paddingLeft 
+          }}>
+            <Text style={styles.createHugText}>
               +
             </Text>
+
             <Animated.View opacity={fade}>
-              <Text style={[styles.createHugText, {
-                // marginTop: 18,
-                fontSize: 25
-              }]}>
+              <Text style={styles.createHugText}>
                 Create Hug
               </Text>
             </Animated.View>
-            
           </Animated.View>
         </TouchableWithoutFeedback>
     </View>
   )
 }
+
+
+const styles = StyleSheet.create({
+  createHugButtonContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    borderRadius: 50,
+    height: 60,
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    
+    shadowColor: '#000',
+    shadowOffset: { height: 2, width: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,  
+    elevation: 2,
+  },
+  createHugText: {
+    fontSize: 20,
+    color: '#FFF',
+  },
+  background: {
+    position: 'absolute',
+  }
+})  

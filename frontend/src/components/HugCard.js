@@ -2,17 +2,27 @@ import React, { useEffect, useContext } from 'react'
 import { StyleSheet, View, Text, Image, ScrollView } from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { DimensionContext } from '../contexts/DimensionContext'
+import { UserContext } from '../contexts/UserContext';
 
 // TODO: Haven't tested undefined hugImage
+// TODO: need severe refactoring -
+//       1) reduce the amount of containers for hugText
+//       2) merge no image and image hug cards' styles with flexShrink a const ? 1 : 0
 
-export default function HugCard({ navigation, name, hugText, hugImage, hugId, mode='light' }) {
-
-  const {windowWidth, windowHeight} = useContext(DimensionContext)
+export default function HugCard({ navigation, route, data }) {
+  
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { userData } = useContext(UserContext);
+  const { isLightTheme } = userData;
+  const { friend_name, message, image, hug_id } = data;
+  
+  const SPACING_SMALL = 5
+  const SPACING_MEDIUM = 10;
+  const HUG_CARD_HEIGHT = 145
 
   const hugCardWidth = windowWidth - 20;
-  const hugCardHeight = 145 // windowHeight / 5.5;
-  const hugImageWidth = hugImage ? hugCardWidth / 2.5 : 0;
-  const hugImageHeight = hugCardHeight;
+  const hugImageWidth = image ? hugCardWidth / 2.5 : 0;
+  const hugImageHeight = HUG_CARD_HEIGHT;
   const hugDescWidth = hugCardWidth - hugImageWidth - 30;/// 1.5; //hugCardWidth - hugImageWidth
   const nameFontSize = hugCardWidth * 0.05
 
@@ -21,31 +31,30 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
       flex: 1, 
       justifyContent: 'space-between',
       flexDirection: 'row',
-      borderBottomLeftRadius: 20, 
-      borderBottomRightRadius: 20,
-      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
+      borderBottomLeftRadius: 10, 
+      borderBottomRightRadius: 10,
       backgroundColor: 'red',
     },
     nameBar: {
       display: 'flex',
-      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
-      borderTopLeftRadius: 20,
-      paddingLeft: 5,
+      borderTopLeftRadius: 10,
+      paddingLeft: SPACING_SMALL,
       width: hugCardWidth - hugImageWidth,
+      backgroundColor: isLightTheme ? '#d9d9d9' : 'rgb(33, 30, 31)'
     },
     nameBarNoImg: {
       display: 'flex',
-      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.6)' : 'white',
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      paddingLeft: 5,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      paddingLeft: SPACING_SMALL,
       width: hugCardWidth - hugImageWidth,
+      backgroundColor: isLightTheme ? '#d9d9d9' : 'rgb(33, 30, 31)'
     },
     outerImageContainer: {
       // marginRight: 10,
-      // marginTop: mode == 'light' ? hugCardHeight / 30 : hugCardHeight / 8,
+      // marginTop: mode == 'light' ? HUG_CARD_HEIGHT / 30 : HUG_CARD_HEIGHT / 8,
       backgroundColor: 'pink', 
-      height: hugCardHeight,
+      height: HUG_CARD_HEIGHT,
     },
     pinContainer: {
       alignItems: 'center',
@@ -63,66 +72,70 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
         shadowOpacity: 0.2,
         shadowRadius: 2,
         elevation: 5,
-        borderRadius: 20,
-        backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0)' : 'white',
-        marginBottom: 10,
+        borderRadius: 10,
+        backgroundColor: isLightTheme ? 'rgb(255, 255, 255)' : 'rgb(43, 40, 41)',
+        marginBottom: SPACING_MEDIUM,
         width: hugCardWidth, 
-        height: hugCardHeight,
+        height: HUG_CARD_HEIGHT,
     },
     textBodyContainer: {
         display: 'flex',
         justifyContent: 'space-between',
         // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
-        // backgroundColor: 'white',
+        // backgroundColor: 'purple',
         flexShrink: 1,
-        marginBottom: 7,
         width: hugCardWidth - hugImageWidth,
         flexDirection: 'row',
-        borderBottomLeftRadius: 20,
+        borderBottomLeftRadius: 10,
+        paddingLeft: SPACING_MEDIUM,
+        paddingRight: SPACING_MEDIUM,
+        paddingTop: SPACING_SMALL,
+        paddingBottom: SPACING_SMALL
     },
     textBodyContainerNoImg: {
       display: 'flex',
       justifyContent: 'space-between',
       // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
       // backgroundColor: 'yellow',
-      // height: hugCardHeight - 40,
-      flexShrink: 1,
+      // height: HUG_CARD_HEIGHT - 40,
+      // flexShrink: 1,
       width: hugCardWidth - hugImageWidth,
       flexDirection: 'row',
-      borderBottomLeftRadius: 20,
-      borderBottomRightRadius: 20,
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 10,
+      padding: SPACING_MEDIUM,
     },
     textContainer: {
-      marginLeft: 12,
+      marginLeft: SPACING_SMALL,
       width: hugDescWidth,
       overflow: 'hidden',
-      flexShrink: 1,
+      // flexShrink: 1,
       // maxHeight: hugDescMaxHeight - 10,
-      // backgroundColor: 'blue',
+      // backgroundColor: 'yellow',
     },
     pinIcon: {
         borderRadius: 50,
         overflow: 'hidden',
     },
     imageContainer: {
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
         width: hugImageWidth, 
         height: hugImageHeight,
     },
     name: {
-        marginTop: 7,
-        marginLeft: 7,
-        marginBottom: 5,
+        padding: 7,
+        paddingHorizontal: SPACING_MEDIUM,
         fontSize: 17,
         fontWeight: 'bold',
-        color: mode == 'dark' ? 'white' : 'black',
+        color: isLightTheme ? '#000' : '#EEE',
     },
     hugText: {
         fontSize: 15,
-        color: mode == 'dark' ? 'white' : 'black',
+        color: isLightTheme ? '#000' : '#EEE',
+        fontFamily: 'Montserrat_400Regular',
     },
   })
   
@@ -130,55 +143,55 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
     /* container */
       <TouchableOpacity 
         style={styles.hugCardContainer}
-        onPress={() => { navigation.navigate("Hug Info") }}
+        onPress={() => { navigation.navigate("Hug Info", hug_id ) }}
       >
 
         <View className='title-description'>
           {/* Name Bar */}
           { 
-            hugImage &&
+            image &&
             <View style={styles.nameBar}>
               <Text style={styles.name}>
-                  {name}
+                  {friend_name}
               </Text>
             </View>
           }
           {
-            !hugImage && 
+            !image && 
             <View style={styles.nameBarNoImg}>
               <Text style={styles.name}>
-                  {name}
+                  {friend_name}
               </Text>
             </View>
           }
 
           {
-            hugImage &&
+            image &&
             <View style={styles.textBodyContainer}>
               <View style={styles.textContainer}>
-                <ScrollView 
+                {/* <ScrollView 
                   nestedScrollEnabled={true}
                   persistentScrollbar={true}
-                >
+                > */}
                   <Text style={styles.hugText}>
-                      {hugText}
+                      {message}
                   </Text>
-                </ScrollView>
+                {/* </ScrollView> */}
               </View>
             </View>
           }
           {
-            !hugImage &&
+            !image &&
             <View style={styles.textBodyContainerNoImg}>
               <View style={styles.textContainer}>
-                <ScrollView 
+                {/* <ScrollView 
                   nestedScrollEnabled={true}
                   persistentScrollbar={true}
-                >
+                > */}
                   <Text style={styles.hugText}>
-                      {hugText}
+                      {message}
                   </Text>
-                </ScrollView>
+                {/* </ScrollView> */}
               </View>
             </View>
           }
@@ -186,7 +199,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId, mo
 
         <View>
           <Image
-            source={hugImage}
+            source={{ uri: image}}
             style={styles.imageContainer}
           />  
         </View>

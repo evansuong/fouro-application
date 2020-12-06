@@ -1,15 +1,19 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Header from "../../components/Header";
-import Setting from "../../components/Setting";
-import UserProfile from "../../components/UserProfile";
-import { DimensionContext } from "../../contexts/DimensionContext";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+// Contexts
+import { DimensionContext } from "contexts/DimensionContext";
+import { UserContext } from "contexts/UserContext";
+// Custom Components
+import Header from "components/Header";
+import Setting from "components/Setting";
+import UserProfile from "components/UserProfile";
 
 export default function UserProfilePage({ navigation, route }) {
-  const pfp = require("assets/fillerProfilePic.jpg");
+  const pfp = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
 
   const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { userData, dispatch } = useContext(UserContext);
+  const { isLightTheme } = userData;
 
   const topMarginSize = windowWidth * 0.1;
   const settingMarginTopBottom = windowWidth * 0.03;
@@ -31,12 +35,18 @@ export default function UserProfilePage({ navigation, route }) {
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
-      margin: buttonMargin
+      margin: buttonMargin,
+      marginBottom: windowHeight / 20,
     },
     buttonText: {
       color: 'white',
       fontSize: windowWidth * 0.05,
       fontWeight: 'bold'
+    },
+    container: {
+      backgroundColor: isLightTheme ? '#EEE' : '#000',
+      display: "flex", 
+      alignItems: "center"
     }
   });
 
@@ -44,8 +54,14 @@ export default function UserProfilePage({ navigation, route }) {
     navigation.navigate('Reset Password Page')
   }
 
+  function toggleTheme() {
+    dispatch({
+      type: "TOGGLE_THEME",
+    })
+  }
+
   return (
-    <View style={{ display: "flex", alignItems: "center" }}>
+    <View style={styles.container}>
       <Header routeName={routeName} navigation={navigation} onMainNav={false} />
 
       <View style={{ marginTop: topMarginSize }}>
@@ -74,6 +90,15 @@ export default function UserProfilePage({ navigation, route }) {
               windowWidth={windowWidth}
               windowHeight={windowHeight}
             />
+
+            <Setting
+              icon={require("assets/deleteAccount.png")}
+              text="Toggle Theme"
+              textColor="black"
+              onPress={toggleTheme}
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
+              />
           </View>
 
           <TouchableOpacity style={styles.button}>

@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/evansuong/fouro-application#readme",
   "dependencies": {
-    "@react-native-community/slider": "^3.0.3",
     "expo": "^39.0.5"
   }
 }

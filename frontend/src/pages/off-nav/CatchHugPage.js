@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -11,7 +11,6 @@ import {
   ImageBackground
 } from 'react-native';
 // Expo Imports
-import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 // APIs
@@ -19,44 +18,42 @@ import { CreateAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
 import UserContext from 'contexts/UserContext';
-// Custom Components
+// Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
 import Header from 'components/Header';
 // Images/Assets
+import BackgroundImg from 'assets/gradients/middle.png';
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 import profilePic from 'assets/profilePic.jpg';
-import BackgroundImg from 'assets/gradients/middle.png';
 
 
 // TODO: Remove FriendName and FriendPic parameters
-export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
+export default function CatchHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
-
-    const {windowWidth, windowHeight} = useContext(DimensionContext);
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-
+    // const { hugId, friendData } = route.params.data;
     const routeName = route.name;
-    // const { friendData } = route.params.data;
 
     const callBackend = async () => {
-      console.log('userData: ', userData);
       try {
+        console.log('userData: ', userData);
         let base64Strings = [];
         for (let image of images) {
           const base64 = await getBase64WithImage(image);
           base64Strings.push(base64);
         }
         request = {
-          // friendId: friendData.friend_id,
+          hugId: hugId,
           message: message,
           blobs: base64Strings
         }
-        // const response = await CreateAPI.createHug(userData.uid, request);
-        const { status, data } = await CreateAPI.createHug('temp', request);
-        console.log('data', data);
+        // const response = await CreateAPI.respondToHug(userData.uid, request);
+        const response = await CreateAPI.respondToHug('temp', request);
+        console.log('response', response);
         Alert.alert('Hug created!');
         navigation.navigate('Home Page');
       } catch (err) {
@@ -64,24 +61,8 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
       }
     }
 
-    const pickFromGallery = async () => {
-      const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (granted) {
-        console.log('granted');
-        let data = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
-          aspect: [1,1],
-          quality: 0.5,
-        })
-        checkUpload(data); 
-      } else {
-        console.log('access denied');
-        Alert.alert('You need to give permission to upload a picture!');
-      }
-    }
-
     const getBase64WithImage = async (uploadPic) => {
+      // console.log('before compression', uploadPic.base64.length);
       const manipResult = await ImageManipulator.manipulateAsync(
         uploadPic.uri,
         [],
@@ -91,6 +72,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
           base64: true
         }
       )
+      // console.log('after compression', manipResult`.base64.length);
       return `data:image/jpeg;base64,${manipResult}`;
     }
   
@@ -109,12 +91,30 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
       }
     }
 
+    const pickFromGallery = async () => {
+      const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (granted) {
+        console.log('granted');
+        let data = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1,1],
+          quality: 0.5,
+        })
+        checkUpload(data);
+      } else {
+        console.log('access denied');
+        Alert.alert('You need to give permission to upload a picture!');
+      }
+    }
+
     const isEmpty = (obj) => {
       return Object.keys(obj).length == 0;
     }
 
     const styles = StyleSheet.create({
       mainContainer: {
+        // marginTop: windowHeight / 8,
         overflow: 'hidden',
         height: windowHeight / 1.45,
       },
@@ -147,6 +147,8 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         marginTop: windowHeight / 80,
       },
       backgroundImg: {
+        // flex: 1,
+        // justifyContent: 'center',
         height: windowHeight,
         resizeMode: 'cover',
       },
@@ -180,11 +182,11 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.headerText}>
-                Create Hug
+                Catch Hug
               </Text>
               <Text style={styles.helperHeaderText}>
-                Add a message and images so that you can save a memorable
-                event with {friendName}
+                Add to the caught hug with a message and images of your 
+                own!
               </Text>
             </View>
 
@@ -226,9 +228,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
               {/* Images Array */}
               <View style={styles.picContainer}>
                 <ScrollView horizontal={true}>
-                  <View onStartShouldSetResponder={() => true} style={{
-                    flexDirection: 'row'
-                  }}>
+                  <View onStartShouldSetResponder={() => true} style={{flexDirection: 'row'}}>
                   {images.map((item) => (
                     <Image
                       key={item.uri}

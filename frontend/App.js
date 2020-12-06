@@ -19,6 +19,7 @@ import ResetPasswordPage from './src/pages/off-nav/ResetPasswordPage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreateHugPage from './src/pages/off-nav/CreateHugPage'; 
+import CatchHugPage from './src/pages/off-nav/CatchHugPage';
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
 import UserContextProvider from './src/contexts/UserContext'; 
 import { useFonts } from 'expo-font'
@@ -27,17 +28,26 @@ import {
   EBGaramond_500Medium,
   EBGaramond_600SemiBold,
 } from '@expo-google-fonts/eb-garamond';
+import {
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold
+} from '@expo-google-fonts/montserrat'
+import SearchPage from './src/pages/off-nav/SearchPage';
 
 
 export default function App() {
   const Stack = createStackNavigator();
 
-  const [mainNavPageTitle, setMainNavPageTitle] = useState("Main")
+  const [mainNavPageTitle, setMainNavPageTitle] = useState("Main");
   // console.log('apprendered')
   let [fontsLoaded] = useFonts({
     EBGaramond_400Regular,
     EBGaramond_500Medium,
     EBGaramond_600SemiBold,
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_600SemiBold
   });
 
   if (!fontsLoaded) {
@@ -107,6 +117,14 @@ export default function App() {
               <Stack.Screen 
                 name='Reset Password Page'
                 component={ResetPasswordPage}/>
+
+              <Stack.Screen 
+                name='Catch Hug Page'
+                component={CatchHugPage}/>
+
+              <Stack.Screen
+                name='upload'
+                component={PicUploadPage}/>
             </Stack.Navigator>
           </NavigationContainer>    
         </DimensionContextProvider>
