@@ -8,7 +8,7 @@ import { UserContext } from '../../contexts/UserContext';
 
 
 
-const pic = require('assets/fillerProfilePic.jpg')
+const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
 
 export default function SearchPage({ input, navigation }) {
 
@@ -21,6 +21,7 @@ export default function SearchPage({ input, navigation }) {
     const Tab = createMaterialTopTabNavigator();
 
     function toggleSearchList() { setSearchFriends(!searchFriends) }
+
    
     
     useEffect(() => {
@@ -74,19 +75,20 @@ export default function SearchPage({ input, navigation }) {
 
         function viewFriend(userData) {
             // TODO: change this route name to Other User Profile
-            navigation.navigate('Friend Profile', userData)
+            navigation.navigate('Friend Profile', { data: Object.assign({}, { id: userData.user_id, profile_pic: userData.pfp, ...userData })});
         }
 
         let textColor = isLightTheme ? '#000' : '#FFF';
         let borderColor = isLightTheme ? '#FFF' : '#555';
         let backgroundColor = isLightTheme ? '#FFF' : '#333'
+        console.log(userData.image)
 
         return (
             <ScrollView style={{ backgroundColor: backgroundColor }}>
             {userList.map(userData => (
                 <TouchableOpacity key={userData.user_id} onPress={() => viewFriend(userData)}>
                     <View style={{...styles.userCard, borderBottomColor: borderColor}}>
-                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
+                        {/* <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.image }}/> */}
                         <Text style={{...styles.userText, textColor: textColor}}>{userData.name}</Text>
                     </View>
                 </TouchableOpacity>
@@ -102,7 +104,7 @@ export default function SearchPage({ input, navigation }) {
         })
 
         function viewUser(userData) {
-            navigation.navigate('Friend Profile', userData)
+            navigation.navigate('Friend Profile', { data: Object.assign({}, { id: userData.user_id, profile_pic: userData.pfp, ...userData })})
         }
 
         let textColor = isLightTheme ? '#000' : '#FFF';

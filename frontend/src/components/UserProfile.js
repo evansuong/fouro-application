@@ -28,7 +28,7 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
   return (
       <View style={[styles.container, { display: "flex" }]}>
           <Image
-              source={profilePicture}
+              source={{ uri: profilePicture }}
               style={[styles.profilePicStyle, { width: profPicWidth, height: profPicWidth }]}
           />
           <Text style={[styles.userFirstLastStyle, { fontSize: nameFontSize }]}>

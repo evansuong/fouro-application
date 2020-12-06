@@ -4,3 +4,4 @@ config.*
 .expo/
 serviceAccountKey.*
 serviceAccountKey.json
+.DS_STORE

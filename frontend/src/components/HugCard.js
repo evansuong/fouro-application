@@ -9,18 +9,19 @@ import { UserContext } from '../contexts/UserContext';
 //       1) reduce the amount of containers for hugText
 //       2) merge no image and image hug cards' styles with flexShrink a const ? 1 : 0
 
-export default function HugCard({ navigation, name, hugText, hugImage, hugId }) {
+export default function HugCard({ navigation, route, data }) {
   
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
   const { isLightTheme } = userData;
+  const { friend_name, message, image, hug_id } = data;
   
   const SPACING_SMALL = 5
   const SPACING_MEDIUM = 10;
   const HUG_CARD_HEIGHT = 145
 
   const hugCardWidth = windowWidth - 20;
-  const hugImageWidth = hugImage ? hugCardWidth / 2.5 : 0;
+  const hugImageWidth = image ? hugCardWidth / 2.5 : 0;
   const hugImageHeight = HUG_CARD_HEIGHT;
   const hugDescWidth = hugCardWidth - hugImageWidth - 30;/// 1.5; //hugCardWidth - hugImageWidth
   const nameFontSize = hugCardWidth * 0.05
@@ -142,30 +143,30 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
     /* container */
       <TouchableOpacity 
         style={styles.hugCardContainer}
-        onPress={() => { navigation.navigate("Hug Info") }}
+        onPress={() => { navigation.navigate("Hug Info", hug_id ) }}
       >
 
         <View className='title-description'>
           {/* Name Bar */}
           { 
-            hugImage &&
+            image &&
             <View style={styles.nameBar}>
               <Text style={styles.name}>
-                  {name}
+                  {friend_name}
               </Text>
             </View>
           }
           {
-            !hugImage && 
+            !image && 
             <View style={styles.nameBarNoImg}>
               <Text style={styles.name}>
-                  {name}
+                  {friend_name}
               </Text>
             </View>
           }
 
           {
-            hugImage &&
+            image &&
             <View style={styles.textBodyContainer}>
               <View style={styles.textContainer}>
                 {/* <ScrollView 
@@ -173,14 +174,14 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
                   persistentScrollbar={true}
                 > */}
                   <Text style={styles.hugText}>
-                      {hugText}
+                      {message}
                   </Text>
                 {/* </ScrollView> */}
               </View>
             </View>
           }
           {
-            !hugImage &&
+            !image &&
             <View style={styles.textBodyContainerNoImg}>
               <View style={styles.textContainer}>
                 {/* <ScrollView 
@@ -188,7 +189,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
                   persistentScrollbar={true}
                 > */}
                   <Text style={styles.hugText}>
-                      {hugText}
+                      {message}
                   </Text>
                 {/* </ScrollView> */}
               </View>
@@ -198,7 +199,7 @@ export default function HugCard({ navigation, name, hugText, hugImage, hugId }) 
 
         <View>
           <Image
-            source={hugImage}
+            source={{ uri: image}}
             style={styles.imageContainer}
           />  
         </View>
