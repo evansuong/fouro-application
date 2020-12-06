@@ -247,8 +247,8 @@ const FriendsAPI = {
    * @param {string} userId
    * @param {string} friendId
    */
-  getFriendProfile: function (userId, friendId) {
-    return Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
+  getFriendProfile: async function (userId, friendId) {
+    return await Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
   },
 };
 
