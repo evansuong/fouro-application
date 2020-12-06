@@ -20,29 +20,14 @@ const NotificationsAPI = {
    */
   getNotifications: async function (uid) {
     let notifications = [];
-    let exist = true;
 
-    // Check notifications exist
-    var notificationCollection = await users
+    const notificationSnapshot = await users
       .doc(uid)
       .collection("notifications")
-      .get()
-      .then((sub) => {
-        if (sub.docs.length == 0) {
-          console.log("subcollection does not exist");
-          exist = false;
-        }
-      });
-
-    // No notification collection
-    if (!exist) {
-      return { notifs: [] };
-    }
-
-    notificationCollection = await users.doc(uid).collection("notifications");
-    const notificationSnapshot = await notificationCollection
       .orderBy("date_time", "desc")
       .get(); //sort notifications by date/time
+
+    // No notifications
     if (notificationSnapshot.empty) {
       console.log("No matching documents.");
       return { notifs: notifications };
