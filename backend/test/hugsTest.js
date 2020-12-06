@@ -96,12 +96,13 @@ async function testGetSharedHugs(currUser, targetUser) {
 //     "-------------------example@email.com & otherguy@email.com--------------------"
 // );
 testGetSharedHugs("example@email.com", "otherguy@email.com");
+//testGetSharedHugs("otherguy@email.com", "example@email.com");
 //output should be hug1 and hug_2
 
 // console.log(
 //     "-------------------gary@example.com & otherguy@email.com--------------------"
 // );
-testGetSharedHugs("gary@email.com", "otherguy@email.com");
+//testGetSharedHugs("gary@email.com", "otherguy@email.com");
 //output should be hug_3
 
 //loop through images? Need cloud function?
