@@ -3,10 +3,6 @@ require("firebase/firestore");
 require("firebase/auth");
 require("firebase/storage");
 
-// xml http request
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var xhr = new XMLHttpRequest();
-
 // Firestore
 const db = firebase.firestore();
 
@@ -79,8 +75,8 @@ var Hugs = require("../../model/Hugs");
 
 // getSharedHugs()
 async function testGetSharedHugs(currUser, targetUser) {
-    sharedHugs = await Hugs.ViewHugAPI.getSharedHugs(currUser, targetUser);
-    console.log(sharedHugs);
+  sharedHugs = await Hugs.ViewHugAPI.getSharedHugs(currUser, targetUser);
+  console.log(sharedHugs);
 }
 // console.log(
 //     "-------------------example@email.com & otherguy@email.com--------------------"
