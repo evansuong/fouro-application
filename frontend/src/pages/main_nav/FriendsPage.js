@@ -1,16 +1,34 @@
-import React, { useContext, useState } from 'react'
-import { View, Text, Button, StyleSheet, FlatList, Dimensions, Image } from 'react-native'
-import AppStyles from '../../AppStyles'
-import FriendCard from '../../components/FriendCard'
-import Header from '../../components/Header'
-import { DimensionContext } from '../../contexts/DimensionContext'
-import SearchPage from '../off-nav/SearchPage'
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import AppStyles from '../../AppStyles';
+// APIs
+import { ReadAPI } from '../../API';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import FriendCard from 'components/FriendCard';
+import Header from 'components/Header';
+// Images/Assets
+import gradient from 'assets/gradients/left.png';
+
 
 export default function FriendsPage({ navigation, route }) {
+    const [startUp, setStartUp] = useState(true);
+    const [friends, setFriends] = useState([]);
 
-    const gradient = require('assets/gradients/left.png')
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    // const { userData } = useContext(UserContext);
+
     const routeName = route.name;
+
+    // useEffect(() => {
+    //   if (startUp) {
+    //     const { friends } = await ReadAPI.getFriends(userData.uid);
+    //     setFriends(friends);
+    //     setStartUp(false);
+    //   }
+    // }, []);
 
     function buildFriendData(id, name, username, profile_pic, color) {
         return {
@@ -24,7 +42,7 @@ export default function FriendsPage({ navigation, route }) {
 
     const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
     
-    let friends = [
+    let friendsTestData = [
         buildFriendData('1', 'Alex Chow', 'alexchow', pic, '#FE5951'),
         buildFriendData('2', 'Vivian Tang', 'vtang', pic, '#FC6C58'),
         buildFriendData('3', 'Evan Suong', 'esuong', pic, '#FA7D5D'),
@@ -39,50 +57,67 @@ export default function FriendsPage({ navigation, route }) {
     ]
 
     const renderCards = friend => {
-        // console.log(friend.item)
-        // NOTE: Depending on how the data is retrieved from firebase/firestore,
-        // we'll need to rewrite how we get each friend
-        //console.log(friend.item.friend_first)
+        // console.log(friend)
         return  <FriendCard
                     friendData={friend.item}
+                    // friendData={...friend}
                     navigation={navigation}
                     height={windowHeight / 15}
                     width={windowWidth - 40}
                 />        
     }
 
+    const styles = StyleSheet.create({
+      navPageContainer: {
+        display: 'flex',
+        backgroundColor: 'transparent',
+        alignItems: 'center',
+        flexShrink: 1
+      },
+      background: {
+          position: 'absolute',
+          width: windowWidth, 
+          height: windowHeight
+      },
+      friendCard: {
+        width: windowWidth, 
+        alignItems: 'center', 
+        marginTop: 5, 
+        paddingBottom: 5
+      },
+      flatListContainer: {
+        display: 'flex', 
+        flexShrink: 1
+      }
+    });
+
     return (
         <View style={AppStyles.navPageContainer}>
             {/* background */}
             <Image
                 source={gradient}
-                style={[styles.background, { width: windowWidth, height: windowHeight }]}
+                style={styles.background}
             />
 
             <View style={{height: windowWidth * 0.27 }}/>
-            <Header routeName={routeName} navigation={navigation} onMainNav={true}>Friends</Header>
+            <Header 
+              routeName={routeName} 
+              navigation={navigation} 
+              onMainNav={true}
+            >
+              Friends
+            </Header>
             {
-                <View style={{display: 'flex', flexShrink: 1}}>
+              <View style={styles.flatListContainer}>
                 <FlatList
-                    data={friends}
-                    keyExtractor={item => item.user_id}
-                    renderItem={renderCards}
-                    contentContainerStyle={{ width: windowWidth, alignItems: 'center', marginTop: 5, paddingBottom: 5 }}
+                  data={friendsTestData}
+                  // data={friends}
+                  keyExtractor={item => item.user_id}
+                  renderItem={renderCards}
+                  contentContainerStyle={styles.friendCard}
                 />
-                </View>
+              </View>
             } 
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    navPageContainer: {
-      display: 'flex',
-      backgroundColor: 'transparent',
-      alignItems: 'center',
-      flexShrink: 1
-    },
-    background: {
-        position: 'absolute',
-    },
-});

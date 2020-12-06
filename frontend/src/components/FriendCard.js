@@ -5,9 +5,9 @@
  * https://stackoverflow.com/questions/40665370/react-native-what-is-a-proper-way-to-pass-style-as-props-when-using-spread-ope
  * https://stackoverflow.com/questions/53647304/elevation-in-react-native 
  */
-
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+// Contexts
 import { DimensionContext } from '../contexts/DimensionContext'
 import { UserContext } from '../contexts/UserContext';
 /**

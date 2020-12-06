@@ -1,7 +1,9 @@
 import React, { useContext } from 'react'
-import { View, Text, StyleSheet, Image, Pressable, TouchableOpacity } from 'react-native'
-import { DimensionContext } from '../contexts/DimensionContext';
-import pinIcons from '../../assets/pinIcons/pinIcons'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+// Images/Assets
+import pinIcons from 'assets/pinIcons/pinIcons'
 
 function randomPinIcon() {
     const randNum = Math.floor(Math.random() * 40)
