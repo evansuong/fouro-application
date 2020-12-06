@@ -114,7 +114,7 @@ router.get("/getUserCounts/:id", async (req, res) => {
   }
 });
 
-// TODO: BROKEN. WORKING ON UPLOADING BLOB 
+// TODO: BROKEN. WORKING ON UPLOADING BLOB
 router.put('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
   console.log('In route');
   const uid = req.params.id;

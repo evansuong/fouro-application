@@ -8,32 +8,38 @@ require("firebase/auth");
 const ManageAccountAPI = {
   
   //update password from within the app.
-  changePassword: function (uid, newPassword) {
+  changePassword: async function (uid, newPassword) {
     var successful;
 
-    admin
+    if(uid == null) {
+      console.log("No user signed in.");
+      return { out: false };
+    }
+
+    await admin
       .auth()
       .updateUser(uid, { password: newPassword })
       .then((successful = true))
       .catch((error) => {
         successful = false;
         console.log("Error updating password:", error);
+        return { out: successful };
       });
 
     return { out: successful };
   },
 
 
-  //"forgot password" to be used outside of the app/
-  forgotPassword: function (email) {
-    authentication.sendPasswordResetEmail(email).then(function() {
+  //"forgot password" to be used outside of the app
+  forgotPassword: async function (email) {
+    await authentication.auth().sendPasswordResetEmail(email).then(function() {
       response = {
-        status: true,
+        out: true,
         data: ""
       };
     }).catch(function(error) {
       response = {
-        status: false,
+        out: false,
         data: error.message
       };
     })
@@ -47,31 +53,43 @@ const ManageAccountAPI = {
   *         OR remove the user from everyone's friends lists.
   *         this MUST be looked at before we submit.
   * 
+  *     - remove the user from everyone's friends lists OR somehow mark them as "deleted user" (probably go in Friends.js)
+  *     - 
+  * 
   */
-  deleteAccount: function (uid) {
+  deleteAccount: async function (uid) {
+    if(uid == null) {
+      console.log("No user in parameter to deleteAccount.");
+      return { out: false };
+    }
+
     // delete document associated with user
-    firebase
+    await firebase
       .firestore()
       .collection("users")
       .doc(uid)
       .delete()
-      .then(function () {
+      .then(async function () {
         // delete user from authentication
-        admin
+        await admin
           .auth()
           .deleteUser(uid)
           .then(() => {
             console.log("Successfully deleted user");
-            return { out: true };
+            response = { out: true };
           })
           .catch((error) => {
             console.log("Error deleting user: ", error);
+            response = { out: false };
           });
       })
       .catch((error) => {
         console.log("Error deleting document associated with user: ", error);
+        response = { out: false };
       });
+
+    return response;
   },
 };
 
-module.exports = ManageAccountAPI;
+module.exports = {ManageAccountAPI};
