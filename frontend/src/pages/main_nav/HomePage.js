@@ -131,7 +131,7 @@ export default function HomePage({ navigation, route }) {
 
         <Button
           title='upload page'
-          onPress={() => navigation.navigate('upload')}
+          onPress={() => navigation.navigate('Pic Upload Page')}
         />
       
         {/* Hug Cards */}
