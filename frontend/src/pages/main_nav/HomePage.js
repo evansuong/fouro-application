@@ -4,27 +4,20 @@ import {
   Button, 
   Text, 
   View, 
-  Dimensions, 
   ScrollView,
   Animated,
   TouchableWithoutFeedback,
-  TouchableOpacity,
-  Switch,
-  Image
-} from 'react-native'
-
-import AppStyles from '../../AppStyles'
-import { FlatList } from 'react-native-gesture-handler';
-
-import HugCard from 'components/HugCard'
+  Image,
+} from 'react-native';
+import AppStyles from '../../AppStyles';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import HugCard from 'components/HugCard';
 import Panel from 'components/StreakPanel';
-// import CreateHugButton from 'components/CreateHugButton';
-import { DimensionContext } from '../../contexts/DimensionContext';
-import Header from '../../components/Header';
-import { UserContext } from '../../contexts/UserContext';
+import Header from 'components/Header';
 
-// TODO: Move create hug button to the right side of the screen.
-// TODO: Fix button animation starting from far left of button
 
 export default function HomePage({ navigation, route }) {
   const [expanded, setExpanded] = useState(false);
@@ -42,10 +35,10 @@ export default function HomePage({ navigation, route }) {
 
   function buildTestData(name, text, img, id) {
     return {
-      name: name,
-      hugText: text,
-      hugImage: img,
-      hugId: id,
+      friend_name: name,
+      message: text,
+      image: img,
+      hug_id: id,
     }
   }
 
@@ -92,12 +85,14 @@ export default function HomePage({ navigation, route }) {
     }).start();
   }
 
+  const pic = "https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb"
+
   const testData = [
-    buildTestData('Vicki', 'do you remember', require('assets/profilePic.jpg'), 1),
-    buildTestData('Ricky', 'the 21st night of september Chow', require('assets/profilePic.jpg'), 2),
+    buildTestData('Vicki', 'do you remember', pic, 1), 
+    buildTestData('Ricky', 'the 21st night of september Chow', pic, 2),
     buildTestData('Alex', 'soulja boy tellem', undefined, 3),
-    buildTestData('Evan', 'nobody \n \n\npray for\n me if t\nhey n\no\n\n\n\n\n\nt \n there \n \n \n for me', require('assets/profilePic.jpg'), 4),
-    buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), 5),
+    buildTestData('Evan', 'nobody \n \n\npray for\n me if t\nhey n\no\n\n\n\n\n\nt \n there \n \n \n for me', pic, 4),
+    buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', pic, 5),
   ]
 
   let backgroundColor = isLightTheme ? '#FB7250': 'rgba(0,0,0,0.5)';
@@ -126,6 +121,11 @@ export default function HomePage({ navigation, route }) {
           title='welcome page'
           onPress={() => navigation.navigate('Welcome Page')}
         />
+
+        <Button
+          title='upload page'
+          onPress={() => navigation.navigate('upload')}
+        />
       
         {/* Hug Cards */}
         <TouchableWithoutFeedback
@@ -137,9 +137,9 @@ export default function HomePage({ navigation, route }) {
           >
             {testData.map(hugData => (
               <HugCard 
-                key={hugData.hugId} 
+                key={hugData.hug_id} 
                 navigation={navigation}
-                { ...hugData } 
+                data={hugData}
               />
             ))}
           </ScrollView>

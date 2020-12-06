@@ -5,31 +5,32 @@ import {
   StyleSheet, 
   Animated, 
   Image, 
-  TouchableOpacity 
+  TouchableOpacity,
 } from 'react-native'
 import { DimensionContext } from '../contexts/DimensionContext';
 import { UserContext } from '../contexts/UserContext';
 
 
-const COLLAPSED_CARD_HEIGHT_PROPORTION = 4.6;
+const COLLAPSED_CARD_HEIGHT_PROPORTION = 4.7;
 const EXPANDED_CARD_HEIGHT_PROPORTION = 2.7;
 const EXPAND_ANIMATION_DURATION_MS = 150;
 const FADE_ANIMATION_DURATION_MS = 300;
 const VISIBLE = 1;
 const HIDDEN = 0;
 
+console.log(Platform.OS)
+
 /**
  */
 export default function NotificationCard({ callId, notificationData, isFocused, handleAccept, handleDecline }) {
 
     // prop destructuring: { notification type, user that generated notif, sender pp, notification id }
-    const { id, type, time, friend, friendId, hugId } = notificationData;  
-    const { profPic, name } = friend;
+    const { name, date_time, friendpfp, type, call_id, notification_id } = notificationData;  
 
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
 
-    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { windowWidth, windowHeight, platform } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     const { isLightTheme } = userData;
     
@@ -38,9 +39,10 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
     const fade = useRef(new Animated.Value(0)).current;
     const marginL = useRef(new Animated.Value(0)).current;
 
-    const notificationMessage = type === 'r' ? "sent you a friend request" : "sent you a hug!"
-    const acceptBtnText = type === 'r' ? 'Accept' : 'Catch'
-    const declineBtnText =  type === 'r' ? 'Decline' : 'Drop'
+
+    const notificationMessage = type === 'friend' ? "sent you a friend request" : "sent you a hug!"
+    const acceptBtnText = type === 'friend' ? 'Accept' : 'Catch'
+    const declineBtnText =  type === 'friend' ? 'Decline' : 'Drop'
 
     // auto collapse panels if the user leaves the notification page
     useEffect(() => {
@@ -100,10 +102,9 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
  
 
 
-    let notifColor = type === 'r' ? '#8677E5' : '#E57777';
-    let backgroundColor = isLightTheme ? '#ffffff' : "rgb(45, 40, 40)";
+    let notifColor = type === 'friend' ? '#8677E5' : '#E57777';
+    let backgroundColor = isLightTheme ? '#ffffff' : "rgb(43, 40, 41)";
     let textColor = isLightTheme ? '#000' : '#EEE';
-
 
     return (
         <View style={{ 
@@ -126,11 +127,11 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                     }}><Text></Text></View>
 
                     {/* notification content */}
-                    <View style={{ padding: 0 }}>
+                    <View>
                         <View style={{
                             ...styles.notificationContent,
-                            height: windowWidth / 4.7,
-                            padding: windowWidth / 30,
+                            height: windowWidth / COLLAPSED_CARD_HEIGHT_PROPORTION,
+                            paddingVertical: platform === 'ios' ? 15 : 5
                         }}>
                             <View style={styles.textArea}>
                                 <View>
@@ -143,7 +144,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                                 </View>
                                 
                                 <Text style={{ fontSize: 12, color: '#bbbbbb' }}>
-                                    { time }
+                                    { date_time }
                                 </Text>
                             </View>
                             <View>
@@ -154,7 +155,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                                     height: windowWidth / 7,
                                     width: windowWidth / 7,
                                 }} 
-                                source={profPic} />
+                                source={{ uri: friendpfp }} />
                             </View>
                         </View>
                         
@@ -165,7 +166,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                             {/* accept button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => handleAccept(callId, id)}
+                                onPress={() => handleAccept(call_id, notification_id)}
                             >
                                 <Animated.View 
                                     style={{ 
@@ -190,7 +191,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                             {/* decline button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => handleDecline(callId, id)}
+                                onPress={() => handleDecline(call_id, notification_id)}
                             >
                                 <Animated.View 
                                     style={{ 
@@ -242,9 +243,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     notificationContent: {
+        paddingHorizontal: 10,
         display: 'flex',
+        height: '100%',
+        paddingVertical: 5,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
+        // backgroundColor: 'yellow'
     },
     footer: {
         display: 'flex',
@@ -256,9 +262,11 @@ const styles = StyleSheet.create({
     textArea: {
         fontSize: 18,
         marginHorizontal: 10,
+        height: '100%', 
         flex: 1,
-        flexWrap: 'wrap',
         justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        // backgroundColor: 'pink',
     },
     buttonText: {
         fontSize: 15,  

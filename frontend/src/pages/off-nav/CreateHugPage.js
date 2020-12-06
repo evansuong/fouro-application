@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -14,40 +14,51 @@ import {
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-// Images/Assets
-import fillerProfilePic from 'assets/fillerProfilePic.jpg';
-import profilePic from 'assets/profilePic.jpg';
-import BackgroundImg from 'assets/gradients/middle.png';
+// APIs
+import { CreateAPI } from '../../API';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import UserContext from 'contexts/UserContext';
 // Custom Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
 import Header from 'components/Header';
-// Contexts
-import { DimensionContext } from 'contexts/DimensionContext';
-import UserContext from 'contexts/UserContext';
+// Images/Assets
+import fillerProfilePic from 'assets/fillerProfilePic.jpg';
+import profilePic from 'assets/profilePic.jpg';
+import BackgroundImg from 'assets/gradients/middle.png';
 
 
 // TODO: Remove FriendName and FriendPic parameters
 export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
+
     const {windowWidth, windowHeight} = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
 
     const routeName = route.name;
-    // const {friendName, friendPfp} = route.params.data;
+    // const { friendData } = route.params.data;
 
     const callBackend = async () => {
       console.log('userData: ', userData);
       try {
-        const base64 = getBase64WithImage(uploadPic);
-        request = {
-          blob: base64
+        let base64Strings = [];
+        for (let image of images) {
+          const base64 = await getBase64WithImage(image);
+          base64Strings.push(base64);
         }
-        // UpdateAPI.uploadUserProfilePicture(userData.uid, request);
-        UpdateAPI.uploadUserProfilePicture('temp', request);
+        request = {
+          // friendId: friendData.friend_id,
+          message: message,
+          blobs: base64Strings
+        }
+        // const response = await CreateAPI.createHug(userData.uid, request);
+        const { status, data } = await CreateAPI.createHug('temp', request);
+        console.log('data', data);
         Alert.alert('Hug created!');
+        navigation.navigate('Home Page');
       } catch (err) {
         Alert.alert('Hug creation failed. Please try again.')
       }
@@ -70,8 +81,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
       }
     }
 
-    const getBase64WithImage = (uploadPic) => {
-      // console.log('before compression', uploadPic.base64.length);
+    const getBase64WithImage = async (uploadPic) => {
       const manipResult = await ImageManipulator.manipulateAsync(
         uploadPic.uri,
         [],
@@ -81,7 +91,6 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
           base64: true
         }
       )
-      // console.log('after compression', manipResult`.base64.length);
       return `data:image/jpeg;base64,${manipResult}`;
     }
   
@@ -91,10 +100,12 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
       const validExtension = validExtensions.includes(fileExtension);
       if (!validExtension) {
         Alert.alert(`Accepted image types are ${validExtensions}`);
-      } else if (data.cancelled == false) {
-        setUploadPic(data);
+      } else if (images.length > 3) {
+        Alert.alert('Max limit of uploads reached');
       } else if (data.cancelled) {
         Alert.alert('Image upload cancelled');
+      } else if (data.cancelled == false) {
+        setUploadPic(data);
       }
     }
 
@@ -104,7 +115,6 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
 
     const styles = StyleSheet.create({
       mainContainer: {
-        // marginTop: windowHeight / 8,
         overflow: 'hidden',
         height: windowHeight / 1.45,
       },
@@ -135,12 +145,8 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         height: windowHeight / 5,
         overflow: 'hidden',
         marginTop: windowHeight / 80,
-        // borderTopWidth: 1,
-        // borderBottomWidth: 1,
       },
       backgroundImg: {
-        // flex: 1,
-        // justifyContent: 'center',
         height: windowHeight,
         resizeMode: 'cover',
       },

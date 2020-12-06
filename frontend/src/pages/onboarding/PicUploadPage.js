@@ -7,21 +7,21 @@ import {
   Animated,
   ImageBackground
 } from 'react-native';
-import fillerProfilePic from 'assets/fillerProfilePic.jpg';
-import BackgroundImg from 'assets/gradients/middle.png';
-import AuthAPI from '../../authentication/Authentication';
-import { UpdateAPI } from '../../API';
-import { UserContext } from '../../contexts/UserContext';
-import { DimensionContext } from '../../contexts/DimensionContext';
-import LinkedButton from 'components/LinkedButton';
-import PicUploadButton from 'components/PicUploadButton';
+// Expo Imports
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import * as ImageManipulator from 'expo-image-manipulator';
+// APIs
+import { UpdateAPI } from '../../API';
+// Contexts
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import LinkedButton from 'components/LinkedButton';
+import PicUploadButton from 'components/PicUploadButton';
+// Images/Assets
+import fillerProfilePic from 'assets/fillerProfilePic.jpg';
+import BackgroundImg from 'assets/gradients/middle.png';
 
-// const fs = require('fs');
-
-const fetch = require('node-fetch');
 
 export default function ProfileSetupPage({ navigation, route }) {
   const [uploadPic, setUploadPic] = useState({});
@@ -41,15 +41,22 @@ export default function ProfileSetupPage({ navigation, route }) {
   const validExtensions = ['jpeg', 'jpg'];
 
   const callBackend = async () => {
-    const base64 = getBase64WithImage(uploadPic);
+    const base64 = await getBase64WithImage(uploadPic);
     request = {
       blob: base64
     }
-    UpdateAPI.uploadUserProfilePicture('zE51j8mkbreXCT2QDevz4Daid5I2', request);
+    // const response = await UpdateAPI.uploadUserProfilePicture(userData.uid, request);
+    const { status, data } = await UpdateAPI.uploadUserProfilePicture('1', request);
+    if (!status) {
+      Alert.alert('An error occurred');
+      console.log(data);
+    } else {
+      console.log('data', data);
+      navigation.navigate('Welcome Page');
+    }
   }
 
-  const getBase64WithImage = (uploadPic) => {
-    // console.log('before compression', uploadPic.base64.length);
+  const getBase64WithImage = async (uploadPic) => {
     const manipResult = await ImageManipulator.manipulateAsync(
       uploadPic.uri,
       [],
@@ -59,7 +66,6 @@ export default function ProfileSetupPage({ navigation, route }) {
         base64: true
       }
     )
-    // console.log('after compression', manipResult`.base64.length);
     return `data:image/jpeg;base64,${manipResult}`;
   }
 
@@ -133,11 +139,14 @@ export default function ProfileSetupPage({ navigation, route }) {
   
   return (
     <Animated.View opacity={fade} style={{flex: 1,}}>
+      {/* Gradient Background */}
       <ImageBackground
         source={BackgroundImg}
         style={styles.backgroundImg}
       >
+        {/* White Box Background */}
         <View style={styles.whiteBox}>
+          {/* Profile Picture Holder */}
           <View style={styles.picContainer}>
             <Image
               source={isEmpty(uploadPic) || uploadPic.cancelled ? fillerProfilePic : {uri: `${uploadPic.uri}`}}
@@ -145,6 +154,7 @@ export default function ProfileSetupPage({ navigation, route }) {
             />
           </View>
 
+          {/* Choose a Profile Picture Button */}
           <View style={styles.buttonContainer}>
             <PicUploadButton
               text='Choose a profile picture'
@@ -156,10 +166,12 @@ export default function ProfileSetupPage({ navigation, route }) {
             />
           </View>
 
-          { uploadedPic() && 
+          {/* Conditional Submit */}
+          { 
+            uploadedPic() && 
             <View style={styles.submit}>
               <LinkedButton
-                text='SUBMIT'
+                text='NEXT'
                 // Should this be yellow or grey?
                 color='#FFC24A'
                 onPress={() => callBackend()}

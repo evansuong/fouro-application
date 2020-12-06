@@ -5,9 +5,9 @@
  * https://stackoverflow.com/questions/40665370/react-native-what-is-a-proper-way-to-pass-style-as-props-when-using-spread-ope
  * https://stackoverflow.com/questions/53647304/elevation-in-react-native 
  */
-
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+// Contexts
 import { DimensionContext } from '../contexts/DimensionContext'
 import { UserContext } from '../contexts/UserContext';
 /**
@@ -26,11 +26,12 @@ import { UserContext } from '../contexts/UserContext';
  */
 export default function FriendCard(props) {
 
-  const { profilePicture, friendName, friendColorString, navigation, height, width, friendData} = props;
+  const { navigation, height, width, friendData } = props;
+  const { color, name, profile_pic, username, user_id } = friendData;
   const { windowWidth, windowHeight } = useContext(DimensionContext)
   const pfpWidth = windowWidth * 0.11
   const cardHeight = pfpWidth + 15
-  const friendColor = { backgroundColor: friendColorString }
+  const friendColor = { backgroundColor: color }
   const containerDimensions = { width: width, height: height }
   const { userData } = useContext(UserContext);
   const { isLightTheme } = userData;
@@ -43,7 +44,7 @@ export default function FriendCard(props) {
       borderRadius: 100,
       width: pfpWidth + 5,
       height: pfpWidth + 5,
-      backgroundColor: isLightTheme ? 'pink' : friendColorString,
+      backgroundColor: isLightTheme ? 'pink' : color,
     },
     pfpContainer2: {
       marginRight: 20,
@@ -61,7 +62,7 @@ export default function FriendCard(props) {
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 100,
-      backgroundColor: isLightTheme ? friendColorString : 'rgb(40, 40, 40)',
+      backgroundColor: isLightTheme ? color : 'rgb(40, 40, 40)',
   
       /* iOS shadow*/
       shadowColor: '#000',
@@ -80,7 +81,7 @@ export default function FriendCard(props) {
     friendText: {
       fontSize: 20,
       marginLeft: 20,
-      color: isLightTheme ? 'white' : friendColorString,
+      color: isLightTheme ? 'white' : color,
       fontWeight: '500',
     }
   });
@@ -89,7 +90,7 @@ export default function FriendCard(props) {
     /* the card itself */
     <TouchableOpacity 
       style={styles.friendCardContainer}
-      onPress={() => { navigation.navigate("Friend Profile", { friendData: friendData })}}
+      onPress={() => { navigation.navigate("Friend Profile", { data: friendData })}}
     >
 
     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: pfpWidth + 10 }}>
@@ -97,17 +98,17 @@ export default function FriendCard(props) {
         {/* profile picture */}
         <View style={styles.pfpContainer}>
           <Image
-            source={profilePicture}
+            source={{ uri: profile_pic }}
             style={styles.pfp}
           />
         </View>
 
         {/* friend name */}
         <Text style={styles.friendText}>
-          {friendName}
+          {name}
         </Text>
 
-        {/* profile picture */}
+        {/* filler profile picture */}
         <View style={styles.pfpContainer2}>
         </View>
 

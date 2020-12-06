@@ -8,18 +8,19 @@ import {
   Animated,
   ImageBackground,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-// Custom Components
-import CustomTextField from 'components/CustomTextField';
-import LinkedButton from 'components/LinkedButton';
-// Images
-import BackgroundImg from 'assets/gradients/middle.png';
 // APIs
 import AuthAPI from '../../authentication/Authentication';
 // Contexts
 import { UserContext } from '../../contexts/UserContext';
 import { DimensionContext } from '../../contexts/DimensionContext';
+// Custom Components
+import CustomTextField from 'components/CustomTextField';
+import LinkedButton from 'components/LinkedButton';
+// Images
+import BackgroundImg from 'assets/gradients/middle.png';
 
 
 export default function SignupPage({ navigation }) {
@@ -86,8 +87,14 @@ export default function SignupPage({ navigation }) {
     // check if user with that email already exists (waiting for backend)
     
     
-    let response = await AuthAPI.registerUser(emailField.trim(), passwordField.trim())
-    processSignupResponse(response)
+    let { status, data } = 
+      await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
+    if (status) {
+      processSignupResponse(data);
+    } else {
+      Alert.alert('An error occurred');
+      console.log(data);
+    }
   }
 
   const processSignupResponse = (response) => {
@@ -262,7 +269,7 @@ export default function SignupPage({ navigation }) {
               passwordMatch() && 
               checkLength() &&
               <LinkedButton
-                text='SIGN UP'
+                text='NEXT'
                 color='#FFC24A'
                 onPress={() => submitHandler()}
               />

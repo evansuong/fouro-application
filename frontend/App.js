@@ -59,7 +59,6 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator 
               style={styles.appContainer}
-              initialRouteName='Pic Upload Page'
               /** 
                * comment out the line below when you need the header for 
               /* going back to the previous screen. Leave it to see what 
@@ -122,6 +121,10 @@ export default function App() {
               <Stack.Screen 
                 name='Catch Hug Page'
                 component={CatchHugPage}/>
+
+              <Stack.Screen
+                name='upload'
+                component={PicUploadPage}/>
             </Stack.Navigator>
           </NavigationContainer>    
         </DimensionContextProvider>
