@@ -20,10 +20,9 @@ function checkBody(req, res, next) {
 }
 
 // Routes
-// TODO: NOT TESTED
 router.delete("/removeFriend/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
-  const { friendId } = req.body;
+  const friendId = req.body.friendId;
 
   if (!friendId) {
     res.status(400).send("Request has missing fields");
@@ -38,17 +37,16 @@ router.delete("/removeFriend/:id", checkBody, async (req, res) => {
   }
 });
 
-// TODO: NOT TESTED
 router.get("/getFriendStatus/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
-  const { friendId } = req.body;
+  const friendId = req.body.friendId;
 
   if (!friendId) {
     res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
-      let response = await FriendsAPI.addFriend(uid, friendId);
+      let response = await FriendsAPI.getFriendStatus(uid, friendId);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);

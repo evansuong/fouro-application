@@ -171,7 +171,6 @@ const FriendsAPI = {
       .then(async (doc) => {
         // Friend is found
         if (doc.exists) {
-          console.log("HI");
           status = "friend";
         } else {
           // If Pending
