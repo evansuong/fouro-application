@@ -14,6 +14,8 @@ export default function HugCard({ navigation, route, data }) {
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
   const { isLightTheme } = userData;
+
+  // backend json object data fields
   const { friend_name, message, image, hug_id } = data;
   
   const SPACING_SMALL = 5
@@ -40,7 +42,7 @@ export default function HugCard({ navigation, route, data }) {
       borderTopLeftRadius: 10,
       paddingLeft: SPACING_SMALL,
       width: hugCardWidth - hugImageWidth,
-      backgroundColor: isLightTheme ? '#d9d9d9' : 'rgb(33, 30, 31)'
+      backgroundColor: isLightTheme ? '#dddddd' : 'rgb(33, 30, 31)'
     },
     nameBarNoImg: {
       display: 'flex',
@@ -48,7 +50,7 @@ export default function HugCard({ navigation, route, data }) {
       borderTopRightRadius: 10,
       paddingLeft: SPACING_SMALL,
       width: hugCardWidth - hugImageWidth,
-      backgroundColor: isLightTheme ? '#d9d9d9' : 'rgb(33, 30, 31)'
+      backgroundColor: isLightTheme ? '#dddddd' : 'rgb(33, 30, 31)',
     },
     outerImageContainer: {
       // marginRight: 10,
@@ -130,22 +132,22 @@ export default function HugCard({ navigation, route, data }) {
         paddingHorizontal: SPACING_MEDIUM,
         fontSize: 17,
         fontWeight: 'bold',
-        color: isLightTheme ? '#000' : '#EEE',
+        color: isLightTheme ? '#000' : '#eee',
     },
     hugText: {
         fontSize: 15,
         color: isLightTheme ? '#000' : '#EEE',
         fontFamily: 'Montserrat_400Regular',
     },
-  })
+  });
   
   return (
     /* container */
       <TouchableOpacity 
         style={styles.hugCardContainer}
-        onPress={() => { navigation.navigate("Hug Info", hug_id ) }}
+        onPress={() => { navigation.navigate("Hug Info", { data: data }) }}
+        activeOpacity={.9}
       >
-
         <View className='title-description'>
           {/* Name Bar */}
           { 
