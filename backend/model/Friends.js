@@ -5,7 +5,7 @@ var firebase = require("../firebase/admin");
 require("firebase/firestore");
 
 // Backend function imports
-// var Hugs = require("./Hugs");
+const Hugs = require("./Hugs");
 
 // Firestore
 const db = firebase.firestore();
