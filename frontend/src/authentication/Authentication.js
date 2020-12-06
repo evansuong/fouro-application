@@ -14,7 +14,7 @@ const AuthAPI = {
         registered = true;
         response = {
           status: true,
-          data: firebase.auth().currentUser
+          data: firebase.auth().currentUser.uid
         };
       })
       .catch(function (error) {
@@ -40,7 +40,7 @@ const AuthAPI = {
         loggedin = true;
         response = {
           status: true,
-          data: firebase.auth().currentUser
+          data: firebase.auth().currentUser.uid
         }
       })
       .catch(function (error) {
