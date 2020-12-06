@@ -177,14 +177,14 @@ export default function LoginPage({ navigation }) {
             <View style={styles.whiteBox}>
               <CustomTextField 
                 titleText='Email' 
-                placeholder='eg rikhilna@ucsd.edu'
+                placeholder='e.g., abc123@gmail.com'
                 setField={setEmailField}
                 required={true}
               />
 
               <CustomTextField
                 titleText='Password'
-                placeholder='eg password'
+                placeholder='Password'
                 setField={setPasswordField}
                 secureText={true}
                 required={true}

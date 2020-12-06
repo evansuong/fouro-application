@@ -22,12 +22,20 @@ export default function LaunchPage({ navigation }) {
     innerContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: '30%',
+      marginBottom: '5%',
+      // backgroundColor: 'pink'
     },
     logo: {
+      width: windowWidth * 0.75,
+      height: windowWidth * 0.75,
+    },
+    logoContainer: {
+      position: 'absolute',
+      height: '100%',
       width: windowWidth,
-      height: windowWidth,
-      marginTop: windowWidth / 2,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     }
   })
 
@@ -41,12 +49,15 @@ export default function LaunchPage({ navigation }) {
         source={{ uri: `https://picsum.photos/${roundedWidth}/${roundedHeight}`}}
         style={{position: 'absolute', width: '100%', height: '100%'}}
       >
-        <View>
+        {/* logo */}
+        <View style={styles.logoContainer}>
           <Image
             source={fouroLogo}
             style={styles.logo}
           />
         </View>
+
+        {/* Buttons */}
         <View style={styles.innerContainer}>
           <LinkedButton 
             navigation={navigation} 

@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 // APIs
 import AuthAPI from '../../authentication/Authentication';
 // Contexts
@@ -27,8 +28,8 @@ export default function SignupPage({ navigation, route }) {
   const [emailField, setEmailField] = useState('');
   // const [passwordField, setPasswordField] = useState('');
   // const [passwordConfirmField, setPasswordConfirmField] = useState('');
-  const [passwordField, setPasswordField] = useState('gggggg');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('gggggg');
+  const [passwordField, setPasswordField] = useState('');
+  const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
@@ -210,14 +211,14 @@ export default function SignupPage({ navigation, route }) {
           <View style={styles.whiteBox}>
             <CustomTextField 
               titleText='Email' 
-              placeholder='eg rikhilna@ucsd.edu'
+              placeholder='e.g., abc123@gmail.com'
               setField={setEmailField}
               required={true}
             />
 
             <CustomTextField
               titleText='Password'
-              placeholder='eg password'
+              placeholder='Password'
               setField={setPasswordField}
               secureText={true}
               required={true}
@@ -225,7 +226,7 @@ export default function SignupPage({ navigation, route }) {
 
             <CustomTextField
               titleText='Password Confirmation'
-              placeholder='eg password'
+              placeholder='Password'
               setField={setPasswordConfirmField}
               secureText={true}
               required={true}
