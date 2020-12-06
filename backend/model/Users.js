@@ -3,32 +3,26 @@
 var firebase = require("../firebase/admin");
 var firebase2 = require("../firebase/config");
 require("firebase/auth");
-<<<<<<< HEAD
-const fetch = require("node-fetch");
-=======
 global.XMLHttpRequest = require("xhr2");
->>>>>>> 9d6e97f3c1b8a31d8afdf6bd5f635aec0254daac
 
 // Firestore
 const db = firebase.firestore();
 const usersCollection = db.collection("users");
 
-
 // helper function that checks if a username is taken by another user.
 async function usernameTaken(username) {
-  console.log('user input: ', username);
-  const response = usersCollection.where('username', '==', username);
+  console.log("user input: ", username);
+  const response = usersCollection.where("username", "==", username);
   const query = await response.get();
   return !query.empty;
 }
 
-
-/* 
- * 
- * 
+/*
+ *
+ *
  *    API for database storage of user info.
- * 
- * 
+ *
+ *
  */
 const UsersAPI = {
   // Profile pic, friends, hugs, chatrooms, corkboard_id
@@ -37,23 +31,31 @@ const UsersAPI = {
    */
   createNewUser: async function (uid, username, firstName, lastName) {
     let created = false;
-    
+
     // trim whitespace from username
     username = username.trim().toLowerCase();
     firstName = firstName.trim();
     lastName = lastName.trim();
-      
+
     // Check if username matches [a-z 0-9]
     for (var i = 0; i < username.length; i++) {
-      var ch = username.charAt(i);  
-      if (!((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '.') || (ch == '_') || (ch == '-'))) {
+      var ch = username.charAt(i);
+      if (
+        !(
+          (ch >= "a" && ch <= "z") ||
+          (ch >= "0" && ch <= "9") ||
+          ch == "." ||
+          ch == "_" ||
+          ch == "-"
+        )
+      ) {
         console.log("Username contained an invalid character");
         created = false;
-        return { out : created };
+        return { out: created };
       }
     }
 
-    if(await usernameTaken(username)) {
+    if (await usernameTaken(username)) {
       console.log("username " + username + " is already taken");
       created = false;
       return { out: created };
@@ -128,28 +130,38 @@ const UsersAPI = {
     if (!user.exists) {
       success = false;
     } else {
-      if (typeof username !== 'undefined') {
+      if (typeof username !== "undefined") {
         // trim whitespace from username
         username = username.trim().toLowerCase();
         // Check if username matches [a-z 0-9]
         for (var i = 0; i < username.length; i++) {
           var ch = username.charAt(i);
 
-          if (!((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '.') || (ch == '_') || (ch == '-'))) {
+          if (
+            !(
+              (ch >= "a" && ch <= "z") ||
+              (ch >= "0" && ch <= "9") ||
+              ch == "." ||
+              ch == "_" ||
+              ch == "-"
+            )
+          ) {
             console.log("Username contained an invalid character.");
             success = false;
-            return { out : success };
+            return { out: success };
           }
         }
 
         // case for if a username is already taken.
-        if(username == userData.username) {
-          console.log("user " + uid + " set their new username to old username")
+        if (username == userData.username) {
+          console.log(
+            "user " + uid + " set their new username to old username"
+          );
         } else {
-          if(await usernameTaken(username)) {
-            console.log("username " + username + " is already taken.")
+          if (await usernameTaken(username)) {
+            console.log("username " + username + " is already taken.");
             success = false;
-            return { out : success };
+            return { out: success };
           }
         }
       }
@@ -202,43 +214,51 @@ const UsersAPI = {
 
     // setup metadata
     let metadata = {
-      contentType: "image/jpeg"
+      contentType: "image/jpeg",
     };
 
-    var url = ""
+    var url = "";
     // upload to firestore
-    await profilePicRef.put(blob, metadata).then(async () => {
-      upload_success = true;
-    }).catch((error) => {
-      upload_success = false;
-      console.log("Error uploading user " + uid + "\'s profile picture to Cloud Storage: " + error);
-    });
+    await profilePicRef
+      .put(blob, metadata)
+      .then(async () => {
+        upload_success = true;
+      })
+      .catch((error) => {
+        upload_success = false;
+        console.log(
+          "Error uploading user " +
+            uid +
+            "'s profile picture to Cloud Storage: " +
+            error
+        );
+      });
 
     // get reference URL and store it in the user document
     url = await profilePicRef.getDownloadURL();
     const user = { profile_pic: url };
 
     // update user's profile_pic field in firestore
-    await userRef.update(user).then(() => {
-      update_success = true;
-    })
-    .catch((error) => {
-      update_success = false;
-      console.log("Error setting profile_pic URL: " + error);
-    })
+    await userRef
+      .update(user)
+      .then(() => {
+        update_success = true;
+      })
+      .catch((error) => {
+        update_success = false;
+        console.log("Error setting profile_pic URL: " + error);
+      });
 
-    return { out : upload_success && update_success, url : url };
-
+    return { out: upload_success && update_success, url: url };
   },
 };
 
-
-/* 
- * 
- * 
+/*
+ *
+ *
  *    API for hug count retrieval and updates.
- * 
- * 
+ *
+ *
  */
 const HugCountAPI = {
   getUserCounts: async function (uid) {
@@ -270,15 +290,9 @@ const HugCountAPI = {
   increaseHugCount: async function (uid) {
     // retrieve hug and streak count
 
-<<<<<<< HEAD
-    var json = this.getUserCount(uid);
+    var json = this.getUserCounts(uid);
     var hug_count = (await json).hug;
     var streak_count = (await json).streak;
-=======
-    var json = this.getUserCounts(uid);
-    var hug_count = (await json).hug
-    var streak_count = (await json).streak
->>>>>>> 9d6e97f3c1b8a31d8afdf6bd5f635aec0254daac
     var success = false;
 
     var userDocRef = usersCollection.doc(uid);

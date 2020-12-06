@@ -6,7 +6,7 @@ require("firebase/firestore");
 require("firebase/storage");
 global.XMLHttpRequest = require("xhr2");
 
-// import
+// Import
 const Users = require("./Users");
 const Notifications = require("./Notifications");
 
@@ -16,7 +16,6 @@ const users = db.collection("users");
 const hugs = db.collection("hugs");
 
 // Storage
-const storage = firebase2.storage();
 const storageRef = firebase2.storage().ref();
 
 const HugsAPI = {
