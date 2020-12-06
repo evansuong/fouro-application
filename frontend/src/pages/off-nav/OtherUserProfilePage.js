@@ -8,10 +8,10 @@ import LinkedButton from 'components/LinkedButton'
 
 function buildTestData(name, text, img, id) {
     return {
-      name: name,
-      hugText: text,
-      hugImage: img,
-      hugId: id,
+      friend_name: name,
+      message: text,
+      image: img,
+      hug_id: id,
     }
   }
 
@@ -24,22 +24,21 @@ function buildTestData(name, text, img, id) {
   ]
 
 export default function OtherUserProfilePage({ navigation, route }) {
-    const icon = require("assets/overflowMenuIcon.png");
     const {windowWidth, windowHeight} = useContext(DimensionContext)
     const routeName = route.name;
+    const dotsIcon = require('assets/dots-icon.png');
+    const dotsIconDark = require('assets/dots-icon-dark.png');
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
-    let status = 'friend';
-    const isStranger = status === 'friend' ? true : false;
-    const isPending = status === 'friend' ? status === 'pending' ? true : false : false;
+    let status = 'pending';
+    const isStranger = status !== 'friend' ? true : false;
+    const isPending = status === 'pending' ? true : false;
     
-   
+    // destruct route parameteres
+    const { data } = route.params;
+    const { id, name, profile_pic, username } = data;
     
-    const { friendData } = route.params;
-    const { color, id, name, profile_pic, username } = friendData;
-    
-    console.log(friendData)
 
     // TODO: replace with getFriendProfile to get all shared hugs
     const friendProfile = { 
@@ -56,12 +55,13 @@ export default function OtherUserProfilePage({ navigation, route }) {
         return(
         <HugCard 
             navigation={navigation}
-            name={item.item.name}
-            hugText={item.item.hugText}
-            hugImage={item.item.hugImage}
-            // hugId={item.hugId}
+            data={item.item}
         />)}
     )
+
+    function handleSendRequest() {
+        console.log('wererw')
+    }
         
     const styles = StyleSheet.create({
         header: {
@@ -110,7 +110,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
             alignItems: 'center',
             borderRadius: 20,
             margin: 10,
-            width: windowWidth, 
+            width: windowWidth / 1.2, 
             height: 40, 
             alignItems: 'center', 
             justifyContent: 'center'
@@ -120,7 +120,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
             alignItems: 'center',
             borderRadius: 20,
             margin: 10,
-            width: windowWidth, 
+            width: windowWidth / 1.2, 
             height: 40, 
             alignItems: 'center', 
             justifyContent: 'center'
@@ -130,13 +130,14 @@ export default function OtherUserProfilePage({ navigation, route }) {
             flexShrink: 1,
         },
         generalText: {
-          fontSize: 25, 
+          fontSize: 20, 
           color: 'white', 
           justifyContent: 'center'
         },
         button: {
           width: windowWidth / 1.2, 
-          marginBottom: windowHeight / 30
+          marginBottom: windowHeight / 30,
+          height: windowWidth / 20,
         }
     });
     
@@ -151,45 +152,46 @@ export default function OtherUserProfilePage({ navigation, route }) {
               contentContainerStyle={styles.sharedHugsContainer}
               data={testData}
               renderItem={renderHug}
-              keyExtractor={(item) => item.hugId}
+              keyExtractor={(item) => item.hug_id}
             />
         let hugButton = 
-            <TouchableOpacity 
-                style={styles.hugButtonStyle}
-                onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
-            >
-                <Text style={styles.generalText}>
-                  Hug
-                </Text>
-            </TouchableOpacity>
+            <LinkedButton
+                navigation={navigation}
+                link='Create Hug'
+                text='Hug'
+                color='#FB7250'
+            />
 
         //TODO: fix redirection and change to pending on click
         let sendFriendRequestButton = 
             <TouchableOpacity 
                 style={styles.sendFriendRequestButtonStyle}
-                onPress={() => navigation.navigate('Create Hug', { page: 'createHug' })}
-                >
+                onPress={handleSendRequest}
+            >
                 <Text style={styles.generalText}>
                   Send Friend Request
                 </Text>
             </TouchableOpacity>
 
         let pendingButton = 
-            <View 
+            <TouchableOpacity 
                 style={styles.pendingButtonStyle}
-                >
+                activeOpacity={1}
+            >
                 <Text style={styles.generalText}>
-                  Pending
+                    Request Pending
                 </Text>
-            </View>
+            </TouchableOpacity>
+        
+      
 
-    let button = hugButton
+    let button = sendFriendRequestButton
     let containerStyle = {}
 
     if(isStranger) {
         sharedHugsContainer = <></>
         sharedHugsFlatList = <></>
-        button = isPending && isStranger ? pendingButton : sendFriendRequestButton
+        button = isStranger ? (isPending ? pendingButton : sendFriendRequestButton) : hugButton;
         containerStyle = { position: 'absolute', bottom: 0 }
     }
 
@@ -210,15 +212,9 @@ export default function OtherUserProfilePage({ navigation, route }) {
             <View style={[styles.friendSharedHugs, containerStyle]}>
                 {sharedHugsContainer}
                 {sharedHugsFlatList}
-                {/* {button} */}
             </View>
-            <View style={styles.button}>
-              <LinkedButton
-                navigation={navigation}
-                link='Create Hug'
-                text='Hug'
-                color='#FB7250'
-              />
+            <View>
+                {button}
             </View>
             
         </View>
