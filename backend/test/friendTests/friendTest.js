@@ -32,4 +32,13 @@ async function testGetFriend() {
   let test = await Friends.FriendsAPI.getFriendsList("example@email.com");
   console.log(test);
 }
-testGetFriend();
+//testGetFriend();
+
+async function testFriendProfile() {
+  let test = await Friends.FriendsAPI.getFriendProfile(
+    "example@email.com",
+    "TestManSupreme"
+  );
+  console.log(test);
+}
+testFriendProfile();

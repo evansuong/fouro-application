@@ -42,8 +42,6 @@ function calculateFriendColor(last_hug_date) {
   // Times
   let dateInSeconds = Math.floor(Date.now() / SECOND);
   let hugDateInSeconds = last_hug_date.seconds;
-  let time = last_hug_date.toDate().toString();
-  console.log(time);
 
   // Time since last hug in seconds
   let diff = dateInSeconds - hugDateInSeconds;
@@ -250,7 +248,7 @@ const FriendsAPI = {
    * @param {string} friendId
    */
   getFriendProfile: function (userId, friendId) {
-    // return Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
+    return Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
   },
 };
 
