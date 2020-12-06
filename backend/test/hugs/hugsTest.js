@@ -1,4 +1,4 @@
-var firebase = require("../firebase/config");
+var firebase = require("../../firebase/config");
 require("firebase/firestore");
 require("firebase/auth");
 require("firebase/storage");
@@ -11,8 +11,8 @@ var xhr = new XMLHttpRequest();
 const db = firebase.firestore();
 
 // Main.js used to run and test functions
-var Users = require("../model/Users");
-var Hugs = require("../model/Hugs");
+var Users = require("../../model/Users");
+var Hugs = require("../../model/Hugs");
 // Users
 //Users.UsersAPI.addUser("username", "first", "last");
 
@@ -63,16 +63,6 @@ var Hugs = require("../model/Hugs");
 //         console.log(results); //ADD RETURN HERE
 //     });
 
-// deleteImage()
-// Hugs.UpdateHugAPI.deleteImage(
-//     "https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb"
-// );
-
-// deleteImageFromPath()
-// Hugs.UpdateHugAPI.deleteImageFromPath(
-//     "profile_pictures/Photo on 3-30-20 at 5.34 PM.jpg"
-// );
-
 // getHugById()
 // async function testGetHugById(hugId) {
 //     hug1 = await Hugs.ViewHugAPI.getHugById(hugId);
@@ -96,12 +86,13 @@ async function testGetSharedHugs(currUser, targetUser) {
 //     "-------------------example@email.com & otherguy@email.com--------------------"
 // );
 testGetSharedHugs("example@email.com", "otherguy@email.com");
+//testGetSharedHugs("otherguy@email.com", "example@email.com");
 //output should be hug1 and hug_2
 
 // console.log(
 //     "-------------------gary@example.com & otherguy@email.com--------------------"
 // );
-testGetSharedHugs("gary@email.com", "otherguy@email.com");
+//testGetSharedHugs("gary@email.com", "otherguy@email.com");
 //output should be hug_3
 
 //loop through images? Need cloud function?

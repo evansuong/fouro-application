@@ -1,9 +1,13 @@
 // Users file for Creating, Reading, Updating, and Deleting Users
 // and User Profile Management
 var firebase = require("../firebase/admin");
-var firebase2 = require('../firebase/config');
+var firebase2 = require("../firebase/config");
 require("firebase/auth");
+<<<<<<< HEAD
+const fetch = require("node-fetch");
+=======
 global.XMLHttpRequest = require("xhr2");
+>>>>>>> 9d6e97f3c1b8a31d8afdf6bd5f635aec0254daac
 
 // Firestore
 const db = firebase.firestore();
@@ -152,18 +156,16 @@ const UsersAPI = {
 
       // initialize local object containing new user values
       const user = {
-        username: typeof username !== 'undefined' ?
-          username
-          :
-          userData['username'],
-        first_name: typeof firstName !== 'undefined' ?
-        firstName.trim() 
-        : 
-        userData['first_name'],
-        last_name: typeof lastName !== 'undefined' ?
-        lastName.trim() 
-        : 
-        userData['last_name'],
+        username:
+          typeof username !== "undefined" ? username : userData["username"],
+        first_name:
+          typeof firstName !== "undefined"
+            ? firstName.trim()
+            : userData["first_name"],
+        last_name:
+          typeof lastName !== "undefined"
+            ? lastName.trim()
+            : userData["last_name"],
       };
 
       // update document with data
@@ -262,15 +264,21 @@ const HugCountAPI = {
         hug_count = null;
       });
 
-    return { hug : hug_count, streak : streak_count };
+    return { hug: hug_count, streak: streak_count };
   },
 
   increaseHugCount: async function (uid) {
     // retrieve hug and streak count
 
+<<<<<<< HEAD
+    var json = this.getUserCount(uid);
+    var hug_count = (await json).hug;
+    var streak_count = (await json).streak;
+=======
     var json = this.getUserCounts(uid);
     var hug_count = (await json).hug
     var streak_count = (await json).streak
+>>>>>>> 9d6e97f3c1b8a31d8afdf6bd5f635aec0254daac
     var success = false;
 
     var userDocRef = usersCollection.doc(uid);
