@@ -24,11 +24,12 @@ const testRef = storageRef.child("test.jpg");
 //convert base64 to buffer / blob
 const blob = Buffer.from(test, "base64");
 
-// Assign metadata
+// MIME Metadata
 let metadata = {
   contentType: "image/jpeg",
 };
 
-testRef.put(blob, metadata).then(() => {
+// Upload to firestore
+testRef.put(blob, metadata).then((snapshot) => {
   console.log("Success!");
 });
