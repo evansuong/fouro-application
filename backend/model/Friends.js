@@ -42,6 +42,8 @@ function calculateFriendColor(last_hug_date) {
   // Times
   let dateInSeconds = Math.floor(Date.now() / SECOND);
   let hugDateInSeconds = last_hug_date.seconds;
+  let time = last_hug_date.toDate().toString();
+  console.log(time);
 
   // Time since last hug in seconds
   let diff = dateInSeconds - hugDateInSeconds;
@@ -103,7 +105,7 @@ const FriendsAPI = {
       .set({
         // Priority new friend to top of list
         last_hug_date: new admin.firestore.Timestamp(0, 0), // seconds, nanoseconds
-        user_id: usersCollection.doc(friendId),
+        user_ref: usersCollection.doc(friendId),
       });
     // Add user to friend
     usersCollection
@@ -113,7 +115,7 @@ const FriendsAPI = {
       .set({
         // Priority new friend to top of list
         last_hug_date: new admin.firestore.Timestamp(0, 0), // seconds, nanoseconds
-        user_id: usersCollection.doc(userId),
+        user_ref: usersCollection.doc(userId),
       });
   },
 
@@ -180,7 +182,7 @@ const FriendsAPI = {
             .doc(friendId)
             .collection("notifications");
           let query = await friendNotificationsRef
-            .where("user_id", "==", usersCollection.doc(userId))
+            .where("user_ref", "==", usersCollection.doc(userId))
             .get();
 
           // Check if any matching results
@@ -220,8 +222,7 @@ const FriendsAPI = {
 
     // Get all user_id references from friends
     await friendsSnapshot.forEach(async (friendDoc) => {
-      friendPromises.push(friendDoc.get("user_id"));
-      console.log(friendDoc.get("user_id"));
+      friendPromises.push(friendDoc.get("user_ref"));
       colors.push(friendDoc.get("last_hug_date"));
     });
 
@@ -278,7 +279,7 @@ const FriendSearchAPI = {
     }
     // Get all user_id references from friends
     friendsSnapshot.forEach(async (friendDoc) => {
-      friendPromises.push(friendDoc.get("user_id"));
+      friendPromises.push(friendDoc.get("user_ref"));
     });
 
     let friends = [];

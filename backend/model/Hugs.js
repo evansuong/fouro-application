@@ -14,6 +14,7 @@ const Notifications = require("./Notifications");
 // Firestore
 const db = firebase.firestore();
 const users = db.collection("users");
+const hugs = db.collection("hugs");
 
 const HugsAPI = {
     // The user that calls this function is the sender
@@ -25,7 +26,7 @@ const HugsAPI = {
         // Set the date of the hug (also used to ID image)
         let dateInSeconds = Math.floor(Date.now() / 1000);
         var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
-        console.log('dateTime', dateTime);
+        console.log("dateTime", dateTime);
         // Image: byte array
         // Create a root reference in firebase storage
         var storageRef = await firebase.storage().ref();
@@ -85,11 +86,10 @@ const HugsAPI = {
                             completed: false,
                             date_time: dateTime,
                             receiver_description: "",
-                            sender_description_: message,
+                            sender_description: message,
                             images: [downloadURL],
-                            receiver_id: friendId,
-                            sender_id: currUser.id,
-                            hug_id: topLevelHug.id,
+                            receiver_ref: users.doc(friendId),
+                            sender_ref: currUser,
                         });
                     });
             }
@@ -102,10 +102,10 @@ const HugsAPI = {
         //    completed: false,
         //    date_time: dateTime,
         //    receiver_description: "",
-        //    sender_description_: message,
+        //    sender_description: message,
         //    images: [uploadTask],
         //    receiver_id: friendId,
-        //    sender_id: currUser.uid,
+        //    sender_ref: currUser.uid,
         //});
         // Add fields to currUser's hug auto-ID document
 
@@ -115,9 +115,10 @@ const HugsAPI = {
             .collection("user_hugs")
             .doc(topLevelHug)
             .set({
+                completed: false,
                 date_time: dateTime, //dateTime is an actual DateTime object (timestamp?)
-                friend: friendId,
-                hug_id: topLevelHug.id, //Use the ref to the top level hug ^^
+                friend_ref: users.doc(friendId),
+                hug_ref: topLevelHug, //Use the ref to the top level hug ^^
                 pinned: false,
             })
             .then(function (docRef) {
@@ -130,9 +131,10 @@ const HugsAPI = {
             .collection("user_hugs")
             .doc(topLevelHug)
             .set({
+                completed: false,
                 date_time: dateTime, //dateTime is an actual DateTime object (timestamp?)
-                friend: friendId,
-                hug_id: topLevelHug.id, //Use the ref to the top level hug ^^
+                friend_ref: users.doc(friendId),
+                hug_ref: topLevelHug, //Use the ref to the top level hug ^^
                 pinned: false,
             })
             .then(function (docRef) {
@@ -141,7 +143,9 @@ const HugsAPI = {
             .catch(function (error) {
                 console.error("Error adding document: ", error);
             });
-        return { out: true }
+        // Create a hug request
+        Notifications.RequestsAPI.sendHugRequest(currentUser, friendId);
+        return { out: true };
     },
 
     // hugId is the global hug.
@@ -159,12 +163,12 @@ const HugsAPI = {
             .then();
         // delete the sender's user_hug
         users
-            .doc(db.collection("hugs").doc(hugId).get("sender_id"))
+            .doc(db.collection("hugs").doc(hugId).get("sender_ref").id)
             .delete()
             .then();
         // delete the receiver's user_hug
         users
-            .doc(db.collection("hugs").doc(hugId).get("receiver_id"))
+            .doc(db.collection("hugs").doc(hugId).get("receiver_ref").id)
             .delete()
             .then();
         // Remove hug images from storage
@@ -182,7 +186,6 @@ const HugsAPI = {
                 });
                 return results;
             });
-
         // Delete the global hug document
         topLevelHug.delete().then();
     },
@@ -244,13 +247,11 @@ const UpdateHugAPI = {
                     .getDownloadURL()
                     .then(function (downloadURL) {
                         console.log("File available at", downloadURL);
-                        db.collection("hugs")
-                            .doc(hugId)
-                            .update({
-                                completed: true,
-                                description_receiver: message,
-                                images: db.FieldValue.arrayUnion(downloadURL),
-                            });
+                        hugs.doc(hugId).update({
+                            completed: true,
+                            description_receiver: message,
+                            images: db.FieldValue.arrayUnion(downloadURL),
+                        });
                     });
             }
         );
@@ -265,8 +266,8 @@ const UpdateHugAPI = {
         //        images: db.FieldValue.arrayUnion(uploadTask), //not sure how arrayUnion works
         //    });
 
-        // Call updateHugUsers()
-        this.updateHugUsers(hugId);
+        // Call updateUserHugCount()
+        this.updateUserHugCount(hugId);
         // call deleteNotification
         // Getting the requestId may be questionable
         currUserNotifRef = db
@@ -284,8 +285,17 @@ const UpdateHugAPI = {
             .then(function (doc) {
                 if (doc.exists) {
                     // Increment receiver and sender hug count
-                    Users.UsersAPI.increaseHugCount(doc.data().receiver_id);
-                    Users.UsersAPI.increaseHugCount(doc.data().sender_id);
+                    receiverId = doc.data().receiver_ref.id;
+                    senderId = doc.data().sender_ref.id;
+                    Users.UsersAPI.increaseHugCount(receiverId);
+                    Users.UsersAPI.increaseHugCount(senderId);
+                    // Update each user's user_hug to completed : true
+                    users.doc(receiverId).update({
+                        completed: true,
+                    });
+                    users.doc(senderId).update({
+                        completed: true,
+                    });
                 } else {
                     console.log("No such document!");
                 }
@@ -320,41 +330,89 @@ const UpdateHugAPI = {
 
 const ViewHugAPI = {
     // TODO: MAKE SURE OUTPUTS STRING JSON
-    getHugById: function (hugId) {
-        db.collection("hugs")
-            .doc(hugId)
-            .get()
-            .then(function (variable) {
-                if (variable.exists) {
-                    return variable.data();
-                } else {
-                    console.log("No such document!");
-                }
-            })
-            .catch(function (error) {
-                console.log("Error getting document:", error);
-            });
+    getHugById: async function (hugId) {
+        var fullHugInfo = {};
+        // Set the hugData
+        const hugQuery = await hugs.doc(hugId).get();
+        const hugData = hugQuery.data();
+        // Set the receiver profile
+        var receiverProfile = await Users.UsersAPI.getUserProfile(
+            hugData.receiver_ref.id
+        );
+        // Set the sender user profile
+        var senderProfile = await Users.UsersAPI.getUserProfile(
+            hugData.sender_ref.id
+        );
+        // console.log(hugData);
+        if (Object.keys(hugData).length != 0) {
+            fullHugInfo.date_time = hugData.date_time.toDate().toString();
+            fullHugInfo.images = hugData.images;
+            // RECEIVER
+            fullHugInfo.receiver_description = hugData.receiver_description;
+            fullHugInfo.receiver_name = receiverProfile.name;
+            fullHugInfo.receiver_username = receiverProfile.username;
+            fullHugInfo.receiver_profile_picture = receiverProfile.profile_pic;
+            fullHugInfo.receiver_id = hugData.receiver_ref.id;
+            // SENDER
+            fullHugInfo.sender_description = hugData.sender_description;
+            fullHugInfo.sender_name = senderProfile.name;
+            fullHugInfo.sender_username = senderProfile.username;
+            fullHugInfo.sender_profile_picture = senderProfile.profile_pic;
+            fullHugInfo.sender_id = hugData.sender_ref.id;
+        } else {
+            console.log("No such document!");
+        }
+        // console.log(fullHugInfo.sender_description);
+        return fullHugInfo;
     },
 
     // Gets all hugs from the currently logged in user
     // TODO: not sure how to use the paginated data "next"
     // TODO: delete one of the versions. not sure how to return multiple docs?
-    getUserHugs: function (currentUser) {
-        // Set current user
-        var currUser = users.doc(currentUser);
+    getUserHugs: async function (currentUser) {
         // GET ALL VERSION
+
         var results = [];
-        users
-            .doc(currUser.id)
+        const userHugsQuery = await users
+            .doc(currentUser)
             .collection("user_hugs")
-            .get()
-            .then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    results = [...results, doc.data()];
-                });
-                var feed = { userHugs: results }; // no quotes needed?
-                return feed;
-            });
+            .orderBy("date_time", "desc")
+            .where("completed", "==", true)
+            .get();
+        // Go through each user_hug that is completed
+        for (const doc of userHugsQuery.docs) {
+            let currHugId = doc.data().hug_ref.id;
+            let currHug = await hugs.doc(currHugId).get();
+            let currHugData = currHug.data();
+            var loadIn = {};
+            // Set the name of the person currentUser hugged
+            if (users.doc(currentUser).id == currHugData.receiver_ref.id) {
+                let friend = await Users.UsersAPI.getUserProfile(
+                    currHugData.sender_ref.id
+                );
+                loadIn.friend_name = friend.name;
+                loadIn.friend_username = friend.username;
+                loadIn.friend_profile_pic = friend.profile_pic;
+            } else if (users.doc(currentUser).id == currHugData.sender_ref.id) {
+                let friend = await Users.UsersAPI.getUserProfile(
+                    currHugData.receiver_ref.id
+                );
+                loadIn.friend_name = friend.name;
+                loadIn.friend_username = friend.username;
+                loadIn.friend_profile_pic = friend.profile_pic;
+            }
+            // Set the message to be the SENDER'S message ALWAYS
+            loadIn.message = currHugData.sender_description;
+            // Set the image to be the first image added
+            loadIn.image = currHugData.images[0];
+            // Set the hugId
+            loadIn.hug_id = currHugId;
+            // add the JSON the results array
+            results = [...results, loadIn];
+        }
+        var feed = { userHugs: results };
+        return feed;
+
         // PAGINATED VERSION
         // var first = db
         //     .collection("users")
@@ -379,30 +437,61 @@ const ViewHugAPI = {
         // });
     },
 
-    getSharedHugs: function (currUser, targetUser) {
-        // Set current user
-        var currUser = users.doc(currentUser);
+    getSharedHugs: async function (currentUser, targetUser) {
         // GET ALL VERSION
+
+        // Set the hugData
+        // const currUser = Users.UsersAPI.getUserProfile(currentUser);
+        // const currUserName = currUser.name;
+        // const currUserUsername = currUser.username;
+        // const currUserProfilePic = currUser.profile_pic;
+
         var results = [];
-        users
-            .doc(currUser.id)
-            .collection("user_hugs")
-            .get()
-            .then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    senderId = doc.get("sender_id");
-                    receiverId = doc.get("receiver_id");
-                    // adds any hug with both users to the results array
-                    if (
-                        (senderId === currUser && receiverId === targetUser) ||
-                        (senderId === targetUser && receiverId === currUser)
-                    ) {
-                        results = [...results, doc.data()];
-                    }
-                });
-                var sharedHugs = { sharedHugs: results }; //no quotes needed?
-                return sharedHugs;
-            });
+        const hugsQuery = await hugs
+            .orderBy("date_time", "desc")
+            .where("completed", "==", true)
+            .get();
+        // Go through each user_hug that is completed
+        for (const doc of hugsQuery.docs) {
+            let currHugData = doc.data();
+            var loadIn = {};
+            senderId = currHugData.sender_ref.id;
+            receiverId = currHugData.receiver_ref.id;
+            // adds any hug with both users to the results array
+            if (
+                (senderId === currentUser && receiverId === targetUser) ||
+                (senderId === targetUser && receiverId === currentUser)
+            ) {
+                // Set the name of the person currentUser hugged
+                if (users.doc(currentUser).id == currHugData.receiver_ref.id) {
+                    let friend = await Users.UsersAPI.getUserProfile(
+                        currHugData.sender_ref.id
+                    );
+                    loadIn.friend_name = friend.name;
+                    loadIn.friend_username = friend.username;
+                    loadIn.friend_profile_pic = friend.profile_pic;
+                } else if (
+                    users.doc(currentUser).id == currHugData.sender_ref.id
+                ) {
+                    let friend = await Users.UsersAPI.getUserProfile(
+                        currHugData.receiver_ref.id
+                    );
+                    loadIn.friend_name = friend.name;
+                    loadIn.friend_username = friend.username;
+                    loadIn.friend_profile_pic = friend.profile_pic;
+                }
+                // Set the message to be the SENDER'S message ALWAYS
+                loadIn.message = currHugData.sender_description;
+                // Set the image to be the first image added
+                loadIn.image = currHugData.images[0];
+                // Set the hugId
+                loadIn.hug_id = doc.id;
+                // add the JSON the results array
+                results = [...results, loadIn];
+            }
+        }
+        var feed = { sharedHugs: results };
+        return feed;
     },
 };
 

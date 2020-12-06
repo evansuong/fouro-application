@@ -8,7 +8,7 @@ import { DimensionContext } from "../../contexts/DimensionContext";
 import { UserContext } from "../../contexts/UserContext";
 
 export default function UserProfilePage({ navigation, route }) {
-  const pfp = require("assets/fillerProfilePic.jpg");
+  const pfp = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
 
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { dispatch } = useContext(UserContext);
