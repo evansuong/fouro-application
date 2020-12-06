@@ -25,23 +25,20 @@ import { ReadAPI } from '../../API';
 
 
 export default function LoginPage({ navigation }) {
-  // user info
+    // States
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
-
-  // component state
   const [loggingIn, setLoggingIn] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  // contexts
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext)
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (!startUp) {
+    if (startUp) {
       setStartUp(false);
       fadeIn();
     }
@@ -108,15 +105,6 @@ export default function LoginPage({ navigation }) {
   const checkFilled = () => {
     return emailField !== '' && 
       passwordField !== '';
-  }
-
-  const timeout = () => {
-    if (mounted) {
-      setTimeout(() => {
-        setError(false);
-      }, 5000);
-      return true;
-    }
   }
 
   const styles = StyleSheet.create({

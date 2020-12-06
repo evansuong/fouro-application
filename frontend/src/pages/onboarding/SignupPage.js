@@ -10,7 +10,6 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
 // APIs
 import AuthAPI from '../../authentication/Authentication';
 // Contexts
@@ -25,30 +24,27 @@ import BackgroundImg from 'assets/gradients/middle.png';
 
 export default function SignupPage({ navigation }) {
   // States
-  const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('');
+  const [emailField, setEmailField] = useState('gggggg');
+  const [passwordField, setPasswordField] = useState('gggggg');
+  // const [emailField, setEmailField] = useState('');
+  // const [passwordField, setPasswordField] = useState('');
   const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
-  const [startUp, setStartUp] = useState(false);
+  const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { dispatch } = useContext(UserContext);
   // Misc
-  const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
+  const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
   useEffect(() => {
-    if (!startUp) {
-      setStartUp(true);
-      fadeIn();
-    }
-    if (!isFocused) {
-      setSigningUp(false);
+    if (startUp) {
       setStartUp(false);
-      setMounted(false);
+      fadeIn();
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -66,6 +62,7 @@ export default function SignupPage({ navigation }) {
     );
 
     return () => {
+      setSigningUp(false);
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
     }
@@ -90,31 +87,31 @@ export default function SignupPage({ navigation }) {
     
     let { status, data } = 
       await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
+    console.log(data, status);
     if (status) {
-      processSignupResponse(data);
+      processSignupResponse(data, status);
     } else {
-      Alert.alert('An error occurred');
+      setSigningUp(false);
+      Alert.alert('Error. Maybe a user with that email already exists?');
       console.log(data);
     }
   }
 
-  const processSignupResponse = (response) => {
-    if (response.status) {
+  const processSignupResponse = (data, status) => {
+    if (status) {
       setMounted(false);
       dispatch({
         type: "SET_USER",
-        payload: response.data,
+        payload: data.providerData,
       });
       setTimeout(() => {
         navigation.navigate('Name Page');
       }, 1000);
     } else {
       setSigningUp(false);
-      alert(response.data);
+      alert(data);
     }
   }
-
-  const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
   const checkLength = () => {
     if (passwordField.length < 6) {
@@ -169,6 +166,7 @@ export default function SignupPage({ navigation }) {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      marginTop: 20,
     },
     backgroundImg: {
       flex: 1,
@@ -187,7 +185,7 @@ export default function SignupPage({ navigation }) {
     },
     whiteBox: {
       backgroundColor: 'rgba(255,255,255,0.2)',
-      paddingBottom: 30,
+      paddingBottom: 20,
       marginLeft: 20,
       marginRight: 20,
       marginBottom: isKeyboardVisible ? windowHeight / 3 : 0,
@@ -262,11 +260,13 @@ export default function SignupPage({ navigation }) {
               checkEmailValid() &&
               passwordMatch() && 
               checkLength() &&
-              <LinkedButton
-                text='NEXT'
-                color='#FFC24A'
-                onPress={() => submitHandler()}
-              />
+              <View style={{marginTop: 20,}}>
+                <LinkedButton
+                  text='NEXT'
+                  color='#FFC24A'
+                  onPress={() => submitHandler()}
+                />
+              </View>
             }
             {
               userExists &&
@@ -280,7 +280,7 @@ export default function SignupPage({ navigation }) {
               signingUp &&
               <View style={styles.textContainer}>
                 <Text style={styles.signingText}>
-                  Signing up...
+                  Gathering Data...
                 </Text>
                 <ActivityIndicator />
               </View>

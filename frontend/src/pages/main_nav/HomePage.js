@@ -55,6 +55,7 @@ export default function HomePage({ navigation, route }) {
   function dismissCreateButton() {
     setExpanded(false);
     collapse();
+                
   }
 
   function expand() {
@@ -124,7 +125,7 @@ export default function HomePage({ navigation, route }) {
 
         <Button
           title='upload page'
-          onPress={() => navigation.navigate('upload')}
+          onPress={() => navigation.navigate('Pic Upload Page')}
         />
       
         {/* Hug Cards */}
@@ -152,8 +153,8 @@ export default function HomePage({ navigation, route }) {
         >
           <Animated.View style={{
             ...styles.createHugButtonContainer, 
-            width:width, backgroundColor: 
-            backgroundColor, 
+            width:width, 
+            backgroundColor: 'rgba(0, 0, 0, .5)', 
             padding: padding, 
             paddingLeft: paddingLeft 
           }}>

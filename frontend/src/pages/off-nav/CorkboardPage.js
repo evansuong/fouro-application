@@ -4,7 +4,7 @@ import { View, StyleSheet, Image, FlatList } from 'react-native'
 import { ReadAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
-import UserContext from 'contexts/UserContext';
+import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import Header from 'components/Header';
 import PinnedHug from 'components/PinnedHug'

@@ -61,6 +61,7 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
       <View style={[styles.container, { display: "flex" }]}>
           <Image
               source={{ uri: profilePicture }}
+              // source={profilePicture}
               style={styles.profilePicStyle}
           />
           <Text style={styles.userFirstLastStyle}>
