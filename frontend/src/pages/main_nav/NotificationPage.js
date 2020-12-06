@@ -18,7 +18,6 @@ import { UserContext } from "contexts/UserContext";
 // Custom Components
 import NotificationCard from "components/NotificationCard";
 import Header from "components/Header";
-import Header from "components/Header";
 // Images/Assets
 import AppStyles from "../../AppStyles";
 

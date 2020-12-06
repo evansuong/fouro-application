@@ -54,7 +54,6 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
     const { isLightTheme } = userData;
     // Misc
     const routeName = route.name;
-    const dotsIcon = require('assets/dots-icon.png');
     const dotsIconDark = require('assets/dots-icon-dark.png');
     // destruct route parameters
     const { data } = route.params;
@@ -64,11 +63,6 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
-    
-    
-    // destruct route parameteres
-    const { data } = route.params;
-    console.log('from otheruserprofilepage:', data)
 
     
     const { callback_id, friendName, friend_username, friend, status } = data; // add profile_pic
