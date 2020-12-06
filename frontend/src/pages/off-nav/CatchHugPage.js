@@ -10,44 +10,89 @@ import {
   Alert,
   ImageBackground
 } from 'react-native';
-import fillerProfilePic from 'assets/fillerProfilePic.jpg';
-import profilePic from 'assets/profilePic.jpg';
+// Expo Imports
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+// APIs
+import { CreateAPI } from '../../API';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
-import { DimensionContext } from 'contexts/DimensionContext';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
-import Header from '../../components/Header';
+import Header from 'components/Header';
+// Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
+import fillerProfilePic from 'assets/fillerProfilePic.jpg';
+import profilePic from 'assets/profilePic.jpg';
 
 
-export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
+// TODO: Remove FriendName and FriendPic parameters
+export default function CatchHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
+    // States
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
-    const {windowWidth, windowHeight} = useContext(DimensionContext);
-    const routeName = route.name
+    // Contexts
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    // Misc
+    const { hugId, friendPfp } = route.params.data;
+    // console.log('in catch hug page:', route.params.data)
+    const routeName = route.name;
 
     const callBackend = async () => {
       try {
-        let blobArray = [];
-        for (let i = 0; i < images.length; i++) {
-          const splitPicURI = images[i].uri.split('/');
-          let res = await getBlobObj(images[i].uri, splitPicURI[splitPicURI.length - 1]);
-          blobArray.push(res);
+        console.log('userData: ', userData);
+        let base64Strings = [];
+        for (let image of images) {
+          const base64 = await getBase64WithImage(image);
+          base64Strings.push(base64);
         }
-        // Send hugImagesArray to backend to push to firebase
-        // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-        // console.log('done', JSON.stringify(blobArray));
+        request = {
+          hugId: hugId,
+          message: message,
+          blobs: base64Strings
+        }
+        // const response = await CreateAPI.respondToHug(userData.uid, request);
+        const response = await CreateAPI.respondToHug('temp', request);
+        console.log('response', response);
         Alert.alert('Hug created!');
+        navigation.navigate('Home Page');
       } catch (err) {
         Alert.alert('Hug creation failed. Please try again.')
       }
     }
+
+    const getBase64WithImage = async (uploadPic) => {
+      // console.log('before compression', uploadPic.base64.length);
+      const manipResult = await ImageManipulator.manipulateAsync(
+        uploadPic.uri,
+        [],
+        {
+          compress: 0.1,
+          format: ImageManipulator.SaveFormat.JPEG,
+          base64: true
+        }
+      )
+      // console.log('after compression', manipResult`.base64.length);
+      return `data:image/jpeg;base64,${manipResult}`;
+    }
   
-    const getBlobObj = async (uri, imgName) => {
-      const response = await fetch(uri);
-      return await response.blob();
+    const checkUpload = (data) => {
+      const arr = data.uri.split('.');
+      const fileExtension = arr[arr.length - 1];
+      const validExtension = validExtensions.includes(fileExtension);
+      if (!validExtension) {
+        Alert.alert(`Accepted image types are ${validExtensions}`);
+      } else if (images.length > 3) {
+        Alert.alert('Max limit of uploads reached');
+      } else if (data.cancelled) {
+        Alert.alert('Image upload cancelled');
+      } else if (data.cancelled == false) {
+        setUploadPic(data);
+      }
     }
 
     const pickFromGallery = async () => {
@@ -60,12 +105,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
           aspect: [1,1],
           quality: 0.5,
         })
-        // console.log(data);
-        if (data.cancelled == false) {
-          setImages(prevImages => [...prevImages, data]);
-        } else {
-          console.log('image canceled');
-        }
+        checkUpload(data);
       } else {
         console.log('access denied');
         Alert.alert('You need to give permission to upload a picture!');
@@ -159,7 +199,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
                   <Image
-                    source={friendPic ? friendPic : fillerProfilePic}
+                    source={{ uri: friendPfp }}
                     style={styles.profilePic}
                   />
                   <View style={styles.friendTextContainer}>

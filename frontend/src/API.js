@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const server = 'http://192.168.1.170:3000'
+const server = 'http://192.168.4.66:3000';
 
 const onAccept = (res, response) => {
   console.log('accepting');
@@ -42,6 +42,7 @@ export const ReadAPI = {
   },
   getNotifications: async function(uid) {
     let response = {}
+    console.log(uid)
     await axios.get(`${server}/notifications/getNotifications/${uid}`)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
@@ -50,14 +51,6 @@ export const ReadAPI = {
   getUserHugs: async function(uid) {
     let response = {}
     await axios.get(`${server}/hugs/getUserHugs/${uid}`)
-    .then(res => onAccept(res, response))
-    .catch(err => onReject(err, response));
-    return response
-  },
-  getHugById: async function(uid, request) {
-    // request: { hugId }
-    let response = {}
-    await axios.get(`${server}/hugs/getHugById/${uid}`, request)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response

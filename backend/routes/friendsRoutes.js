@@ -30,7 +30,7 @@ router.delete("/removeFriend/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-      let response = FriendsAPI.removeFriend(uid, friendId);
+      let response = await FriendsAPI.removeFriend(uid, friendId);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -48,7 +48,7 @@ router.get("/getFriendStatus/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-      let response = FriendsAPI.addFriend(uid, friendId);
+      let response = await FriendsAPI.addFriend(uid, friendId);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -61,7 +61,7 @@ router.get("/getFriends/:id", async (req, res) => {
   const uid = req.params.id;
 
   try {
-    let response = FriendsAPI.getFriendsList(uid);
+    let response = await FriendsAPI.getFriendsList(uid);
     res.status(200).json(response);
   } catch (err) {
     res.status(400).send(`An error occurred: ${err}`);
@@ -78,7 +78,7 @@ router.get("/getFriendProfile/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-      let response = FriendsAPI.getFriendProfile(uid, friendId);
+      let response = await FriendsAPI.getFriendProfile(uid, friendId);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -96,7 +96,7 @@ router.get("/searchFriends/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-      let response = FriendSearchAPI.searchFriends(uid, name);
+      let response = await FriendSearchAPI.searchFriends(uid, name);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -113,7 +113,7 @@ router.get("/searchUsers/:id", checkBody, async (req, res) => {
     return;
   } else {
     try {
-      let response = FriendSearchAPI.searchUsers(username);
+      let response = await FriendSearchAPI.searchUsers(uid, username);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);

@@ -9,40 +9,36 @@ import {
   ActivityIndicator,
   Animated
 } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+// APIs
+import AuthAPI from '../../authentication/Authentication';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import AuthAPI from '../../authentication/Authentication';
+// Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
-import { DimensionContext } from '../../contexts/DimensionContext';
-import { UserContext } from '../../contexts/UserContext';
+import { ReadAPI } from '../../API';
+
 
 
 export default function LoginPage({ navigation }) {
-  // user info
+    // States
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
-
-  // component state
   const [loggingIn, setLoggingIn] = useState(false);
-  const [mounted, setMounted] = useState(true);
-  const [startUp, setStartUp] = useState(false);
+  const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  // contexts
-  const {windowWidth, windowHeight} = useContext(DimensionContext);
-  const {dispatch} = useContext(UserContext)
+  // Contexts
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { userData, dispatch } = useContext(UserContext)
   const fade = useRef(new Animated.Value(0)).current;
 
-  // const { user } = useContext(User)
-
   useEffect(() => {
-    if (!startUp) {
-      setStartUp(true);
+    if (startUp) {
+      setStartUp(false);
       fadeIn();
-    }
-    if (!isFocused) {
-      setMounted(false);
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -65,8 +61,6 @@ export default function LoginPage({ navigation }) {
     }
   }, []);
 
-  const isFocused = useIsFocused();
-
   const fadeIn = () => {
     Animated.timing(fade, {
       toValue: 1,
@@ -81,14 +75,19 @@ export default function LoginPage({ navigation }) {
     processLoginResponse(response)
   }
 
-  const processLoginResponse = (response) => {
+  const processLoginResponse = async (response) => {
     if (response.status) {
-      setMounted(false);
-      dispatch({
-        type: "SET_USER",
-        payload: response.data,
-      });
-      navigation.navigate('Main Nav Page', { loggedIn: true });
+      const { status, data } = await ReadAPI.getUserProfile(userData.uid);
+      if (status) {
+        dispatch({
+          type: "SET_USER",
+          payload: data,
+        });
+        navigation.navigate('Main Nav Page', { loggedIn: true });
+      } else {
+        Alert.alert('An error occurred');
+        console.log(data);
+      }
     } else {
       setLoggingIn(false);
       alert("No users found with those credentials")
@@ -98,15 +97,6 @@ export default function LoginPage({ navigation }) {
   const checkFilled = () => {
     return emailField !== '' && 
       passwordField !== '';
-  }
-
-  const timeout = () => {
-    if (mounted) {
-      setTimeout(() => {
-        setError(false);
-      }, 5000);
-      return true;
-    }
   }
 
   const styles = StyleSheet.create({
@@ -143,64 +133,84 @@ export default function LoginPage({ navigation }) {
     titleTextContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      width: windowWidth
+      width: windowWidth,
     },
     titleText: {
       marginBottom: 40,
       fontSize: 40,
-      fontFamily: 'Montserrat_500Medium'
+      fontFamily: 'Montserrat_500Medium',
+      textAlign: 'center',
     }
   });
 
-  return (
-    <TouchableWithoutFeedback onPress={() => {
-      Keyboard.dismiss();
-      console.log('dismissed keyboard');
-    }}>
+  if (false) { //userData.currentUser.uid) {
+    return (
       <Animated.View opacity={fade} style={styles.container}>
         <ImageBackground
           source={BackgroundImg}
           style={styles.backgroundImage}
         >
           <View style={styles.titleTextContainer}>
-            <Text style={styles.titleText}>Welcome Back</Text>
-          </View>
-          <View style={styles.whiteBox}>
-            <CustomTextField 
-              titleText='Email' 
-              placeholder='eg rikhilna@ucsd.edu'
-              setField={setEmailField}
-              required={true}
-            />
-
-            <CustomTextField
-              titleText='Password'
-              placeholder='eg password'
-              setField={setPasswordField}
-              secureText={true}
-              required={true}
-            />
-
-            {
-              // checkFilled() && 
-              <LinkedButton
-                text='LOGIN'
-                color='#FB7250'
-                onPress={() => submitHandler()}
-              />
-            }
-            {
-              loggingIn &&
-              <View style={styles.textContainer}>
-                <Text style={styles.loggingText}>
-                  Logging in...
-                </Text>
-                <ActivityIndicator />
-              </View>
-            }
+            <Text style={styles.titleText}>
+              You're already logged in!
+            </Text>
           </View>
         </ImageBackground>
       </Animated.View>
-    </TouchableWithoutFeedback>
-  );
+    )
+  } else {
+    return (
+      <TouchableWithoutFeedback onPress={() => {
+        Keyboard.dismiss();
+        console.log('dismissed keyboard');
+      }}>
+        <Animated.View opacity={fade} style={styles.container}>
+          <ImageBackground
+            source={BackgroundImg}
+            style={styles.backgroundImage}
+          >
+            <View style={styles.titleTextContainer}>
+              <Text style={styles.titleText}>
+                Welcome Back
+              </Text>
+            </View>
+            <View style={styles.whiteBox}>
+              <CustomTextField 
+                titleText='Email' 
+                placeholder='e.g., abc123@gmail.com'
+                setField={setEmailField}
+                required={true}
+              />
+
+              <CustomTextField
+                titleText='Password'
+                placeholder='Password'
+                setField={setPasswordField}
+                secureText={true}
+                required={true}
+              />
+
+              {
+                // checkFilled() && 
+                <LinkedButton
+                  text='LOGIN'
+                  color='#FB7250'
+                  onPress={() => submitHandler()}
+                />
+              }
+              {
+                loggingIn &&
+                <View style={styles.textContainer}>
+                  <Text style={styles.loggingText}>
+                    Logging in...
+                  </Text>
+                  <ActivityIndicator />
+                </View>
+              }
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+    );
+  }
 }

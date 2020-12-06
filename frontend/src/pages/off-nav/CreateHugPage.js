@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -10,45 +10,73 @@ import {
   Alert,
   ImageBackground
 } from 'react-native';
-import fillerProfilePic from 'assets/fillerProfilePic.jpg';
-import profilePic from 'assets/profilePic.jpg';
+// Expo Imports
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+// APIs
+import { CreateAPI } from '../../API';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
-import { DimensionContext } from 'contexts/DimensionContext';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
-import Header from '../../components/Header';
+import Header from 'components/Header';
+// Images/Assets
+import fillerProfilePic from 'assets/fillerProfilePic.jpg';
+import profilePic from 'assets/profilePic.jpg';
 import BackgroundImg from 'assets/gradients/middle.png';
 
 
+// TODO: Remove FriendName and FriendPic parameters
 export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
+    // States
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
+    // Contexts
     const {windowWidth, windowHeight} = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    // Misc
     const routeName = route.name;
-    // const {friendName, friendPfp} = route.params;
+    const MAX_UPLOAD_SIZE = 100000;
+    const validExtensions = ['jpeg', 'jpg'];
+    // const { friendData } = route.params.data;
 
     const callBackend = async () => {
-      try {
-        let blobArray = [];
-        for (let i = 0; i < images.length; i++) {
-          const splitPicURI = images[i].uri.split('/');
-          let res = await getBlobObj(images[i].uri, splitPicURI[splitPicURI.length - 1]);
-          blobArray.push(res);
+      // try {
+        let base64Strings = [];
+        for (let image of images) {
+          let base64 = image.base64;    
+          if (base64.length > MAX_UPLOAD_SIZE) {
+            const compressFactor = MAX_UPLOAD_SIZE / base64.length;
+            console.log('comp', compressFactor);
+            base64 = await getBase64WithImage(image, compressFactor);
+          }
+          base64Strings.push(base64);
         }
-        // Send hugImagesArray to backend to push to firebase
-        // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-        // console.log('done', JSON.stringify(blobArray));
-        Alert.alert('Hug created!');
-      } catch (err) {
-        Alert.alert('Hug creation failed. Please try again.')
-      }
-    }
-  
-    const getBlobObj = async (uri, imgName) => {
-      const response = await fetch(uri);
-      return await response.blob();
+        const request = {
+          // friend_id: friendData.friend_id,
+          friend_id: 'gary@email.com',
+          message: message,
+          blobs: base64Strings
+        }
+        const { status, data } = 
+          await CreateAPI.createHug(userData.currentUser.uid, request);
+        if (status) {
+          console.log('woah');
+          console.log(status, data);
+          // const CreateAPI.sendHugRequest
+          
+        // Alert.alert('Hug created!');
+        // navigation.navigate('Home Page');
+        } else {
+          Alert.alert('Error creating hug.')
+        }
+      // } catch (err) {
+      //   Alert.alert('Hug creation failed. Please try again.')
+      // }
     }
 
     const pickFromGallery = async () => {
@@ -60,16 +88,46 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
           allowsEditing: true,
           aspect: [1,1],
           quality: 0.5,
+          base64: true
         })
-        // console.log(data);
-        if (data.cancelled == false) {
-          setImages(prevImages => [...prevImages, data]);
-        } else {
-          console.log('image canceled');
-        }
+        checkUpload(data); 
       } else {
         console.log('access denied');
         Alert.alert('You need to give permission to upload a picture!');
+      }
+    }
+
+    const getBase64WithImage = async (uploadPic, compressFactor) => {
+      const manipResult = await ImageManipulator.manipulateAsync(
+        uploadPic.uri,
+        [],
+        {
+          compress: compressFactor,
+          format: ImageManipulator.SaveFormat.JPEG,
+          base64: true
+        }
+      )
+      return `data:image/jpeg;base64,${manipResult}`;
+    }
+  
+    const checkUpload = (data) => {
+      let totalChars = 0;
+      for (let i = 0; i < images.length; i++) {
+        totalChars += images[i].base64.length;
+      }
+      const arr = data.uri.split('.');
+      const fileExtension = arr[arr.length - 1];
+      const validExtension = validExtensions.includes(fileExtension);
+      if (!validExtension) {
+        Alert.alert(`Accepted image types are ${validExtensions}`);
+      } else if (totalChars > 100000) {
+        Alert.alert('You\'ve exceeded the limit of 100KB/hug');
+      } else if (images.length > 3) {
+        Alert.alert('Max limit of uploads reached');
+      } else if (data.cancelled) {
+        Alert.alert('Image upload cancelled');
+      } else if (data.cancelled == false) {
+        setImages(prevImages => [...prevImages, data]);
       }
     }
 
@@ -79,7 +137,6 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
 
     const styles = StyleSheet.create({
       mainContainer: {
-        // marginTop: windowHeight / 8,
         overflow: 'hidden',
         height: windowHeight / 1.45,
       },
@@ -110,12 +167,8 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         height: windowHeight / 5,
         overflow: 'hidden',
         marginTop: windowHeight / 80,
-        // borderTopWidth: 1,
-        // borderBottomWidth: 1,
       },
       backgroundImg: {
-        // flex: 1,
-        // justifyContent: 'center',
         height: windowHeight,
         resizeMode: 'cover',
       },

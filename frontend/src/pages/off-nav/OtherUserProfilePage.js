@@ -1,10 +1,25 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import UserProfile from '../../components/UserProfile';
+import { View, 
+  Text,
+  StyleSheet, 
+  FlatList, 
+  TouchableOpacity 
+} from 'react-native';
+import OptionsMenu from "react-native-options-menu";
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext'
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import UserProfile from 'components/UserProfile';
 import HugCard from 'components/HugCard'
-import { DimensionContext } from '../../contexts/DimensionContext'
 import Header from 'components/Header';
 import LinkedButton from 'components/LinkedButton'
+
+
+
+
+
+/*------- testing --------*/
 
 function buildTestData(name, text, img, id) {
     return {
@@ -23,22 +38,46 @@ function buildTestData(name, text, img, id) {
     buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), '5'),
   ]
 
-export default function OtherUserProfilePage({ navigation, route }) {
-    const {windowWidth, windowHeight} = useContext(DimensionContext)
+/*------- end of testing --------*/
+
+
+
+
+
+
+export default function OtherUserProfilePage({ navigation, route,  }) {
+    // States
+    // const [status, getStatus] = useState('');
+    // Contexts
+    const {windowWidth, windowHeight} = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    const { isLightTheme } = userData;
+    // Misc
     const routeName = route.name;
-    const dotsIcon = require('assets/dots-icon.png');
     const dotsIconDark = require('assets/dots-icon-dark.png');
+    // destruct route parameters
+    const { data } = route.params;
+    const { user_id, name, profile_pic, username } = data;
+
+    let width = windowWidth / 8.5;
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
-    let status = 'pending';
+
+    
+    const { callback_id, friendName, friend_username, friend, status } = data; // add profile_pic
+    // TODO CHANGE THIS
+    let friendPfp = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
+    data.friendPfp = friendPfp;
     const isStranger = status !== 'friend' ? true : false;
     const isPending = status === 'pending' ? true : false;
     
-    // destruct route parameteres
-    const { data } = route.params;
-    const { id, name, profile_pic, username } = data;
     
+          
+    function removeFriend(id) {
+        
+    }
+
 
     // TODO: replace with getFriendProfile to get all shared hugs
     const friendProfile = { 
@@ -51,7 +90,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
     //const hugButtonHeight = windowHeight / 8;
 
     const renderHug = (( item ) => {
-
+        // console.log(item.item)
         return(
         <HugCard 
             navigation={navigation}
@@ -62,17 +101,17 @@ export default function OtherUserProfilePage({ navigation, route }) {
     function handleSendRequest() {
         console.log('wererw')
     }
+
+    /**
+     * Helper function to remove friends from the Friends Page list. Calls the
+     * removeFriend(user_id) method in Friends Page and navigates back.
+     */
+    function removeFriendFromList() {
+        // removeFriend(user_id);
+        navigation.goBack();
+    }
         
     const styles = StyleSheet.create({
-        header: {
-            position: 'absolute',
-            zIndex: 3
-        },
-        removeFriendOverlay: {
-            display: 'flex',
-            flexDirection: 'row', 
-            justifyContent: 'flex-end'
-        },
         userProfile: {
             zIndex: -1,
             marginTop: 20,
@@ -138,6 +177,20 @@ export default function OtherUserProfilePage({ navigation, route }) {
           width: windowWidth / 1.2, 
           marginBottom: windowHeight / 30,
           height: windowWidth / 20,
+        },
+        btnImage: {
+            width: windowWidth / 15,
+            height: windowWidth / 15,
+            resizeMode: 'contain'
+        },
+        menuBtn: {
+            position: 'absolute',
+            top: windowHeight / 20 + 5,
+            right: 20,
+            // backgroundColor: 'pink',
+            zIndex: 6,
+            padding: 10,
+            borderRadius: 100,
         }
     });
     
@@ -183,28 +236,46 @@ export default function OtherUserProfilePage({ navigation, route }) {
                 </Text>
             </TouchableOpacity>
         
-      
+    
+    let button = isStranger ? (isPending ? pendingButton : sendFriendRequestButton) : hugButton;
 
-    let button = sendFriendRequestButton
     let containerStyle = {}
 
+    console.log('isStranger', isStranger)
     if(isStranger) {
         sharedHugsContainer = <></>
         sharedHugsFlatList = <></>
-        button = isStranger ? (isPending ? pendingButton : sendFriendRequestButton) : hugButton;
         containerStyle = { position: 'absolute', bottom: 0 }
     }
 
     return (
 
         <View style={{ height: '100%', display: "flex", backgroundColor: 'white', alignItems: 'center' }}>
+            
+            {/* <TouchableOpacity style={styles.menuBtn} onPress={removeFriend}>
+                <Image style={styles.btnImage} source={dotsIconDark} />
+            </TouchableOpacity> */}
+
+            {
+                !isStranger &&
+                <View style={styles.menuBtn}>
+                {/* add a 'close' option */}
+                <OptionsMenu
+                    button={dotsIconDark}
+                    buttonStyle={styles.btnImage}
+                    options={["remove friend"]}
+                    actions={[removeFriendFromList]} />
+                </View>
+            }
+
             <Header routeName={routeName} navigation={navigation} onMainNav={false} />
+
             <View style={styles.userProfile, {marginTop:topMarginSize}}>
                 {/* user profile information */}
                 <UserProfile 
-                    profilePicture={profile_pic}
-                    userFirstLast = {name}
-                    username = {username}
+                    profilePicture={friendPfp}
+                    userFirstLast = {friendName}
+                    username = {friend_username}
                 />
             </View>
 
@@ -213,7 +284,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
                 {sharedHugsContainer}
                 {sharedHugsFlatList}
             </View>
-            <View>
+            <View style={{ width: windowWidth, marginBottom: windowHeight * .02 }}>
                 {button}
             </View>
             

@@ -6,7 +6,6 @@ const AuthAPI = {
   registerUser: async function (email, password) {
     var registered = false;
     var response;
-    // console.log('registering')
     await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -14,16 +13,18 @@ const AuthAPI = {
         registered = true;
         response = {
           status: true,
-          data: firebase.auth().currentUser
+          data: firebase.auth().currentUser.uid,
+          message: "success"
         };
       })
       .catch(function (error) {
-        // console.log("error");
         registered = false;
         var errorMessage = error.message;
+        console.log(errorMessage);
         response = {
           status: false,
-          data: error.message
+          data: null,
+          message: error.message
         }
       });
 
@@ -41,7 +42,8 @@ const AuthAPI = {
         loggedin = true;
         response = {
           status: true,
-          data: firebase.auth().currentUser
+          data: firebase.auth().currentUser.uid,
+          message: "success"
         }
       })
       .catch(function (error) {
@@ -50,7 +52,8 @@ const AuthAPI = {
         console.log('error code', error.code);
         response = {
           status: false,
-          data: error.code
+          data: null,
+          message: error.code
         };
       });
 
@@ -68,6 +71,8 @@ const AuthAPI = {
         .catch(function (error) {
           return false;
         }); // an error happened.
+    } else {
+      return false;
     }
   },
 

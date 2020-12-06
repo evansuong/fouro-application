@@ -1,8 +1,14 @@
-import React, {useContext} from 'react'
-import { View, Text, StyleSheet, Image, Pressable, FlatList } from 'react-native'
-import Header from '../../components/Header';
-import PinnedHug from '../../components/PinnedHug'
-import { DimensionContext } from '../../contexts/DimensionContext';
+import React, { useState, useContext, useEffect } from 'react'
+import { View, StyleSheet, Image, FlatList, Text } from 'react-native'
+// APIs
+import { ReadAPI } from '../../API';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import Header from 'components/Header';
+import PinnedHug from 'components/PinnedHug'
+// Images/Assets
 const corkboardImg = require('assets/corkboard.jpg')
 const trashCanImg = require('assets/trashCan.png')
 
@@ -37,10 +43,53 @@ const testData = [
 /*------- end of testing --------*/
 
 export default function CorkboardPage({ navigation, route }) {
-    
+    // States
+    const [startUp, setStartUp] = useState(true);
+    const [pinnedHugs, setPinnedHugs] = useState([]);
+    // Contexts
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    // Misc
     const routeName = route.name;
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const margin = windowWidth * 0.03
+    const margin = windowWidth * 0.03;
+
+    useEffect(() => {
+      if (startUp) {
+        fetchCorkboard();
+        // setPinnedHugs(hugList);
+        setStartUp(false);
+      }
+    }, [])
+
+    const fetchCorkboard = async () => {
+      const { status, data } = await ReadAPI.buildCorkboard(userData.uid);
+      if (status) {
+        // console.log(data);
+        setPinnedHugs(data.hugList.pinnedHugs);
+      } else {
+        Alert.alert('Something went wrong when building the corkboard!');
+      }
+    }
+
+    const styles = StyleSheet.create({
+      corkboardImage: {
+          position: 'absolute',
+          resizeMode: 'contain',
+          zIndex: 0
+      },
+      noPinnedHugs: {
+        fontSize: 20, 
+        fontFamily: 'Montserrat_400Regular',
+        textAlign: 'center',
+        color: 'white'
+      },
+      noPinnedHugsContainer: {
+        marginTop: windowHeight * 0.1,
+        width: windowWidth * 0.7, 
+        justifyContent: 'center', 
+        alignItems: 'center'
+      },
+    })
 
     return (
         <View style={{ alignItems: 'center'}}>
@@ -51,45 +100,46 @@ export default function CorkboardPage({ navigation, route }) {
             <Header routeName={routeName} navigation={navigation} onMainNav={false}/>
 
             {/* Hugs list as a grid */}
-            <FlatList
-                data={testData}
-                renderItem={( hug ) => (
-                    <PinnedHug
-                        navigation={navigation}
-                        unpin={showTrashCan}
-                        picture={hug.item.picture}
-                        date={hug.item.date}
-                        friendName={hug.item.friendName}
-                    />
-                )}
-                contentContainerStyle={{
-                  paddingBottom: margin, paddingTop: margin + windowWidth * 0.2
-                }}
-                numColumns={2}
-            />
-
-            {/* <Image
-                source={trashCanImg}
-                style={styles.trashCanImage}
-            /> */}
-                
+            {
+              pinnedHugs.length != 0 &&
+              <FlatList
+                  data={testData}
+                  // data={pinnedHugs}
+                  // keyExtractor={item => item.hugId}
+                  renderItem={( hug ) => (
+                      <PinnedHug
+                          navigation={navigation}
+                          unpin={showTrashCan}
+                          picture={hug.item.picture}
+                          date={hug.item.date}
+                          friendName={hug.item.friendName}
+                          // picture={hug.image}
+                          // date={hug.dateTime}
+                          // friendName={hug.friendName}
+                          // id={hug.hugId}
+                      />
+                  )}
+                  contentContainerStyle={{
+                    paddingBottom: margin, paddingTop: margin + windowWidth * 0.2
+                  }}
+                  numColumns={2}
+              />
+            }
+            {
+              pinnedHugs.length == 0 &&
+              <View style={styles.noPinnedHugsContainer}>
+                <Text style={[
+                  styles.noPinnedHugs, 
+                  {transform: [{ rotate: '90deg'}], fontSize: 50}
+                ]}>
+                  :(
+                </Text>
+                <Text style={styles.noPinnedHugs}>
+                  You don't have any pinned hugs. (wtf?) Why don't you pin some! 
+                  If you don't have any hugs, create one!
+                </Text>
+              </View>
+            }        
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    corkboardImage: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        zIndex: 0
-    },
-    trashCanImage: {
-        position: 'absolute',
-        width: 70,
-        height: 70,
-        bottom: 10,
-        backgroundColor: 'pink',
-        zIndex: 1,
-        borderRadius: 100
-    }
-})

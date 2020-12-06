@@ -8,43 +8,46 @@ import {
   Animated,
   ImageBackground,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
-import CustomTextField from 'components/CustomTextField';
-import LinkedButton from 'components/LinkedButton';
 import { useIsFocused } from '@react-navigation/native';
-import BackgroundImg from 'assets/gradients/middle.png';
+// APIs
 import AuthAPI from '../../authentication/Authentication';
+// Contexts
 import { UserContext } from '../../contexts/UserContext';
 import { DimensionContext } from '../../contexts/DimensionContext';
+// Custom Components
+import CustomTextField from 'components/CustomTextField';
+import LinkedButton from 'components/LinkedButton';
+// Images
+import BackgroundImg from 'assets/gradients/middle.png';
+import Header from '../../components/Header';
 
 
-export default function SignupPage({ navigation }) {
+export default function SignupPage({ navigation, route }) {
   const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('gggggg');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('gggggg');
   // const [passwordField, setPasswordField] = useState('');
   // const [passwordConfirmField, setPasswordConfirmField] = useState('');
+  const [passwordField, setPasswordField] = useState('');
+  const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
-  const [startUp, setStartUp] = useState(false);
+  const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { dispatch } = useContext(UserContext);
-
+  // Misc
+  const routeName = route.name;
   const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
+  const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
   useEffect(() => {
-    if (!startUp) {
-      setStartUp(true);
-      fadeIn();
-    }
-    if (!isFocused) {
-      setSigningUp(false);
+    if (startUp) {
       setStartUp(false);
-      setMounted(false);
+      fadeIn();
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -62,6 +65,7 @@ export default function SignupPage({ navigation }) {
     );
 
     return () => {
+      setSigningUp(false);
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
     }
@@ -84,25 +88,33 @@ export default function SignupPage({ navigation }) {
     // check if user with that email already exists (waiting for backend)
     
     
-    let response = await AuthAPI.registerUser(emailField.trim(), passwordField.trim())
-    processSignupResponse(response)
-  }
-
-  const processSignupResponse = (response) => {
-    if (response.status) {
-      setMounted(false);
-      dispatch({
-        type: "SET_USER",
-        payload: response.data,
-      });
-      navigation.navigate('Name Page');
+    let { status, data } = 
+      await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
+    // console.log(data, status);
+    if (status) {
+      processSignupResponse(data, status);
     } else {
       setSigningUp(false);
-      alert(response.data);
+      Alert.alert('Error. Maybe a user with that email already exists?');
+      console.log(data);
     }
   }
 
-  const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
+  const processSignupResponse = (data, status) => {
+    if (status) {
+      setMounted(false);
+      dispatch({
+        type: "SET_USER",
+        payload: data.providerData,
+      });
+      setTimeout(() => {
+        navigation.replace('Name Page');
+      }, 500);
+    } else {
+      setSigningUp(false);
+      alert(data);
+    }
+  }
 
   const checkLength = () => {
     if (passwordField.length < 6) {
@@ -137,15 +149,6 @@ export default function SignupPage({ navigation }) {
     return passwordField === passwordConfirmField;
   }
 
-  const timeout = () => {
-    if (mounted) {
-      setTimeout(() => {
-        setUserExists(false);
-      }, 5000);
-      return true;
-    }
-  }
-
   const styles = StyleSheet.create({
     container: {
       flex: 1
@@ -166,6 +169,7 @@ export default function SignupPage({ navigation }) {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      marginTop: 20,
     },
     backgroundImg: {
       flex: 1,
@@ -184,7 +188,7 @@ export default function SignupPage({ navigation }) {
     },
     whiteBox: {
       backgroundColor: 'rgba(255,255,255,0.2)',
-      paddingBottom: 30,
+      paddingBottom: 20,
       marginLeft: 20,
       marginRight: 20,
       marginBottom: isKeyboardVisible ? windowHeight / 3 : 0,
@@ -196,7 +200,10 @@ export default function SignupPage({ navigation }) {
       Keyboard.dismiss();
       console.log('dismissed keyboard');
     }}>
+      
       <Animated.View opacity={fade} style={styles.container}>
+      <Header navigation={navigation} routeName={routeName} onMainNav={false} />
+
         <ImageBackground source={BackgroundImg} style={styles.backgroundImg}>
           <View style={styles.titleTextContainer}>
             <Text style={styles.titleText}>Welcome</Text>
@@ -204,14 +211,14 @@ export default function SignupPage({ navigation }) {
           <View style={styles.whiteBox}>
             <CustomTextField 
               titleText='Email' 
-              placeholder='eg rikhilna@ucsd.edu'
+              placeholder='e.g., abc123@gmail.com'
               setField={setEmailField}
               required={true}
             />
 
             <CustomTextField
               titleText='Password'
-              placeholder='eg password'
+              placeholder='Password'
               setField={setPasswordField}
               secureText={true}
               required={true}
@@ -219,7 +226,7 @@ export default function SignupPage({ navigation }) {
 
             <CustomTextField
               titleText='Password Confirmation'
-              placeholder='eg password'
+              placeholder='Password'
               setField={setPasswordConfirmField}
               secureText={true}
               required={true}
@@ -259,11 +266,14 @@ export default function SignupPage({ navigation }) {
               checkEmailValid() &&
               passwordMatch() && 
               checkLength() &&
-              <LinkedButton
-                text='SIGN UP'
-                color='#FFC24A'
-                onPress={() => submitHandler()}
-              />
+              !signingUp &&
+              <View style={{marginTop: 20,}}>
+                <LinkedButton
+                  text='NEXT'
+                  color='#FFC24A'
+                  onPress={() => submitHandler()}
+                />
+              </View>
             }
             {
               userExists &&
@@ -277,7 +287,7 @@ export default function SignupPage({ navigation }) {
               signingUp &&
               <View style={styles.textContainer}>
                 <Text style={styles.signingText}>
-                  Signing up...
+                  Gathering Data...
                 </Text>
                 <ActivityIndicator />
               </View>

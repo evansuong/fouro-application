@@ -1,22 +1,63 @@
-import React, { useState } from 'react';
-import { StyleSheet, ImageBackground, View } from 'react-native'
+import React, { useState, useContext } from 'react';
+import { StyleSheet, ImageBackground, View, Image } from 'react-native';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+// Custom Components
 import LinkedButton from 'components/LinkedButton';
-import AppStyles from '../../AppStyles';
+// Assets/Images
+import fouroLogo from 'assets/fouro_logo.png';
 
-// TODO: Figure out how to get custom background colors into each
-// LinkedButton component
-
-// const image = { uri: '../../assets/tempBackground.png'};
 
 export default function LaunchPage({ navigation }) {
-  const background = require('../../../assets/tempBackground.png');
+  // Contexts
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  // Misc
+  const roundedWidth = Math.round(windowWidth / 100) * 100;
+  const roundedHeight = Math.round(windowHeight / 100) * 100;
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    innerContainer: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      marginBottom: '5%',
+      // backgroundColor: 'pink'
+    },
+    logo: {
+      width: windowWidth * 0.75,
+      height: windowWidth * 0.75,
+    },
+    logoContainer: {
+      position: 'absolute',
+      height: '100%',
+      width: windowWidth,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+  })
 
   return (
     <View style={styles.container}>
-      <ImageBackground 
+      {/* <ImageBackground 
         source={background}
         style={{position: 'absolute', width: '100%', height: '100%'}}
+      > */}
+      <ImageBackground
+        source={{ uri: `https://picsum.photos/${roundedWidth}/${roundedHeight}`}}
+        style={{position: 'absolute', width: '100%', height: '100%'}}
       >
+        {/* logo */}
+        <View style={styles.logoContainer}>
+          <Image
+            source={fouroLogo}
+            style={styles.logo}
+          />
+        </View>
+
+        {/* Buttons */}
         <View style={styles.innerContainer}>
           <LinkedButton 
             navigation={navigation} 
@@ -36,15 +77,3 @@ export default function LaunchPage({ navigation }) {
     </View>
   );
 } 
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  innerContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: '30%',
-  }
-})

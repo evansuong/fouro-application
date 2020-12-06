@@ -1,13 +1,53 @@
-import React, { useContext } from 'react'
-import { View, Text, StyleSheet, Image, ScrollView, StatusBar } from 'react-native'
-import Header from '../../components/Header';
-import { DimensionContext } from '../../contexts/DimensionContext';
+import React, { useContext, useEffect, useState } from 'react'
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  ScrollView, 
+  StatusBar, 
+  TouchableOpacity 
+} from 'react-native'
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// APIs
+import { ReadAPI } from '../../API';
+// Custom Components
+import Header from 'components/Header';
+
 
 export default function HugInfoPage({ navigation, route }) {
-
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
+    // States
+    const [pinned, setPinned] = useState(false);
+    const [startUp, setStartUp] = useState(true);
+    const [fetchedUser, setFetchedUser] = useState({});
+    // Contexts
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    const { isLightTheme } = userData;
+    // Misc
     const routeName = route.name;
-    const hug_id = route.params;
+    const { data } = route.params;
+    const { 
+      friend_name, 
+      friend_username,
+      friend_profile_pic, 
+      message, 
+      image, 
+      hug_id, 
+    } = data;
+
+    useEffect(() => {
+      if (startUp) {
+        setStartUp(false);
+        fetchUserData();
+        if (typeof image === 'undefined') {
+          image = friend_profile_pic;
+        }
+      }
+    }, [])
+    // console.log(data)
 
     // TODO: uncomment line below when pulling data from firestore or whatever and delete the following test block
     //       hugId will be passed in and we fetch the hug info with that hugId
@@ -17,15 +57,15 @@ export default function HugInfoPage({ navigation, route }) {
     const hugId = 1
     const completed = true
     const dateTime = "April 1, 2021"
-    const images = [require("assets/profilePic.jpg"), require("assets/profilePic.jpg"), require("assets/profilePic.jpg")]
-    const receiverDescription = "omae wa mou shindeiru"
-    const senderDescription = "Roses are red, violets are blue"
+    const images = [{id: 1, pic: require("assets/profilePic.jpg")}, {id: 2, pic: require("assets/profilePic.jpg")}, {id:3, pic: require("assets/profilePic.jpg")}]
+    const receiverDescription = "omae wa mou shindeiru adsfadskfdajsfhjadh jfadkfjadk  adskjfh aklhdfkljh adskjhf adklshfakshfajklsdfh "
+    const senderDescription = "Roses are red, violets are blue jahdfladskjfh kjlahdf kjladshf kjhkjahdf kjhadskljfjhadsfh kljahsdfajsdfh"
     const receiverId = "@EvanSuong"
     const senderId = "@AlexChow"
 
     // sizing
     const textContainerWidth = windowWidth / 1.1;
-    const textWidth = textContainerWidth / 1.1;
+    const textWidth = textContainerWidth / 1.3;
 
     const statusBarHeight = StatusBar.currentHeight == null ? windowHeight * 0.05 : StatusBar.currentHeight
 
@@ -36,23 +76,21 @@ export default function HugInfoPage({ navigation, route }) {
             paddingBottom: statusBarHeight,
         },
         header: {
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             borderTopLeftRadius: 15,
             borderTopRightRadius: 15,
             paddingVertical: 5,
-            paddingHorizontal: 10,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
         },
         body: {
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             paddingTop: 20
         },
         username: {
             paddingVertical: 5,
             paddingHorizontal: 5,
-            backgroundColor: 'white',
             fontWeight: 'bold',
             fontSize: 20,
             width: '100%'
@@ -60,7 +98,6 @@ export default function HugInfoPage({ navigation, route }) {
         message: {
             paddingVertical: 10,
             paddingHorizontal: 10,
-            backgroundColor: 'white',
             fontSize: 16,
             display: 'flex',
             flexDirection: 'row',
@@ -90,35 +127,90 @@ export default function HugInfoPage({ navigation, route }) {
         notificationContent: {
             display: 'flex',
             justifyContent: 'space-between',
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             alignItems: 'center',
         },
         textAreaFriend: {
             color: 'white',
-            marginHorizontal: 10,
+            marginLeft: -120,
             flex: 1,
             padding: 10,
             flexWrap: 'wrap',
             justifyContent: 'space-between',
-            borderRadius: 20,
-            borderColor: '#8677E5',
-            borderWidth: 2, 
+            borderTopRightRadius: 15,
+            borderBottomRightRadius: 15,
+            backgroundColor: '#8677E5',
             marginBottom: 20,
         },
         textAreaUser: {
-            color: 'white',
-            marginHorizontal: 10,
+            marginRight: -100,
             flex: 1,
             padding: 10,
             flexWrap: 'wrap',
             justifyContent: 'space-between',
-            borderRadius: 20,
-            borderColor: '#E57777',
-            borderWidth: 2, 
+            borderTopLeftRadius: 15,
+            borderBottomLeftRadius: 15,
+            backgroundColor: '#E57777',
             marginBottom: 20,
+        },
+        pinButton: {
+            borderRadius: 100,            
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 5,
+                height: 5,
+            },
+            shadowOpacity: 0.41,
+            shadowRadius: 7,
+            elevation: 10,
+            width: 70,
+            height: 70,
+            position: 'absolute',
+            bottom: 25,
+            right: 15,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        },
+        pinButtonIcon: {
+            width: 50, 
+            height: 50,
         }
-    });
+    })
 
+    const fetchUserData = async () => {
+      const { status, data } = 
+        await ReadAPI.getUserProfile(userData.currentUser.uid);
+      // console.log(status, data);
+      if (status) {
+        setFetchedUser(data);
+      } else {
+        Alert.alert('Something went wrong when fetching user data');
+      }
+    }
+
+    function pinHug() {
+        if(!pinned) {
+            setPinned(true)
+            // call the backend function for pinning
+        } else {
+            setPinned(false)
+            // call the backend function for unpinning
+        }
+    }
+
+    function checkMessageLength() {
+      return typeof message == 'object' &&
+      message.length > 1;
+      // return typeof messages == 'object' &&
+      // messages.length > 1;
+    }
+
+    function checkImageArray() {
+      return typeof image == 'object';
+      // return typeof images == 'object';
+    }
+    
     return (
         <View style={{ backgroundColor: 'white' }}>
 
@@ -131,34 +223,61 @@ export default function HugInfoPage({ navigation, route }) {
                         <Text style={styles.hugDateText}>{dateTime}</Text>
 
                         {/* insert first hug picture -- default is friend's prof pic */}
-                        <Image source={images[0]} style={styles.imageContainer}/>
+                          <Image source={{ uri: image }} style={styles.imageContainer}/>
                 </View>
-
             
                 <View style={styles.notificationContent}>    
                     <View style={{ ...styles.textAreaFriend, maxWidth: textContainerWidth }}>
                         {/* Text from friend */}
-                        <Text style={styles.username}>{senderId}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{senderDescription}</Text>
+                        <Text style={{...styles.username, color: "#FFF"}}>
+                          {`@${friend_username}`}
+                        </Text>
+                        <Text style={{ ...styles.message, width: textWidth - windowWidth * 0.05 , color: "#FFF" }}>
+                          {message}
+                        </Text>
                     </View>
                     <View style={{ ...styles.textAreaUser, maxWidth: textContainerWidth }}>
                         {/* Text from user */}
-                        <Text style={styles.username}>{receiverId}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{receiverDescription}</Text>
+                        <Text style={{...styles.username, color: "#FFF"}}>
+                          {`@${fetchedUser.username}`}
+                        </Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>
+                          {checkMessageLength() ? receiverDescription : ''}
+                        </Text>
                     </View>  
-                </View>
-            
+                </View>            
 
                 {/* more hug imgs */}
                 <View style={styles.images}>
-                    <ScrollView horizontal={true} style={{backgroundColor:'white'}}>
+                  {
+                    checkImageArray() &&
+                    <ScrollView horizontal={true}>
                         {images.map(img => (
-                            <Image source={img} style={styles.imageContainer}/>
+                            <Image source={img.pic} style={styles.imageContainer} key={img.id}/>
                         ))}
                     </ScrollView>
+                  }
+                  {
+                    !checkImageArray() &&
+                    <Image
+                      source={{ uri: image }}
+                      style={styles.imageContainer}
+                    />
+                  }
                 </View>
 
+
             </ScrollView>
+
+            <TouchableOpacity 
+                style={[styles.pinButton, {backgroundColor: pinned ? 'orange' : '#d4d4d4'}]}
+                onPress={pinHug}>
+                <Image 
+                    source={require('assets/pinIcons/0015.png')}
+                    style={styles.pinButtonIcon}
+                />
+            </TouchableOpacity>
+
         </View>
         
     )

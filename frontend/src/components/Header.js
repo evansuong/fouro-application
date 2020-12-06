@@ -102,12 +102,7 @@ function RemoveFriendButton(navigation, isLightTheme) {
 
 
 export function HeaderButton({ name, icon, onPress, onMainNav, isLightTheme }) {
-
-    // console.log("buttonName: ", name)
-    // console.log(onMainNav)
-
     const { windowWidth, windowHeight } = useContext(DimensionContext);
-    console.log(isLightTheme)
 
     let width = windowWidth / 8.5;
     
@@ -181,6 +176,9 @@ export default function Header(props) {
         'Corkboard': '',
         'Hug Info': '',
         'Reset Password Page': '',
+        'Pic Upload Page': '',
+        'Login Page': '',
+        'Signup Page': '',
     };
 
     // setting button list for header 
@@ -211,8 +209,8 @@ export default function Header(props) {
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: isLightTheme ? 0.2 : 0.6,
             shadowRadius: 2,  
-            elevation: onMainNav ? 5 : 0
-        }, 
+            elevation: onMainNav && !isLightTheme ? 5 : 0
+        },
         header: {
             display: 'flex',
             flexDirection: 'row',
