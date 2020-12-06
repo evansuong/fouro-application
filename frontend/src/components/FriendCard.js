@@ -5,9 +5,9 @@
  * https://stackoverflow.com/questions/40665370/react-native-what-is-a-proper-way-to-pass-style-as-props-when-using-spread-ope
  * https://stackoverflow.com/questions/53647304/elevation-in-react-native 
  */
-
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+// Contexts
 import { DimensionContext } from '../contexts/DimensionContext'
 import { UserContext } from '../contexts/UserContext';
 /**
@@ -28,13 +28,16 @@ export default function FriendCard(props) {
 
   const { navigation, height, width, friendData } = props;
   const { color, name, profile_pic, username, user_id } = friendData;
+
+  // console.log(profile_pic)
+
   const { windowWidth, windowHeight } = useContext(DimensionContext)
   const pfpWidth = windowWidth * 0.11
   const cardHeight = pfpWidth + 15
   const friendColor = { backgroundColor: color }
   const containerDimensions = { width: width, height: height }
   const { userData } = useContext(UserContext);
-  const { isLightTheme } = userData;
+  const { isLightTheme } = userData;  
 
   const styles = StyleSheet.create({
     pfpContainer: {
@@ -91,6 +94,7 @@ export default function FriendCard(props) {
     <TouchableOpacity 
       style={styles.friendCardContainer}
       onPress={() => { navigation.navigate("Friend Profile", { data: friendData })}}
+      activeOpacity={.9}
     >
 
     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: pfpWidth + 10 }}>

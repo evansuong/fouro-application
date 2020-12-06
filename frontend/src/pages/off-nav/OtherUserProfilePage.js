@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import UserProfile from '../../components/UserProfile';
 import HugCard from 'components/HugCard'
 import { DimensionContext } from '../../contexts/DimensionContext'
 import Header from 'components/Header';
 import LinkedButton from 'components/LinkedButton'
+import { UserContext } from '../../contexts/UserContext';
+import OptionsMenu from "react-native-options-menu";
 
 function buildTestData(name, text, img, id) {
     return {
@@ -23,22 +25,34 @@ function buildTestData(name, text, img, id) {
     buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), '5'),
   ]
 
-export default function OtherUserProfilePage({ navigation, route }) {
+export default function OtherUserProfilePage({ navigation, route,  }) {
     const {windowWidth, windowHeight} = useContext(DimensionContext)
     const routeName = route.name;
     const dotsIcon = require('assets/dots-icon.png');
     const dotsIconDark = require('assets/dots-icon-dark.png');
+    const { userData } = useContext(UserContext);
+    const { isLightTheme } = userData;
+    // const [status, getStatus] = useState('')
+
+    let width = windowWidth / 8.5;
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
-    let status = 'pending';
+    let status = 'stranger';
     const isStranger = status !== 'friend' ? true : false;
     const isPending = status === 'pending' ? true : false;
     
     // destruct route parameteres
     const { data } = route.params;
-    const { id, name, profile_pic, username } = data;
     
+    const { user_id, name, profile_pic, username } = data;
+    
+    
+          
+    function removeFriend(id) {
+        
+    }
+
 
     // TODO: replace with getFriendProfile to get all shared hugs
     const friendProfile = { 
@@ -51,6 +65,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
     //const hugButtonHeight = windowHeight / 8;
 
     const renderHug = (( item ) => {
+        // console.log(item.item)
 
         return(
         <HugCard 
@@ -62,17 +77,17 @@ export default function OtherUserProfilePage({ navigation, route }) {
     function handleSendRequest() {
         console.log('wererw')
     }
+
+    /**
+     * Helper function to remove friends from the Friends Page list. Calls the
+     * removeFriend(user_id) method in Friends Page and navigates back.
+     */
+    function removeFriendFromList() {
+        // removeFriend(user_id);
+        navigation.goBack();
+    }
         
     const styles = StyleSheet.create({
-        header: {
-            position: 'absolute',
-            zIndex: 3
-        },
-        removeFriendOverlay: {
-            display: 'flex',
-            flexDirection: 'row', 
-            justifyContent: 'flex-end'
-        },
         userProfile: {
             zIndex: -1,
             marginTop: 20,
@@ -138,6 +153,20 @@ export default function OtherUserProfilePage({ navigation, route }) {
           width: windowWidth / 1.2, 
           marginBottom: windowHeight / 30,
           height: windowWidth / 20,
+        },
+        btnImage: {
+            width: windowWidth / 15,
+            height: windowWidth / 15,
+            resizeMode: 'contain'
+        },
+        menuBtn: {
+            position: 'absolute',
+            top: windowHeight / 20 + 5,
+            right: 20,
+            // backgroundColor: 'pink',
+            zIndex: 6,
+            padding: 10,
+            borderRadius: 100,
         }
     });
     
@@ -198,7 +227,25 @@ export default function OtherUserProfilePage({ navigation, route }) {
     return (
 
         <View style={{ height: '100%', display: "flex", backgroundColor: 'white', alignItems: 'center' }}>
+            
+            {/* <TouchableOpacity style={styles.menuBtn} onPress={removeFriend}>
+                <Image style={styles.btnImage} source={dotsIconDark} />
+            </TouchableOpacity> */}
+
+            {
+                !isStranger &&
+                <View style={styles.menuBtn}>
+                {/* add a 'close' option */}
+                <OptionsMenu
+                    button={dotsIconDark}
+                    buttonStyle={styles.btnImage}
+                    options={["remove friend"]}
+                    actions={[removeFriendFromList]} />
+                </View>
+            }
+
             <Header routeName={routeName} navigation={navigation} onMainNav={false} />
+
             <View style={styles.userProfile, {marginTop:topMarginSize}}>
                 {/* user profile information */}
                 <UserProfile 

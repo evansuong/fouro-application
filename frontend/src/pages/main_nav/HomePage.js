@@ -4,27 +4,20 @@ import {
   Button, 
   Text, 
   View, 
-  Dimensions, 
   ScrollView,
   Animated,
   TouchableWithoutFeedback,
-  TouchableOpacity,
-  Switch,
-  Image
-} from 'react-native'
-
-import AppStyles from '../../AppStyles'
-import { FlatList } from 'react-native-gesture-handler';
-
-import HugCard from 'components/HugCard'
+  Image,
+} from 'react-native';
+import AppStyles from '../../AppStyles';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import HugCard from 'components/HugCard';
 import Panel from 'components/StreakPanel';
-// import CreateHugButton from 'components/CreateHugButton';
-import { DimensionContext } from '../../contexts/DimensionContext';
-import Header from '../../components/Header';
-import { UserContext } from '../../contexts/UserContext';
+import Header from 'components/Header';
 
-// TODO: Move create hug button to the right side of the screen.
-// TODO: Fix button animation starting from far left of button
 
 export default function HomePage({ navigation, route }) {
   const [expanded, setExpanded] = useState(false);
@@ -62,6 +55,7 @@ export default function HomePage({ navigation, route }) {
   function dismissCreateButton() {
     setExpanded(false);
     collapse();
+                
   }
 
   function expand() {
@@ -131,7 +125,7 @@ export default function HomePage({ navigation, route }) {
 
         <Button
           title='upload page'
-          onPress={() => navigation.navigate('upload')}
+          onPress={() => navigation.navigate('Pic Upload Page')}
         />
       
         {/* Hug Cards */}
@@ -159,8 +153,8 @@ export default function HomePage({ navigation, route }) {
         >
           <Animated.View style={{
             ...styles.createHugButtonContainer, 
-            width:width, backgroundColor: 
-            backgroundColor, 
+            width:width, 
+            backgroundColor: 'rgba(0, 0, 0, .5)', 
             padding: padding, 
             paddingLeft: paddingLeft 
           }}>

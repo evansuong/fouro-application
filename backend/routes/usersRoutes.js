@@ -54,10 +54,10 @@ function checkBody(req, res, next) {
   next();
 }
 
-// TESTING ROUTE FOR GETTING HTTP REQUESTS WORKING
+/* TESTING ROUTE FOR GETTING HTTP REQUESTS WORKING
 router.get('/testRoute', async (req, res) => {
   res.status(200).send('Working');
-})
+}) */
 
 // Routes
 // VERIFIED
@@ -114,11 +114,13 @@ router.get("/getUserCounts/:id", async (req, res) => {
   }
 });
 
-// TODO: BROKEN. WORKING ON UPLOADING BLOB 
+// TODO: BROKEN. WORKING ON UPLOADING BLOB
 router.put('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
   console.log('In route');
   const uid = req.params.id;
   const { blob } = req.body;
+
+  console.log(blob);
   
   if (!uid || !blob) {
     res.status(400).send('Request has missing fields');

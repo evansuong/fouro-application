@@ -164,7 +164,8 @@ export default function Header(props) {
     const [searchInput, setSearchInput] = useState();
 
     const { userData } = useContext(UserContext);
-    const { isLightTheme } = userData;
+    // const { isLightTheme } = userData;
+    let isLightTheme = true;
 
     function enableSearch() { setSearching(true) }
     function disableSearch() { setSearching(false) }
@@ -181,6 +182,7 @@ export default function Header(props) {
         'Corkboard': '',
         'Hug Info': '',
         'Reset Password Page': '',
+        'Pic Upload Page': '',
     };
 
     // setting button list for header 
@@ -211,8 +213,8 @@ export default function Header(props) {
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: isLightTheme ? 0.2 : 0.6,
             shadowRadius: 2,  
-            elevation: onMainNav ? 5 : 0
-        }, 
+            elevation: onMainNav && !isLightTheme ? 5 : 0
+        },
         header: {
             display: 'flex',
             flexDirection: 'row',
