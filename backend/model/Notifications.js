@@ -6,7 +6,8 @@ require("firebase/auth");
 
 const admin = require("firebase-admin");
 
-const { UsersAPI } = require('../model/Users');
+const { UsersAPI } = require('./Users');
+const { HugsAPI } = require('./Hugs');
 
 
 // Firestore
@@ -14,31 +15,76 @@ const db = firebase.firestore();
 const users = db.collection("users");
 // Firestore
 const NotificationsAPI = {
+    
     getNotifications: async function (uid) {
-        // UNPAGINATED
+        let notifications = [];
+        // Gets notifications collection
         var notificationCollection = users
           .doc(uid)
-          .collection("notifications")
-          .orderBy("date_time")
-        const notificationSnapshot = await notificationCollection.get();
-        let notifications = [];
-        notificationSnapshot.forEach(doc => {
-          notifications = [...notifications, doc.data()];
-        });
-        for (let i = 0; i < notifications.length; i++) {
-          const userId = notifications[i].friend;
-          const userResponse = await UsersAPI.getUserProfile(userId);
-          const newUser = {
-            friendName: userResponse.name,
-            friendPfp: userResponse.profile_pic
-          }
-          notifications[i]['friendInfo'] = newUser;
+          .collection("notifications");
+          if(!notificationCollection.exists) {
+            console.log('No such document');
         }
-        return notifications;
+        const notificationSnapshot = await notificationCollection.orderBy("date_time", "desc").get(); //sort notifications by time
+        if(notificationSnapshot.empty) {
+            console.log('No matching documents.');
+            return {notifs : notifications};
+        }
+        //get all the notification_id's
+        let notificationData = [];
+        notificationSnapshot.forEach(doc => {
+          
+          notificationData = [...notificationData, doc];
+          
+        });
+       
+        
+        let newUser = {};
+        for (let i = 0; i < notificationData.length; i++) {
+          const userRef = await notificationData[i].get("user_ref").id; 
+          const userResponse = await UsersAPI.getUserProfile(userRef);
+          if (await notificationData[i].get("type") == "hug"){
+            newUser = {
+                friendName: userResponse.name,
+                friend_username: userResponse.username,
+                date_time: notificationData[i].get("date_time").toDate().toString(),
+                friendPfp: userResponse.profile_pic,
+                type: notificationData[i].get("type"),
+                callback_id: notificationData[i].get("hug_ref").id,
+                notification_id: notificationData[i].id
+              }
+          } else {
+            newUser = {
+            friendName: userResponse.name,
+            friend_username: userResponse.username,
+            date_time: notificationData[i].get("date_time").toDate().toString(),
+            friendPfp: userResponse.profile_pic,
+            type: notificationData[i].get("type"),
+            callback_id : notificationData[i].get("user_ref").id,
+            notification_id: notificationData[i].id
+          }
+        }
+          notifications[i] = newUser;
+        }
+        //wrapped in json
+        return {notifs: notifications};
     },
-
-    deleteNotification: function (requestId) {
-        requestId.delete().then();
+    //fix 
+    //hug request call drop hug
+    deleteNotification: function ( uid, requestId) {
+        var notificationCollection = users
+          .doc(uid)
+          .collection("notifications");
+        if(!notificationCollection.exists) {
+            console.log('No such document');
+        }
+        var user_request_id = notificationCollection.doc(requestId)
+        
+        if(user_request_id.get("type") == "hug"){
+            HugsAPI.dropHug(uid, requestId, user_request_id.get("hug_ref"));
+        }
+        
+        user_request_id.delete().then();
     }
 };
 
@@ -51,13 +97,13 @@ const RequestsAPI = {
         // navigates to current users notification collection and updates with 
         // the current time, friend_id, and type
         const newFriendCollectionRef = 
-          users.doc(friend_id).collection('notifications').doc(user_id);
+          users.doc(friend_id).collection('notifications');
         const newFriendRequest = {
           type : "friend",
           date_time : dateTime,
           user_id : user_id, // sender
         }
-        await newFriendCollectionRef.set(newFriendRequest);
+        await newFriendCollectionRef.add(newFriendRequest);
         return({ out: true });
     },
 
@@ -67,7 +113,7 @@ const RequestsAPI = {
         var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
         
         const newHugCollectionRef = 
-          users.doc(friend_id).collection('notifications').doc(hug_id);
+          users.doc(friend_id).collection('notifications');
 
         const newHug = {
           type : "hug",
@@ -75,7 +121,7 @@ const RequestsAPI = {
           date_time : dateTime,
           user_id : user_id, // sender
         }
-        await newHugCollectionRef.set(newHug);
+        await newHugCollectionRef.add(newHug);
         return({ out: true });
     },
 }

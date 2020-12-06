@@ -7,8 +7,10 @@ export default function HugInfoPage({ navigation, route }) {
 
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const routeName = route.name;
+    const hug_id = route.params;
 
     // TODO: uncomment line below when pulling data from firestore or whatever and delete the following test block
+    //       hugId will be passed in and we fetch the hug info with that hugId
     // const { hugId, completed, dateTime, images, receiverDescription, receiverId, senderDescription, senderId } = route.params.data
     
     // TODO: delete the following test block
@@ -19,8 +21,7 @@ export default function HugInfoPage({ navigation, route }) {
     const receiverDescription = "omae wa mou shindeiru"
     const senderDescription = "Roses are red, violets are blue"
     const receiverId = "@EvanSuong"
-    const senderId ="@AlexChow"
-    // console.log("route params data: ", route.params.data)
+    const senderId = "@AlexChow"
 
     // sizing
     const textContainerWidth = windowWidth / 1.1;
@@ -41,8 +42,8 @@ export default function HugInfoPage({ navigation, route }) {
             paddingVertical: 5,
             paddingHorizontal: 10,
             display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center'
         },
         body: {
             backgroundColor: 'white',
@@ -66,6 +67,9 @@ export default function HugInfoPage({ navigation, route }) {
             flex: 1,
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
+        },
+        hugDateText: {
+            marginBottom: 10,
         },
         images: {
             flexDirection: 'row',
@@ -123,10 +127,11 @@ export default function HugInfoPage({ navigation, route }) {
 
             <ScrollView style={styles.mainContainer}>
                 <View style={styles.header}>
-                    <View>
+                        {/* hug date */}
+                        <Text style={styles.hugDateText}>{dateTime}</Text>
+
                         {/* insert first hug picture -- default is friend's prof pic */}
                         <Image source={images[0]} style={styles.imageContainer}/>
-                    </View>  
                 </View>
 
             
