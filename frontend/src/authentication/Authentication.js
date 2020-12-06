@@ -13,7 +13,8 @@ const AuthAPI = {
         registered = true;
         response = {
           status: true,
-          data: firebase.auth().currentUser
+          data: firebase.auth().currentUser.uid,
+          message: "success"
         };
       })
       .catch(function (error) {
@@ -22,7 +23,8 @@ const AuthAPI = {
         console.log(errorMessage);
         response = {
           status: false,
-          data: error.message
+          data: null,
+          message: error.message
         }
       });
 
@@ -40,7 +42,8 @@ const AuthAPI = {
         loggedin = true;
         response = {
           status: true,
-          data: firebase.auth().currentUser
+          data: firebase.auth().currentUser.uid,
+          message: "success"
         }
       })
       .catch(function (error) {
@@ -49,7 +52,8 @@ const AuthAPI = {
         console.log('error code', error.code);
         response = {
           status: false,
-          data: error.code
+          data: null,
+          message: error.code
         };
       });
 

@@ -6,79 +6,137 @@ require("firebase/auth");
 
 const admin = require("firebase-admin");
 
-const { UsersAPI } = require('../model/Users');
-
+const { UsersAPI } = require("./Users");
+const { HugsAPI } = require("./Hugs");
 
 // Firestore
 const db = firebase.firestore();
 const users = db.collection("users");
 // Firestore
 const NotificationsAPI = {
-    getNotifications: async function (uid) {
-        // UNPAGINATED
-        var notificationCollection = users
-          .doc(uid)
-          .collection("notifications")
-          .orderBy("date_time")
-        const notificationSnapshot = await notificationCollection.get();
-        let notifications = [];
-        notificationSnapshot.forEach(doc => {
-          notifications = [...notifications, doc.data()];
-        });
-        for (let i = 0; i < notifications.length; i++) {
-          const userId = notifications[i].friend;
-          const userResponse = await UsersAPI.getUserProfile(userId);
-          const newUser = {
-            friendName: userResponse.name,
-            friendPfp: userResponse.profile_pic
-          }
-          notifications[i]['friendInfo'] = newUser;
-        }
-        return notifications;
-    },
-
-    deleteNotification: function (requestId) {
-        requestId.delete().then();
+  /* retrieves all the notifications from a certain user
+   * @param: user id
+   * @return a list of JSON objects with notification information
+   */
+  getNotifications: async function (uid) {
+    let notifications = [];
+    // Gets notifications collection
+    var notificationCollection = users.doc(uid).collection("notifications");
+    if (!notificationCollection.exists) {
+      console.log("No such document");
     }
+    const notificationSnapshot = await notificationCollection
+      .orderBy("date_time", "desc")
+      .get(); //sort notifications by date/time
+    if (notificationSnapshot.empty) {
+      console.log("No matching documents.");
+      return { notifs: notifications };
+    }
+    //get all the notification_id's
+    let notificationData = [];
+    notificationSnapshot.forEach((doc) => {
+      notificationData = [...notificationData, doc];
+    });
+
+    let newUser = {}; //JSON object of user who sent notification
+    for (let i = 0; i < notificationData.length; i++) {
+      const userRef = await notificationData[i].get("user_ref").id;
+      const userResponse = await UsersAPI.getUserProfile(userRef);
+      //if the notification type is a hug
+      if ((await notificationData[i].get("type")) == "hug") {
+        newUser = {
+          friendName: userResponse.name,
+          friend_username: userResponse.username,
+          date_time: notificationData[i].get("date_time").toDate().toString(),
+          friendPfp: userResponse.profile_pic,
+          type: notificationData[i].get("type"),
+          callback_id: notificationData[i].get("hug_ref").id,
+          notification_id: notificationData[i].id,
+        };
+        //if the notification type is a friend
+      } else {
+        newUser = {
+          friendName: userResponse.name,
+          friend_username: userResponse.username,
+          date_time: notificationData[i].get("date_time").toDate().toString(),
+          friendPfp: userResponse.profile_pic,
+          type: notificationData[i].get("type"),
+          callback_id: notificationData[i].get("user_ref").id,
+          notification_id: notificationData[i].id,
+        };
+      }
+      //push the users notification
+      notifications.push(newUser);
+    }
+    //wrapped in json
+    return { notifs: notifications };
+  },
+
+  /* Deletes all notifications for a certain user
+   * @param: user id and request id
+   * @return none
+   */
+  deleteNotification: function (uid, requestId) {
+    var notificationCollection = users.doc(uid).collection("notifications");
+    if (!notificationCollection.exists) {
+      console.log("No such document");
+    }
+    var user_request_id = notificationCollection.doc(requestId);
+
+    if (user_request_id.get("type") == "hug") {
+      HugsAPI.dropHug(uid, requestId, user_request_id.get("hug_ref"));
+    }
+
+    user_request_id.delete().then();
+  },
 };
 
 const RequestsAPI = {
-    sendFriendRequest: async function (user_id, friend_id) {
-        //Gets the time that the notification is sent
-        let dateInSeconds = Math.floor(Date.now() / 1000);
-        var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
+  /* sends a notification when sending a friend request
+   * @param: user_id and friend_id
+   * @return true
+   */
+  sendFriendRequest: async function (user_id, friend_id) {
+    //Gets the time that the notification is sent
+    let dateInSeconds = Math.floor(Date.now() / 1000);
+    var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
 
-        // navigates to current users notification collection and updates with 
-        // the current time, friend_id, and type
-        const newFriendCollectionRef = 
-          users.doc(friend_id).collection('notifications').doc(user_id);
-        const newFriendRequest = {
-          type : "friend",
-          date_time : dateTime,
-          user_id : user_id, // sender
-        }
-        await newFriendCollectionRef.set(newFriendRequest);
-        return({ out: true });
-    },
+    // navigates to current users notification collection and updates with
+    // the current time, friend_id, and type
+    const newFriendCollectionRef = users
+      .doc(friend_id)
+      .collection("notifications");
+    const newFriendRequest = {
+      type: "friend",
+      date_time: dateTime,
+      user_id: user_id, // sender
+    };
+    await newFriendCollectionRef.add(newFriendRequest);
+    return { out: true };
+  },
+  /* sends a notification when sending a hug to a friend
+   * @param: user_id, friend_id and hug_id
+   * @return true
+   */
+  sendHugRequest: async function (user_id, friend_id, hug_id) {
+    // Gets the time that the notification is sent
+    let dateInSeconds = Math.floor(Date.now() / 1000);
+    var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
 
-    sendHugRequest: async function(user_id, friend_id, hug_id) {
-        // Gets the time that the notification is sent
-        let dateInSeconds = Math.floor(Date.now() / 1000);
-        var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
-        
-        const newHugCollectionRef = 
-          users.doc(friend_id).collection('notifications').doc(hug_id);
+    const newHugCollectionRef = users
+      .doc(friend_id)
+      .collection("notifications");
 
-        const newHug = {
-          type : "hug",
-          hug_id : hug_id,
-          date_time : dateTime,
-          user_id : user_id, // sender
-        }
-        await newHugCollectionRef.set(newHug);
-        return({ out: true });
-    },
-}
+    const newHug = {
+      type: "hug",
+      hug_id: hug_id,
+      date_time: dateTime,
+      user_id: user_id, // sender
+    };
+    await newHugCollectionRef.add(newHug);
+    return { out: true };
+  },
+};
 
 // Export the module
 module.exports = { NotificationsAPI, RequestsAPI }; // awaiting to be filled

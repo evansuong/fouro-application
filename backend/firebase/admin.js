@@ -1,4 +1,5 @@
 // Firebase Admin SDK, for all server side code
+
 // Your Firebase service account can be used to authenticate multiple
 // Firebase features, such as Database, Storage and Auth,
 // programmatically via the unified Admin SDK.
