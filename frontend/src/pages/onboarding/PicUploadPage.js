@@ -14,15 +14,19 @@ import * as Permissions from 'expo-permissions';
 import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import Header from 'components/Header';
+import PicUploadButton from 'components/PicUploadButton';
 // Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 
 
 export default function ProfileSetupPage({ navigation, route }) {
+  // States
   const [uploadPic, setUploadPic] = useState({});
-  const { userData, dispatch } = useContext(UserContext);
   const [startUp, setStartUp] = useState(true);
+  // Context
+  const { userData, dispatch } = useContext(UserContext);
+  // Misc
   const fade = useRef(new Animated.Value(0)).current;
   const routeName = route.name;
 

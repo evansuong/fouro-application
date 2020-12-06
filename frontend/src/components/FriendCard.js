@@ -26,7 +26,7 @@ import { UserContext } from '../contexts/UserContext';
  */
 export default function FriendCard(props) {
 
-  const { navigation, height, width, friendData, removeFriend } = props;
+  const { navigation, height, width, friendData } = props;
   const { color, name, profile_pic, username, user_id } = friendData;
 
   // console.log(profile_pic)
@@ -93,7 +93,7 @@ export default function FriendCard(props) {
     /* the card itself */
     <TouchableOpacity 
       style={styles.friendCardContainer}
-      onPress={() => { navigation.navigate("Friend Profile", { data: friendData, removeFriend: removeFriend })}}
+      onPress={() => { navigation.navigate("Friend Profile", { data: friendData })}}
       activeOpacity={.9}
     >
 

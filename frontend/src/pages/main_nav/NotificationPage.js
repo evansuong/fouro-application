@@ -100,14 +100,23 @@ export default function NotificationPage({ navigation, route }) {
 
     // add a filler item to move the list down
     useEffect(() => {
+<<<<<<< HEAD
         // console.log(notifications)
+=======
+        //console.log(notifications)
+>>>>>>> cc78257c0d0cfea2672d6b8b216412f6698bad22
         if (notifications[0].type !== 'f') setNotifications([{ type: 'f' }, ...notifications])
     }, []);
 
     function catchHug(hugId, id) {
         clearNotification(id)
+<<<<<<< HEAD
         // console.log(id)
+=======
+        //console.log(id)
+>>>>>>> cc78257c0d0cfea2672d6b8b216412f6698bad22
         let data = testHugData.filter((item) => item.hugId === hugId)[0]
+        data = Object.assign({}, {hug_id: data.call_id, ...data})
         navigation.navigate('Catch Hug Page', { 
             page: 'hugInfo',
             data: data

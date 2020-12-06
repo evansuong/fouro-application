@@ -54,11 +54,7 @@ export default function FriendsPage({ navigation, route }) {
         }
     }
     
-        
-    function removeFriend(id) {
-        setFriends(friends.filter(user => user.user_id !== id))
-    }
-
+  
     const renderCards = friend => {
         // console.log(friend)
         return  <FriendCard
@@ -67,7 +63,6 @@ export default function FriendsPage({ navigation, route }) {
                     navigation={navigation}
                     height={windowHeight / 15}
                     width={windowWidth - 40}
-                    removeFriend={removeFriend}
                 />        
     }
 
@@ -117,7 +112,6 @@ export default function FriendsPage({ navigation, route }) {
               <View style={styles.flatListContainer}>
                 <FlatList
                   data={friends}
-                  // data={friends}
                   keyExtractor={item => item.user_id}
                   renderItem={renderCards}
                   contentContainerStyle={styles.friendCard}
