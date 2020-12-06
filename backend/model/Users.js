@@ -1,10 +1,9 @@
 // Users file for Creating, Reading, Updating, and Deleting Users
 // and User Profile Management
 var firebase = require("../firebase/admin");
-var firebase2 = require('../firebase/config');
+var firebase2 = require("../firebase/config");
 require("firebase/auth");
-const fetch = require('node-fetch');
-
+const fetch = require("node-fetch");
 
 // Firestore
 const db = firebase.firestore();
@@ -103,18 +102,16 @@ const UsersAPI = {
 
       // initialize local object containing new user values
       const user = {
-        username: typeof username !== 'undefined' ?
-          username
-          :
-          userData['username'],
-        first_name: typeof firstName !== 'undefined' ?
-        firstName.trim() 
-        : 
-        userData['first_name'],
-        last_name: typeof lastName !== 'undefined' ?
-        lastName.trim() 
-        : 
-        userData['last_name'],
+        username:
+          typeof username !== "undefined" ? username : userData["username"],
+        first_name:
+          typeof firstName !== "undefined"
+            ? firstName.trim()
+            : userData["first_name"],
+        last_name:
+          typeof lastName !== "undefined"
+            ? lastName.trim()
+            : userData["last_name"],
       };
 
       // update document with data
@@ -139,7 +136,7 @@ const UsersAPI = {
   },
 
   uploadUserProfilePicture: async function (uid, file) {
-    console.log('here');
+    console.log("here");
     // TODO: this function may not work correctly.
     // create a cloud storage refrence
     // var storageRef = await firebase2
@@ -148,34 +145,34 @@ const UsersAPI = {
     // TODO: This should have a child call I think
     // TODO: NEED TO GET URL https://firebase.google.com/docs/storage/web/download-files#download_data_via_url
     var storageRef = firebase2.storage().ref();
-    var profilePicRef = storageRef.child(`profile_pictures/${uid}`)
-      // .ref()
-      // .child(`${uid}`);
-      // .ref(`profile_pictures/${uid}/${file._data.name}`)
-      // .child(`profile_pictures/${uid}/${file._data.name}`);
+    var profilePicRef = storageRef.child(`profile_pictures/${uid}`);
+    // .ref()
+    // .child(`${uid}`);
+    // .ref(`profile_pictures/${uid}/${file._data.name}`)
+    // .child(`profile_pictures/${uid}/${file._data.name}`);
 
-      // console.log('storageRefffff: ', storageRef);
-      // console.log('bucket: ', storageRef.bucket);
+    // console.log('storageRefffff: ', storageRef);
+    // console.log('bucket: ', storageRef.bucket);
 
-      // const downloadURL = await storageRef.getDownloadURL();
-      // console.log('downloadURL: ', downloadURL);
+    // const downloadURL = await storageRef.getDownloadURL();
+    // console.log('downloadURL: ', downloadURL);
 
     // save to cloud storage
-    let img = file.dataUrl
+    let img = file.dataUrl;
     // let img = Object.keys(file)[0]
-    console.log(img)
-    img = img.replace(/\s/g, '');
+    console.log(img);
+    img = img.replace(/\s/g, "");
 
-    await profilePicRef.putString(img)
-    .then((snapshot) => {
-      console.log('Uploaded a blob');
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+    await profilePicRef
+      .putString(img)
+      .then((snapshot) => {
+        console.log("Uploaded a blob");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-   
-    console.log('hi')
+    console.log("hi");
     // update user's photo URL to the saved cloud storage url
     await usersCollection.doc(uid).update({
       profile_pic: profilePicRef.fullPath,
@@ -207,15 +204,15 @@ const HugCountAPI = {
         hug_count = null;
       });
 
-    return { hug : hug_count, streak : streak_count };
+    return { hug: hug_count, streak: streak_count };
   },
 
   increaseHugCount: async function (uid) {
     // retrieve hug and streak count
 
     var json = this.getUserCount(uid);
-    var hug_count = (await json).hug
-    var streak_count = (await json).streak
+    var hug_count = (await json).hug;
+    var streak_count = (await json).streak;
     var success = false;
 
     var userDocRef = usersCollection.doc(uid);

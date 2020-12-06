@@ -5,7 +5,7 @@ require("firebase/firestore");
 require("firebase/storage");
 
 // import
-const Users = require("../model/Users");
+const Users = require("./Users");
 const Notifications = require("./Notifications");
 
 // Firestore
@@ -269,29 +269,33 @@ const UpdateHugAPI = {
     Notifications.NotificationsAPI.deleteNotification(requestIdRef);
   },
 
+  /**
+   * Update the user counts for the sender and receiver
+   * @param {string} hugId
+   */
   updateUserHugCount: function (hugId) {
     db.collection("hugs")
       .doc(hugId)
       .get()
-      .then(function (doc) {
+      .then((doc) => {
         if (doc.exists) {
           // Increment receiver and sender hug count
-          receiverId = doc.data().receiver_ref.id;
-          senderId = doc.data().sender_ref.id;
-          Users.UsersAPI.increaseHugCount(receiverId);
-          Users.UsersAPI.increaseHugCount(senderId);
+          let receiverRef = doc.get("receiver_ref");
+          let senderRef = doc.get("sender_ref");
+          Users.HugCountAPI.increaseHugCount(receiverRef.id);
+          Users.HugCountAPI.increaseHugCount(senderRef.id);
           // Update each user's user_hug to completed : true
-          users.doc(receiverId).update({
+          senderRef.collection("user_hugs").doc(hugId).update({
             completed: true,
           });
-          users.doc(senderId).update({
+          receiverRef.collection("user_hugs").doc(hugId).update({
             completed: true,
           });
         } else {
           console.log("No such document!");
         }
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log("Error getting document:", error);
       });
   },

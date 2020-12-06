@@ -1,4 +1,4 @@
-var firebase = require("../firebase/config");
+var firebase = require("../../firebase/config");
 require("firebase/firestore");
 require("firebase/auth");
 require("firebase/storage");
@@ -11,8 +11,8 @@ var xhr = new XMLHttpRequest();
 const db = firebase.firestore();
 
 // Main.js used to run and test functions
-var Users = require("../model/Users");
-var Hugs = require("../model/Hugs");
+var Users = require("../../model/Users");
+var Hugs = require("../../model/Hugs");
 // Users
 //Users.UsersAPI.addUser("username", "first", "last");
 
@@ -89,8 +89,8 @@ var Hugs = require("../model/Hugs");
 
 // getSharedHugs()
 async function testGetSharedHugs(currUser, targetUser) {
-    sharedHugs = await Hugs.ViewHugAPI.getSharedHugs(currUser, targetUser);
-    console.log(sharedHugs);
+  sharedHugs = await Hugs.ViewHugAPI.getSharedHugs(currUser, targetUser);
+  console.log(sharedHugs);
 }
 // console.log(
 //     "-------------------example@email.com & otherguy@email.com--------------------"
