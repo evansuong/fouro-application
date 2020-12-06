@@ -14,7 +14,7 @@ export default function HugInfoPage({ navigation, route }) {
     const { userData } = useContext(UserContext);
     const { isLightTheme } = userData;
     const [pinned, setPinned] = useState(false);
-    console.log(data)
+    // console.log(data)
 
     // TODO: uncomment line below when pulling data from firestore or whatever and delete the following test block
     //       hugId will be passed in and we fetch the hug info with that hugId
@@ -24,7 +24,7 @@ export default function HugInfoPage({ navigation, route }) {
     const hugId = 1
     const completed = true
     const dateTime = "April 1, 2021"
-    const images = [require("assets/profilePic.jpg"), require("assets/profilePic.jpg"), require("assets/profilePic.jpg")]
+    const images = [{id: 1, pic: require("assets/profilePic.jpg")}, {id: 2, pic: require("assets/profilePic.jpg")}, {id:3, pic: require("assets/profilePic.jpg")}]
     const receiverDescription = "omae wa mou shindeiru adsfadskfdajsfhjadh jfadkfjadk  adskjfh aklhdfkljh adskjhf adklshfakshfajklsdfh "
     const senderDescription = "Roses are red, violets are blue jahdfladskjfh kjlahdf kjladshf kjhkjahdf kjhadskljfjhadsfh kljahsdfajsdfh"
     const receiverId = "@EvanSuong"
@@ -187,7 +187,7 @@ export default function HugInfoPage({ navigation, route }) {
                 <View style={styles.images}>
                     <ScrollView horizontal={true}>
                         {images.map(img => (
-                            <Image source={img} style={styles.imageContainer}/>
+                            <Image source={img.pic} style={styles.imageContainer} key={img.id}/>
                         ))}
                     </ScrollView>
                 </View>

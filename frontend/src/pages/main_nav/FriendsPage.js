@@ -11,16 +11,13 @@ import SearchPage from '../off-nav/SearchPage'
 
 export default function FriendsPage({ navigation, route }) {
     const [startUp, setStartUp] = useState(true);
-    const [friends, setFriends] = useState([]);
-
-    const { windowWidth, windowHeight } = useContext(DimensionContext);
-    // const { userData } = useContext(UserContext);
+    //const [friends, setFriends] = useState([]);
 
     const gradient = require('assets/gradients/left.png');
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     const { uid } = userData.currentUser;
-    console.log(uid)
+    //console.log(uid)
     const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
 
     const [friends, setFriends] = useState([
@@ -56,11 +53,7 @@ export default function FriendsPage({ navigation, route }) {
         }
     }
     
-        
-    function removeFriend(id) {
-        setFriends(friends.filter(user => user.user_id !== id))
-    }
-
+  
     const renderCards = friend => {
         // console.log(friend)
         return  <FriendCard
@@ -69,7 +62,6 @@ export default function FriendsPage({ navigation, route }) {
                     navigation={navigation}
                     height={windowHeight / 15}
                     width={windowWidth - 40}
-                    removeFriend={removeFriend}
                 />        
     }
 
@@ -118,8 +110,7 @@ export default function FriendsPage({ navigation, route }) {
             {
               <View style={styles.flatListContainer}>
                 <FlatList
-                  data={friendsTestData}
-                  // data={friends}
+                  data={friends}
                   keyExtractor={item => item.user_id}
                   renderItem={renderCards}
                   contentContainerStyle={styles.friendCard}

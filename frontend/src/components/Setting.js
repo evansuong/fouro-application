@@ -32,7 +32,6 @@ export default function Setting({
       resizeMode: "contain",
       width: 50,
       height: 50,
-      color: 'red'
     },
     iconDescGroup: {
       flexDirection: "row",
