@@ -1,6 +1,13 @@
-import React from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import React, { useContext } from "react";
+import { 
+  Text, 
+  View, 
+  StyleSheet, 
+  Image, 
+  TouchableOpacity 
+} from "react-native";
+// Contexts
+import { UserContext } from 'contexts/UserContext';
 
 export default function Setting({
   icon,
@@ -16,12 +23,16 @@ export default function Setting({
   const settingMarginTopBottom = windowWidth * 0.03;
   const descMargin = windowWidth * 0.03;
   const fontColor = textColor == undefined ? "black" : textColor;
+  
+  const { userData } = useContext(UserContext);
+  const { isLightTheme } = userData;
 
   const styles = StyleSheet.create({
     icon: {
       resizeMode: "contain",
       width: 50,
       height: 50,
+      color: 'red'
     },
     iconDescGroup: {
       flexDirection: "row",
@@ -35,6 +46,8 @@ export default function Setting({
       marginLeft: settingMarginSides,
       marginRight: settingMarginSides,
       marginTop: settingMarginTopBottom,
+      padding: 5,
+      backgroundColor: '#EEE',
     },
     desc: {
       marginLeft: descMargin,

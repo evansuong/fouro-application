@@ -119,6 +119,8 @@ router.put('/uploadUserProfilePicture/:id', checkBody, async (req, res) => {
   console.log('In route');
   const uid = req.params.id;
   const { blob } = req.body;
+
+  console.log(blob);
   
   if (!uid || !blob) {
     res.status(400).send('Request has missing fields');

@@ -46,7 +46,6 @@ export default function PicUploadButton({ navigation, text, onPress }) {
       alignItems: 'center',
       // Shadows do not work on rgba values
       backgroundColor: '#ccc7c6',
-      borderWidth: 1,
       borderRadius: 10,
       shadowColor: '#000',
       shadowOffset: {
@@ -55,7 +54,7 @@ export default function PicUploadButton({ navigation, text, onPress }) {
       },
       shadowOpacity: 0.22,
       shadowRadius: 3,
-      elevation: 10,  
+      elevation: 5,  
     },
   })
 

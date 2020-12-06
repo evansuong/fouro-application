@@ -18,7 +18,6 @@ const AuthAPI = {
         };
       })
       .catch(function (error) {
-        // console.log("error");
         registered = false;
         var errorMessage = error.message;
         response = {

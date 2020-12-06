@@ -95,11 +95,17 @@ export default function NamePage({ navigation, route }) {
       lastName: lastName.trim(),
     }
 
-    let response = await CreateAPI.createUser(userToCreate.uid, userToCreate)
-    if (response.status) {
+    dispatch({
+      type: "SET_USER",
+      payload: userToCreate,
+    });
+
+    let { status, data } = await CreateAPI.createUser(userToCreate.uid, userToCreate);
+    if (status) {
       navigation.navigate('Pic Upload Page');
     } else {
-      alert('something went wrong try again')
+      alert('An error occurred');
+      console.log(data);
     }
   }
 
@@ -172,7 +178,7 @@ export default function NamePage({ navigation, route }) {
             {
               checkFilled() &&
               <LinkedButton
-                text='SUBMIT'
+                text='NEXT'
                 color='#FFC24A'
                 onPress={() => submitHandler()}
               />
