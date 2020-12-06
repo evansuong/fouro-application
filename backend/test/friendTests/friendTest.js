@@ -28,10 +28,8 @@ async function statusCheck() {
 statusCheck();
 */
 
-/*
 async function testGetFriend() {
   let test = await Friends.FriendsAPI.getFriendsList("example@email.com");
   console.log(test);
 }
 testGetFriend();
-*/
