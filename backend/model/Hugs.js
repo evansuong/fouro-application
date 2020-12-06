@@ -28,7 +28,7 @@ const HugsAPI = {
       baseString = baseString.substr(baseString.indexOf(",") + 1);
 
       // Path to image is: hug_images/[topLevelHug.id]/[i]
-      const hugImageRef = storageRef.child(imageName + i);
+      const hugImageRef = storageRef.child(imageName + i) + ".jpg";
 
       //convert base64 to buffer / blob
       const blob = Buffer.from(baseString, "base64");
