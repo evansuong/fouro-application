@@ -9,21 +9,23 @@ import {
   ImageBackground,
   ActivityIndicator,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+// Custom Components
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import { useIsFocused } from '@react-navigation/native';
+// Images
 import BackgroundImg from 'assets/gradients/middle.png';
+// APIs
 import AuthAPI from '../../authentication/Authentication';
+// Contexts
 import { UserContext } from '../../contexts/UserContext';
 import { DimensionContext } from '../../contexts/DimensionContext';
 
 
 export default function SignupPage({ navigation }) {
   const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('gggggg');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('gggggg');
-  // const [passwordField, setPasswordField] = useState('');
-  // const [passwordConfirmField, setPasswordConfirmField] = useState('');
+  const [passwordField, setPasswordField] = useState('');
+  const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);

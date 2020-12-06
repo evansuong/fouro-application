@@ -17,8 +17,6 @@ import LinkedButton from 'components/LinkedButton';
 import PicUploadButton from 'components/PicUploadButton';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import * as FileSystem from 'expo-file-system';
-import ImageResizer from 'react-native-image-resizer';
 import * as ImageManipulator from 'expo-image-manipulator';
 
 // const fs = require('fs');
@@ -65,7 +63,7 @@ export default function ProfileSetupPage({ navigation, route }) {
     return `data:image/jpeg;base64,${manipResult}`;
   }
 
-  const checkFileType = (data) => {
+  const checkUpload = (data) => {
     const arr = data.uri.split('.');
     const fileExtension = arr[arr.length - 1];
     const validExtension = validExtensions.includes(fileExtension);
@@ -89,7 +87,7 @@ export default function ProfileSetupPage({ navigation, route }) {
         maxHeight: IMAGE_WIDTH,
         base64: true
       })
-      checkFileType(data); 
+      checkUpload(data); 
     } else {
       console.log('access denied');
       Alert.alert('You need to give up permission to work'); 
@@ -108,7 +106,7 @@ export default function ProfileSetupPage({ navigation, route }) {
         maxHeight: IMAGE_WIDTH,
         base64: true
       })
-      checkFileType(data); 
+      checkUpload(data); 
     } else {
       console.log('access denied');
       Alert.alert('You need to give up permission to work');

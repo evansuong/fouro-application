@@ -10,16 +10,22 @@ import {
   Alert,
   ImageBackground
 } from 'react-native';
+// Expo Imports
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+// Images/Assets
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 import profilePic from 'assets/profilePic.jpg';
+import BackgroundImg from 'assets/gradients/middle.png';
+// Custom Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
+import Header from 'components/Header';
+// Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
-import Header from '../../components/Header';
-import BackgroundImg from 'assets/gradients/middle.png';
+import UserContext from 'contexts/UserContext';
 
 
 // TODO: Remove FriendName and FriendPic parameters
@@ -27,29 +33,24 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
     const {windowWidth, windowHeight} = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+
     const routeName = route.name;
     // const {friendName, friendPfp} = route.params.data;
 
     const callBackend = async () => {
+      console.log('userData: ', userData);
       try {
-        let blobArray = [];
-        for (let i = 0; i < images.length; i++) {
-          const splitPicURI = images[i].uri.split('/');
-          let res = await getBlobObj(images[i].uri, splitPicURI[splitPicURI.length - 1]);
-          blobArray.push(res);
+        const base64 = getBase64WithImage(uploadPic);
+        request = {
+          blob: base64
         }
-        // Send hugImagesArray to backend to push to firebase
-        // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
-        // console.log('done', JSON.stringify(blobArray));
+        // UpdateAPI.uploadUserProfilePicture(userData.uid, request);
+        UpdateAPI.uploadUserProfilePicture('temp', request);
         Alert.alert('Hug created!');
       } catch (err) {
         Alert.alert('Hug creation failed. Please try again.')
       }
-    }
-  
-    const getBlobObj = async (uri, imgName) => {
-      const response = await fetch(uri);
-      return await response.blob();
     }
 
     const pickFromGallery = async () => {
@@ -62,15 +63,38 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
           aspect: [1,1],
           quality: 0.5,
         })
-        // console.log(data);
-        if (data.cancelled == false) {
-          setImages(prevImages => [...prevImages, data]);
-        } else {
-          console.log('image canceled');
-        }
+        checkUpload(data); 
       } else {
         console.log('access denied');
         Alert.alert('You need to give permission to upload a picture!');
+      }
+    }
+
+    const getBase64WithImage = (uploadPic) => {
+      // console.log('before compression', uploadPic.base64.length);
+      const manipResult = await ImageManipulator.manipulateAsync(
+        uploadPic.uri,
+        [],
+        {
+          compress: 0.1,
+          format: ImageManipulator.SaveFormat.JPEG,
+          base64: true
+        }
+      )
+      // console.log('after compression', manipResult`.base64.length);
+      return `data:image/jpeg;base64,${manipResult}`;
+    }
+  
+    const checkUpload = (data) => {
+      const arr = data.uri.split('.');
+      const fileExtension = arr[arr.length - 1];
+      const validExtension = validExtensions.includes(fileExtension);
+      if (!validExtension) {
+        Alert.alert(`Accepted image types are ${validExtensions}`);
+      } else if (data.cancelled == false) {
+        setUploadPic(data);
+      } else if (data.cancelled) {
+        Alert.alert('Image upload cancelled');
       }
     }
 
