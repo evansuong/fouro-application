@@ -41,12 +41,13 @@ const ManageAccountAPI = {
     return response;
   },
 
-
-
-
-
-
-  // delete user account and all corresponding data
+  /*
+  *
+  *   TODO: we currently don't delete files in storage associated with the user
+  *         OR remove the user from everyone's friends lists.
+  *         this MUST be looked at before we submit.
+  * 
+  */
   deleteAccount: function (uid) {
     // delete document associated with user
     firebase

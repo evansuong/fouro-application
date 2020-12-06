@@ -10,6 +10,23 @@ const fetch = require('node-fetch');
 const db = firebase.firestore();
 const usersCollection = db.collection("users");
 
+
+// helper function that checks if a username is taken by another user.
+async function usernameTaken(username) {
+  console.log('user input: ', username);
+  const response = usersCollection.where('username', '==', username);
+  const query = await response.get();
+  return !query.empty;
+}
+
+
+/* 
+ * 
+ * 
+ *    API for database storage of user info.
+ * 
+ * 
+ */
 const UsersAPI = {
   // Profile pic, friends, hugs, chatrooms, corkboard_id
   /*
@@ -24,14 +41,19 @@ const UsersAPI = {
     lastName = lastName.trim();
       
     // Check if username matches [a-z 0-9]
-    var str = "";
     for (var i = 0; i < username.length; i++) {
       var ch = username.charAt(i);  
-      if ((ch >= 'a' && ch <= 'z') || (ch == '.') || (ch == '_') || (ch == '-')) {
-        str += ch;
+      if (!(ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '.') || (ch == '_') || (ch == '-')) {
+        console.log("Username contained an invalid character");
+        created = false;
+        return { out : created };
       }
     }
-    username = str;
+
+    if(await usernameTaken(username)) {
+      created = false;
+      return { out: created };
+    }
 
     // initialize local object containing initial user values
     const user = {
@@ -108,15 +130,26 @@ const UsersAPI = {
       lastName = lastName.trim();
       
       // Check if username matches [a-z 0-9]
-      var str = "";
       for (var i = 0; i < username.length; i++) {
         var ch = username.charAt(i);
         
-        if ((ch >= 'a' && ch <= 'z') || (ch == '.') || (ch == '_') || (ch == '-')) {
-          str += ch;
+        if (!((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '.') || (ch == '_') || (ch == '-'))) {
+          console.log("Username contained an invalid character.");
+          success = false;
+          return { out : success };
         }
       }
-      username = str;
+
+      // case for if a username is already taken.
+      if(username == userData.username) {
+        console.log("user " + uid + " set their new username to old username")
+      } else {
+        if(await usernameTaken(username)) {
+          console.log("username " + username + " is already taken.")
+          success = false;
+          return { out : success };
+        }
+      }
 
       // initialize local object containing new user values
       const user = {
@@ -200,8 +233,16 @@ const UsersAPI = {
   },
 };
 
+
+/* 
+ * 
+ * 
+ *    API for hug count retrieval and updates.
+ * 
+ * 
+ */
 const HugCountAPI = {
-  getUserCount: async function (uid) {
+  getUserCounts: async function (uid) {
     var userDocRef = usersCollection.doc(uid);
     var hug_count;
 
@@ -230,7 +271,7 @@ const HugCountAPI = {
   increaseHugCount: async function (uid) {
     // retrieve hug and streak count
 
-    var json = this.getUserCount(uid);
+    var json = this.getUserCounts(uid);
     var hug_count = (await json).hug
     var streak_count = (await json).streak
     var success = false;
