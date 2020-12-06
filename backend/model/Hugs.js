@@ -16,6 +16,7 @@ const users = db.collection("users");
 const hugs = db.collection("hugs");
 
 // Storage
+const storage = firebase2.storage();
 const storageRef = firebase2.storage().ref();
 
 const HugsAPI = {
@@ -27,7 +28,8 @@ const HugsAPI = {
       // Get only the data of the base64
       baseString = baseString.substr(baseString.indexOf(",") + 1);
 
-      // Path to image is: hug_images/[topLevelHug.id]/[i]
+      // Path to image is: hug_images/[topLevelHug.id]/Timestamp in milliseconds[i]
+      // Where "i" is the ith string in the base64Array
       const hugImageRef = storageRef.child(imageName + i) + ".jpg";
 
       //convert base64 to buffer / blob
@@ -68,7 +70,7 @@ const HugsAPI = {
       base64,
       imageName
     );
-    // Listen for state changes, errors, and completion of the upload
+    // Set the topLevelHug's data
     topLevelHug.set({
       completed: false,
       date_time: dateTime,
@@ -159,83 +161,77 @@ const HugsAPI = {
     // Delete the global hug document
     topLevelHug.delete().then();
   },
+
+  deleteAllImagesInArray: function (imagesArray) {
+    var storage = firebase.storage();
+    // Loop through each element in the images array of hugId
+    imagesArray.forEach(function (image) {
+      // Every time we get another HTTPS URL from images, we need to make an httpsReference
+      // Create a reference from a HTTPS URL
+      var httpsReference = storage.refFromURL(image);
+      httpsReference
+        .delete()
+        .then(function () {
+          // File deleted successfully
+        })
+        .catch(function (error) {
+          // Uh-oh, an error occurred!
+        });
+    });
+  },
+
+  deleteImage: async function (imageHttps) {
+    // Create a root reference in firebase storage
+    var httpsReference = storage.refFromURL(imageHttps);
+    httpsReference
+      .delete()
+      .then(function () {
+        // File deleted successfully
+      })
+      .catch(function (error) {
+        // Uh-oh, an error occurred!
+      });
+  },
+
+  deleteImageFromPath: function (pathString) {
+    storageRef
+      .child(pathString)
+      .delete()
+      .then(function () {
+        // File deleted successfully
+      })
+      .catch(function (error) {
+        // Uh-oh, an error occurred!
+      });
+  },
 };
 
 const UpdateHugAPI = {
   // currentUser must be the receiver of a hug
-  respondToHug: function (currentUser, hugId, message, image) {
+  respondToHug: async function (currentUser, hugId, message, base64) {
     // Set current user
     var currUser = users.doc(currentUser);
     // Process the image
-    // Create a root reference
-    var storageRef = firebase.storage().ref();
+    // Set the date of the hug (also used to ID image)
+    let dateInMillis = Date.now();
+    let dateInSeconds = Math.floor(dateInMillis / 1000);
+    var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
     // Create a unique image ID
-    var imageName = "hug_images/" + dateTimeString;
-    // Create a reference to the hug image (use when we download?)
-    // var hugImageRef = storageRef.child(imageName)
-    // Convert the byte array image to Uint8Array
-    var bytes = new Uint8Array(image);
-    // uploadTask is the ref to the image in GCP?
-    var uploadTask = storageRef.child(imageName).put(bytes);
-    // Listen for state changes, errors, and completion of the upload
-    uploadTask.on(
-      firebase.storage.TaskEvent.STATE_CHANGED,
-      function (snapshot) {
-        // Get task prograss, including the number of bytes uploaded and the total number of bytes to be uploaded
-        var progress = (snapshot.bytesTrasferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case firebase.storage.TaskState.PAUSED:
-            console.log("Upload is paused");
-            break;
-          case firebase.storage.TaskState.RUNNING:
-            console.log("Upload is running");
-            break;
-        }
-      },
-      function (error) {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
-        switch (error.code) {
-          case "storage/unauthorized":
-            // User doesn't have permission to access the object
-            break;
-
-          case "storage/canceled":
-            // User canceled the upload
-            break;
-
-          case "storage/unknown":
-            // Unknown error occurred, inspect error.serverResponse
-            break;
-        }
-      },
-      function () {
-        //Upload completed successfully, now we can get the download URL
-        uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-          console.log("File available at", downloadURL);
-          hugs.doc(hugId).update({
-            completed: true,
-            description_receiver: message,
-            images: db.FieldValue.arrayUnion(downloadURL),
-          });
-        });
-      }
+    var imageName = "hug_images/" + topLevelHug.id + "/" + dateInMillis;
+    // Set a var to an array of the downloadURLs
+    var imageDownloadURLSArray = await this.uploadBase64ArrayToHugs(
+      base64,
+      imageName
     );
-
-    // COMMENTED THIS OUT FOR NEW IMAGE UPLOAD ^^
-    // hugId is a refernce to the top level hug
-    //db.collection("hugs")
-    //    .doc(hugId)
-    //    .update({
-    //        completed: true,
-    //        description_receiver: message,
-    //        images: db.FieldValue.arrayUnion(uploadTask), //not sure how arrayUnion works
-    //    });
-
+    // Update the top level hug to include more pictures and the receiver's message
+    hugs.doc(hugId).update({
+      completed: true,
+      description_receiver: message,
+      images: db.FieldValue.arrayUnion(imageDownloadURLSArray),
+    });
     // Call updateUserHugCount()
     this.updateUserHugCount(hugId);
-    // call deleteNotification
+    // Call deleteNotification
     // Getting the requestId may be questionable
     currUserNotifRef = db
       .colection("users")
@@ -270,28 +266,6 @@ const UpdateHugAPI = {
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
-  },
-
-  deleteAllImagesInArray: function (imagesArray) {
-    var storage = firebase.storage();
-    // Loop through each element in the images array of hugId
-    imagesArray.forEach(function (image) {
-      // Every time we get another HTTPS URL from images, we need to make an httpsReference
-      // Create a reference from a HTTPS URL
-      var httpsReference = storage.refFromURL(image);
-      httpsReference.delete().then();
-    });
-  },
-
-  deleteImage: function (imageHttps) {
-    var storage = firebase.storage();
-    // Create a root reference in firebase storage
-    var httpsReference = storage.refFromURL(imageHttps);
-    httpsReference.delete().then();
-  },
-
-  deleteImageFromPath: function (pathString) {
-    storageRef.child(pathString).delete().then();
   },
 };
 
