@@ -54,10 +54,10 @@ function checkBody(req, res, next) {
   next();
 }
 
-// TESTING ROUTE FOR GETTING HTTP REQUESTS WORKING
+/* TESTING ROUTE FOR GETTING HTTP REQUESTS WORKING
 router.get('/testRoute', async (req, res) => {
   res.status(200).send('Working');
-})
+}) */
 
 // Routes
 // VERIFIED
