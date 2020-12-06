@@ -1,37 +1,32 @@
-/**
- * 
- * References:
- * https://reactnavigation.org/docs/stack-navigator/#headershown
- */
-
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, Image, Alert } from 'react-native';
-
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import FriendsPage from './FriendsPage';
-import NotificationPage from './NotificationPage'
-import HomePage from './HomePage'
-import { DimensionContext } from '../../contexts/DimensionContext';
 import { useIsFocused } from '@react-navigation/native';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+// Pages
+import FriendsPage from './FriendsPage';
+import NotificationPage from './NotificationPage';
+import HomePage from './HomePage';
 
 
 // TODO: follow the gradient thing
 export default function MainNavPage({ route }) {
-
     const Tab = createMaterialTopTabNavigator();
-    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    // States
     const [fromLogin, setFromLogin] = useState(false);
-    const isFocused = useIsFocused();
-    const { params } = route;
-
-
+    // Contexts
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    // Images/Assets
     const homeFocused = require("assets/homeFocused.png");
     const homeBlurred = require("assets/homeBlurred.png");
     const friendsFocused = require("assets/friendsFocused.png");
     const friendsBlurred = require("assets/friendsBlurred.png");
     const notifFocused = require("assets/notifFocused.png");
     const notifBlurred = require("assets/notifBlurred.png");
-
+    // Misc
+    const isFocused = useIsFocused();
+    const { params } = route;
     const tabWidth = windowWidth / 3;
     const tabHeight = tabWidth / 2.25;
 

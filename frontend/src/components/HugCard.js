@@ -16,7 +16,14 @@ export default function HugCard({ navigation, route, data }) {
   const { isLightTheme } = userData;
 
   // backend json object data fields
-  const { friend_name, message, image, hug_id } = data;
+  const { 
+    friend_name, 
+    friend_username,
+    friend_profile_pic, 
+    message, 
+    image, 
+    hug_id,
+  } = data;
   
   const SPACING_SMALL = 5
   const SPACING_MEDIUM = 10;
@@ -201,7 +208,7 @@ export default function HugCard({ navigation, route, data }) {
 
         <View>
           <Image
-            source={{ uri: image}}
+            source={{ uri: image }}
             style={styles.imageContainer}
           />  
         </View>

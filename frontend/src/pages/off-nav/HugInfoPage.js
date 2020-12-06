@@ -1,19 +1,52 @@
-import React, { useContext, useState } from 'react'
-import { View, Text, StyleSheet, Image, ScrollView, StatusBar, TouchableOpacity } from 'react-native'
-import Header from '../../components/Header';
-import { DimensionContext } from '../../contexts/DimensionContext';
-import { UserContext } from '../../contexts/UserContext';
+import React, { useContext, useEffect, useState } from 'react'
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  ScrollView, 
+  StatusBar, 
+  TouchableOpacity 
+} from 'react-native'
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
+// APIs
+import { ReadAPI } from '../../API';
+// Custom Components
+import Header from 'components/Header';
+
 
 export default function HugInfoPage({ navigation, route }) {
-
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const routeName = route.name;
-    const { data } = route.params;
-    const { friend_name, hug_id, image, message } = data;
-
+    // States
+    const [pinned, setPinned] = useState(false);
+    const [startUp, setStartUp] = useState(true);
+    const [fetchedUser, setFetchedUser] = useState({});
+    // Contexts
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     const { isLightTheme } = userData;
-    const [pinned, setPinned] = useState(false);
+    // Misc
+    const routeName = route.name;
+    const { data } = route.params;
+    const { 
+      friend_name, 
+      friend_username,
+      friend_profile_pic, 
+      message, 
+      image, 
+      hug_id, 
+    } = data;
+
+    useEffect(() => {
+      if (startUp) {
+        setStartUp(false);
+        fetchUserData();
+        if (typeof image === 'undefined') {
+          image = friend_profile_pic;
+        }
+      }
+    }, [])
     // console.log(data)
 
     // TODO: uncomment line below when pulling data from firestore or whatever and delete the following test block
@@ -32,7 +65,7 @@ export default function HugInfoPage({ navigation, route }) {
 
     // sizing
     const textContainerWidth = windowWidth / 1.1;
-    const textWidth = textContainerWidth / 1.1;
+    const textWidth = textContainerWidth / 1.3;
 
     const statusBarHeight = StatusBar.currentHeight == null ? windowHeight * 0.05 : StatusBar.currentHeight
 
@@ -99,7 +132,7 @@ export default function HugInfoPage({ navigation, route }) {
         },
         textAreaFriend: {
             color: 'white',
-            marginLeft: -50,
+            marginLeft: -120,
             flex: 1,
             padding: 10,
             flexWrap: 'wrap',
@@ -110,7 +143,7 @@ export default function HugInfoPage({ navigation, route }) {
             marginBottom: 20,
         },
         textAreaUser: {
-            marginRight: -50,
+            marginRight: -100,
             flex: 1,
             padding: 10,
             flexWrap: 'wrap',
@@ -145,6 +178,17 @@ export default function HugInfoPage({ navigation, route }) {
         }
     })
 
+    const fetchUserData = async () => {
+      const { status, data } = 
+        await ReadAPI.getUserProfile(userData.currentUser.uid);
+      // console.log(status, data);
+      if (status) {
+        setFetchedUser(data);
+      } else {
+        Alert.alert('Something went wrong when fetching user data');
+      }
+    }
+
     function pinHug() {
         if(!pinned) {
             setPinned(true)
@@ -153,6 +197,18 @@ export default function HugInfoPage({ navigation, route }) {
             setPinned(false)
             // call the backend function for unpinning
         }
+    }
+
+    function checkMessageLength() {
+      return typeof message == 'object' &&
+      message.length > 1;
+      // return typeof messages == 'object' &&
+      // messages.length > 1;
+    }
+
+    function checkImageArray() {
+      return typeof image == 'object';
+      // return typeof images == 'object';
     }
     
     return (
@@ -167,29 +223,47 @@ export default function HugInfoPage({ navigation, route }) {
                         <Text style={styles.hugDateText}>{dateTime}</Text>
 
                         {/* insert first hug picture -- default is friend's prof pic */}
-                        <Image source={{ uri: image }} style={styles.imageContainer}/>
+                          <Image source={{ uri: image }} style={styles.imageContainer}/>
                 </View>
             
                 <View style={styles.notificationContent}>    
                     <View style={{ ...styles.textAreaFriend, maxWidth: textContainerWidth }}>
                         {/* Text from friend */}
-                        <Text style={{...styles.username, color: "#FFF"}}>{senderId}</Text>
-                        <Text style={{ ...styles.message, width: textWidth, color: "#FFF" }}>{senderDescription}</Text>
+                        <Text style={{...styles.username, color: "#FFF"}}>
+                          {`@${friend_username}`}
+                        </Text>
+                        <Text style={{ ...styles.message, width: textWidth - windowWidth * 0.05 , color: "#FFF" }}>
+                          {message}
+                        </Text>
                     </View>
                     <View style={{ ...styles.textAreaUser, maxWidth: textContainerWidth }}>
                         {/* Text from user */}
-                        <Text style={{...styles.username}}>{receiverId}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{receiverDescription}</Text>
+                        <Text style={{...styles.username, color: "#FFF"}}>
+                          {`@${fetchedUser.username}`}
+                        </Text>
+                        <Text style={{ ...styles.message, width: textWidth }}>
+                          {checkMessageLength() ? receiverDescription : ''}
+                        </Text>
                     </View>  
                 </View>            
 
                 {/* more hug imgs */}
                 <View style={styles.images}>
+                  {
+                    checkImageArray() &&
                     <ScrollView horizontal={true}>
                         {images.map(img => (
                             <Image source={img.pic} style={styles.imageContainer} key={img.id}/>
                         ))}
                     </ScrollView>
+                  }
+                  {
+                    !checkImageArray() &&
+                    <Image
+                      source={{ uri: image }}
+                      style={styles.imageContainer}
+                    />
+                  }
                 </View>
 
 

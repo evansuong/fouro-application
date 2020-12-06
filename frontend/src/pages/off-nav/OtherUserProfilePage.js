@@ -1,13 +1,25 @@
-import React, { useContext, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import UserProfile from '../../components/UserProfile';
+import React, { useContext } from 'react';
+import { View, 
+  Text,
+  StyleSheet, 
+  FlatList, 
+  TouchableOpacity 
+} from 'react-native';
+import OptionsMenu from "react-native-options-menu";
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext'
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import UserProfile from 'components/UserProfile';
 import HugCard from 'components/HugCard'
-import { DimensionContext } from '../../contexts/DimensionContext'
 import Header from 'components/Header';
 import LinkedButton from 'components/LinkedButton'
-import { UserContext } from '../../contexts/UserContext';
-import OptionsMenu from "react-native-options-menu";
-import { processFontFamily } from 'expo-font';
+
+
+
+
+
+/*------- testing --------*/
 
 function buildTestData(name, text, img, id) {
     return {
@@ -26,24 +38,31 @@ function buildTestData(name, text, img, id) {
     buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), '5'),
   ]
 
+/*------- end of testing --------*/
+
+
+
+
+
+
 export default function OtherUserProfilePage({ navigation, route,  }) {
-    const {windowWidth, windowHeight} = useContext(DimensionContext)
-    const routeName = route.name;
-    const dotsIcon = require('assets/dots-icon.png');
-    const dotsIconDark = require('assets/dots-icon-dark.png');
+    // States
+    // const [status, getStatus] = useState('');
+    // Contexts
+    const {windowWidth, windowHeight} = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     const { isLightTheme } = userData;
-    // const [status, getStatus] = useState('')
+    // Misc
+    const routeName = route.name;
+    const dotsIconDark = require('assets/dots-icon-dark.png');
+    // destruct route parameters
+    const { data } = route.params;
+    const { user_id, name, profile_pic, username } = data;
 
     let width = windowWidth / 8.5;
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
-    
-    
-    // destruct route parameteres
-    const { data } = route.params;
-    console.log('from otheruserprofilepage:', data)
 
     
     const { callback_id, friendName, friend_username, friend, status } = data; // add profile_pic

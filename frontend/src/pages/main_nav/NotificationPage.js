@@ -9,17 +9,26 @@ import {
   Image,
   Button,
 } from "react-native";
-import NotificationCard from "components/NotificationCard";
-import { DimensionContext } from "../../contexts/DimensionContext";
-import { UserContext } from "../../contexts/UserContext";
-
 import { useFocusEffect } from "@react-navigation/native";
-import AppStyles from "../../AppStyles";
-import Header from "../../components/Header";
+// APIs
 import { ReadAPI } from "../../API";
+// Contexts
+import { DimensionContext } from "contexts/DimensionContext";
+import { UserContext } from "contexts/UserContext";
+// Custom Components
+import NotificationCard from "components/NotificationCard";
+import Header from "components/Header";
+// Images/Assets
+import AppStyles from "../../AppStyles";
+
+
+
+
+
+/*------- testing --------*/
 
 // temorary test data to simulate backend notification data
-const pic = require("../../../assets/profilePic.jpg");
+const pic = require("assets/profilePic.jpg");
 const gradient = require("assets/gradients/right.png");
 
 // function buildTestHugData(
@@ -82,14 +91,22 @@ const gradient = require("assets/gradients/right.png");
 //     }
 // }
 
+/*------- end of testing --------*/
+
+
+
+
+
 
 export default function NotificationPage({ navigation, route }) {
- 
+    // States
     // stores whether the user is on this page (true) or not (false)
     const [isFocused, setIsFocused] = useState(false)
+    // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const [notifications, setNotifications] = useState()
     const { userData } = useContext(UserContext);
+    // Misc
     const { uid } = userData.currentUser;
     const routeName = route.name;
     
@@ -152,7 +169,9 @@ export default function NotificationPage({ navigation, route }) {
 
     function clearNotification(id, type) {
         const newList = notifications.filter((item) => item.call_id !== id);
-        setNotifications(newList)
+        setTimeout(() => {
+          setNotifications(newList);
+        }, 1000);
     }
 
     // notification list styles

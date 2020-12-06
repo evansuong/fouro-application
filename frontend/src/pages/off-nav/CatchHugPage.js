@@ -31,12 +31,15 @@ import profilePic from 'assets/profilePic.jpg';
 
 // TODO: Remove FriendName and FriendPic parameters
 export default function CatchHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
+    // States
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
+    // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
+    // Misc
     const { hugId, friendPfp } = route.params.data;
-    console.log('in catch hug page:', route.params.data)
+    // console.log('in catch hug page:', route.params.data)
     const routeName = route.name;
 
     const callBackend = async () => {

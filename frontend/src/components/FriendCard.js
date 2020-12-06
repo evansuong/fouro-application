@@ -86,6 +86,13 @@ export default function FriendCard(props) {
       marginLeft: 20,
       color: isLightTheme ? 'white' : color,
       fontWeight: '500',
+    },
+    innerFriendCardContainer: {
+      flex: 1, 
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      minHeight: pfpWidth + 10,
     }
   });
 
@@ -114,8 +121,8 @@ export default function FriendCard(props) {
 
         {/* filler profile picture */}
         <View style={styles.pfpContainer2}>
-        </View>
 
+        </View>
       </View>
 
     </TouchableOpacity>

@@ -32,11 +32,13 @@ async function retrieveUserData(req, res, uid) {
 // const response = HugsAPI.createHug(uid, friend_id, message, blobs);
 
 // Routes
-// TODO: BROKEN. WORKING ON UPLOADING BLOB 
+// TODO: BROKEN. CREATE HUG IS NOT WORKING.
 router.post("/createHug/:id", checkBody, async (req, res) => {
+  console.log('here man');
   const uid = req.params.id;
   const { friend_id, message, blobs } = req.body;
 
+  console.log(friend_id, message, blobs.length);
   if (!friend_id || !message || !blobs) {
     res.status(400).send('Request has missing fields');
     return;
@@ -88,11 +90,12 @@ router.delete("/dropAHug/:id", checkBody, (req, res) => {
 });
 
 // TODO: BROKEN (SEE ABOVE)
-router.get("/getUserHugs/:id", (req, res) => {
+router.get("/getUserHugs/:id", async (req, res) => {
   const uid = req.params.id;
 
   try {
-    
+    const response = await ViewHugAPI.getUserHugs(uid);
+    res.status(200).json(response);
   } catch(err) {
     res.status(400).send(`An error occurred: ${err}`);
   }

@@ -6,7 +6,6 @@ const AuthAPI = {
   registerUser: async function (email, password) {
     var registered = false;
     var response;
-    // console.log('registering')
     await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -21,6 +20,7 @@ const AuthAPI = {
       .catch(function (error) {
         registered = false;
         var errorMessage = error.message;
+        console.log(errorMessage);
         response = {
           status: false,
           data: null,
@@ -71,6 +71,8 @@ const AuthAPI = {
         .catch(function (error) {
           return false;
         }); // an error happened.
+    } else {
+      return false;
     }
   },
 

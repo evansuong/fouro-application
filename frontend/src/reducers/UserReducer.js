@@ -6,8 +6,10 @@ export default function userReducer(state, action) {
       return Object.assign({}, {...state, userData: action.payLoad});
 
     case 'TOGGLE_THEME':
-      console.log('toggling')
+      // console.log('toggling');
       return Object.assign({}, {...state, isLightTheme: !state.isLightTheme})
+    case 'LOG_OUT':
+      return Object.assign({}, {...state, userData: undefined, currentUser: { uid: undefined }})
     default:
       return state;
   }
