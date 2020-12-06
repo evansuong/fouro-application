@@ -18,7 +18,6 @@ import * as Permissions from 'expo-permissions';
 import { CreateAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
-import UserContext from 'contexts/UserContext';
 // Custom Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
@@ -37,12 +36,11 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
 
     const {windowWidth, windowHeight} = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-
+ 
     const routeName = route.name;
     // const { friendData } = route.params.data;
 
     const callBackend = async () => {
-      console.log('userData: ', userData);
       try {
         let base64Strings = [];
         for (let image of images) {

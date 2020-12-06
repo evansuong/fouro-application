@@ -7,13 +7,16 @@ import {
   PickerIOSItem,
   LayoutAnimation,
   Image,
+  Button,
 } from "react-native";
 import NotificationCard from "components/NotificationCard";
 import { DimensionContext } from "../../contexts/DimensionContext";
+import { UserContext } from "../../contexts/UserContext";
 
 import { useFocusEffect } from "@react-navigation/native";
 import AppStyles from "../../AppStyles";
 import Header from "../../components/Header";
+import { ReadAPI } from "../../API";
 
 // temorary test data to simulate backend notification data
 const pic = require("../../../assets/profilePic.jpg");
@@ -60,7 +63,6 @@ const testData = [
   buildTestData("Evan Alex", "April 20, 2020", img, "hug", '9', '9'),
 ];
 
-
 const testHugData = [
   buildTestHugData(1, true, "April 20, 2020", img, testDes1, "@Evan", testDes2, "@Alex",),
   buildTestHugData(3, true, "April 22, 2020", img, testDes1, "@Alex", testDes2, "@Tyus",),
@@ -88,6 +90,8 @@ export default function NotificationPage({ navigation, route }) {
     const [isFocused, setIsFocused] = useState(false)
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const [notifications, setNotifications] = useState(testData ? testData : {})
+    const { userData } = useContext(UserContext);
+    const { uid } = userData.currentUser;
     const routeName = route.name;
     
     // check whether the user is on the page (true) or navigates away from the page (false)
@@ -98,17 +102,28 @@ export default function NotificationPage({ navigation, route }) {
         }
     }, []);  
 
+    function getNotifications() {
+        ReadAPI.getNotifications(uid)
+            .then(response => console.log('asdfadsf', response.data))
+
+    }
+
     // add a filler item to move the list down
     useEffect(() => {
         //console.log(notifications)
-        if (notifications[0].type !== 'f') setNotifications([{ type: 'f' }, ...notifications])
+       
+        
+        // setNotifications([{ type: 'f' }, ...notifications.data])
     }, []);
 
     function catchHug(hugId, id) {
-        clearNotification(id)
         //console.log(id)
-        let data = testHugData.filter((item) => item.hugId === hugId)[0]
-        data = Object.assign({}, {hug_id: data.call_id, ...data})
+        console.log(hugId)
+        let data = notifications.filter((item) => item.call_id === hugId)[0]
+        console.log(data)
+        clearNotification(id)
+
+        // data = Object.assign({}, {hug_id: data.call_id, ...data})
         navigation.navigate('Catch Hug Page', { 
             page: 'hugInfo',
             data: data
@@ -164,8 +179,10 @@ export default function NotificationPage({ navigation, route }) {
                 style={AppStyles.background}
             />
             <Header routeName={routeName} navigation={navigation} onMainNav={true}>Notifications</Header>
+        
 
             <View style={styles.notificationList}>
+                <Button title="adsfasdfdf" onPress={getNotifications}/>
                 {/* actual list */}
                 <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
                     {notifications.map(( data, index ) => (

@@ -17,7 +17,7 @@ import * as Permissions from 'expo-permissions';
 import { CreateAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
-import UserContext from 'contexts/UserContext';
+import { UserContext } from 'contexts/UserContext';
 // Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';

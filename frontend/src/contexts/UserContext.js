@@ -1,8 +1,6 @@
 
-import { Dimensions } from 'react-native';
 import React, { createContext, useReducer } from 'react';
 import userReducer from '../reducers/UserReducer';
-
 
 export const UserContext = createContext();
 
