@@ -8,5 +8,4 @@ var serviceAccount = require("./serviceAccountKey.json");
 
 module.exports = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  // storageBucket: "cafe-fouro.appspot.com",
 });
