@@ -69,9 +69,40 @@ var Hugs = require("../model/Hugs");
 // );
 
 // deleteImageFromPath()
-Hugs.UpdateHugAPI.deleteImageFromPath(
-    "profile_pictures/Photo on 3-30-20 at 5.34 PM.jpg"
-);
+// Hugs.UpdateHugAPI.deleteImageFromPath(
+//     "profile_pictures/Photo on 3-30-20 at 5.34 PM.jpg"
+// );
+
+// getHugById()
+// async function testGetHugById(hugId) {
+//     hug1 = await Hugs.ViewHugAPI.getHugById(hugId);
+//     console.log(hug1);
+// }
+// testGetHugById("hug1");
+
+// getUserHugs()
+// async function testGetUserHugs(hugId) {
+//     userHugs = await Hugs.ViewHugAPI.getUserHugs(hugId);
+//     console.log(userHugs);
+// }
+// testGetUserHugs("example@email.com");
+
+// getSharedHugs()
+async function testGetSharedHugs(currUser, targetUser) {
+    sharedHugs = await Hugs.ViewHugAPI.getSharedHugs(currUser, targetUser);
+    console.log(sharedHugs);
+}
+// console.log(
+//     "-------------------example@email.com & otherguy@email.com--------------------"
+// );
+testGetSharedHugs("example@email.com", "otherguy@email.com");
+//output should be hug1 and hug_2
+
+// console.log(
+//     "-------------------gary@example.com & otherguy@email.com--------------------"
+// );
+testGetSharedHugs("gary@email.com", "otherguy@email.com");
+//output should be hug_3
 
 //loop through images? Need cloud function?
 //db.doc("hugs/hug1").
