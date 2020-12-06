@@ -24,6 +24,7 @@ import BackgroundImg from 'assets/gradients/middle.png';
 
 
 export default function SignupPage({ navigation }) {
+  // States
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
   const [passwordConfirmField, setPasswordConfirmField] = useState('');
@@ -32,10 +33,10 @@ export default function SignupPage({ navigation }) {
   const [userExists, setUserExists] = useState(false);
   const [startUp, setStartUp] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { dispatch } = useContext(UserContext);
-
+  // Misc
   const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
 
@@ -104,7 +105,9 @@ export default function SignupPage({ navigation }) {
         type: "SET_USER",
         payload: response.data,
       });
-      navigation.navigate('Name Page');
+      setTimeout(() => {
+        navigation.navigate('Name Page');
+      }, 1000);
     } else {
       setSigningUp(false);
       alert(response.data);
@@ -144,15 +147,6 @@ export default function SignupPage({ navigation }) {
 
   const passwordMatch = () => {
     return passwordField === passwordConfirmField;
-  }
-
-  const timeout = () => {
-    if (mounted) {
-      setTimeout(() => {
-        setUserExists(false);
-      }, 5000);
-      return true;
-    }
   }
 
   const styles = StyleSheet.create({

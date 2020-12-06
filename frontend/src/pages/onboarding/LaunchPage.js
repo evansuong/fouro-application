@@ -11,7 +11,8 @@ import fouroLogo from 'assets/fouro_logo.png';
 export default function LaunchPage({ navigation }) {
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const roundedWidth = Math.round(windowWidth / 100) * 100;
-  const roundedHeight = Math.round(windowWidth / 100) * 100;
+  const roundedHeight = Math.round(windowHeight / 100) * 100;
+  console.log(roundedWidth, roundedHeight);
 
   const styles = StyleSheet.create({
     container: {
