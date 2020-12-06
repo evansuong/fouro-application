@@ -121,6 +121,10 @@ export default function App() {
               <Stack.Screen 
                 name='Catch Hug Page'
                 component={CatchHugPage}/>
+
+              <Stack.Screen
+                name='upload'
+                component={PicUploadPage}/>
             </Stack.Navigator>
           </NavigationContainer>    
         </DimensionContextProvider>
