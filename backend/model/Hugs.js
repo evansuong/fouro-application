@@ -22,6 +22,10 @@ const HugsAPI = {
   // HELPER FUNCTIONS
   uploadBase64ArrayToHugs: async function (base64Array, imageName) {
     var downloadURLArrays = [];
+    // Edge check
+    if (base64Array.length == 0) {
+      return downloadURLArrays;
+    }
 
     // Traverse through base64 strings
     for (let i = 0; i < base64Array.length; i++) {

@@ -20,13 +20,15 @@ const CorkboardAPI = {
     let hugPromises = []; // hug promises
     let pinnedHugsList = []; // all pinned hugs as JSON objects
     let pinnedHugsref = users.doc(uid).collection("user_hugs");
+
     const pinnedSnapshot = await pinnedHugsref
       .orderBy("date_time", "desc")
+      .where("completed", "==", true) // Added secondary check
       .where("pinned", "==", true)
       .get();
 
     if (pinnedSnapshot.empty) {
-      console.log("no matching documents");
+      console.log("No pinned hugs");
       return { pinnedHugs: pinnedHugsList };
     }
     // adds all pinned hugs to a list

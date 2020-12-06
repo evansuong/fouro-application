@@ -14,12 +14,11 @@ router.use(cors());
 
 function checkBody(req, res, next) {
   if (Object.keys(req.body).length == 0) {
-    res.status(400).send('Missing JSON request body');
+    res.status(400).send("Missing JSON request body");
     return;
   }
   next();
 }
-
 
 //Routes
 // TODO: NOT TESTED
@@ -28,8 +27,8 @@ router.get("/buildCorkboard/:id", async (req, res) => {
 
   try {
     const response = await CorkboardAPI.buildCorkboard(uid);
-    res.status(200).json({ hugList: response });
-  } catch(err) {
+    res.status(200).json(response);
+  } catch (err) {
     res.status(400).send(`An error occurred: ${err}`);
   }
 });
@@ -40,13 +39,13 @@ router.put("/pin/:id", checkBody, async (req, res) => {
   const { userHugId } = req.body;
 
   if (!userHugId) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
       const response = await PinAPI.pinHugToCorkboard(userHugId);
       res.status(200).json(response);
-    } catch(err) {
+    } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }
   }
@@ -58,13 +57,13 @@ router.put("/unpin/:id", checkBody, async (req, res) => {
   const { userHugId } = req.body;
 
   if (!userHugId) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
       const response = await PinAPI.unpinHugFromCorkboard(userHugId);
       res.status(200).json(response);
-    } catch(err) {
+    } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }
   }
