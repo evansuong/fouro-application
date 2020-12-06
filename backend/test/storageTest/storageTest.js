@@ -6,13 +6,29 @@ global.XMLHttpRequest = require("xhr2");
 // Create a root reference
 var storageRef = firebase.storage().ref();
 
-// Create a reference to 'mountains.jpg'
-var hiRef = storageRef.child("hi.png");
+var fs = require("fs");
 
-// Create a reference to 'images/mountains.jpg'
-var hiImagesRef = storageRef.child("test/hi.png");
+let test;
+try {
+  const data = fs.readFileSync("./file.base64", "utf8");
+  test = data;
+} catch (err) {
+  console.error(err);
+}
 
-let message = "Hi everyone!";
-hiImagesRef.put(data).then(function (snapshot) {
-  console.log("success");
+// Get only the data of the base64
+test = test.substr(test.indexOf(",") + 1);
+
+const testRef = storageRef.child("test.jpg");
+
+//convert base64 to buffer / blob
+const blob = Buffer.from(test, "base64");
+
+// Assign metadata
+let metadata = {
+  contentType: "image/jpeg",
+};
+
+testRef.put(blob, metadata).then(() => {
+  console.log("Success!");
 });
