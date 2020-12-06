@@ -24,7 +24,7 @@ import { ReadAPI } from '../../API';
 
 
 
-export default function LoginPage({ navigation, route }) {
+export default function LoginPage({ navigation }) {
   // user info
   const [emailField, setEmailField] = useState('');
   const [passwordField, setPasswordField] = useState('');
@@ -39,7 +39,6 @@ export default function LoginPage({ navigation, route }) {
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext)
   const fade = useRef(new Animated.Value(0)).current;
-  const routeName = route.name;
 
   useEffect(() => {
     if (!startUp) {
@@ -164,8 +163,6 @@ export default function LoginPage({ navigation, route }) {
   });
 
   return (
-    <>
-    <Header routeName={routeName} navigation={navigation} onMainNav={false}/>
     <TouchableWithoutFeedback onPress={() => {
       Keyboard.dismiss();
       console.log('dismissed keyboard');
@@ -215,6 +212,5 @@ export default function LoginPage({ navigation, route }) {
         </ImageBackground>
       </Animated.View>
     </TouchableWithoutFeedback>
-    </>
   );
 }

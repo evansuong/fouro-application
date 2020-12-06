@@ -35,7 +35,8 @@ export default function CatchHugPage({ navigation, route, friendName='Placeholde
     const [images, setImages] = useState([]);
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    // const { hugId, friendData } = route.params.data;
+    const { hugId, friendPfp } = route.params.data;
+    console.log('in catch hug page:', route.params.data)
     const routeName = route.name;
 
     const callBackend = async () => {
@@ -195,7 +196,7 @@ export default function CatchHugPage({ navigation, route, friendName='Placeholde
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
                   <Image
-                    source={friendPic ? friendPic : fillerProfilePic}
+                    source={{ uri: friendPfp }}
                     style={styles.profilePic}
                   />
                   <View style={styles.friendTextContainer}>

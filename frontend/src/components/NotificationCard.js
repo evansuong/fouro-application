@@ -7,6 +7,7 @@ import {
   Image, 
   TouchableOpacity,
 } from 'react-native'
+import { call } from 'react-native-reanimated';
 import { DimensionContext } from '../contexts/DimensionContext';
 import { UserContext } from '../contexts/UserContext';
 
@@ -22,11 +23,10 @@ console.log(Platform.OS)
 
 /**
  */
-export default function NotificationCard({ callId, notificationData, isFocused, handleAccept, handleDecline }) {
+export default function NotificationCard({ notificationData, isFocused, handleAccept, handleDecline }) {
 
     // prop destructuring: { notification type, user that generated notif, sender pp, notification id }
-    const { name, date_time, friendpfp, type, call_id, notification_id } = notificationData;  
-
+    const { callback_id, date_time, friendName, friendPfp, friend_username, notification_id, type } = notificationData;  
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
 
@@ -136,7 +136,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                             <View style={styles.textArea}>
                                 <View>
                                     <Text style={{ fontWeight: 'bold', fontSize: 16, color: textColor }}>
-                                        {name}
+                                        {friendName}
                                     </Text>  
                                     <Text style={{ color: textColor }}>
                                         {notificationMessage}
@@ -155,7 +155,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                                     height: windowWidth / 7,
                                     width: windowWidth / 7,
                                 }} 
-                                source={{ uri: friendpfp }} />
+                                source={{ uri: friendPfp }} />
                             </View>
                         </View>
                         
@@ -166,7 +166,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                             {/* accept button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => handleAccept(call_id, notification_id)}
+                                onPress={() => handleAccept(callback_id, notification_id)}
                             >
                                 <Animated.View 
                                     style={{ 
@@ -191,7 +191,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                             {/* decline button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => handleDecline(call_id, notification_id)}
+                                onPress={() => handleDecline(callback_id, notification_id)}
                             >
                                 <Animated.View 
                                     style={{ 

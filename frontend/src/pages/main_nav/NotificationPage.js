@@ -22,66 +22,65 @@ import { ReadAPI } from "../../API";
 const pic = require("../../../assets/profilePic.jpg");
 const gradient = require("assets/gradients/right.png");
 
-function buildTestHugData(
-  hugId,
-  completed,
-  dateTime,
-  img,
-  receiverDescription,
-  receiverId,
-  senderDescription,
-  senderId
-) {
-  return {
-    hugId: hugId,
-    completed: completed,
-    dateTime: dateTime,
-    images: img,
-    receiverDescription: receiverDescription,
-    receiverId: receiverId,
-    senderDescription: senderDescription,
-    senderId: senderId,
-  };
-}
+// function buildTestHugData(
+//   hugId,
+//   completed,
+//   dateTime,
+//   img,
+//   receiverDescription,
+//   receiverId,
+//   senderDescription,
+//   senderId
+// ) {
+//   return {
+//     hugId: hugId,
+//     completed: completed,
+//     dateTime: dateTime,
+//     images: img,
+//     receiverDescription: receiverDescription,
+//     receiverId: receiverId,
+//     senderDescription: senderDescription,
+//     senderId: senderId,
+//   };
+// }
 
-const testDes1 =
-  "are you ready kids, aye aye captain, i cant hear you, aye aye captin";
-const testDes2 =
-"ohhhhhhhhhhhhhhhhh who lives in a pineapple under the sea spongebb squarepants";
+// const testDes1 =
+//   "are you ready kids, aye aye captain, i cant hear you, aye aye captin";
+// const testDes2 =
+// "ohhhhhhhhhhhhhhhhh who lives in a pineapple under the sea spongebb squarepants";
 
-const img = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
 
-const testData = [
-  buildTestData("Alex Chow", "April 20, 2020", img, "hug", '1', '1'),
-  buildTestData("Evan Chow", "April 20, 2020", img, "friend", '2', '2'),
-  buildTestData("Alex Suong", "April 20, 2020", img, "hug", '3', '3'),
-  buildTestData("Alex Evan", "April 20, 2020", img, "hug", '4', '4'),
-  buildTestData("Alex Chow", "April 20, 2020", img, "hug", '5', '5'),
-  buildTestData("Suong Chow", "April 20, 2020", img, "friend", '6', '6'),
-  buildTestData("Alex Chow", "April 20, 2020", img, "friend", '7', '7'),
-  buildTestData("Alex Song", "April 20, 2020", img, "hug", '8', '8'),
-  buildTestData("Evan Alex", "April 20, 2020", img, "hug", '9', '9'),
-];
+// const testData = [
+//   buildTestData("Alex Chow", "April 20, 2020", img, "hug", '1', '1'),
+//   buildTestData("Evan Chow", "April 20, 2020", img, "friend", '2', '2'),
+//   buildTestData("Alex Suong", "April 20, 2020", img, "hug", '3', '3'),
+//   buildTestData("Alex Evan", "April 20, 2020", img, "hug", '4', '4'),
+//   buildTestData("Alex Chow", "April 20, 2020", img, "hug", '5', '5'),
+//   buildTestData("Suong Chow", "April 20, 2020", img, "friend", '6', '6'),
+//   buildTestData("Alex Chow", "April 20, 2020", img, "friend", '7', '7'),
+//   buildTestData("Alex Song", "April 20, 2020", img, "hug", '8', '8'),
+//   buildTestData("Evan Alex", "April 20, 2020", img, "hug", '9', '9'),
+// ];
 
-const testHugData = [
-  buildTestHugData(1, true, "April 20, 2020", img, testDes1, "@Evan", testDes2, "@Alex",),
-  buildTestHugData(3, true, "April 22, 2020", img, testDes1, "@Alex", testDes2, "@Tyus",),
-  buildTestHugData(5, true, "April 22, 2020", img, testDes1, "@Vicki", testDes2, "@AlexChow",),
-  buildTestHugData(6, true, "April 22, 2020", img, testDes1, "@Vivian", testDes2, "@TyusLiu",),
-  buildTestHugData(7, true, "April 22, 2020", img, testDes1, "@Alana", testDes2, "@VickiChen",),
-];
- // ( only if type is hug) notification_id: notif_id}]}
+// const testHugData = [
+//   buildTestHugData(1, true, "April 20, 2020", img, testDes1, "@Evan", testDes2, "@Alex",),
+//   buildTestHugData(3, true, "April 22, 2020", img, testDes1, "@Alex", testDes2, "@Tyus",),
+//   buildTestHugData(5, true, "April 22, 2020", img, testDes1, "@Vicki", testDes2, "@AlexChow",),
+//   buildTestHugData(6, true, "April 22, 2020", img, testDes1, "@Vivian", testDes2, "@TyusLiu",),
+//   buildTestHugData(7, true, "April 22, 2020", img, testDes1, "@Alana", testDes2, "@VickiChen",),
+// ];
+//  // ( only if type is hug) notification_id: notif_id}]}
 
-function buildTestData(name, date_time, friendpfp, type, call_id, notification_id) {
-    return {
-        name: name, 
-        date_time: date_time,
-        friendpfp: friendpfp,
-        type: type,
-        call_id: call_id,
-        notification_id: notification_id,
-    }
-}
+// function buildTestData(name, date_time, friendpfp, type, call_id, notification_id) {
+//     return {
+//         name: name, 
+//         date_time: date_time,
+//         friendpfp: friendpfp,
+//         type: type,
+//         call_id: call_id,
+//         notification_id: notification_id,
+//     }
+// }
 
 
 export default function NotificationPage({ navigation, route }) {
@@ -89,7 +88,7 @@ export default function NotificationPage({ navigation, route }) {
     // stores whether the user is on this page (true) or not (false)
     const [isFocused, setIsFocused] = useState(false)
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const [notifications, setNotifications] = useState(testData ? testData : {})
+    const [notifications, setNotifications] = useState()
     const { userData } = useContext(UserContext);
     const { uid } = userData.currentUser;
     const routeName = route.name;
@@ -104,23 +103,20 @@ export default function NotificationPage({ navigation, route }) {
 
     function getNotifications() {
         ReadAPI.getNotifications(uid)
-            .then(response => console.log('asdfadsf', response.data))
-
+            .then(response => {
+                console.log(response.data.notifications.notifs)
+                setNotifications(response.data.notifications.notifs)
+            })
     }
 
     // add a filler item to move the list down
     useEffect(() => {
-        //console.log(notifications)
-       
-        
-        // setNotifications([{ type: 'f' }, ...notifications.data])
+        getNotifications();
     }, []);
 
     function catchHug(hugId, id) {
         //console.log(id)
-        console.log(hugId)
-        let data = notifications.filter((item) => item.call_id === hugId)[0]
-        console.log(data)
+        let data = notifications.filter((item) => item.callback_id === hugId)[0]
         clearNotification(id)
 
         // data = Object.assign({}, {hug_id: data.call_id, ...data})
@@ -137,9 +133,11 @@ export default function NotificationPage({ navigation, route }) {
     }
 
     function acceptFriendRequest(friendId, id) {
+        console.log(id)
+        let data = notifications.filter((item) => item.callback_id === friendId)[0]
+        console.log('data', data)
         clearNotification(id)
-        let data = notifications.filter((item) => item.call_id === id)[0]
-        data = Object.assign({}, {profile_pic: data.friendpfp, ...data})
+        data = Object.assign({}, { status: data.type, ...data})
         navigation.navigate('Friend Profile', {
             page: 'friendProfile',
             data: data
@@ -168,7 +166,7 @@ export default function NotificationPage({ navigation, route }) {
         filler: {
             height: windowHeight / 7,
         }
-    })     
+    })  
    
     // map every notification entry to a notification panel element 
     return (
@@ -184,8 +182,9 @@ export default function NotificationPage({ navigation, route }) {
             <View style={styles.notificationList}>
                 <Button title="adsfasdfdf" onPress={getNotifications}/>
                 {/* actual list */}
-                <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
-                    {notifications.map(( data, index ) => (
+                
+                {notifications && <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
+                    {notifications && notifications.map(( data, index ) => (
                         data.type === 'friend' ? 
                         <NotificationCard 
                             key={data.notification_id} 
@@ -205,7 +204,7 @@ export default function NotificationPage({ navigation, route }) {
                             handleAccept={catchHug} 
                             handleDecline={dropHug} />
                     ))}
-                </ScrollView>
+                </ScrollView>}
             </View>                   
         </View>
     )

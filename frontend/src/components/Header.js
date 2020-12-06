@@ -164,8 +164,7 @@ export default function Header(props) {
     const [searchInput, setSearchInput] = useState();
 
     const { userData } = useContext(UserContext);
-    // const { isLightTheme } = userData;
-    let isLightTheme = true;
+    const { isLightTheme } = userData;
 
     function enableSearch() { setSearching(true) }
     function disableSearch() { setSearching(false) }
@@ -183,6 +182,8 @@ export default function Header(props) {
         'Hug Info': '',
         'Reset Password Page': '',
         'Pic Upload Page': '',
+        'Login Page': '',
+        'Signup Page': '',
     };
 
     // setting button list for header 
