@@ -1,6 +1,7 @@
 var Users = require("../model/Users");
 var auth = require("../../frontend/src/authentication/Authentication");
 const readline = require('readline');
+const ManageAccount = require("../model/ManageAccount");
 
 /* WARNING! This tester will NOT WORK unless you go into 
  * config.js and Authentication.js (filepaths listed above)
@@ -22,8 +23,6 @@ const readline = require('readline');
  *  export default firebase.initializeApp(firebaseConfig);      -->        module.exports = firebase.initializeApp(firebaseConfig);
  *  
  */
-
-
 
 var uid;
 var response;
@@ -51,6 +50,8 @@ async function t_createNewUser(){
         response = await auth.AuthAPI.loginUser(email, password);
         uid = response.data;
 
+        console.log(uid);
+
         // call updateUser
         response = await Users.UsersAPI.updateUserProfile(
             uid,
@@ -72,12 +73,14 @@ async function t_createNewUser(){
     if(response.out == true) {
         console.log("yay! user created/updated");
     } else {
-        console.log("Something went wrong in createNewUser.")
+        console.log("Something went wrong in t_createNewUser.")
     }
 }
 
 
 async function t_updateUserProfile() {
+    await ManageAccount.ManageAccountAPI.deleteAccount("evan impostor O_O");
+
     var newUsername = "newEvanPostUpdate"
     var newFirstname = "Ivan"
     var newLastname = "Sirrano"
@@ -100,6 +103,8 @@ async function t_dupUsername() {
     var dupUsername = "newEvanPostUpdate"
     var first = "Iefan"
     var last = "Sriracha"
+
+    
     response = await Users.UsersAPI.createNewUser(
         uid2,
         dupUsername,
@@ -229,6 +234,8 @@ async function main() {
     separator(sepSize, "Increment Hug/Streak Count Test")
     await pause("Press enter to continue.\n")
     await t_increaseHugCount()
+
+    await pause("Tests complete!\n")
 }
 
 main();
