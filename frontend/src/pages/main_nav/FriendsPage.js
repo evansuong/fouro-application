@@ -10,17 +10,15 @@ import SearchPage from '../off-nav/SearchPage'
 
 
 export default function FriendsPage({ navigation, route }) {
+    // States
     const [startUp, setStartUp] = useState(true);
-    const [friends, setFriends] = useState([]);
-
-    const { windowWidth, windowHeight } = useContext(DimensionContext);
-    // const { userData } = useContext(UserContext);
-
-    const gradient = require('assets/gradients/left.png');
+    // const [friends, setFriends] = useState([]);
+    // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     const { uid } = userData.currentUser;
-    console.log(uid)
+    // Images
+    const gradient = require('assets/gradients/left.png');
     const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
 
     const [friends, setFriends] = useState([
@@ -39,12 +37,12 @@ export default function FriendsPage({ navigation, route }) {
     const routeName = route.name;
 
     function getFriends() {
-        ReadAPI.getFriends(uid).then(response => console.log(response.data));
+        // ReadAPI.getFriends(uid).then(response => console.log(response.data));
     }
 
-    useEffect(() => {
-        // pull friends list from backend
-    }, [])
+    // useEffect(() => {
+    //     // pull friends list from backend
+    // }, [])
     
     function buildFriendData(id, name, username, profile_pic, color) {
         return {
@@ -118,7 +116,7 @@ export default function FriendsPage({ navigation, route }) {
             {
               <View style={styles.flatListContainer}>
                 <FlatList
-                  data={friendsTestData}
+                  data={friends}
                   // data={friends}
                   keyExtractor={item => item.user_id}
                   renderItem={renderCards}

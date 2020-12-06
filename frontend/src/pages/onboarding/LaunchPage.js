@@ -9,7 +9,9 @@ import fouroLogo from 'assets/fouro_logo.png';
 
 
 export default function LaunchPage({ navigation }) {
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
+  // Misc
   const roundedWidth = Math.round(windowWidth / 100) * 100;
   const roundedHeight = Math.round(windowWidth / 100) * 100;
 

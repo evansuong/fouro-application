@@ -29,7 +29,7 @@ export default function FriendCard(props) {
   const { navigation, height, width, friendData, removeFriend } = props;
   const { color, name, profile_pic, username, user_id } = friendData;
 
-  console.log(profile_pic)
+  // console.log(profile_pic)
 
   const { windowWidth, windowHeight } = useContext(DimensionContext)
   const pfpWidth = windowWidth * 0.11

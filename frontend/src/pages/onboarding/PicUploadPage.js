@@ -10,10 +10,13 @@ import {
 // Expo Imports
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import * as FileSystem from 'expo-file-system';
-import Header from '../../components/Header';
-
-// const fs = require('fs');
+// Contexts
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import Header from 'components/Header';
+// Images/Assets
+import BackgroundImg from 'assets/gradients/middle.png';
+import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 
 
 export default function ProfileSetupPage({ navigation, route }) {
