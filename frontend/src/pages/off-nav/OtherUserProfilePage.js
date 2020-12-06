@@ -18,6 +18,7 @@ import LinkedButton from 'components/LinkedButton'
 
 
 
+
 /*------- testing --------*/
 
 function buildTestData(name, text, img, id) {
@@ -63,9 +64,21 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
-    let status = 'stranger';
+    
+    
+    // destruct route parameteres
+    const { data } = route.params;
+    console.log('from otheruserprofilepage:', data)
+
+    
+    const { callback_id, friendName, friend_username, friend, status } = data; // add profile_pic
+    // TODO CHANGE THIS
+    let friendPfp = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
+    data.friendPfp = friendPfp;
     const isStranger = status !== 'friend' ? true : false;
-    const isPending = status === 'pending' ? true : false;    
+    const isPending = status === 'pending' ? true : false;
+    
+    
           
     function removeFriend(id) {
         
@@ -84,7 +97,6 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
 
     const renderHug = (( item ) => {
         // console.log(item.item)
-
         return(
         <HugCard 
             navigation={navigation}
@@ -230,15 +242,15 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
                 </Text>
             </TouchableOpacity>
         
-      
+    
+    let button = isStranger ? (isPending ? pendingButton : sendFriendRequestButton) : hugButton;
 
-    let button = sendFriendRequestButton
     let containerStyle = {}
 
+    console.log('isStranger', isStranger)
     if(isStranger) {
         sharedHugsContainer = <></>
         sharedHugsFlatList = <></>
-        button = isStranger ? (isPending ? pendingButton : sendFriendRequestButton) : hugButton;
         containerStyle = { position: 'absolute', bottom: 0 }
     }
 
@@ -267,9 +279,9 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
             <View style={styles.userProfile, {marginTop:topMarginSize}}>
                 {/* user profile information */}
                 <UserProfile 
-                    profilePicture={profile_pic}
-                    userFirstLast = {name}
-                    username = {username}
+                    profilePicture={friendPfp}
+                    userFirstLast = {friendName}
+                    username = {friend_username}
                 />
             </View>
 
@@ -278,7 +290,7 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
                 {sharedHugsContainer}
                 {sharedHugsFlatList}
             </View>
-            <View>
+            <View style={{ width: windowWidth, marginBottom: windowHeight * .02 }}>
                 {button}
             </View>
             

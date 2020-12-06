@@ -20,10 +20,10 @@ import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
 // Images
 import BackgroundImg from 'assets/gradients/middle.png';
+import Header from '../../components/Header';
 
 
-export default function SignupPage({ navigation }) {
-  // States
+export default function SignupPage({ navigation, route }) {
   const [emailField, setEmailField] = useState('');
   // const [passwordField, setPasswordField] = useState('');
   // const [passwordConfirmField, setPasswordConfirmField] = useState('');
@@ -38,6 +38,8 @@ export default function SignupPage({ navigation }) {
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { dispatch } = useContext(UserContext);
   // Misc
+  const routeName = route.name;
+  const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
   const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
@@ -197,7 +199,10 @@ export default function SignupPage({ navigation }) {
       Keyboard.dismiss();
       console.log('dismissed keyboard');
     }}>
+      
       <Animated.View opacity={fade} style={styles.container}>
+      <Header navigation={navigation} routeName={routeName} onMainNav={false} />
+
         <ImageBackground source={BackgroundImg} style={styles.backgroundImg}>
           <View style={styles.titleTextContainer}>
             <Text style={styles.titleText}>Welcome</Text>

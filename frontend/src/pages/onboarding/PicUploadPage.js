@@ -174,7 +174,6 @@ export default function ProfileSetupPage({ navigation, route }) {
   
   return (
     <Animated.View opacity={fade} style={{flex: 1,}}>
-      <Header onMainNav={false} navigation={navigation} routeName={routeName}/>
 
       {/* Gradient Background */}
       <ImageBackground

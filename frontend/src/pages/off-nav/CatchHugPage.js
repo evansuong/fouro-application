@@ -17,7 +17,7 @@ import * as Permissions from 'expo-permissions';
 import { CreateAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
-import UserContext from 'contexts/UserContext';
+import { UserContext } from 'contexts/UserContext';
 // Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
@@ -38,7 +38,8 @@ export default function CatchHugPage({ navigation, route, friendName='Placeholde
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     // Misc
-    // const { hugId, friendData } = route.params.data;
+    const { hugId, friendPfp } = route.params.data;
+    // console.log('in catch hug page:', route.params.data)
     const routeName = route.name;
 
     const callBackend = async () => {
@@ -198,7 +199,7 @@ export default function CatchHugPage({ navigation, route, friendName='Placeholde
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
                   <Image
-                    source={friendPic ? friendPic : fillerProfilePic}
+                    source={{ uri: friendPfp }}
                     style={styles.profilePic}
                   />
                   <View style={styles.friendTextContainer}>
