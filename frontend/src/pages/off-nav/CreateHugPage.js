@@ -22,12 +22,13 @@ import Header from '../../components/Header';
 import BackgroundImg from 'assets/gradients/middle.png';
 
 
+// TODO: Remove FriendName and FriendPic parameters
 export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
     const {windowWidth, windowHeight} = useContext(DimensionContext);
     const routeName = route.name;
-    // const {friendName, friendPfp} = route.params;
+    // const {friendName, friendPfp} = route.params.data;
 
     const callBackend = async () => {
       try {
