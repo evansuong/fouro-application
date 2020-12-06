@@ -20,13 +20,26 @@ const NotificationsAPI = {
    */
   getNotifications: async function (uid) {
     let notifications = [];
-    // Gets notifications collection
-    var notificationCollection = users.doc(uid).collection("notifications");
+    let exist = true;
 
-    if (!notificationCollection.exists) {
-      console.log("No such document");
+    // Check notifications exist
+    var notificationCollection = await users
+      .doc(uid)
+      .collection("notifications")
+      .get()
+      .then((sub) => {
+        if (sub.docs.length == 0) {
+          console.log("subcollection does not exist");
+          exist = false;
+        }
+      });
+
+    // No notification collection
+    if (!exist) {
       return { notifs: [] };
     }
+
+    notificationCollection = await users.doc(uid).collection("notifications");
     const notificationSnapshot = await notificationCollection
       .orderBy("date_time", "desc")
       .get(); //sort notifications by date/time
@@ -42,8 +55,8 @@ const NotificationsAPI = {
 
     let newUser = {}; //JSON object of user who sent notification
     for (let i = 0; i < notificationData.length; i++) {
-      const userRef = await notificationData[i].get("user_ref").id;
-      const userResponse = await UsersAPI.getUserProfile(userRef);
+      const userId = await notificationData[i].get("user_ref").id;
+      const userResponse = await UsersAPI.getUserProfile(userId);
       //if the notification type is a hug
       if ((await notificationData[i].get("type")) == "hug") {
         newUser = {
@@ -111,7 +124,7 @@ const RequestsAPI = {
     const newFriendRequest = {
       type: "friend",
       date_time: dateTime,
-      user_id: user_id, // sender
+      user_ref: users.doc(user_id), // sender
     };
     await newFriendCollectionRef.add(newFriendRequest);
     return { out: true };
@@ -131,9 +144,9 @@ const RequestsAPI = {
 
     const newHug = {
       type: "hug",
-      hug_id: hug_id,
+      hug_ref: db.collection("hugs").doc(hug_id),
       date_time: dateTime,
-      user_id: user_id, // sender
+      user_ref: users.doc(user_id), // sender
     };
     await newHugCollectionRef.add(newHug);
     return { out: true };

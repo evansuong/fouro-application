@@ -2,7 +2,8 @@ let Notifications = require("../model/Notifications");
 let Users = require("../model/Users");
 async function testGetNotifications() {
   let test = await Notifications.NotificationsAPI.getNotifications(
-    "example@email.com"
+    //"example@email.com"
+    "D3ExthKFKOf1D0gOrDqka0Y34Ik1"
   );
   console.log(test);
 }
