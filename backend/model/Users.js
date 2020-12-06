@@ -188,7 +188,8 @@ const UsersAPI = {
   },
 
   uploadUserProfilePicture: async function (uid, file) {
-    var success;
+    var upload_success;
+    var update_success;
     // make references
     const userRef = usersCollection.doc(uid);
     var storageRef = firebase2.storage().ref();
@@ -204,23 +205,28 @@ const UsersAPI = {
 
     var url = ""
     // upload to firestore
-    await profilePicRef.put(blob, metadata).then(async (snapshot) => {
-      // get reference URL and store it in the user document
-      url = await profilePicRef.getDownloadURL();
-      const user = { profile_pic: url };
-
-      // update user's profile_pic field in firestore
-      userRef.update(user).then( success = true )
-      .catch((error) => {
-        console.log("Error updating user " + uid + "\'s profile picture in Firestore: " + error);
-        success = false;
-      });
+    await profilePicRef.put(blob, metadata).then(async () => {
+      upload_success = true;
     }).catch((error) => {
+      upload_success = false;
       console.log("Error uploading user " + uid + "\'s profile picture to Cloud Storage: " + error);
-      success = false;
     });
 
-    return { out : success, url : url };
+    // get reference URL and store it in the user document
+    url = await profilePicRef.getDownloadURL();
+    const user = { profile_pic: url };
+
+    // update user's profile_pic field in firestore
+    await userRef.update(user).then(() => {
+      update_success = true;
+    })
+    .catch((error) => {
+      update_success = false;
+      console.log("Error setting profile_pic URL: " + error);
+    })
+
+    return { out : upload_success && update_success, url : url };
+
   },
 };
 

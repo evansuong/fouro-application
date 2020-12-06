@@ -8,28 +8,6 @@ global.XMLHttpRequest = require("xhr2");
 var fs = require("fs");
 
 
-
-function pause(prompt) {
-    const r1 = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    return new Promise(resolve => r1.question(prompt, ans => {
-        r1.close();
-        resolve(ans);
-    }))
-}
-
-function separator(n, name) {
-    for(i = 0; i < n; i++) {
-        console.log("~")
-    }
-    console.log("~\t\t", name.toUpperCase())
-    for(i = 0; i < n; i++) {
-        console.log("~")
-    }
-}
-
 async function main() {
     //initialize user information
     var response;
@@ -76,7 +54,7 @@ async function main() {
 
     response = await Users.UsersAPI.uploadUserProfilePicture(uid, file)
 
-    if(response == true) {
+    if(response.out == true) {
         console.log("YAAAAAY you uploaded it at: " + response.url);
     } else {
         console.log("I am literally going to cry right now")
