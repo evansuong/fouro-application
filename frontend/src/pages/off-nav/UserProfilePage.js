@@ -1,5 +1,7 @@
-import React, { useContext } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+// APIs
+import { ReadAPI } from '../../API';
 // Contexts
 import { DimensionContext } from "contexts/DimensionContext";
 import { UserContext } from "contexts/UserContext";
@@ -9,17 +11,37 @@ import Setting from "components/Setting";
 import UserProfile from "components/UserProfile";
 
 export default function UserProfilePage({ navigation, route }) {
-  const pfp = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
-
+  // States
+  const [fetchedUser, setFetchedUser] = useState({});
+  const [startUp, setStartUp] = useState(true);
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext);
   const { isLightTheme } = userData;
-
+  // Misc
   const topMarginSize = windowWidth * 0.1;
   const settingMarginTopBottom = windowWidth * 0.03;
   const buttonMargin = 10
   const buttonHeight = 50
   const routeName = route.name;
+
+  useEffect(() => {
+    if (startUp) {
+      setStartUp(false);
+      fetchUserData();
+    }
+  }, [])
+
+  const fetchUserData = async () => {
+    const { status, data } = 
+      await ReadAPI.getUserProfile(userData.currentUser.uid);
+    // console.log(status, data);
+    if (status) {
+      setFetchedUser(data);
+    } else {
+      Alert.alert('Something went wrong when fetching user data');
+    }
+  }
 
   const styles = StyleSheet.create({
     settingsContainer: {
@@ -60,6 +82,22 @@ export default function UserProfilePage({ navigation, route }) {
     })
   }
 
+  function logOut() {
+    if (userData.userData) {
+      dispatch({
+        type: 'LOG_OUT',
+        payload: {}
+      })
+      Alert.alert('Logged out!');
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Launch Page'}],
+      });
+    } else {
+      Alert.alert('userData.userData is undefined. You\'re not logged in!');
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Header routeName={routeName} navigation={navigation} onMainNav={false} />
@@ -67,9 +105,9 @@ export default function UserProfilePage({ navigation, route }) {
       <View style={{ marginTop: topMarginSize }}>
         <UserProfile
           routeName={"User Profile Page"}
-          profilePicture={pfp}
-          userFirstLast={"Dummy One"}
-          username={"iamnumberone"}
+          profilePicture={fetchedUser.profile_pic}
+          userFirstLast={fetchedUser.name}
+          username={fetchedUser.username}
         />
 
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -101,7 +139,7 @@ export default function UserProfilePage({ navigation, route }) {
               />
           </View>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => logOut()}>
             <Text style={styles.buttonText}>LOG OUT</Text>
           </TouchableOpacity>
 

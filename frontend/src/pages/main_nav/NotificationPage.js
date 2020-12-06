@@ -8,15 +8,23 @@ import {
   LayoutAnimation,
   Image,
 } from "react-native";
-import NotificationCard from "components/NotificationCard";
-import { DimensionContext } from "../../contexts/DimensionContext";
-
 import { useFocusEffect } from "@react-navigation/native";
+// Contexts
+import { DimensionContext } from "contexts/DimensionContext";
+// Custom Components
+import NotificationCard from "components/NotificationCard";
+import Header from "components/Header";
+// Images/Assets
 import AppStyles from "../../AppStyles";
-import Header from "../../components/Header";
+
+
+
+
+
+/*------- testing --------*/
 
 // temorary test data to simulate backend notification data
-const pic = require("../../../assets/profilePic.jpg");
+const pic = require("assets/profilePic.jpg");
 const gradient = require("assets/gradients/right.png");
 
 function buildTestHugData(
@@ -81,13 +89,21 @@ function buildTestData(name, date_time, friendpfp, type, call_id, notification_i
     }
 }
 
+/*------- end of testing --------*/
+
+
+
+
+
 
 export default function NotificationPage({ navigation, route }) {
- 
+    // States
     // stores whether the user is on this page (true) or not (false)
-    const [isFocused, setIsFocused] = useState(false)
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const [notifications, setNotifications] = useState(testData ? testData : {})
+    const [isFocused, setIsFocused] = useState(false);
+    const [notifications, setNotifications] = useState(testData ? testData : {});
+    // Contexts
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    // Misc
     const routeName = route.name;
     
     // check whether the user is on the page (true) or navigates away from the page (false)
@@ -100,21 +116,13 @@ export default function NotificationPage({ navigation, route }) {
 
     // add a filler item to move the list down
     useEffect(() => {
-<<<<<<< HEAD
         // console.log(notifications)
-=======
-        //console.log(notifications)
->>>>>>> cc78257c0d0cfea2672d6b8b216412f6698bad22
         if (notifications[0].type !== 'f') setNotifications([{ type: 'f' }, ...notifications])
     }, []);
 
     function catchHug(hugId, id) {
         clearNotification(id)
-<<<<<<< HEAD
         // console.log(id)
-=======
-        //console.log(id)
->>>>>>> cc78257c0d0cfea2672d6b8b216412f6698bad22
         let data = testHugData.filter((item) => item.hugId === hugId)[0]
         data = Object.assign({}, {hug_id: data.call_id, ...data})
         navigation.navigate('Catch Hug Page', { 
@@ -147,7 +155,9 @@ export default function NotificationPage({ navigation, route }) {
 
     function clearNotification(id, type) {
         const newList = notifications.filter((item) => item.call_id !== id);
-        setNotifications(newList)
+        setTimeout(() => {
+          setNotifications(newList);
+        }, 1000);
     }
 
     // notification list styles

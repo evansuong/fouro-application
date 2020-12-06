@@ -9,13 +9,16 @@ import {
   ImageBackground,
   ActivityIndicator,
 } from 'react-native';
+// APIs
+import { CreateAPI } from '../../API';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from '../../contexts/UserContext';
+// Custom Components
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import { useIsFocused } from '@react-navigation/native';
+// Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
-import { DimensionContext } from 'contexts/DimensionContext';
-import { CreateAPI } from '../../API';
-import { UserContext } from '../../contexts/UserContext';
 
 
 export default function NamePage({ navigation, route }) {
@@ -27,7 +30,6 @@ export default function NamePage({ navigation, route }) {
   // const [lastName, setLastName] = useState('');
   // const [username, setUsername] = useState('');
   const [userExists, setUserExists] = useState(false);
-  const [mounted, setMounted] = useState(true);
   const [startUp, setStartUp] = useState(true);
   const [signingUp, setSigningUp] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -36,15 +38,11 @@ export default function NamePage({ navigation, route }) {
   const { userData, dispatch } = useContext(UserContext);
   // Misc
   const fade = useRef(new Animated.Value(0)).current;
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (startUp) {
       setStartUp(false);
       fadeIn();
-    }
-    if (!isFocused) {
-      setMounted(false);
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -63,7 +61,6 @@ export default function NamePage({ navigation, route }) {
 
     return () => {
       setSigningUp(false);
-      setMounted(false);
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
     }
@@ -94,7 +91,7 @@ export default function NamePage({ navigation, route }) {
     // }
     // await UsersAPI.updateUserProfile(username, firstName, lastName);
     
-    console.log(userData);
+    // console.log(userData);
     let userToCreate = {
       uid: userData.currentUser.uid,
       username: username.trim(),
@@ -111,7 +108,7 @@ export default function NamePage({ navigation, route }) {
       await CreateAPI.createUser(userData.currentUser.uid, userToCreate);
     if (status) {
       setTimeout(() => {
-        navigation.navigate('Pic Upload Page');
+        navigation.replace('Pic Upload Page');
       }, 1000);
     } else {
       setSigningUp(false);
@@ -187,6 +184,7 @@ export default function NamePage({ navigation, route }) {
 
             {
               checkFilled() &&
+              !signingUp &&
               <View style={{marginTop: 20,}}>
                 <LinkedButton
                   text='NEXT'

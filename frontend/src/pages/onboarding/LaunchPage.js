@@ -14,7 +14,6 @@ export default function LaunchPage({ navigation }) {
   // Misc
   const roundedWidth = Math.round(windowWidth / 100) * 100;
   const roundedHeight = Math.round(windowHeight / 100) * 100;
-  console.log(roundedWidth, roundedHeight);
 
   const styles = StyleSheet.create({
     container: {

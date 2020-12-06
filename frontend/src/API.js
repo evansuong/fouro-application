@@ -62,14 +62,6 @@ export const ReadAPI = {
     .catch(err => onReject(err, response));
     return response
   },
-  getHugById: async function(uid, request) {
-    // request: { hugId }
-    let response = {}
-    await axios.get(`${server}/hugs/getHugById/${uid}`, request)
-    .then(res => onAccept(res, response))
-    .catch(err => onReject(err, response));
-    return response
-  },
   buildCorkboard: async function(uid) {
     let response = {}
     await axios.get(`${server}/corkboard/buildCorkboard/${uid}`)

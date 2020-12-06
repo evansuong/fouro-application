@@ -3,23 +3,28 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 // APIs
-
+import AuthAPI from '../../authentication/Authentication';
 // Contexts
-import { DimensionContext } from "../../contexts/DimensionContext";
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import CustomTextField from "components/CustomTextField";
 import Header from "components/Header"
 
 
 export default function ResetPasswordPage({ navigation, route }) {
+  // States
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { userData } = useContext(UserContext);
+  // Misc
   const buttonMargin = 10;
   const buttonHeight = 50;
   const topMarginSize = windowWidth * 0.1 + 5;
@@ -41,6 +46,13 @@ export default function ResetPasswordPage({ navigation, route }) {
     return verifyNewPasswordsMatch() && 
     !oldPasswordEmpty() && 
     !newPasswordEmpty();
+  }
+
+  function reset() {
+    Alert.alert('(NOT SET UP) Reset button pressed!');
+    // const { status, data } = 
+    //   await AuthAPI.changePassword(userData.currentUser.uid, newPassword);
+    // navigation.replace('User Profile Page');
   }
 
   const styles = StyleSheet.create({
@@ -133,6 +145,7 @@ export default function ResetPasswordPage({ navigation, route }) {
       <TouchableOpacity
         style={styles.button}
         disabled={!fieldsValid()}
+        onPress={() => reset()}
       >
         <Text style={styles.buttonText}>
           RESET

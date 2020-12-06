@@ -107,14 +107,16 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
     let textColor = isLightTheme ? '#000' : '#EEE';
 
     return (
-        <View style={{ 
+        <Animated.View style={{ 
             ...styles.hugPanelContainer, 
             display: 'flex', 
             backgroundColor: backgroundColor,
-            margin: windowWidth / 75,
+            marginVertical: windowWidth / 75,
+            marginRight: windowWidth / 75,
+            marginLeft: marginL ? marginL : windowWidth / 75,
             width: windowWidth / 1.1,
         }}>
-            <TouchableOpacity onPress={handlePress} activeOpacity={.7}>
+            <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
                 
                 {/* body */}
                 <Animated.View style={{ height: height, ...styles.bodyContainer }}>
@@ -191,7 +193,10 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                             {/* decline button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => handleDecline(call_id, notification_id)}
+                                onPress={() => {
+                                  handleDisappear();
+                                  handleDecline(call_id, notification_id);
+                                }}
                             >
                                 <Animated.View 
                                     style={{ 
@@ -218,7 +223,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
                     </View>
                 </Animated.View>
             </TouchableOpacity>
-        </View>
+        </Animated.View>
     )
 }
         

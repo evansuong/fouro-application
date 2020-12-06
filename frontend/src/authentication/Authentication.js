@@ -71,6 +71,8 @@ const AuthAPI = {
         .catch(function (error) {
           return false;
         }); // an error happened.
+    } else {
+      return false;
     }
   },
 

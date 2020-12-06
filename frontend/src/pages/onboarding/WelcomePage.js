@@ -1,16 +1,66 @@
-import React, {useState}  from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableWithoutFeedback } from 'react-native';
-import LinkedButton from 'components/LinkedButton';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState, useContext }  from 'react';
+import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { ScrollView } from 'react-native-gesture-handler';
-
-const window = Dimensions.get('window');
-const screenHeight = window.height
-const screenWidth = window.width
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+// Custom Components
+import LinkedButton from 'components/LinkedButton';
+// Images/Assets
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function QuestionPage({ navigation }) {
-  const [value, setValue]=useState(1)
+  // States
+  const [value, setValue] = useState(1);
+  // Contexts
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+
+  const styles = StyleSheet.create({
+    title: {
+      marginTop: 50,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      textAlign: 'center',
+      fontSize: 30,
+      fontWeight: 'bold',
+    },
+    background: {
+      position: 'absolute',
+      width: '100%',
+    },
+    linearGradient: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: windowHeight,
+    },
+    quoteBody: {
+      marginTop: 20,
+      marginHorizontal: 30, 
+      padding: 15,   
+      backgroundColor: '#FB7250',
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+    quote: {
+      fontStyle: 'italic',
+      fontSize: 15,
+      color: 'white',
+    },
+    byLine: {
+      textAlign: 'right',
+      fontStyle: 'italic',
+      fontSize: 15,
+      color: 'white',
+    },
+    body: {
+      marginTop: 0,
+      marginHorizontal: 25, 
+      padding: 10, 
+      fontSize: 15,
+    }
+  });
 
   return (
     <View style={{height: '100%'}}>
@@ -99,51 +149,3 @@ export default function QuestionPage({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    marginTop: 50,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  background: {
-    position: 'absolute',
-    width: '100%',
-  },
-  linearGradient: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 0,
-      height: screenHeight,
-  },
-  quoteBody: {
-    marginTop: 20,
-    marginHorizontal: 30, 
-    padding: 15,   
-    backgroundColor: '#FB7250',
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  quote: {
-    fontStyle: 'italic',
-    fontSize: 15,
-    color: 'white',
-  },
-  byLine: {
-    textAlign: 'right',
-    fontStyle: 'italic',
-    fontSize: 15,
-    color: 'white',
-  },
-  body: {
-    marginTop: 0,
-    marginHorizontal: 25, 
-    padding: 10, 
-    fontSize: 15,
-  }
-});

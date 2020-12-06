@@ -24,11 +24,11 @@ import BackgroundImg from 'assets/gradients/middle.png';
 
 export default function SignupPage({ navigation }) {
   // States
-  const [emailField, setEmailField] = useState('gggggg');
-  const [passwordField, setPasswordField] = useState('gggggg');
-  // const [emailField, setEmailField] = useState('');
+  const [emailField, setEmailField] = useState('');
   // const [passwordField, setPasswordField] = useState('');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('');
+  // const [passwordConfirmField, setPasswordConfirmField] = useState('');
+  const [passwordField, setPasswordField] = useState('gggggg');
+  const [passwordConfirmField, setPasswordConfirmField] = useState('gggggg');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
@@ -87,7 +87,7 @@ export default function SignupPage({ navigation }) {
     
     let { status, data } = 
       await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
-    console.log(data, status);
+    // console.log(data, status);
     if (status) {
       processSignupResponse(data, status);
     } else {
@@ -105,8 +105,8 @@ export default function SignupPage({ navigation }) {
         payload: data.providerData,
       });
       setTimeout(() => {
-        navigation.navigate('Name Page');
-      }, 1000);
+        navigation.replace('Name Page');
+      }, 500);
     } else {
       setSigningUp(false);
       alert(data);
@@ -260,6 +260,7 @@ export default function SignupPage({ navigation }) {
               checkEmailValid() &&
               passwordMatch() && 
               checkLength() &&
+              !signingUp &&
               <View style={{marginTop: 20,}}>
                 <LinkedButton
                   text='NEXT'
