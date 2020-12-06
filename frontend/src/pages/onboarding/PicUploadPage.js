@@ -37,44 +37,63 @@ export default function ProfileSetupPage({ navigation, route }) {
   }, [startUp])
 
   const callBackend = async () => {
-    // function toDataURL(url, callback) {
-    //   var xhr = new XMLHttpRequest();
-    //   xhr.onload = function() {
-    //     var reader = new FileReader();
-    //     reader.onloadend = function() {
-    //       callback(reader.result);
-    //     }
-    //     reader.readAsDataURL(xhr.response);
-    //   };
-    //   xhr.open('GET', url);
-    //   xhr.responseType = 'blob';
-    //   xhr.send();
-    // }
+
+//     const toDataURL = url => fetch(url)
+//   .then(response => response.blob())
+//   .then(blob => new Promise((resolve, reject) => {
+//     const reader = new FileReader()
+//     reader.onloadend = () => resolve(reader.result)
+//     reader.onerror = reject
+//     reader.readAsDataURL(blob)
+//   }))
+
+
+// toDataURL(uploadPic.uri)
+//   .then(dataUrl => {
+//     console.log('RESULT:', dataUrl.length)
+//   })
+
+
+
+    function toDataURL(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    }
     
-    // toDataURL('https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0', function(dataUrl) {
-    //   console.log(dataUrl)
-    //   const request = {dataUrl: dataUrl}
-    //   API.uploadUserProfilePicture('zE51j8mkbreXCT2QDevz4Daid5I2', request);
-    // })
+    toDataURL(uploadPic.uri, function(dataUrl) {
+      console.log(uploadPic.uri)
+      console.log(dataUrl.length)
+      // const request = {dataUrl: dataUrl}
+      // API.uploadUserProfilePicture('zE51j8mkbreXCT2QDevz4Daid5I2', request);
+    })
 
       // uploadUserProfilePicture
-      console.log(uploadPic);
-      // ImagePicker.showImagePicker
-      const base64 = await FileSystem.readAsStringAsync(
-        uploadPic.uri, { encoding: 'base64'}
-      );
-      console.log('base64: ', base64);
-      // const readFileOut = fs.readFile(uploadPic.uri, 'base64');
-      // const blob = Blob.build(readFileOut, { type: 'application/octet;BASE64'});
+      // console.log(uploadPic);
+      // // ImagePicker.showImagePicker
+      // const base64 = await FileSystem.readAsStringAsync(
+      //   uploadPic.uri, { encoding: 'base64'}
+      // );
+      // console.log('base64: ', base64);
+      // // const readFileOut = fs.readFile(uploadPic.uri, 'base64');
+      // // const blob = Blob.build(readFileOut, { type: 'application/octet;BASE64'});
 
-      // const splitPicURI = uploadPic.uri.split('/');
-      console.log('uri: ', uploadPic.uri);
-      const imgResponse = await fetch(uploadPic.uri);
-      const blob =  await imgResponse.blob();
-      console.log('blob: ', JSON.stringify(blob));
+      // // const splitPicURI = uploadPic.uri.split('/');
+      // console.log('uri: ', uploadPic.uri);
+      // const imgResponse = await fetch(uploadPic.uri);
+      // const blob =  await imgResponse.blob();
+      // console.log('blob: ', JSON.stringify(blob));
 
       
-      // console.log(typeof blob);
+      // // console.log(typeof blob);
       // console.log(blob.size);
       // console.log(blob.type);
       // console.log(blob.text());
@@ -84,13 +103,13 @@ export default function ProfileSetupPage({ navigation, route }) {
       // Refer to https://medium.com/@ericmorgan1/upload-images-to-firebase-in-expo-c4a7d4c46d06
       // console.log('success', JSON.stringify(blob));
       // console.log('userData: ', userData);
-      const request = {
-        uid: userData.uid,
-        blob: blob,
-      }
-      console.log('request: ', JSON.stringify(request));
-      const pfpResponse = await PutAPI.uploadUserProfilePicture(request.uid, request);
-      // navigation.navigate('Welcome Page');
+      // const request = {
+      //   uid: userData.uid,
+      //   blob: blob,
+      // }
+      // console.log('request: ', JSON.stringify(request));
+      // const pfpResponse = await PutAPI.uploadUserProfilePicture(request.uid, request);
+      // // navigation.navigate('Welcome Page');
    
   }
 
@@ -101,7 +120,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       let data = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        aspect: [1,1],
+        aspect: [1,.1],
         quality: 0.1,
         maxWidth: 512,
         maxHeight: 512,
