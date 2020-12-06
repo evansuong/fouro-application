@@ -192,7 +192,7 @@ const UsersAPI = {
     // make references
     const userRef = usersCollection.doc(uid);
     var storageRef = firebase2.storage().ref();
-    var profilePicRef = storageRef.child(`profile_pictures/${uid}`);
+    var profilePicRef = storageRef.child(`profile_pictures/${uid}.jpg`);
 
     // create blob
     const blob = Buffer.from(file.substr(file.indexOf(",") + 1), "base64");
