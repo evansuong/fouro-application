@@ -1,8 +1,14 @@
-import React, {useContext} from 'react'
-import { View, Text, StyleSheet, Image, Pressable, FlatList } from 'react-native'
-import Header from '../../components/Header';
-import PinnedHug from '../../components/PinnedHug'
-import { DimensionContext } from '../../contexts/DimensionContext';
+import React, { useState, useContext } from 'react'
+import { View, StyleSheet, Image, FlatList } from 'react-native'
+// APIs
+import { ReadAPI } from '../../API';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import UserContext from 'contexts/UserContext';
+// Custom Components
+import Header from 'components/Header';
+import PinnedHug from 'components/PinnedHug'
+// Images/Assets
 const corkboardImg = require('assets/corkboard.jpg')
 const trashCanImg = require('assets/trashCan.png')
 
@@ -37,10 +43,23 @@ const testData = [
 /*------- end of testing --------*/
 
 export default function CorkboardPage({ navigation, route }) {
-    
+    const [startUp, setStartUp] = useState(true);
+    const [pinnedHugs, setPinnedHugs] = useState([]);
+
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+
     const routeName = route.name;
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const margin = windowWidth * 0.03
+
+    const margin = windowWidth * 0.03;
+
+    // useEffect(() => {
+    //   if (!startUp) {
+    //     const { hugList } = await ReadAPI.buildCorkboard(userData.uid);
+    //     setPinnedHugs(hugList);
+    //     setStartUp(false);
+    //   }
+    // }, [])
 
     return (
         <View style={{ alignItems: 'center'}}>
@@ -53,6 +72,8 @@ export default function CorkboardPage({ navigation, route }) {
             {/* Hugs list as a grid */}
             <FlatList
                 data={testData}
+                // data={pinnedHugs}
+                // keyExtractor={item => item.hugId}
                 renderItem={( hug ) => (
                     <PinnedHug
                         navigation={navigation}
@@ -60,19 +81,17 @@ export default function CorkboardPage({ navigation, route }) {
                         picture={hug.item.picture}
                         date={hug.item.date}
                         friendName={hug.item.friendName}
+                        // picture={hug.image}
+                        // date={hug.dateTime}
+                        // friendName={hug.friendName}
+                        // id={hug.hugId}
                     />
                 )}
                 contentContainerStyle={{
                   paddingBottom: margin, paddingTop: margin + windowWidth * 0.2
                 }}
                 numColumns={2}
-            />
-
-            {/* <Image
-                source={trashCanImg}
-                style={styles.trashCanImage}
-            /> */}
-                
+            />                
         </View>
     )
 }
@@ -82,14 +101,5 @@ const styles = StyleSheet.create({
         position: 'absolute',
         resizeMode: 'contain',
         zIndex: 0
-    },
-    trashCanImage: {
-        position: 'absolute',
-        width: 70,
-        height: 70,
-        bottom: 10,
-        backgroundColor: 'pink',
-        zIndex: 1,
-        borderRadius: 100
     }
 })

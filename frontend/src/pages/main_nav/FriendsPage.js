@@ -8,7 +8,13 @@ import { DimensionContext } from '../../contexts/DimensionContext'
 import { UserContext } from '../../contexts/UserContext'
 import SearchPage from '../off-nav/SearchPage'
 
+
 export default function FriendsPage({ navigation, route }) {
+    const [startUp, setStartUp] = useState(true);
+    const [friends, setFriends] = useState([]);
+
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    // const { userData } = useContext(UserContext);
 
     const gradient = require('assets/gradients/left.png');
     const { windowWidth, windowHeight } = useContext(DimensionContext);
@@ -56,12 +62,10 @@ export default function FriendsPage({ navigation, route }) {
     }
 
     const renderCards = friend => {
-        // console.log(friend.item)
-        // NOTE: Depending on how the data is retrieved from firebase/firestore,
-        // we'll need to rewrite how we get each friend
-        //console.log(friend.item.friend_first)
+        // console.log(friend)
         return  <FriendCard
                     friendData={friend.item}
+                    // friendData={...friend}
                     navigation={navigation}
                     height={windowHeight / 15}
                     width={windowWidth - 40}
@@ -69,40 +73,59 @@ export default function FriendsPage({ navigation, route }) {
                 />        
     }
 
+    const styles = StyleSheet.create({
+      navPageContainer: {
+        display: 'flex',
+        backgroundColor: 'transparent',
+        alignItems: 'center',
+        flexShrink: 1
+      },
+      background: {
+          position: 'absolute',
+          width: windowWidth, 
+          height: windowHeight
+      },
+      friendCard: {
+        width: windowWidth, 
+        alignItems: 'center', 
+        marginTop: 5, 
+        paddingBottom: 5
+      },
+      flatListContainer: {
+        display: 'flex', 
+        flexShrink: 1
+      }
+    });
+
     return (
         <View style={AppStyles.navPageContainer}>
             {/* background */}
             <Image
                 source={gradient}
-                style={[styles.background, { width: windowWidth, height: windowHeight }]}
+                style={styles.background}
             />
             <Button title="adsfasdf" onPress={getFriends}></Button>
 
 
             <View style={{height: windowWidth * 0.27 }}/>
-            <Header routeName={routeName} navigation={navigation} onMainNav={true}>Friends</Header>
+            <Header 
+              routeName={routeName} 
+              navigation={navigation} 
+              onMainNav={true}
+            >
+              Friends
+            </Header>
             {
-                <View style={{display: 'flex', flexShrink: 1}}>
+              <View style={styles.flatListContainer}>
                 <FlatList
-                    data={friends}
-                    keyExtractor={item => item.user_id}
-                    renderItem={renderCards}
-                    contentContainerStyle={{ width: windowWidth, alignItems: 'center', marginTop: 5, paddingBottom: 5 }}
+                  data={friendsTestData}
+                  // data={friends}
+                  keyExtractor={item => item.user_id}
+                  renderItem={renderCards}
+                  contentContainerStyle={styles.friendCard}
                 />
-                </View>
+              </View>
             } 
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    navPageContainer: {
-      display: 'flex',
-      backgroundColor: 'transparent',
-      alignItems: 'center',
-      flexShrink: 1
-    },
-    background: {
-        position: 'absolute',
-    },
-});
