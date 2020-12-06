@@ -137,7 +137,7 @@ export default function NotificationPage({ navigation, route }) {
     } 
 
     function clearNotification(id, type) {
-        const newList = notifications.filter((item) => item.id !== id);
+        const newList = notifications.filter((item) => item.call_id !== id);
         setNotifications(newList)
     }
 

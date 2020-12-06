@@ -114,7 +114,7 @@ export default function NotificationCard({ callId, notificationData, isFocused, 
             margin: windowWidth / 75,
             width: windowWidth / 1.1,
         }}>
-            <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
+            <TouchableOpacity onPress={handlePress} activeOpacity={.7}>
                 
                 {/* body */}
                 <Animated.View style={{ height: height, ...styles.bodyContainer }}>
