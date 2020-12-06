@@ -100,7 +100,17 @@ export default function FriendCard(props) {
     /* the card itself */
     <TouchableOpacity 
       style={styles.friendCardContainer}
-      onPress={() => { navigation.navigate("Friend Profile", { data: friendData })}}
+      onPress={() => { 
+        navigation.navigate("Friend Profile", 
+          { data: {
+              otheruser_id: friendData.user_id,
+              name: friendData.name,
+              username: friendData.username,
+              profile_pic: friendData.profile_pic,
+              status: 'friend'
+            }
+          })
+        }}
       activeOpacity={.9}
     >
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, 
   Text,
   StyleSheet, 
@@ -14,6 +14,7 @@ import UserProfile from 'components/UserProfile';
 import HugCard from 'components/HugCard'
 import Header from 'components/Header';
 import LinkedButton from 'components/LinkedButton'
+import { ReadAPI } from '../../API';
 
 
 
@@ -45,40 +46,45 @@ function buildTestData(name, text, img, id) {
 
 
 
-export default function OtherUserProfilePage({ navigation, route,  }) {
+export default function OtherUserProfilePage({ navigation, route }) {
     // States
-    // const [status, getStatus] = useState('');
+    const [hugs, setHugs] = useState()
     // Contexts
-    const {windowWidth, windowHeight} = useContext(DimensionContext);
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    const { isLightTheme } = userData;
+    const { isLightTheme, currentUser } = userData;
+    const { uid } = currentUser;
     // Misc
     const routeName = route.name;
     const dotsIconDark = require('assets/dots-icon-dark.png');
-    // destruct route parameters
+    // destruct route parameterU
     const { data } = route.params;
-    const { user_id, name, profile_pic, username } = data;
-
-    let width = windowWidth / 8.5;
+    const { otheruser_id, name, username, profile_pic, status } = data;
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
 
-    
-    const { callback_id, friendName, friend_username, friend, status } = data; // add profile_pic
+    console.log('from other user profile page:', data)
+
+    function getSharedHugs() {
+        console.log('quering')
+        ReadAPI.getFriendProfile(uid, otheruser_id).then(response => console.log(response.data));
+        // setHugs(ReadAPI.getFriendProfile(uid, otheruser_id))
+    }
+
+    useEffect(() => {
+        console.log('mounting otheruserprofile')
+        getSharedHugs()
+    }, [otheruser_id])
+
     // TODO CHANGE THIS
-    let friendPfp = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
-    data.friendPfp = friendPfp;
     const isStranger = status !== 'friend' ? true : false;
     const isPending = status === 'pending' ? true : false;
     
-    
-          
+      
     function removeFriend(id) {
         
     }
-
-
     // TODO: replace with getFriendProfile to get all shared hugs
     const friendProfile = { 
         sharedHugs: [],
@@ -95,6 +101,7 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
         <HugCard 
             navigation={navigation}
             data={item.item}
+            image={profile_pic}
         />)}
     )
 
@@ -238,10 +245,8 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
         
     
     let button = isStranger ? (isPending ? pendingButton : sendFriendRequestButton) : hugButton;
-
     let containerStyle = {}
 
-    console.log('isStranger', isStranger)
     if(isStranger) {
         sharedHugsContainer = <></>
         sharedHugsFlatList = <></>
@@ -251,10 +256,6 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
     return (
 
         <View style={{ height: '100%', display: "flex", backgroundColor: 'white', alignItems: 'center' }}>
-            
-            {/* <TouchableOpacity style={styles.menuBtn} onPress={removeFriend}>
-                <Image style={styles.btnImage} source={dotsIconDark} />
-            </TouchableOpacity> */}
 
             {
                 !isStranger &&
@@ -273,9 +274,9 @@ export default function OtherUserProfilePage({ navigation, route,  }) {
             <View style={styles.userProfile, {marginTop:topMarginSize}}>
                 {/* user profile information */}
                 <UserProfile 
-                    profilePicture={friendPfp}
-                    userFirstLast = {friendName}
-                    username = {friend_username}
+                    profilePicture={profile_pic}
+                    userFirstLast = {name}
+                    username = {username}
                 />
             </View>
 
