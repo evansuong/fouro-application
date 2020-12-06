@@ -124,30 +124,29 @@ const UsersAPI = {
     if (!user.exists) {
       success = false;
     } else {
-      // trim whitespace from username
-      username = username.trim().toLowerCase();
-      firstName = firstName.trim();
-      lastName = lastName.trim();
-      
-      // Check if username matches [a-z 0-9]
-      for (var i = 0; i < username.length; i++) {
-        var ch = username.charAt(i);
-        
-        if (!((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '.') || (ch == '_') || (ch == '-'))) {
-          console.log("Username contained an invalid character.");
-          success = false;
-          return { out : success };
-        }
-      }
+      if (typeof username !== 'undefined') {
+        // trim whitespace from username
+        username = username.trim().toLowerCase();
+        // Check if username matches [a-z 0-9]
+        for (var i = 0; i < username.length; i++) {
+          var ch = username.charAt(i);
 
-      // case for if a username is already taken.
-      if(username == userData.username) {
-        console.log("user " + uid + " set their new username to old username")
-      } else {
-        if(await usernameTaken(username)) {
-          console.log("username " + username + " is already taken.")
-          success = false;
-          return { out : success };
+          if (!((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '.') || (ch == '_') || (ch == '-'))) {
+            console.log("Username contained an invalid character.");
+            success = false;
+            return { out : success };
+          }
+        }
+
+        // case for if a username is already taken.
+        if(username == userData.username) {
+          console.log("user " + uid + " set their new username to old username")
+        } else {
+          if(await usernameTaken(username)) {
+            console.log("username " + username + " is already taken.")
+            success = false;
+            return { out : success };
+          }
         }
       }
 
