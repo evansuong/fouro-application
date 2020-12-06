@@ -9,14 +9,14 @@ async function testGetNotifications() {
 async function testSendNotifications() {
   let test = await Notifications.RequestsAPI.sendFriendRequest(
     "example@email.com",
-    "otherguy@email.com"
+    "D3ExthKFKOf1D0gOrDqka0Y34Ik1"
   );
   console.log(test);
 }
 async function testSendNotifications2() {
   let test = await Notifications.RequestsAPI.sendHugRequest(
     "example@email.com",
-    "otherguy@email.com",
+    "D3ExthKFKOf1D0gOrDqka0Y34Ik1",
     "hug2"
   );
   console.log(test);
@@ -36,4 +36,6 @@ async function testDeleteNotifications2wHug() {
   console.log(test);
 }
 
-testSendNotifications();
+//testSendNotifications();
+//testSendNotifications2();
+testGetNotifications();

@@ -22,8 +22,10 @@ const NotificationsAPI = {
     let notifications = [];
     // Gets notifications collection
     var notificationCollection = users.doc(uid).collection("notifications");
+
     if (!notificationCollection.exists) {
       console.log("No such document");
+      return { notifs: [] };
     }
     const notificationSnapshot = await notificationCollection
       .orderBy("date_time", "desc")

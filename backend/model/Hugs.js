@@ -22,6 +22,8 @@ const HugsAPI = {
   // HELPER FUNCTIONS
   uploadBase64ArrayToHugs: async function (base64Array, imageName) {
     var downloadURLArrays = [];
+
+    // Traverse through base64 strings
     for (let i = 0; i < base64Array.length; i++) {
       let baseString = base64Array[i];
       // Get only the data of the base64
@@ -29,7 +31,9 @@ const HugsAPI = {
 
       // Path to image is: hug_images/[topLevelHug.id]/Timestamp in milliseconds[i]
       // Where "i" is the ith string in the base64Array
-      const hugImageRef = storageRef.child(imageName + i) + ".jpg";
+      let path = `${imageName}-${i}.jpg`;
+      console.log(path);
+      const hugImageRef = storageRef.child(path);
 
       //convert base64 to buffer / blob
       const blob = Buffer.from(baseString, "base64");
@@ -40,14 +44,16 @@ const HugsAPI = {
       };
 
       // Upload to firestore
-      hugImageRef.put(blob, metadata).then((snapshot) => {
+      await hugImageRef.put(blob, metadata).then((snapshot) => {
         console.log("Success!");
       });
 
-      // Add the downloadURL to our return array
-      let downloadURL = hugImageRef.getDownloadURL();
-      downloadURLArrays.push(downloadURL);
+      // Add to array
+      downloadURLArrays.push(await hugImageRef.getDownloadURL());
     }
+
+    console.log(downloadURLArrays);
+
     return downloadURLArrays;
   },
 
@@ -64,13 +70,15 @@ const HugsAPI = {
     let dateInSeconds = Math.floor(dateInMillis / 1000);
     var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
     // Create a unique image ID
-    var imageName = "hug_images/" + topLevelHug.id + "/" + dateInMillis;
+    var imageName = `hug_images/${topLevelHug.id}/${dateInMillis}`;
+
     var imageDownloadURLSArray = await this.uploadBase64ArrayToHugs(
       base64,
       imageName
     );
+
     // Set the topLevelHug's data
-    topLevelHug.set({
+    await topLevelHug.set({
       completed: false,
       date_time: dateTime,
       receiver_description: "",
@@ -80,11 +88,33 @@ const HugsAPI = {
       sender_ref: currUser,
     });
 
-    // MAKE SURE THIS HAPPENS AFTER WE MADE THE TOP LEVEL HUG
+    // MAKE SURE THIS HAPPENS AFTER WE MAKE THE TOP LEVEL HUG
+    // Add hug to user
+    await currUser
+      .collection("user_hugs")
+      .doc(topLevelHug.id)
+      .set({
+        completed: false,
+        date_time: dateTime,
+        friend_ref: users.doc(friendId),
+        hug_ref: topLevelHug, // Use the ref to the top level hug ^^
+        pinned: false,
+      })
+      .then(function (docRef) {
+        console.log(
+          "Document written with ID: " +
+            currUser.collection("user_hugs").doc(topLevelHug.id).id
+        );
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
+
+    // add hug to friend
     await users
-      .doc(currUser.id)
+      .doc(friendId)
       .collection("user_hugs")
-      .doc(topLevelHug)
+      .doc(topLevelHug.id)
       .set({
         completed: false,
         date_time: dateTime, //dateTime is an actual DateTime object (timestamp?)
@@ -92,30 +122,23 @@ const HugsAPI = {
         hug_ref: topLevelHug, //Use the ref to the top level hug ^^
         pinned: false,
       })
-      .then(function (docRef) {
-        console.log("Document written with ID: ", docRef.id);
+      .then(() => {
+        console.log(
+          "Document written with ID: " +
+            users.doc(friendId).collection("user_hugs").doc(topLevelHug.id).id
+        );
       })
       .catch(function (error) {
         console.error("Error adding document: ", error);
       });
-    await friendId
-      .collection("user_hugs")
-      .doc(topLevelHug)
-      .set({
-        completed: false,
-        date_time: dateTime, //dateTime is an actual DateTime object (timestamp?)
-        friend_ref: users.doc(friendId),
-        hug_ref: topLevelHug, //Use the ref to the top level hug ^^
-        pinned: false,
-      })
-      .then(function (docRef) {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
-      });
+
     // Create a hug request
-    Notifications.RequestsAPI.sendHugRequest(currentUser, friendId);
+    Notifications.RequestsAPI.sendHugRequest(
+      currentUser,
+      friendId,
+      topLevelHug.id
+    );
+
     return { out: true };
   },
 
