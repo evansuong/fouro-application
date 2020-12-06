@@ -14,7 +14,7 @@ export default function FriendsPage({ navigation, route }) {
 
     function buildFriendData(id, name, username, profile_pic, color) {
         return {
-            id: id,
+            user_id: id,
             name: name,
             username: username, 
             profile_pic: profile_pic,
@@ -22,8 +22,8 @@ export default function FriendsPage({ navigation, route }) {
         }
     }
 
-    let pic = require("assets/profilePic.jpg")
-
+    const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
+    
     let friends = [
         buildFriendData('1', 'Alex Chow', 'alexchow', pic, '#FE5951'),
         buildFriendData('2', 'Vivian Tang', 'vtang', pic, '#FC6C58'),
@@ -35,25 +35,20 @@ export default function FriendsPage({ navigation, route }) {
         buildFriendData('8', 'Vuk Radovanovic', 'vrad', pic, '#EFD67C'),
         buildFriendData('9', 'Eman Sherif', 'esherif', pic, '#D2CA94'),
         buildFriendData('10', 'Terry Feng', 'tfeng', pic, '#BCC1A6'),
-        buildFriendData('11', 'Vivki Chen', 'cvhen', pic, '#A4B8B9'),
+        buildFriendData('11', 'Vicki Chen', 'cvhen', pic, '#A4B8B9'),
     ]
 
     const renderCards = friend => {
-        // console.log(friend)
+        // console.log(friend.item)
         // NOTE: Depending on how the data is retrieved from firebase/firestore,
         // we'll need to rewrite how we get each friend
         //console.log(friend.item.friend_first)
         return  <FriendCard
-                    profilePicture={friend.item.profile_pic}
-                    friendName={friend.item.name}
-                    friendColorString={friend.item.color}
                     friendData={friend.item}
-                    key={friend.item.id}
                     navigation={navigation}
                     height={windowHeight / 15}
                     width={windowWidth - 40}
-                /> 
-        
+                />        
     }
 
     return (
@@ -70,7 +65,7 @@ export default function FriendsPage({ navigation, route }) {
                 <View style={{display: 'flex', flexShrink: 1}}>
                 <FlatList
                     data={friends}
-                    keyExtractor={item => item.friend_id}
+                    keyExtractor={item => item.user_id}
                     renderItem={renderCards}
                     contentContainerStyle={{ width: windowWidth, alignItems: 'center', marginTop: 5, paddingBottom: 5 }}
                 />

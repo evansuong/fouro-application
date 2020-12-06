@@ -175,7 +175,7 @@ export default function Header(props) {
         'Hug Feed': [ProfileButton(navigation, isLightTheme), CorkboardButton(navigation, isLightTheme)],
         'Notification': '',
         'User Profile Page': [EditButton(navigation, isLightTheme)],
-        'Friend Profile': [RemoveFriendButton(navigation, isLightTheme)],
+        'Friend Profile': '',
         'Create Hug': '',
         'Catch Hug Page': '',
         'Corkboard': '',
