@@ -25,7 +25,7 @@ function buildTestData(name, text, img, id) {
     buildTestData('Vivian', 'weeeeeeeeeeelll yea yea', require('assets/profilePic.jpg'), '5'),
   ]
 
-export default function OtherUserProfilePage({ navigation, route }) {
+export default function OtherUserProfilePage({ navigation, route,  }) {
     const {windowWidth, windowHeight} = useContext(DimensionContext)
     const routeName = route.name;
     const dotsIcon = require('assets/dots-icon.png');
@@ -43,12 +43,16 @@ export default function OtherUserProfilePage({ navigation, route }) {
     const isPending = status === 'pending' ? true : false;
     
     // destruct route parameteres
-    const { data, removeFriend } = route.params;
+    const { data } = route.params;
     
     const { user_id, name, profile_pic, username } = data;
     
     
-    
+          
+    function removeFriend(id) {
+        
+    }
+
 
     // TODO: replace with getFriendProfile to get all shared hugs
     const friendProfile = { 
@@ -61,7 +65,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
     //const hugButtonHeight = windowHeight / 8;
 
     const renderHug = (( item ) => {
-        console.log(item.item)
+        // console.log(item.item)
 
         return(
         <HugCard 
@@ -79,8 +83,8 @@ export default function OtherUserProfilePage({ navigation, route }) {
      * removeFriend(user_id) method in Friends Page and navigates back.
      */
     function removeFriendFromList() {
-        removeFriend(user_id)
-        navigation.goBack()
+        // removeFriend(user_id);
+        navigation.goBack();
     }
         
     const styles = StyleSheet.create({
