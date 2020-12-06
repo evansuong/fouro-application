@@ -26,15 +26,18 @@ import { UserContext } from '../contexts/UserContext';
  */
 export default function FriendCard(props) {
 
-  const { navigation, height, width, friendData } = props;
+  const { navigation, height, width, friendData, removeFriend } = props;
   const { color, name, profile_pic, username, user_id } = friendData;
+
+  console.log(profile_pic)
+
   const { windowWidth, windowHeight } = useContext(DimensionContext)
   const pfpWidth = windowWidth * 0.11
   const cardHeight = pfpWidth + 15
   const friendColor = { backgroundColor: color }
   const containerDimensions = { width: width, height: height }
   const { userData } = useContext(UserContext);
-  const { isLightTheme } = userData;
+  const { isLightTheme } = userData;  
 
   const styles = StyleSheet.create({
     pfpContainer: {
@@ -90,7 +93,8 @@ export default function FriendCard(props) {
     /* the card itself */
     <TouchableOpacity 
       style={styles.friendCardContainer}
-      onPress={() => { navigation.navigate("Friend Profile", { data: friendData })}}
+      onPress={() => { navigation.navigate("Friend Profile", { data: friendData, removeFriend: removeFriend })}}
+      activeOpacity={.9}
     >
 
     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: pfpWidth + 10 }}>

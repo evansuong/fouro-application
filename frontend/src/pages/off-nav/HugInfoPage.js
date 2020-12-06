@@ -1,13 +1,20 @@
-import React, { useContext } from 'react'
-import { View, Text, StyleSheet, Image, ScrollView, StatusBar } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { View, Text, StyleSheet, Image, ScrollView, StatusBar, TouchableOpacity } from 'react-native'
 import Header from '../../components/Header';
 import { DimensionContext } from '../../contexts/DimensionContext';
+import { UserContext } from '../../contexts/UserContext';
 
 export default function HugInfoPage({ navigation, route }) {
 
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const routeName = route.name;
-    const hug_id = route.params;
+    const { data } = route.params;
+    const { friend_name, hug_id, image, message } = data;
+
+    const { userData } = useContext(UserContext);
+    const { isLightTheme } = userData;
+    const [pinned, setPinned] = useState(false);
+    console.log(data)
 
     // TODO: uncomment line below when pulling data from firestore or whatever and delete the following test block
     //       hugId will be passed in and we fetch the hug info with that hugId
@@ -18,8 +25,8 @@ export default function HugInfoPage({ navigation, route }) {
     const completed = true
     const dateTime = "April 1, 2021"
     const images = [require("assets/profilePic.jpg"), require("assets/profilePic.jpg"), require("assets/profilePic.jpg")]
-    const receiverDescription = "omae wa mou shindeiru"
-    const senderDescription = "Roses are red, violets are blue"
+    const receiverDescription = "omae wa mou shindeiru adsfadskfdajsfhjadh jfadkfjadk  adskjfh aklhdfkljh adskjhf adklshfakshfajklsdfh "
+    const senderDescription = "Roses are red, violets are blue jahdfladskjfh kjlahdf kjladshf kjhkjahdf kjhadskljfjhadsfh kljahsdfajsdfh"
     const receiverId = "@EvanSuong"
     const senderId = "@AlexChow"
 
@@ -36,23 +43,21 @@ export default function HugInfoPage({ navigation, route }) {
             paddingBottom: statusBarHeight,
         },
         header: {
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             borderTopLeftRadius: 15,
             borderTopRightRadius: 15,
             paddingVertical: 5,
-            paddingHorizontal: 10,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
         },
         body: {
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             paddingTop: 20
         },
         username: {
             paddingVertical: 5,
             paddingHorizontal: 5,
-            backgroundColor: 'white',
             fontWeight: 'bold',
             fontSize: 20,
             width: '100%'
@@ -60,7 +65,6 @@ export default function HugInfoPage({ navigation, route }) {
         message: {
             paddingVertical: 10,
             paddingHorizontal: 10,
-            backgroundColor: 'white',
             fontSize: 16,
             display: 'flex',
             flexDirection: 'row',
@@ -90,35 +94,67 @@ export default function HugInfoPage({ navigation, route }) {
         notificationContent: {
             display: 'flex',
             justifyContent: 'space-between',
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             alignItems: 'center',
         },
         textAreaFriend: {
             color: 'white',
-            marginHorizontal: 10,
+            marginLeft: -50,
             flex: 1,
             padding: 10,
             flexWrap: 'wrap',
             justifyContent: 'space-between',
-            borderRadius: 20,
-            borderColor: '#8677E5',
-            borderWidth: 2, 
+            borderTopRightRadius: 15,
+            borderBottomRightRadius: 15,
+            backgroundColor: '#8677E5',
             marginBottom: 20,
         },
         textAreaUser: {
-            color: 'white',
-            marginHorizontal: 10,
+            marginRight: -50,
             flex: 1,
             padding: 10,
             flexWrap: 'wrap',
             justifyContent: 'space-between',
-            borderRadius: 20,
-            borderColor: '#E57777',
-            borderWidth: 2, 
+            borderTopLeftRadius: 15,
+            borderBottomLeftRadius: 15,
+            backgroundColor: '#E57777',
             marginBottom: 20,
+        },
+        pinButton: {
+            borderRadius: 100,            
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 5,
+                height: 5,
+            },
+            shadowOpacity: 0.41,
+            shadowRadius: 7,
+            elevation: 10,
+            width: 70,
+            height: 70,
+            position: 'absolute',
+            bottom: 25,
+            right: 15,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        },
+        pinButtonIcon: {
+            width: 50, 
+            height: 50,
         }
-    });
+    })
 
+    function pinHug() {
+        if(!pinned) {
+            setPinned(true)
+            // call the backend function for pinning
+        } else {
+            setPinned(false)
+            // call the backend function for unpinning
+        }
+    }
+    
     return (
         <View style={{ backgroundColor: 'white' }}>
 
@@ -131,34 +167,43 @@ export default function HugInfoPage({ navigation, route }) {
                         <Text style={styles.hugDateText}>{dateTime}</Text>
 
                         {/* insert first hug picture -- default is friend's prof pic */}
-                        <Image source={images[0]} style={styles.imageContainer}/>
+                        <Image source={{ uri: image }} style={styles.imageContainer}/>
                 </View>
-
             
                 <View style={styles.notificationContent}>    
                     <View style={{ ...styles.textAreaFriend, maxWidth: textContainerWidth }}>
                         {/* Text from friend */}
-                        <Text style={styles.username}>{senderId}</Text>
-                        <Text style={{ ...styles.message, width: textWidth }}>{senderDescription}</Text>
+                        <Text style={{...styles.username, color: "#FFF"}}>{senderId}</Text>
+                        <Text style={{ ...styles.message, width: textWidth, color: "#FFF" }}>{senderDescription}</Text>
                     </View>
                     <View style={{ ...styles.textAreaUser, maxWidth: textContainerWidth }}>
                         {/* Text from user */}
-                        <Text style={styles.username}>{receiverId}</Text>
+                        <Text style={{...styles.username}}>{receiverId}</Text>
                         <Text style={{ ...styles.message, width: textWidth }}>{receiverDescription}</Text>
                     </View>  
-                </View>
-            
+                </View>            
 
                 {/* more hug imgs */}
                 <View style={styles.images}>
-                    <ScrollView horizontal={true} style={{backgroundColor:'white'}}>
+                    <ScrollView horizontal={true}>
                         {images.map(img => (
                             <Image source={img} style={styles.imageContainer}/>
                         ))}
                     </ScrollView>
                 </View>
 
+
             </ScrollView>
+
+            <TouchableOpacity 
+                style={[styles.pinButton, {backgroundColor: pinned ? 'orange' : '#d4d4d4'}]}
+                onPress={pinHug}>
+                <Image 
+                    source={require('assets/pinIcons/0015.png')}
+                    style={styles.pinButtonIcon}
+                />
+            </TouchableOpacity>
+
         </View>
         
     )

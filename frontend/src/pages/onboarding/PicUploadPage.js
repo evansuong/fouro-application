@@ -10,17 +10,10 @@ import {
 // Expo Imports
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import * as ImageManipulator from 'expo-image-manipulator';
-// APIs
-import { UpdateAPI } from '../../API';
-// Contexts
-import { UserContext } from 'contexts/UserContext';
-// Custom Components
-import LinkedButton from 'components/LinkedButton';
-import PicUploadButton from 'components/PicUploadButton';
-// Images/Assets
-import fillerProfilePic from 'assets/fillerProfilePic.jpg';
-import BackgroundImg from 'assets/gradients/middle.png';
+import * as FileSystem from 'expo-file-system';
+import Header from '../../components/Header';
+
+// const fs = require('fs');
 
 
 export default function ProfileSetupPage({ navigation, route }) {
@@ -28,6 +21,7 @@ export default function ProfileSetupPage({ navigation, route }) {
   const { userData, dispatch } = useContext(UserContext);
   const [startUp, setStartUp] = useState(true);
   const fade = useRef(new Animated.Value(0)).current;
+  const routeName = route.name;
 
   useEffect(() => {
     if (startUp) {
@@ -139,6 +133,8 @@ export default function ProfileSetupPage({ navigation, route }) {
   
   return (
     <Animated.View opacity={fade} style={{flex: 1,}}>
+      <Header onMainNav={false} navigation={navigation} routeName={routeName}/>
+
       {/* Gradient Background */}
       <ImageBackground
         source={BackgroundImg}
@@ -203,7 +199,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // Shadows do not work on rgba values
     backgroundColor: '#ccc7c6',
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {

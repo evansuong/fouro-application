@@ -1,16 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
-import AppStyles from '../../AppStyles';
-// APIs
-import { ReadAPI } from '../../API';
-// Contexts
-import { DimensionContext } from 'contexts/DimensionContext';
-import { UserContext } from 'contexts/UserContext';
-// Custom Components
-import FriendCard from 'components/FriendCard';
-import Header from 'components/Header';
-// Images/Assets
-import gradient from 'assets/gradients/left.png';
+import React, { useContext, useState, useEffect } from 'react'
+import { View, Text, Button, StyleSheet, FlatList, Dimensions, Image } from 'react-native'
+import { ReadAPI } from '../../API'
+import AppStyles from '../../AppStyles'
+import FriendCard from '../../components/FriendCard'
+import Header from '../../components/Header'
+import { DimensionContext } from '../../contexts/DimensionContext'
+import { UserContext } from '../../contexts/UserContext'
+import SearchPage from '../off-nav/SearchPage'
 
 
 export default function FriendsPage({ navigation, route }) {
@@ -20,29 +16,14 @@ export default function FriendsPage({ navigation, route }) {
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     // const { userData } = useContext(UserContext);
 
-    const routeName = route.name;
-
-    // useEffect(() => {
-    //   if (startUp) {
-    //     const { friends } = await ReadAPI.getFriends(userData.uid);
-    //     setFriends(friends);
-    //     setStartUp(false);
-    //   }
-    // }, []);
-
-    function buildFriendData(id, name, username, profile_pic, color) {
-        return {
-            user_id: id,
-            name: name,
-            username: username, 
-            profile_pic: profile_pic,
-            color: color
-        }
-    }
-
+    const gradient = require('assets/gradients/left.png');
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    const { uid } = userData.currentUser;
+    console.log(uid)
     const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
-    
-    let friendsTestData = [
+
+    const [friends, setFriends] = useState([
         buildFriendData('1', 'Alex Chow', 'alexchow', pic, '#FE5951'),
         buildFriendData('2', 'Vivian Tang', 'vtang', pic, '#FC6C58'),
         buildFriendData('3', 'Evan Suong', 'esuong', pic, '#FA7D5D'),
@@ -53,8 +34,32 @@ export default function FriendsPage({ navigation, route }) {
         buildFriendData('8', 'Vuk Radovanovic', 'vrad', pic, '#EFD67C'),
         buildFriendData('9', 'Eman Sherif', 'esherif', pic, '#D2CA94'),
         buildFriendData('10', 'Terry Feng', 'tfeng', pic, '#BCC1A6'),
-        buildFriendData('11', 'Vicki Chen', 'cvhen', pic, '#A4B8B9'),
-    ]
+        buildFriendData('11', 'Vicki Chen', 'vchen', pic, '#A4B8B9'),
+    ]);
+    const routeName = route.name;
+
+    function getFriends() {
+        ReadAPI.getFriends(uid).then(response => console.log(response.data));
+    }
+
+    useEffect(() => {
+        // pull friends list from backend
+    }, [])
+    
+    function buildFriendData(id, name, username, profile_pic, color) {
+        return {
+            user_id: id,
+            name: name,
+            username: username,
+            profile_pic: profile_pic,
+            color: color
+        }
+    }
+    
+        
+    function removeFriend(id) {
+        setFriends(friends.filter(user => user.user_id !== id))
+    }
 
     const renderCards = friend => {
         // console.log(friend)
@@ -64,6 +69,7 @@ export default function FriendsPage({ navigation, route }) {
                     navigation={navigation}
                     height={windowHeight / 15}
                     width={windowWidth - 40}
+                    removeFriend={removeFriend}
                 />        
     }
 
@@ -98,6 +104,8 @@ export default function FriendsPage({ navigation, route }) {
                 source={gradient}
                 style={styles.background}
             />
+            <Button title="adsfasdf" onPress={getFriends}></Button>
+
 
             <View style={{height: windowWidth * 0.27 }}/>
             <Header 
