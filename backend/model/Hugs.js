@@ -1,8 +1,10 @@
 // Hugs file for Creating, Reading, Updating, and Deleting Hugs
 var firebase = require("../firebase/admin");
+var firebase2 = require("../firebase/config");
 const admin = require("firebase-admin");
 require("firebase/firestore");
 require("firebase/storage");
+global.XMLHttpRequest = require("xhr2");
 
 // import
 const Users = require("./Users");
@@ -13,95 +15,69 @@ const db = firebase.firestore();
 const users = db.collection("users");
 const hugs = db.collection("hugs");
 
+// Storage
+const storageRef = firebase2.storage().ref();
+
 const HugsAPI = {
+  // HELPER FUNCTIONS
+  uploadBase64ArrayToHugs: async function (base64Array, imageName) {
+    var downloadURLArrays = [];
+    for (let i = 0; i < base64Array.length; i++) {
+      let baseString = base64Array[i];
+      // Get only the data of the base64
+      baseString = baseString.substr(baseString.indexOf(",") + 1);
+
+      // Path to image is: hug_images/[topLevelHug.id]/[i]
+      const hugImageRef = storageRef.child(imageName + i);
+
+      //convert base64 to buffer / blob
+      const blob = Buffer.from(baseString, "base64");
+
+      // MIME Metadata
+      let metadata = {
+        contentType: "image/jpeg",
+      };
+
+      // Upload to firestore
+      hugImageRef.put(blob, metadata).then((snapshot) => {
+        console.log("Success!");
+      });
+
+      // Add the downloadURL to our return array
+      let downloadURL = hugImageRef.getDownloadURL();
+      downloadURLArrays.push(downloadURL);
+    }
+    return downloadURLArrays;
+  },
+
   // The user that calls this function is the sender
   // TODO: More error handling and monitor upload progress?
-  createHug: async function (currentUser, friendId, message, image) {
+  createHug: async function (currentUser, friendId, message, base64) {
     // Set current user
     var currUser = users.doc(currentUser);
-    // const currUser = firebase.auth().currentUser;
-    // Set the date of the hug (also used to ID image)
-    let dateInSeconds = Math.floor(Date.now() / 1000);
-    var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
-    console.log("dateTime", dateTime);
-    // Image: byte array
-    // Create a root reference in firebase storage
-    var storageRef = await firebase.storage().ref();
-    // Create a unique image ID
-    var imageName = "hug_images/" + Date().now();
-    // Create a reference to the hug image (use when we download?)
-    // var hugImageRef = storageRef.child(imageName)
-    // Convert the byte array image to Uint8Array
-    var bytes = new Uint8Array(image);
-    // TODO: not sure if var is needed
-    var uploadTask = await storageRef.child(imageName).put(bytes);
     // Save a reference to the top level hug with an autoID (I think)
     var topLevelHug = db.collection("hugs").doc(); //possible problems if we make a doc every time
-    // Listen for state changes, errors, and completion of the upload
-    uploadTask.on(
-      firebase.storage.TaskEvent.STATE_CHANGED,
-      function (snapshot) {
-        // Get task prograss, including the number of bytes uploaded and the total number of bytes to be uploaded
-        var progress = (snapshot.bytesTrasferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case firebase.storage.TaskState.PAUSED:
-            console.log("Upload is paused");
-            break;
-          case firebase.storage.TaskState.RUNNING:
-            console.log("Upload is running");
-            break;
-        }
-      },
-      function (error) {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
-        switch (error.code) {
-          case "storage/unauthorized":
-            // User doesn't have permission to access the object
-            break;
 
-          case "storage/canceled":
-            // User canceled the upload
-            break;
-
-          case "storage/unknown":
-            // Unknown error occurred, inspect error.serverResponse
-            break;
-        }
-      },
-      function () {
-        //Upload completed successfully, now we can get the download URL
-        uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-          console.log("File available at", downloadURL);
-          // Add fields to the top level "hugs" collection
-          // and store the reference
-          topLevelHug.set({
-            completed: false,
-            date_time: dateTime,
-            receiver_description: "",
-            sender_description: message,
-            images: [downloadURL],
-            receiver_ref: users.doc(friendId),
-            sender_ref: currUser,
-          });
-        });
-      }
+    // Set the date of the hug (also used to ID image)
+    let dateInMillis = Date.now();
+    let dateInSeconds = Math.floor(dateInMillis / 1000);
+    var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
+    // Create a unique image ID
+    var imageName = "hug_images/" + topLevelHug.id + "/" + dateInMillis;
+    var imageDownloadURLSArray = await this.uploadBase64ArrayToHugs(
+      base64,
+      imageName
     );
-    // COMMENTED OUT FOR NEW IMAGE UPLOAD ^^
-    // Add fields to the top level "hugs" collection and store the reference
-    // Save a reference to the top level hug with an autoID (I think)
-    //var topLevelHug = db.collection("user_hugs").doc();
-    //topLevelHug.set({
-    //    completed: false,
-    //    date_time: dateTime,
-    //    receiver_description: "",
-    //    sender_description: message,
-    //    images: [uploadTask],
-    //    receiver_id: friendId,
-    //    sender_ref: currUser.uid,
-    //});
-    // Add fields to currUser's hug auto-ID document
+    // Listen for state changes, errors, and completion of the upload
+    topLevelHug.set({
+      completed: false,
+      date_time: dateTime,
+      receiver_description: "",
+      sender_description: message,
+      images: imageDownloadURLSArray,
+      receiver_ref: users.doc(friendId),
+      sender_ref: currUser,
+    });
 
     // MAKE SURE THIS HAPPENS AFTER WE MADE THE TOP LEVEL HUG
     await users
@@ -269,33 +245,29 @@ const UpdateHugAPI = {
     Notifications.NotificationsAPI.deleteNotification(requestIdRef);
   },
 
-  /**
-   * Update the user counts for the sender and receiver
-   * @param {string} hugId
-   */
   updateUserHugCount: function (hugId) {
     db.collection("hugs")
       .doc(hugId)
       .get()
-      .then((doc) => {
+      .then(function (doc) {
         if (doc.exists) {
           // Increment receiver and sender hug count
-          let receiverRef = doc.get("receiver_ref");
-          let senderRef = doc.get("sender_ref");
-          Users.HugCountAPI.increaseHugCount(receiverRef.id);
-          Users.HugCountAPI.increaseHugCount(senderRef.id);
+          let receiverId = doc.data().receiver_ref.id;
+          let senderId = doc.data().sender_ref.id;
+          Users.UsersAPI.increaseHugCount(receiverId);
+          Users.UsersAPI.increaseHugCount(senderId);
           // Update each user's user_hug to completed : true
-          senderRef.collection("user_hugs").doc(hugId).update({
+          users.doc(receiverId).update({
             completed: true,
           });
-          receiverRef.collection("user_hugs").doc(hugId).update({
+          users.doc(senderId).update({
             completed: true,
           });
         } else {
           console.log("No such document!");
         }
       })
-      .catch((error) => {
+      .catch(function (error) {
         console.log("Error getting document:", error);
       });
   },

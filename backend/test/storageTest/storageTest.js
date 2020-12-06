@@ -10,10 +10,10 @@ var fs = require("fs");
 
 let test;
 try {
-  const data = fs.readFileSync("./file.base64", "utf8");
-  test = data;
+    const data = fs.readFileSync("./file.base64", "utf8");
+    test = data;
 } catch (err) {
-  console.error(err);
+    console.error(err);
 }
 
 // Get only the data of the base64
@@ -26,10 +26,10 @@ const blob = Buffer.from(test, "base64");
 
 // MIME Metadata
 let metadata = {
-  contentType: "image/jpeg",
+    contentType: "image/jpeg",
 };
 
 // Upload to firestore
 testRef.put(blob, metadata).then((snapshot) => {
-  console.log("Success!");
+    console.log("Success!");
 });
