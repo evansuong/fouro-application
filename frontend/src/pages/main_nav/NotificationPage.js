@@ -109,15 +109,15 @@ export default function NotificationPage({ navigation, route }) {
     // Misc
     const { uid } = userData;
     const routeName = route.name;
-    const r = getFocusedRouteNameFromRoute(route)
+    // const r = getFocusedRouteNameFromRoute(route)
     
     // check whether the user is on the page (true) or navigates away from the page (false)
-    // useFocusEffect(() => {
-    //     setIsFocused(true)
-    //     return () => {
-    //        setIsFocused(false)
-    //     }
-    // }, []);  
+    useFocusEffect(() => {
+        setIsFocused(true)
+        return () => {
+           setIsFocused(false)
+        }
+    }, []);  
 
     useEffect(() => {
         getNotifications();

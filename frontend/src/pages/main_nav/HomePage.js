@@ -67,7 +67,6 @@ export default function HomePage({ navigation, route }) {
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
   const routeName = route.name;
-  const r = getFocusedRouteNameFromRoute(route)
   // console.log('HomePage 71', userData);
 
   useEffect(() => {
@@ -160,7 +159,7 @@ export default function HomePage({ navigation, route }) {
 
         {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
         <View style={{marginTop: 100}}></View>
-        <Button
+        {/* <Button
           title='launch page'
           onPress={() => navigation.navigate('Launch Page')}
         />
@@ -173,7 +172,7 @@ export default function HomePage({ navigation, route }) {
           title='upload page'
           onPress={() => navigation.navigate('Pic Upload Page')}
         />
-      
+       */}
         {/* Hug Cards */}
         <TouchableWithoutFeedback
           onPress={() => dismissCreateButton()}

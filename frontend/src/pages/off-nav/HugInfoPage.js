@@ -47,12 +47,13 @@ export default function HugInfoPage({ navigation, route }) {
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
-  const { isLightTheme } = userData;
+  const { isLightTheme, uid } = userData;
   // Misc
   const routeName = route.name;
   const { data } = route.params;
-  console.log("params", data)
+  // console.log("params", data)
   let { hug_id, pinned } = data;
+  console.log("PINNED 56", pinned)
   // sizing
   const textContainerWidth = windowWidth / 1.1;
   const textWidth = textContainerWidth / 1.3;
@@ -75,7 +76,7 @@ export default function HugInfoPage({ navigation, route }) {
   const fetchUserData = async () => {
     const { status, data } = 
       await ReadAPI.getUserProfile(userData.uid);
-    // console.log(status, data);
+    console.log("HUGINFOPAGE 77", status, data);
     if (status) {
       setFetchedUser(data);
     } else {
@@ -91,7 +92,7 @@ export default function HugInfoPage({ navigation, route }) {
       setImage(data.images[0])
       data.images = data.images.slice(1, data.images.length);
       setFetchedHug(data);
-      setPinnedButton(data.pinned);
+      setPinnedButton(pinned)
     } else {
       Alert.alert('Something went wrong when retrieving hug info');
     }
@@ -105,27 +106,19 @@ export default function HugInfoPage({ navigation, route }) {
       const request = {
         hug_id: hug_id
       }
-      const { status, data } = 
-        await UpdateAPI.pin(userData.uid, request);
-      if (status) {
-        setPinnedButton(true);
-        console.log('hug pinned');
-      } else {
-        Alert.alert('Something went wrong when pinning the hug');
-      }
+      await UpdateAPI.pin(uid, request)
+      .then(({ data }) => {
+        data.out && setPinnedButton(true)
+      });
     } else {
       // call the backend function for unpinning
       const request = {
         hug_id: hug_id
       }
-      const { status, data } = 
-        await UpdateAPI.unpin(userData.uid, request);
-      if (status) {
-        console.log('hug unpinned');
-        setPinnedButton(false);
-      } else {
-        Alert.alert('Something went wrong when unpinning the hug');
-      }
+      UpdateAPI.unpin(uid, request)
+      .then(({ data }) => {
+        data.out && setPinnedButton(false)
+      })    
     }
   }
 
@@ -140,6 +133,10 @@ export default function HugInfoPage({ navigation, route }) {
   }
 
   const styles = StyleSheet.create({
+    pageContainer: {
+      width: windowWidth,
+      height: windowHeight
+    },
     mainContainer: {
       backgroundColor: 'white',
       marginTop: statusBarHeight,
@@ -270,7 +267,7 @@ export default function HugInfoPage({ navigation, route }) {
   })
   
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <View style={{ ...styles.pageContainer, backgroundColor: 'white' }}>
       {/* header */}
       <Header 
         routeName={routeName} 
@@ -302,7 +299,7 @@ export default function HugInfoPage({ navigation, route }) {
             </Text>
           </View>
 
-          { fetchedHug.sender_description &&  
+          { fetchedHug.receiver_description &&  
           <View style={styles.textAreaUser}>
             {/* Text from self */}
             <Text style={styles.username}>
@@ -335,7 +332,7 @@ export default function HugInfoPage({ navigation, route }) {
       </ScrollView>
 
       {/* Pin Icon */}
-      {fetchedHug.sender_description && <TouchableOpacity 
+      {fetchedHug.receiver_description && <TouchableOpacity 
         style={styles.pinButton}
         onPress={pinHug}>
         {
@@ -355,7 +352,7 @@ export default function HugInfoPage({ navigation, route }) {
       </TouchableOpacity>}
 
       {/* hug back button */}
-      {!fetchedHug.sender_description && <View style={styles.hugBtnContainer}>
+      {!fetchedHug.receiver_description && <View style={styles.hugBtnContainer}>
         <TouchableOpacity
             onPress={hugBack}
           >
