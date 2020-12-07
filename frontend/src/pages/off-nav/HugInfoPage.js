@@ -90,6 +90,7 @@ export default function HugInfoPage({ navigation, route }) {
     if (status) {
       console.log("opening hug", data)
       setImage(data.images[0])
+      console.log('image HugInfoPage 93', data)
       data.images = data.images.slice(1, data.images.length);
       setFetchedHug(data);
       setPinnedButton(pinned)
@@ -130,6 +131,17 @@ export default function HugInfoPage({ navigation, route }) {
       hugId: hug_id,
       friendId: fetchedHug.sender_id,
     } })
+  }
+
+  function checkImages() {
+    console.log("checkImages ", typeof fetchedHug !== 'undefined', typeof fetchedHug.images !== 'undefined', fetchedHug.images.length > 0)
+    return typeof fetchedHug !== 'undefined' && 
+           typeof fetchedHug.images !== 'undefined' && 
+           fetchedHug.images.length > 0
+  }
+
+  function checkDescription() {
+    return fetchedHug.receiver_description !== ''
   }
 
   const styles = StyleSheet.create({
@@ -299,7 +311,7 @@ export default function HugInfoPage({ navigation, route }) {
             </Text>
           </View>
 
-          { fetchedHug.receiver_description &&  
+          {checkDescription() &&  
           <View style={styles.textAreaUser}>
             {/* Text from self */}
             <Text style={styles.username}>
@@ -316,9 +328,7 @@ export default function HugInfoPage({ navigation, route }) {
         {/* More Hug Images */}
         <View style={styles.images}>
           {
-            fetchedHug && 
-            fetchedHug.images && 
-            fetchedHug.images.length > 0 &&
+            checkImages() &&
             <ScrollView horizontal={true}>
               {fetchedHug.images.map((img, index) => (
                 <Image 
@@ -332,7 +342,7 @@ export default function HugInfoPage({ navigation, route }) {
       </ScrollView>
 
       {/* Pin Icon */}
-      {fetchedHug.receiver_description && <TouchableOpacity 
+      {checkDescription() && <TouchableOpacity 
         style={styles.pinButton}
         onPress={pinHug}>
         {
@@ -352,7 +362,7 @@ export default function HugInfoPage({ navigation, route }) {
       </TouchableOpacity>}
 
       {/* hug back button */}
-      {!fetchedHug.receiver_description && <View style={styles.hugBtnContainer}>
+      {!checkDescription() && <View style={styles.hugBtnContainer}>
         <TouchableOpacity
             onPress={hugBack}
           >
