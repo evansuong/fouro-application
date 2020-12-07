@@ -107,7 +107,7 @@ export default function FriendCard(props) {
               name: friendData.name,
               username: friendData.username,
               profile_pic: friendData.profile_pic,
-              status: 'friend'
+              status: 'friend',
             }
           })
         }}

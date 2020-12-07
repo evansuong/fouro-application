@@ -15,6 +15,7 @@ import HugCard from 'components/HugCard'
 import Header from 'components/Header';
 import LinkedButton from 'components/LinkedButton'
 import { CreateAPI, DeleteAPI, ReadAPI } from '../../API';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -46,7 +47,7 @@ function buildTestData(name, text, img, id) {
 
 
 
-export default function OtherUserProfilePage({ navigation, route }) {
+export default function OtherUserProfilePage({ navigation, route, setFriendPage }) {
     // States
     const [hugs, setHugs] = useState();
     const [status, setStatus] = useState();
@@ -60,7 +61,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
     const dotsIconDark = require('assets/dots-icon-dark.png');
     // destruct route parameterU
     const { data } = route.params;
-    const { otheruser_id, name, username, profile_pic } = data;
+    const { otheruser_id, name, username, profile_pic, updatePage } = data;
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
@@ -68,30 +69,46 @@ export default function OtherUserProfilePage({ navigation, route }) {
     // console.log('from other user profile page:', data)
 
     function getSharedHugs() {
-        console.log('quering')
+        // console.log('quering')
         ReadAPI.getFriendProfile(uid, otheruser_id).then(response => setHugs(response.data.sharedHugs));
         // setHugs(ReadAPI.getFriendProfile(uid, otheruser_id))
     }
 
     function getUserStatus() {
         console.log('getting user status')
-        console.log(otheruser_id)
-        ReadAPI.getFriendStatus(uid, otheruser_id).then(response => setStatus(response.data.status));
+        // console.log(otheruser_id)
+        setTimeout(() => {
+            ReadAPI.getFriendStatus(uid, otheruser_id).then(response => setStatus(response.data.status));
+        }, 500);
     }
 
+    function sendFriendRequest() {
+        CreateAPI.sendFriendRequest(uid, otheruser_id).then(response => console.log(response.status));
+    }
+
+    /**
+     * Helper function to remove friends from the Friends Page list. Calls the
+     * removeFriend(user_id) method in Friends Page and navigates back.
+     */
+    function removeFriendFromList() {
+        // removeFriend(user_id
+        DeleteAPI.removeFriend(uid, otheruser_id).then(response => { if (!response.status) { alert('cannot remove friend') }});
+        setTimeout(() => {
+            navigation.goBack();
+        }, 500);
+    }
+       
+
+
     useEffect(() => {
-        getUserStatus()
-        getSharedHugs()
-    }, [otheruser_id])
+        getUserStatus();
+        getSharedHugs();
+    }, [otheruser_id]);
 
     // TODO CHANGE THIS
     const isStranger = status !== 'friend' ? true : false;
     const isPending = status === 'pending' ? true : false;
     
-      
-    function removeFriend(id) {
-        
-    }
     // TODO: replace with getFriendProfile to get all shared hugs
     const friendProfile = { 
         sharedHugs: [],
@@ -112,10 +129,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
         />)}
     )
 
-    function sendFriendRequest() {
-        CreateAPI.addFriend(uid, otheruser_id).then(response => console.log(response.status))
-    }
-
+   
     // TODO: SHOULD BE ABLE TO UNDO A FRIEND REQUEST, ASK BACKEND ABOUT THAT
     function handleSendRequest() {
         // backend call
@@ -123,16 +137,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
         sendFriendRequest();
     }
 
-    /**
-     * Helper function to remove friends from the Friends Page list. Calls the
-     * removeFriend(user_id) method in Friends Page and navigates back.
-     */
-    function removeFriendFromList() {
-        // removeFriend(user_id
-        DeleteAPI.removeFriend(uid, otheruser_id).then(response => console.log('removefriend',response.status))
-        navigation.goBack();
-    }
-        
+     
     const styles = StyleSheet.create({
         userProfile: {
             zIndex: -1,

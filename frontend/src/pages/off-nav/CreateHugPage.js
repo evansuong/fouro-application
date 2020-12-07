@@ -31,7 +31,7 @@ import BackgroundImg from 'assets/gradients/middle.png';
 
 
 // TODO: Remove FriendName and FriendPic parameters
-export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
+export default function CreateHugPage({ navigation, route }) {
     // States
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
@@ -42,8 +42,8 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
     const routeName = route.name;
     const MAX_UPLOAD_SIZE = 100000;
     const validExtensions = ['jpeg', 'jpg'];
-    // const { friendData } = route.params.data;
-
+    const { name, profile_pic, user_id, username } = route.params.data;
+    
     const callBackend = async () => {
       // try {
         let base64Strings = [];
@@ -204,10 +204,6 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
               <Text style={styles.headerText}>
                 Create Hug
               </Text>
-              <Text style={styles.helperHeaderText}>
-                Add a message and images so that you can save a memorable
-                event with {friendName}
-              </Text>
             </View>
 
             <View style={styles.mainContainer}>
@@ -215,12 +211,12 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
                   <Image
-                    source={friendPic ? friendPic : fillerProfilePic}
+                    source={{ uri : profile_pic }}
                     style={styles.profilePic}
                   />
                   <View style={styles.friendTextContainer}>
                     <Text style={styles.friendText}>
-                      {friendName}
+                      Sending hug to {name}
                     </Text>
                   </View>
                 </View>
