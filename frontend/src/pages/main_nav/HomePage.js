@@ -21,11 +21,7 @@ import HugCard from 'components/HugCard';
 import Panel from 'components/StreakPanel';
 import Header from 'components/Header';
 import gradient from 'assets/gradients/middle.png';
-<<<<<<< HEAD
-import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native'
-=======
 import { useFocusEffect } from '@react-navigation/native';
->>>>>>> e1df468f90017cc13a577e4b567f16d9a73c2c3c
 // const gradient = require('assets/gradients/middle.png')
 
 
