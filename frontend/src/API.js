@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const server = 'http://192.168.1.170:3000';
+const server = 'http://192.168.4.66:3000';
 
 const onAccept = (res, response) => {
   // console.log('API 6 accepting');
@@ -123,7 +123,10 @@ export const CreateAPI = {
   sendFriendRequest: async function(uid, request) {// TODO
     // request: { friend_id }
     let response = {}
-    await axios.post(`${server}/notifications/sendFriendRequest/${uid}`, request)
+    await axios({
+      method: 'post',
+      url: `${server}/notifications/sendFriendRequest/${uid}`,
+      data: { friend_id: request }})
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
