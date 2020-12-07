@@ -100,7 +100,7 @@ export default function EditProfilePage({ navigation, route }) {
 
       <View style={{ width: '100%' }}>
         <Text style={styles.header}>
-          Reset Password
+          Edit Profile
         </Text>
         {/* Old Password Input Field */}
         <CustomTextField
