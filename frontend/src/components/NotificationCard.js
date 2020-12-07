@@ -52,6 +52,8 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
         }
     }, [isFocused])
 
+    
+
     // toggle panel expansion on press
     function handlePress() {
         setExpanded(!expanded);

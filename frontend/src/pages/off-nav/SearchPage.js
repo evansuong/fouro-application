@@ -63,10 +63,8 @@ export default function SearchPage({ input, navigation }) {
     const { userData } = useContext(UserContext);
     const { isLightTheme, currentUser } = userData;
     const { uid } = currentUser;
-
     const Tab = createMaterialTopTabNavigator();
 
-    function toggleSearchList() { setSearchFriends(!searchFriends) }
 
     // setUserList(testStrangerData.filter(user => user.username === input ))
     // setUserList(testFriendData.filter(user => user.name === input ))
@@ -78,6 +76,8 @@ export default function SearchPage({ input, navigation }) {
             ReadAPI.searchUsers(uid, input).then(response => setUserList([response.data.user]))
         }
     }
+
+    console.log('here')
     
     useEffect(() => {
         if (input === '') {
@@ -109,7 +109,7 @@ export default function SearchPage({ input, navigation }) {
                     <TouchableOpacity key={userData.user_id} onPress={() => viewStranger(userData)}>
                         <View style={{...styles.userCard, borderBottomColor: borderColor}}>
                             <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.profile_pic }}/> 
-                            <Text style={{...styles.userText, textColor: textColor}}>{userData.name}</Text>
+                            <Text style={{...styles.userText, color: textColor}}>{userData.name}</Text>
                         </View>
                     </TouchableOpacity>
                 ))}
