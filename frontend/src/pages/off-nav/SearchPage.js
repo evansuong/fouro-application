@@ -10,8 +10,8 @@ import {
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 // Contexts
-import { DimensionContext } from '../../contexts/DimensionContext';
-import { UserContext } from '../../contexts/UserContext';
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
 import { ReadAPI } from '../../API';
 
 
@@ -61,8 +61,7 @@ export default function SearchPage({ input, navigation }) {
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    const { isLightTheme, currentUser } = userData;
-    const { uid } = currentUser;
+    const { isLightTheme, uid } = userData;
     const Tab = createMaterialTopTabNavigator();
 
 
@@ -71,13 +70,17 @@ export default function SearchPage({ input, navigation }) {
 
     function search() {
         if (searchFriends) {
-            ReadAPI.searchFriends(uid, input).then(response => setUserList(response.data.friends))
+            ReadAPI.searchFriends(uid, input).then(response => 
+                setUserList(response.data.friends)
+            )
         } else {
-            ReadAPI.searchUsers(uid, input).then(response => setUserList([response.data.user]))
+            ReadAPI.searchUsers(uid, input).then(response => 
+                setUserList([response.data.user])
+            )
         }
     }
 
-    console.log('here')
+    console.log('search page line 83')
     
     useEffect(() => {
         if (input === '') {
@@ -100,7 +103,6 @@ export default function SearchPage({ input, navigation }) {
         let textColor = isLightTheme ? '#000' : '#FFF';
         let borderColor = isLightTheme ? '#FFF' : '#555';
         let backgroundColor = isLightTheme ? '#FFF' : '#333'
-        console.log(userData.image)
 
         return (
             userList[0] ? 
