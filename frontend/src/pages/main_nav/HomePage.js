@@ -67,10 +67,6 @@ export default function HomePage({ navigation, route }) {
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
   const routeName = route.name;
-<<<<<<< HEAD
-  // const r = getFocusedRouteNameFromRoute(route)
-=======
->>>>>>> 6c434b64958a98655254ddba507a73350948a419
   // console.log('HomePage 71', userData);
 
   useEffect(() => {
