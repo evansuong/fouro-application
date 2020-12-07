@@ -15,6 +15,9 @@ import PicUploadPage from './src/pages/onboarding/PicUploadPage';
 import NamePage from './src/pages/onboarding/NamePage';
 import WelcomePage from './src/pages/onboarding/WelcomePage';
 import ResetPasswordPage from './src/pages/off-nav/ResetPasswordPage';
+import SearchPage from './src/pages/off-nav/SearchPage';
+import HugSearchPage from './src/pages/off-nav/HugSearchPage';
+import EditProfilePage from './src/pages/off-nav/EditProfilePage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -33,8 +36,6 @@ import {
   Montserrat_500Medium,
   Montserrat_600SemiBold
 } from '@expo-google-fonts/montserrat'
-import SearchPage from './src/pages/off-nav/SearchPage';
-import HugSearchPage from './src/pages/off-nav/HugSearchPage';
 
 
 export default function App() {
@@ -126,6 +127,10 @@ export default function App() {
               <Stack.Screen
                 name='Search Page'
                 component={HugSearchPage}/>
+
+              <Stack.Screen
+                name='Edit Profile Page'
+                component={EditProfilePage}/>
               
             </Stack.Navigator>
           </NavigationContainer>    

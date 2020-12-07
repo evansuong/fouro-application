@@ -76,7 +76,7 @@ function ProfileButton(navigation, isLightTheme) {
 
 function EditButton(navigation, isLightTheme) {
     function onPress() {
-        alert('edit button pressed');
+        navigation.navigate('Edit Profile Page');
     }
     let icon = isLightTheme ? editIconDark : editIcon;
     return buildButtonProps('edit', icon, onPress);
@@ -180,6 +180,7 @@ export default function Header(props) {
         'Login Page': '',
         'Signup Page': '',
         'Search Page': '',
+        'Edit Profile Page': '',
     };
 
     // setting button list for header 
