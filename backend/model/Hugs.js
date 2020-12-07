@@ -37,6 +37,7 @@ const HugsAPI = {
     var downloadURLArrays = [];
 
     // Traverse through base64 strings
+    console.log(base64Array.length);
     for (let i = 0; i < base64Array.length; i++) {
       let baseString = base64Array[i];
       // Get only the data of the base64
@@ -76,7 +77,7 @@ const HugsAPI = {
     // Set current user
     var currUser = users.doc(currentUser);
     // Save a reference to the top level hug with an autoID (I think)
-    var topLevelHug = db.collection("hugs").doc(); //possible problems if we make a doc every time
+    var topLevelHug = hugs.doc(); //possible problems if we make a doc every time
 
     // Set the date of the hug (also used to ID image)
     let dateInMillis = Date.now();
@@ -244,27 +245,75 @@ const HugsAPI = {
 const UpdateHugAPI = {
   // currentUser must be the receiver of a hug
   respondToHug: async function (currentUser, hugId, message, base64) {
-    // Set current user
-    var currUser = users.doc(currentUser);
-    // Process the image
-    // Set the date of the hug (also used to ID image)
-    let dateInMillis = Date.now();
-    let dateInSeconds = Math.floor(dateInMillis / 1000);
-    var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
-    // Create a unique image ID
-    var imageName = "hug_images/" + topLevelHug.id + "/" + dateInMillis;
-    // Set a var to an array of the downloadURLs
-    var imageDownloadURLSArray = await this.uploadBase64ArrayToHugs(
-      base64,
-      imageName
-    );
-    // Update the top level hug to include more pictures and the receiver's message
-    hugs.doc(hugId).update({
-      completed: true,
-      description_receiver: message,
-      images: db.FieldValue.arrayUnion(imageDownloadURLSArray),
-    });
-    // Call updateUserHugCount()
+    try {
+      // Set current user
+      var currUser = users.doc(currentUser);
+      var topLevelHug = hugs.doc();
+      // Process the image
+      // Set the date of the hug (also used to ID image)
+      let dateInMillis = Date.now();
+      let dateInSeconds = Math.floor(dateInMillis / 1000);
+      var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
+      // Create a unique image ID
+      var imageName = `hug_images/${topLevelHug.id}/${dateInMillis}`;
+      // Set a var to an array of the downloadURLs
+      var imageDownloadURLSArray = await HugsAPI.uploadBase64ArrayToHugs(
+        base64,
+        imageName
+      );
+
+      const hugQuery = await hugs.doc(hugId).get();
+      const hugData = hugQuery.data();
+
+      // Update the top level hug to include more pictures and the receiver's message
+      await hugs.doc(hugId).update({
+        completed: true,
+        receiver_description: message,
+        images: [...hugData.images, ...imageDownloadURLSArray],
+      });
+
+      await currUser
+        .collection("user_hugs")
+        .doc(hugId)
+        .update({
+          completed: true,
+          date_time: dateTime,
+        })
+        .then(function (docRef) {
+          console.log(
+            "Document updated with ID: " +
+              currUser.collection("user_hugs").doc(hugId).id
+          );
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+
+      await users
+        .doc(hugData.sender_ref.id)
+        .collection('user_hugs')
+        .doc(hugId)
+        .update({
+          completed: true,
+          date_time: dateTime,
+        })
+        .then(function (docRef) {
+          console.log(
+            "Document updated with ID: " +
+              currUser.collection("user_hugs").doc(hugId).id
+          );
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+
+      // Call updateUserHugCount()
+      this.updateUserHugCount()
+
+      return { out: true }
+    } catch(err) {
+      console.log('Hugs 315 Error occurred responding to hug', err);
+    }
     /*
     this.updateUserHugCount(hugId);
     // Call deleteNotification
@@ -282,7 +331,7 @@ const UpdateHugAPI = {
     db.collection("hugs")
       .doc(hugId)
       .get()
-      .then(function (doc) {
+      .then(async function (doc) {
         if (doc.exists) {
           // Increment receiver and sender hug count
           let receiverId = doc.data().receiver_ref.id;

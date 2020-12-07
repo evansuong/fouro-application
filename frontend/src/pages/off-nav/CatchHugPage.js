@@ -54,7 +54,7 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
         request = {
           hugId: callback_id,
           message: message,
-          blobs: base64Strings
+          base64: base64Strings
         }
         // const response = await CreateAPI.respondToHug(userData.uid, request);
         const response = await CreateAPI.respondToHug('temp', request);

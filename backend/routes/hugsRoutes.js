@@ -33,7 +33,7 @@ async function retrieveUserData(req, res, uid) {
 // Routes
 // TODO: BROKEN. CREATE HUG IS NOT WORKING.
 router.post("/createHug/:id", checkBody, async (req, res) => {
-  console.log("here man");
+  // console.log("here man");
   const uid = req.params.id;
   const { friendId, message, base64 } = req.body;
 
@@ -53,14 +53,18 @@ router.post("/createHug/:id", checkBody, async (req, res) => {
 });
 
 // TODO: BROKEN (SEE ABOVE)
-router.post("/respondToHug/:id", checkBody, (req, res) => {
+router.post("/respondToHug/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
-  const { hugId, message, blobs } = req.body;
+  const { hugId, message, base64 } = req.body;
 
-  if (!hugId || !message || !blobs) {
+  if (!hugId || !message || !base64) {
     res.status(400).send("Request has missing fields");
     return;
   } else {
+    const response = 
+      await UpdateHugAPI.respondToHug(uid, hugId, message, base64);
+    console.log("response:", response);
+    res.status(200).json(response);
     try {
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
