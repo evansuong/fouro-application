@@ -42,10 +42,15 @@ export default function ResetPasswordPage({ navigation, route }) {
     return newPassword === "";
   }
 
+  function validPasswordLength() {
+    return newPassword.length >= 6
+  }
+
   function fieldsValid() {
     return verifyNewPasswordsMatch() && 
+    validPasswordLength() &&
     !oldPasswordEmpty() && 
-    !newPasswordEmpty();
+    !newPasswordEmpty()
   }
 
   function reset() {
@@ -78,19 +83,19 @@ export default function ResetPasswordPage({ navigation, route }) {
     },
     warning: {
       color: 'red'
+    },
+    formContainer: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: "column",
+      justifyContent: "space-between",
+      alignItems: "center",
     }
   });
 
   return (
-    <View
-      style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: "column",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
+    <View style={styles.formContainer}>
+      
       <Header routeName={routeName} navigation={navigation} onMainNav={false} />
 
       <View style={{ width: '100%' }}>
@@ -136,6 +141,12 @@ export default function ResetPasswordPage({ navigation, route }) {
             newPasswordEmpty() && 
             <Text style={styles.warning}>
               New password cannot be empty.
+            </Text>
+          }
+          {
+            !validPasswordLength() && 
+            <Text style={styles.warning}>
+              Password must be at least 6 characters long.
             </Text>
           }
         </View>

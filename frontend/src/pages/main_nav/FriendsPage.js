@@ -20,6 +20,7 @@ import SearchPage from '../off-nav/SearchPage'
 // Images/Assets
 import AppStyles from '../../AppStyles'
 import gradient from 'assets/gradients/left.png'
+import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native'
 // const gradient = require('assets/gradients/left.png');
 
 
@@ -57,24 +58,35 @@ export default function FriendsPage({ navigation, route }) {
     // States
     const [startUp, setStartUp] = useState(true);
     const [friends, setFriends] = useState([]);
+    const [friendsPage, setFriendsPage] = useState(false);
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     const { uid } = userData.currentUser;
     const routeName = route.name;
+    const r = getFocusedRouteNameFromRoute(route)
 
     async function getFriends() {
         const { status, data } = await ReadAPI.getFriends(uid);
         if (status) {
-          setFriends(data.friends);
+          if (data.friends.length != friends.length) {
+            setFriends(data.friends);
+          }
         } else {
           Alert.alert('Something went wrong when retreiving friends list');
         }
     }
 
+    console.log('woooooooo')
     useEffect(() => {
+      console.log('uhjgkjvhk')
         getFriends();
     }, [])    
+
+    useFocusEffect(() => {
+      console.log('imbroken')
+      getFriends();
+    }, [r])
   
     const renderCards = friend => {
         // console.log(friend)
@@ -128,9 +140,6 @@ export default function FriendsPage({ navigation, route }) {
                 source={gradient}
                 style={styles.background}
             />
-            <Button title="adsfasdf" onPress={getFriends}></Button>
-
-
             <View style={{height: windowWidth * 0.27 }}/>
             <Header 
               routeName={routeName} 
