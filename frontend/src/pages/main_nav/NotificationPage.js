@@ -154,10 +154,11 @@ export default function NotificationPage({ navigation, route }) {
         let data = notifications.filter((item) => item.callback_id === hugId)[0]
 
         // data = Object.assign({}, {hug_id: data.call_id, ...data})
-        navigation.navigate('Catch Hug Page', { 
-            page: 'hugInfo',
-            data: data,
+        navigation.navigate('Hug Info', { 
+            data: { hug_id: data.callback_id, pinned: false },
         })
+        clearNotification(hugId)
+
         // signify hug as caught to the database
     }
 
