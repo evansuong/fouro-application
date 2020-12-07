@@ -17,7 +17,6 @@ const onReject = (err, response) => {
   response.data = err.code;
 }
 
-
 export const ReadAPI = {
   test: function() {
     console.log('in axios');
@@ -67,7 +66,7 @@ export const ReadAPI = {
     .catch(err => onReject(err, response));
     return response
   },
-  getFriendStatus: async function(uid, friendId) {
+  getFriendStatus: async function(uid, friendId) {//TODO
     let response = {}
     await axios.get(`${server}/friends/getFriendStatus/${uid},${friendId}`)
     .then(res => onAccept(res, response))
@@ -88,7 +87,7 @@ export const ReadAPI = {
     .catch(err => onReject(err, response));
     return response
   },
-  searchFriends: async function(uid, name) {
+  searchFriends: async function(uid, name) {//TODO
     // request: { name }
     let response = {}
     await axios.get(`${server}/friends/searchFriends/${uid},${name}`)
@@ -96,7 +95,7 @@ export const ReadAPI = {
     .catch(err => onReject(err, response));
     return response
   },
-  searchUsers: async function(uid, username) {
+  searchUsers: async function(uid, username) {//TODO
     // request: { name }
     let response = {}
     await axios.get(`${server}/friends/searchUsers/${uid},${username}`)
@@ -120,7 +119,7 @@ export const CreateAPI = {
     console.log('wowowoow:', response);
     return response
   },
-  sendFriendRequest: async function(uid, request) {
+  sendFriendRequest: async function(uid, request) {// TODO
     // request: { friend_id }
     let response = {}
     await axios.post(`${server}/notifications/sendFriendRequest/${uid}`, request)
@@ -154,7 +153,7 @@ export const CreateAPI = {
   },
   addFriend: async function(uid, request) {
     let response = {}
-    await axios.post(`${server}/friends/addFriend/${uid}`, request)
+    await axios.post(`${server}/friends/addFriend/${uid},${request}`)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
@@ -238,8 +237,16 @@ export const DeleteAPI = {
   },
   removeFriend: async function(uid, request) {
     // request: { friendId }
+    console.log('request', request)
+    console.log('asdfasdfasdf')
     let response = {}
-    await axios.delete(`${server}/friends/removeFriend/${uid}`, request)
+    await axios({
+      method: 'delete',
+      url: `${server}/friends/removeFriend/${uid}`,
+      data: {
+        friendId: request
+      }
+    })
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response

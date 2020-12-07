@@ -195,7 +195,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                                 disabled={!expanded} 
                                 onPress={() => {
                                   handleDisappear();
-                                  handleDecline(call_id, notification_id);
+                                  handleDecline(callback_id, notification_id);
                                 }}
                             >
                                 <Animated.View 

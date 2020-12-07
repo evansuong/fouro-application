@@ -134,24 +134,23 @@ export default function NotificationPage({ navigation, route }) {
     function catchHug(hugId, id) {
         //console.log(id)
         let data = notifications.filter((item) => item.callback_id === hugId)[0]
-        clearNotification(id)
 
         // data = Object.assign({}, {hug_id: data.call_id, ...data})
         navigation.navigate('Catch Hug Page', { 
             page: 'hugInfo',
-            data: data
+            data: data,
         })
         // signify hug as caught to the database
     }
 
     function dropHug(hugId, id) {
-        clearNotification(id)
+        clearNotification(hugId)
         // remove hug from database
     }
 
     function acceptFriendRequest(friendId, id) {
         let friend = notifications.filter((item) => item.callback_id === friendId)[0]
-        clearNotification(id)
+        clearNotification(friendId)
         let data = { 
             status: friend.type, 
             profile_pic: friend.friendPfp,
@@ -167,12 +166,13 @@ export default function NotificationPage({ navigation, route }) {
     }
 
     function declineFriendRequest(friendId, id) {
-        clearNotification(id)
+        clearNotification(friendId)
         // remove friend reauest fron database
+
     } 
 
     function clearNotification(id, type) {
-        const newList = notifications.filter((item) => item.call_id !== id);
+        const newList = notifications.filter((item) => item.callback_id !== id);
         setTimeout(() => {
           setNotifications(newList);
         }, 1000);
@@ -185,6 +185,7 @@ export default function NotificationPage({ navigation, route }) {
             display: 'flex',
             flexShrink: 1,
             alignItems: 'center',
+            marginTop: windowHeight * .14,
         },
         filler: {
             height: windowHeight / 7,
@@ -203,7 +204,6 @@ export default function NotificationPage({ navigation, route }) {
         
 
             <View style={styles.notificationList}>
-                <Button title="adsfasdfdf" onPress={getNotifications}/>
                 {/* actual list */}
                 
                 {notifications && <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>

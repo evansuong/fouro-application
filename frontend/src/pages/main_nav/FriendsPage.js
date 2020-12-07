@@ -128,9 +128,6 @@ export default function FriendsPage({ navigation, route }) {
                 source={gradient}
                 style={styles.background}
             />
-            <Button title="adsfasdf" onPress={getFriends}></Button>
-
-
             <View style={{height: windowWidth * 0.27 }}/>
             <Header 
               routeName={routeName} 

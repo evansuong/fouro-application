@@ -14,7 +14,7 @@ import UserProfile from 'components/UserProfile';
 import HugCard from 'components/HugCard'
 import Header from 'components/Header';
 import LinkedButton from 'components/LinkedButton'
-import { ReadAPI } from '../../API';
+import { CreateAPI, DeleteAPI, ReadAPI } from '../../API';
 
 
 
@@ -48,7 +48,8 @@ function buildTestData(name, text, img, id) {
 
 export default function OtherUserProfilePage({ navigation, route }) {
     // States
-    const [hugs, setHugs] = useState()
+    const [hugs, setHugs] = useState();
+    const [status, setStatus] = useState();
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
@@ -59,21 +60,27 @@ export default function OtherUserProfilePage({ navigation, route }) {
     const dotsIconDark = require('assets/dots-icon-dark.png');
     // destruct route parameterU
     const { data } = route.params;
-    const { otheruser_id, name, username, profile_pic, status } = data;
+    const { otheruser_id, name, username, profile_pic } = data;
 
     // TODO: replace with a call to getFriendStatus to get the status as a string
     //       e.g., "stranger", "friend", "pending"
 
-    console.log('from other user profile page:', data)
+    // console.log('from other user profile page:', data)
 
     function getSharedHugs() {
         console.log('quering')
-        ReadAPI.getFriendProfile(uid, otheruser_id).then(response => console.log(response.data));
+        ReadAPI.getFriendProfile(uid, otheruser_id).then(response => setHugs(response.data.sharedHugs));
         // setHugs(ReadAPI.getFriendProfile(uid, otheruser_id))
     }
 
+    function getUserStatus() {
+        console.log('getting user status')
+        console.log(otheruser_id)
+        ReadAPI.getFriendStatus(uid, otheruser_id).then(response => setStatus(response.data.status));
+    }
+
     useEffect(() => {
-        console.log('mounting otheruserprofile')
+        getUserStatus()
         getSharedHugs()
     }, [otheruser_id])
 
@@ -105,8 +112,15 @@ export default function OtherUserProfilePage({ navigation, route }) {
         />)}
     )
 
+    function sendFriendRequest() {
+        CreateAPI.addFriend(uid, otheruser_id).then(response => console.log(response.status))
+    }
+
+    // TODO: SHOULD BE ABLE TO UNDO A FRIEND REQUEST, ASK BACKEND ABOUT THAT
     function handleSendRequest() {
-        console.log('wererw')
+        // backend call
+        setStatus('pending');
+        sendFriendRequest();
     }
 
     /**
@@ -114,7 +128,8 @@ export default function OtherUserProfilePage({ navigation, route }) {
      * removeFriend(user_id) method in Friends Page and navigates back.
      */
     function removeFriendFromList() {
-        // removeFriend(user_id);
+        // removeFriend(user_id
+        DeleteAPI.removeFriend(uid, otheruser_id).then(response => console.log('removefriend',response.status))
         navigation.goBack();
     }
         
@@ -180,10 +195,17 @@ export default function OtherUserProfilePage({ navigation, route }) {
           color: 'white', 
           justifyContent: 'center'
         },
+        buttonContainer: {
+            width: windowWidth,
+            display: 'flex',
+            alignItems: 'center',
+            bottom: windowHeight * .07,
+            height: windowWidth / 20,
+            position: 'absolute',
+            zIndex: 4,
+        },
         button: {
-          width: windowWidth / 1.2, 
-          marginBottom: windowHeight / 30,
-          height: windowWidth / 20,
+            width: windowWidth / 1.2, 
         },
         btnImage: {
             width: windowWidth / 15,
@@ -210,22 +232,23 @@ export default function OtherUserProfilePage({ navigation, route }) {
         let sharedHugsFlatList = 
             <FlatList
               contentContainerStyle={styles.sharedHugsContainer}
-              data={testData}
+              data={hugs}
               renderItem={renderHug}
               keyExtractor={(item) => item.hug_id}
             />
         let hugButton = 
-            <LinkedButton
-                navigation={navigation}
-                link='Create Hug'
-                text='Hug'
-                color='#FB7250'
-            />
-
-        //TODO: fix redirection and change to pending on click
+            <View style={{ width: windowWidth }}>
+                <LinkedButton
+                    navigation={navigation}
+                    link='Create Hug'
+                    text='Hug'
+                    color='#FB7250'
+                />
+            </View>
+           
         let sendFriendRequestButton = 
             <TouchableOpacity 
-                style={styles.sendFriendRequestButtonStyle}
+                style={[styles.sendFriendRequestButtonStyle, styles.buttonStyle]}
                 onPress={handleSendRequest}
             >
                 <Text style={styles.generalText}>
@@ -246,7 +269,7 @@ export default function OtherUserProfilePage({ navigation, route }) {
     
     let button = isStranger ? (isPending ? pendingButton : sendFriendRequestButton) : hugButton;
     let containerStyle = {}
-
+   
     if(isStranger) {
         sharedHugsContainer = <></>
         sharedHugsFlatList = <></>
@@ -254,8 +277,8 @@ export default function OtherUserProfilePage({ navigation, route }) {
     }
 
     return (
-
-        <View style={{ height: '100%', display: "flex", backgroundColor: 'white', alignItems: 'center' }}>
+// TODO: add loading screen while we are querying backend
+        hugs ? <View style={{ height: '100%', display: "flex", backgroundColor: 'white', alignItems: 'center' }}>
 
             {
                 !isStranger &&
@@ -282,13 +305,19 @@ export default function OtherUserProfilePage({ navigation, route }) {
 
             {/* shared hugs and button */}
             <View style={[styles.friendSharedHugs, containerStyle]}>
-                {sharedHugsContainer}
-                {sharedHugsFlatList}
+                {hugs && hugs.length > 0 && sharedHugsContainer }
+                {hugs && hugs.length > 0 ? sharedHugsFlatList : 
+                !isStranger ?
+                    <View>
+                        <Text>No hugs yet!</Text>
+                    </View> : <></>
+                }
+                
             </View>
-            <View style={{ width: windowWidth, marginBottom: windowHeight * .02 }}>
+            <View style={styles.buttonContainer}>
                 {button}
             </View>
             
-        </View>
+        </View> : <></>
     )
 }
