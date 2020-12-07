@@ -25,9 +25,11 @@ function checkBody(req, res, next) {
 // TODO: NOT TESTED
 router.get("/buildCorkboard/:id", async (req, res) => {
   const uid = req.params.id;
+  // console.log('corkboardRoutes 28', uid);
 
   try {
     const response = await CorkboardAPI.buildCorkboard(uid);
+    // console.log('corkboardRoutes 32', response);
     res.status(200).json({ hugList: response });
   } catch(err) {
     res.status(400).send(`An error occurred: ${err}`);
@@ -37,14 +39,16 @@ router.get("/buildCorkboard/:id", async (req, res) => {
 // TODO: NOT TESTED
 router.put("/pin/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
-  const { userHugId } = req.body;
+  const { hug_id } = req.body;
 
-  if (!userHugId) {
+  console.log('corkboardRoutes 43', uid, hug_id);
+
+  if (!hug_id) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
     try {
-      const response = await PinAPI.pinHugToCorkboard(userHugId);
+      const response = await PinAPI.pinHugToCorkboard(uid, hug_id);
       res.status(200).json(response);
     } catch(err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -55,14 +59,16 @@ router.put("/pin/:id", checkBody, async (req, res) => {
 // TODO: NOT TESTED
 router.put("/unpin/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
-  const { userHugId } = req.body;
+  const { hug_id } = req.body;
 
-  if (!userHugId) {
+  console.log('corkboardRoutes 63', uid, hug_id);
+
+  if (!hug_id) {
     res.status(400).send('Request has missing fields');
     return;
   } else {
     try {
-      const response = await PinAPI.unpinHugFromCorkboard(userHugId);
+      const response = await PinAPI.unpinHugFromCorkboard(uid, hug_id);
       res.status(200).json(response);
     } catch(err) {
       res.status(400).send(`An error occurred: ${err}`);

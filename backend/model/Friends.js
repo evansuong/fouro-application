@@ -219,7 +219,7 @@ const FriendsAPI = {
     const friendsSnapshot = await friendsRef.orderBy("last_hug_date").get();
     // No friends
     if (friendsSnapshot.empty) {
-      console.log("No matching documents.");
+      // console.log("Friends 222 No matching documents.");
       return { friends: friends };
     }
 
@@ -280,7 +280,7 @@ const FriendSearchAPI = {
     const friendsSnapshot = await userFriendsRef.get();
     // No friends
     if (friendsSnapshot.empty) {
-      console.log("No matching documents.");
+      // console.log("Friends 283 No matching documents.");
       return { friends: friends };
     }
     // Get all user_id references from friends

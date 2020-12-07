@@ -29,7 +29,7 @@ const NotificationsAPI = {
       .get()
       .then((sub) => {
         if (sub.docs.length == 0) {
-          console.log("subcollection does not exist");
+          // console.log("Notifications 32 subcollection does not exist");
           exist = false;
         }
       });
@@ -44,7 +44,7 @@ const NotificationsAPI = {
       .orderBy("date_time", "desc")
       .get(); //sort notifications by date/time
     if (notificationSnapshot.empty) {
-      console.log("No matching documents.");
+      // console.log("Notifications 47 No matching documents.");
       return { notifs: notifications };
     }
     //get all the notification_id's
@@ -93,9 +93,9 @@ const NotificationsAPI = {
    */
   deleteNotification: function (uid, requestId) {
     var notificationCollection = users.doc(uid).collection("notifications");
-    if (!notificationCollection.exists) {
-      console.log("No such document");
-    }
+    // if (!notificationCollection.exists) {
+    //   console.log("Notifications 97 No such document");
+    // }
     var user_request_id = notificationCollection.doc(requestId);
 
     if (user_request_id.get("type") == "hug") {

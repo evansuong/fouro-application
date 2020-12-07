@@ -104,7 +104,7 @@ export default function NotificationPage({ navigation, route }) {
     const [isFocused, setIsFocused] = useState(false)
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const [notifications, setNotifications] = useState()
+    const [notifications, setNotifications] = useState([])
     const { userData } = useContext(UserContext);
     // Misc
     const { uid } = userData.currentUser;
@@ -136,7 +136,6 @@ export default function NotificationPage({ navigation, route }) {
     function getNotifications() {
         ReadAPI.getNotifications(uid)
             .then(response => {
-
                 let notifications = response.data.notifications.notifs;
                 notifications = notifications.map(notif => (
                     Object.assign({}, {...notif, date_time: getTimeElapsed(notif.date_time)})

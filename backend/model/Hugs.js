@@ -18,6 +18,19 @@ const hugs = db.collection("hugs");
 // Storage
 const storageRef = firebase2.storage().ref();
 
+function convertDate(date) {
+  const dateStr = date.toString();
+  const dateArr = dateStr.split(' ');
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  let strTime = hours + ':' + minutes + ampm;
+  return `${dateArr[0]} ${dateArr[1]} ${dateArr[2]} ${dateArr[3]} ${strTime}`
+}
+
 const HugsAPI = {
   // HELPER FUNCTIONS
   uploadBase64ArrayToHugs: async function (base64Array, imageName) {
@@ -314,7 +327,9 @@ const ViewHugAPI = {
     );
     // console.log(hugData);
     if (Object.keys(hugData).length != 0) {
-      fullHugInfo.date_time = hugData.date_time.toDate().toString();
+      const oldDateTime = hugData.date_time.toDate();
+      const newDateTime = convertDate(oldDateTime);
+      fullHugInfo.date_time = newDateTime;
       fullHugInfo.images = hugData.images;
       // RECEIVER
       fullHugInfo.receiver_description = hugData.receiver_description;
@@ -376,6 +391,8 @@ const ViewHugAPI = {
       loadIn.image = currHugData.images[0];
       // Set the hugId
       loadIn.hug_id = currHugId;
+      // Set if the hug is pinned or not
+      loadIn.pinned = doc.data().pinned;
       // add the JSON the results array
       results = [...results, loadIn];
     }
@@ -458,6 +475,7 @@ const ViewHugAPI = {
       }
     }
     var feed = { sharedHugs: results };
+    // console.log('feed');
     return feed;
   },
 };

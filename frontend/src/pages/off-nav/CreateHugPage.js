@@ -33,7 +33,7 @@ import BackgroundImg from 'assets/gradients/middle.png';
 // TODO: Remove FriendName and FriendPic parameters
 export default function CreateHugPage({ navigation, route }) {
     // States
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState('Yooooooo');
     const [images, setImages] = useState([]);
     // Contexts
     const {windowWidth, windowHeight} = useContext(DimensionContext);
@@ -51,16 +51,18 @@ export default function CreateHugPage({ navigation, route }) {
           let base64 = image.base64;    
           if (base64.length > MAX_UPLOAD_SIZE) {
             const compressFactor = MAX_UPLOAD_SIZE / base64.length;
-            console.log('comp', compressFactor);
+            console.log('CreateHugPage 54', compressFactor);
             base64 = await getBase64WithImage(image, compressFactor);
           }
           base64Strings.push(base64);
         }
         const request = {
           // friend_id: friendData.friend_id,
-          friend_id: 'gary@email.com',
+          // TODO: Hardcoded
+          friendId: 'gary@email.com',
+          // TODO: Hardcoded
           message: message,
-          blobs: base64Strings
+          base64: base64Strings
         }
         const { status, data } = 
           await CreateAPI.createHug(userData.currentUser.uid, request);

@@ -93,10 +93,13 @@ const UsersAPI = {
     var userDocRef = usersCollection.doc(uid);
     var userProfile;
 
+    // console.log('Users 96', uid);
+
     // access document
     await userDocRef
       .get()
       .then(function (userDoc) {
+        // console.log('Users 100', userDoc.data())
         if (userDoc.exists) {
           // set userProfile to retrieved data
           // not sure this is how to retrieve data
@@ -107,6 +110,7 @@ const UsersAPI = {
           };
         } else {
           // no data under uid
+          console.log('Users 111: user is null');
           userProfile = null;
         }
       })

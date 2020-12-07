@@ -87,7 +87,7 @@ router.delete("/dropAHug/:id", checkBody, (req, res) => {
 // TODO: BROKEN (SEE ABOVE)
 router.get("/getUserHugs/:id", async (req, res) => {
   const uid = req.params.id;
-
+  // console.log(uid);
   try {
     const response = await ViewHugAPI.getUserHugs(uid);
     res.status(200).json(response);

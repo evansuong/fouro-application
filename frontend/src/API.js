@@ -1,15 +1,17 @@
 import axios from 'axios';
 
-const server = 'http://192.168.4.66:3000';
+const server = 'http://192.168.1.170:3000';
 
 const onAccept = (res, response) => {
-  console.log('accepting');
+  // console.log('API 6 accepting');
+  // console.log('API 7', response);
   response.status = true;
   response.data = res.data;
 }
 
 const onReject = (err, response) => {
-  console.log('rejecting');
+  // console.log('API 12 rejecting');
+  // console.log('API 13', response);
   console.log(err.code);
   console.log(err.message);
   console.log(err.stack);
@@ -116,7 +118,6 @@ export const CreateAPI = {
     await axios.post(`${server}/users/createNewUser/${uid}`, request)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
-    console.log('wowowoow:', response);
     return response
   },
   sendFriendRequest: async function(uid, request) {// TODO
@@ -136,7 +137,7 @@ export const CreateAPI = {
     return response
   },
   createHug: async function(uid, request) {
-    // request: { friend_id, message, blobs }
+    // request: { friendId, message, blobs }
     let response = {}
     await axios.post(`${server}/hugs/createHug/${uid}`, request)
     .then(res => onAccept(res, response))

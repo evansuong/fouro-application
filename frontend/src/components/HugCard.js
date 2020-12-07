@@ -16,13 +16,7 @@ export default function HugCard({ navigation, route, data, image }) {
   const { isLightTheme } = userData;
 
   // backend json object data fields
-  const { 
-    friend_name, 
-    friend_username,
-    friend_profile_pic, 
-    message, 
-    hug_id,
-  } = data;
+  const { friend_name, message, hug_id, pinned } = data;
 
   
   const SPACING_SMALL = 5
