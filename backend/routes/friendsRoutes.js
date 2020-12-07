@@ -20,6 +20,23 @@ function checkBody(req, res, next) {
 }
 
 // Routes
+router.post("/addFriend/:id,:friendId", async (req, res) => {
+  const uid = req.params.id;
+  const friendId = req.params.friendId;
+
+  if (!friendId) {
+    res.status(400).send("Request has missing fields");
+    return;
+  } else {
+    try {
+      let response = await FriendsAPI.addFriend(uid, friendId);
+      res.status(200).json(response);
+    } catch (err) {
+      res.status(400).send(`An error occurred: ${err}`);
+    }
+  }
+});
+
 router.delete("/removeFriend/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const friendId = req.body.friendId;
@@ -37,9 +54,9 @@ router.delete("/removeFriend/:id", checkBody, async (req, res) => {
   }
 });
 
-router.get("/getFriendStatus/:id", checkBody, async (req, res) => {
+router.get("/getFriendStatus/:id,:friendId", async (req, res) => {
   const uid = req.params.id;
-  const friendId = req.body.friendId;
+  const friendId = req.params.friendId;
 
   if (!friendId) {
     res.status(400).send("Request has missing fields");
@@ -66,10 +83,9 @@ router.get("/getFriends/:id", async (req, res) => {
   }
 });
 
-// TODO: NOT TESTED
-router.get("/getFriendProfile/:id", checkBody, async (req, res) => {
+router.get("/getFriendProfile/:id,:friendId", async (req, res) => {
   const uid = req.params.id;
-  const { friendId } = req.body;
+  const friendId = req.params.friendId;
 
   if (!friendId) {
     res.status(400).send("Request has missing fields");
@@ -84,17 +100,16 @@ router.get("/getFriendProfile/:id", checkBody, async (req, res) => {
   }
 });
 
-// TODO: NOT TESTED
-router.get("/searchFriends/:id", checkBody, async (req, res) => {
+router.get("/searchFriends/:id,:query", async (req, res) => {
   const uid = req.params.id;
-  const { name } = req.body;
+  const query = req.params.query;
 
-  if (!name) {
+  if (!query) {
     res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
-      let response = await FriendSearchAPI.searchFriends(uid, name);
+      let response = await FriendSearchAPI.searchFriends(uid, query);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
@@ -102,16 +117,16 @@ router.get("/searchFriends/:id", checkBody, async (req, res) => {
   }
 });
 
-// TODO: NOT TESTED
-router.get("/searchUsers/:id", checkBody, async (req, res) => {
-  const { username } = req.body;
+router.get("/searchUsers/:id,:query", async (req, res) => {
+  const uid = req.params.id;
+  const query = req.params.query;
 
-  if (!username) {
+  if (!query) {
     res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
-      let response = await FriendSearchAPI.searchUsers(uid, username);
+      let response = await FriendSearchAPI.searchUsers(query);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);

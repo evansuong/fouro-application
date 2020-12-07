@@ -94,9 +94,16 @@ const FriendsAPI = {
    * @param {string} userId
    * @param {string} friendId
    */
-  addFriend: function (userId, friendId) {
+  addFriend: async function (userId, friendId) {
+    let userQuery = await usersCollection.doc(userId).get();
+    let friendQuery = await usersCollection.doc(friendId).get();
+
+    if (!userQuery.exists || !friendQuery.exists) {
+      return { out: "User or friend doesn't exist!" };
+    }
+
     // Add friend to user
-    usersCollection
+    await usersCollection
       .doc(userId)
       .collection("friends")
       .doc(friendId)
@@ -106,7 +113,7 @@ const FriendsAPI = {
         user_ref: usersCollection.doc(friendId),
       });
     // Add user to friend
-    usersCollection
+    await usersCollection
       .doc(friendId)
       .collection("friends")
       .doc(userId)
@@ -115,6 +122,8 @@ const FriendsAPI = {
         last_hug_date: new admin.firestore.Timestamp(0, 0), // seconds, nanoseconds
         user_ref: usersCollection.doc(userId),
       });
+
+    return { out: true };
   },
 
   /**
