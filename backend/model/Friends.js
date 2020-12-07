@@ -237,7 +237,7 @@ const FriendsAPI = {
       // Get the actual userDocument from the friend stored reference
       let userDoc = await friendPromises[i].get();
       if (!userDoc.exists) {
-        console.log("No such document!");
+        console.log("Friends 240 No such document!");
       } else {
         // Helper function fill
         let friend = userFill(userDoc);
@@ -294,7 +294,7 @@ const FriendSearchAPI = {
       // Get the actual userDoc from the friend stored reference
       let userDoc = await friendPromises[i].get();
       if (!userDoc.exists) {
-        console.log("No such document!");
+        console.log("Friends 297 No such document!");
       } else if (userDoc.get("first_name") === nameQuery) {
         // If first_name matches nameQuery
         let friend = userFill(userDoc);

@@ -297,7 +297,7 @@ const UpdateHugAPI = {
             completed: true,
           });
         } else {
-          console.log("No such document!");
+          console.log("Hugs 300 No such document!");
         }
       })
       .catch(function (error) {
@@ -344,7 +344,7 @@ const ViewHugAPI = {
       fullHugInfo.sender_profile_picture = senderProfile.profile_pic;
       fullHugInfo.sender_id = hugData.sender_ref.id;
     } else {
-      console.log("No such document!");
+      console.log("Hugs 347 No such document!");
     }
     // console.log(fullHugInfo.sender_description);
     return fullHugInfo;
