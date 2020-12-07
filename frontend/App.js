@@ -60,6 +60,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator 
               style={styles.appContainer}
+              initialRouteName='Launch Page'
               /** 
                * comment out the line below when you need the header for 
               /* going back to the previous screen. Leave it to see what 

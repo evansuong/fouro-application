@@ -54,6 +54,17 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
     usernameStyle: {
       fontSize: usernameFontSize,
       color: isLightTheme ? 'black' : '#EEE',
+    },
+    titleTextContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: windowWidth,
+    },
+    titleText: {
+      marginBottom: 40,
+      fontSize: 40,
+      fontFamily: 'Montserrat_500Medium',
+      textAlign: 'center',
     }
   });
 

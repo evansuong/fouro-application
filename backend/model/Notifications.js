@@ -136,7 +136,7 @@ const RequestsAPI = {
   sendHugRequest: async function (user_id, friend_id, hug_id) {
     // Gets the time that the notification is sent
     let dateInSeconds = Math.floor(Date.now() / 1000);
-    var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
+    var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
 
     const newHugCollectionRef = users
       .doc(friend_id)

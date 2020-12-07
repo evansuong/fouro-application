@@ -17,6 +17,7 @@ const hugs = db.collection("hugs");
 
 // Storage
 const storageRef = firebase2.storage().ref();
+const storage = firebase2.storage();
 
 function convertDate(date) {
   const dateStr = date.toString();
@@ -147,55 +148,50 @@ const HugsAPI = {
       });
 
     // Create a hug request
-    Notifications.RequestsAPI.sendHugRequest(
+    await Notifications.RequestsAPI.sendHugRequest(
       currentUser,
       friendId,
       topLevelHug.id
     );
 
-    return { out: true };
+    return { out: topLevelHug.id };
   },
 
   // hugId is the global hug.
-  dropHug: function (currentUser, requestId, hugId) {
+  dropHug: async function (currentUser, requestId, hugId) {
     // Set current user
     var currUser = users.doc(currentUser);
     // Set ref for top level hug
-    var topLevelHug = db.collection("hugs").doc(hugId);
+    var topLevelHug = hugs.doc(hugId);
+    const topLevelHugQuery = await topLevelHug.get();
+    const topLevelHugData = topLevelHugQuery.data();
+    const friendId = topLevelHugData.sender_ref.id;
     // delete requestId
-    users
-      .doc(currUser.id)
-      .collection("notifications")
-      .doc(requestId)
+    await users.doc(currUser.id).collection("notifications").doc(requestId)
       .delete()
-      .then();
-    // delete the sender's user_hug
-    users
-      .doc(db.collection("hugs").doc(hugId).get("sender_ref").id)
+    // // delete the receiever's hug
+    const hugRef = await hugs.doc(hugId).get('sender_ref');
+    await users.doc(currUser.id).collection('user_hugs').doc(hugId)
       .delete()
-      .then();
-    // delete the receiver's user_hug
-    users
-      .doc(db.collection("hugs").doc(hugId).get("receiver_ref").id)
-      .delete()
-      .then();
+    // delete the sender's hug
+    await users.doc(friendId).collection('user_hugs').doc(hugId)
+      .delete();
+    await users.doc(hugRef.id).delete()
     // Remove hug images from storage
 
     // TODO: Loop through each element in the images array of hugId
-    db.collection("hugs")
-      .doc(hugId)
-      .get("images")
-      .then(function (querySnapshot) {
-        querySnapshot.forEach(function (image) {
-          // Every time we get another HTTPS URL from images, we need to make an httpsReference
-          // Create a reference from a HTTPS URL
-          var httpsReference = storage.getReferenceFromURL(image);
-          httpsReference.delete().then();
-        });
-        return results;
-      });
+    const hugSnapshot = await hugs.doc(hugId).get("images");
+    const { images } = hugSnapshot.data();
+    for (let i = 0; i < images.length; i++) {
+      // Every time we get another HTTPS URL from images, we need to make an httpsReference
+      // Create a reference from a HTTPS URL
+      const httpsReference = await storage.refFromURL(images[i]);
+      await httpsReference.delete();
+    }
     // Delete the global hug document
-    topLevelHug.delete().then();
+    await topLevelHug.delete();
+
+    return { out: true }
   },
 
   deleteAllImagesInArray: function (imagesArray) {

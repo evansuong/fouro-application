@@ -33,7 +33,6 @@ async function retrieveUserData(req, res, uid) {
 // Routes
 // TODO: BROKEN. CREATE HUG IS NOT WORKING.
 router.post("/createHug/:id", checkBody, async (req, res) => {
-  // console.log("here man");
   const uid = req.params.id;
   const { friendId, message, base64 } = req.body;
 
@@ -73,7 +72,7 @@ router.post("/respondToHug/:id", checkBody, async (req, res) => {
 });
 
 // TODO: BROKEN (SEE ABOVE)
-router.delete("/dropAHug/:id", checkBody, (req, res) => {
+router.delete("/dropAHug/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { requestId, hugId } = req.body;
 
@@ -82,6 +81,9 @@ router.delete("/dropAHug/:id", checkBody, (req, res) => {
     return;
   } else {
     try {
+      console.log('here now');
+      const response = await HugsAPI.dropHug(uid, requestId, hugId);
+      res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }

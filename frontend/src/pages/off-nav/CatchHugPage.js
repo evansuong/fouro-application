@@ -39,7 +39,7 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
     const { userData } = useContext(UserContext);
     // Misc
     const { friendPfp, friend_username, friendName, notification_id, callback_id } = route.params.data;
-    console.log(route.params.data)
+    // console.log(route.params.data)
     // console.log('in catch hug page:', route.params.data)
     const routeName = route.name;
 

@@ -6,7 +6,8 @@ export const UserContext = createContext();
 
 export default function UserContextProvider(props) {
 
-  const [userData, dispatch] = useReducer(userReducer, { isLightTheme: true,  uid: 'otherguy@email.com' });
+  const [userData, dispatch] = 
+    useReducer(userReducer, { isLightTheme: true });
   
   return (
       <UserContext.Provider value={{ userData, dispatch }}> 
