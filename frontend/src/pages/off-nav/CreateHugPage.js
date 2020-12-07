@@ -48,6 +48,7 @@ export default function CreateHugPage({ navigation, route }) {
       // try {
         let base64Strings = [];
         for (let image of images) {
+          
           let base64 = image.base64;    
           if (base64.length > MAX_UPLOAD_SIZE) {
             const compressFactor = MAX_UPLOAD_SIZE / base64.length;

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -13,6 +13,8 @@ import {
 // Expo Imports
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import * as ImageManipulator from 'expo-image-manipulator';
+
 // APIs
 import { CreateAPI } from '../../API';
 // Contexts
@@ -37,64 +39,89 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
+    const { uid } = userData;
     // Misc
-    const { friendPfp, friend_username, friendName, notification_id, callback_id } = route.params.data;
-    // console.log(route.params.data)
+    const { friendId, friendName, friendUsername, friendPfp, hugId } = route.params.data;
+    console.log("DATA", route.params.data.friendPfp)
+
     // console.log('in catch hug page:', route.params.data)
     const routeName = route.name;
+    const validExtensions = ['jpeg', 'jpg'];
+    const MAX_UPLOAD_SIZE = 100000;
 
     const callBackend = async () => {
-      try {
-        console.log('userData: ', userData);
+      // try {
         let base64Strings = [];
         for (let image of images) {
-          const base64 = await getBase64WithImage(image);
+          console.log(image)
+          let base64 = image.base64;
+          if (base64.length > MAX_UPLOAD_SIZE) {
+            const compressFactor = MAX_UPLOAD_SIZE / base64.length;
+            console.log('CreateHugPage 54', compressFactor);
+            base64 = await getBase64WithImage(image, compressFactor);
+          }
           base64Strings.push(base64);
         }
-        request = {
-          hugId: callback_id,
+        const request = {
+          // friend_id: friendData.friend_id,
+          // TODO: Hardcoded
+          hugId: hugId,
+          // TODO: Hardcoded
           message: message,
           base64: base64Strings
         }
-        // const response = await CreateAPI.respondToHug(userData.uid, request);
-        const response = await CreateAPI.respondToHug('temp', request);
-        console.log('response', response);
-        Alert.alert('Hug created!');
-        navigation.navigate('Home Page');
-      } catch (err) {
-        Alert.alert('Hug creation failed. Please try again.')
-      }
+        const { status, data } = 
+          await CreateAPI.respondToHug(uid, request);
+        if (status) {
+          console.log('woah');
+          console.log(status, data);
+          // const CreateAPI.sendHugRequest
+          
+        Alert.alert(`Hugged ${friendName} back!`);
+        navigation.navigate('Main Nav Page');
+        } else {
+          Alert.alert('Error creating hug.')
+        }
+      // } catch (err) {
+      //   Alert.alert('Hug creation failed. Please try again.')
+      // }
     }
 
-    const getBase64WithImage = async (uploadPic) => {
-      // console.log('before compression', uploadPic.base64.length);
+
+    const getBase64WithImage = async (uploadPic, compressFactor) => {
       const manipResult = await ImageManipulator.manipulateAsync(
         uploadPic.uri,
         [],
         {
-          compress: 0.1,
+          compress: compressFactor,
           format: ImageManipulator.SaveFormat.JPEG,
           base64: true
         }
       )
-      // console.log('after compression', manipResult`.base64.length);
       return `data:image/jpeg;base64,${manipResult}`;
     }
   
     const checkUpload = (data) => {
+      let totalChars = 0;
+      for (let i = 0; i < images.length; i++) {
+        totalChars += images[i].base64.length;
+      }
       const arr = data.uri.split('.');
       const fileExtension = arr[arr.length - 1];
       const validExtension = validExtensions.includes(fileExtension);
       if (!validExtension) {
         Alert.alert(`Accepted image types are ${validExtensions}`);
+      } else if (totalChars > 100000) {
+        Alert.alert('You\'ve exceeded the limit of 100KB/hug');
       } else if (images.length > 3) {
         Alert.alert('Max limit of uploads reached');
       } else if (data.cancelled) {
         Alert.alert('Image upload cancelled');
       } else if (data.cancelled == false) {
-        setUploadPic(data);
+        setImages(prevImages => [...prevImages, data]);
       }
     }
+
 
     const pickFromGallery = async () => {
       const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -105,6 +132,7 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
           allowsEditing: true,
           aspect: [1,1],
           quality: 0.5,
+          base64: true
         })
         checkUpload(data);
       } else {
@@ -205,7 +233,7 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
                   />
                   <View style={styles.friendTextContainer}>
                     <Text style={styles.friendText}>
-                      {friend_username}
+                      {friendUsername}
                     </Text>
                   </View>
                 </View>
