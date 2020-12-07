@@ -84,6 +84,7 @@ export default function LoginPage({ navigation }) {
           type: "SET_USERDATA",
           payload: data,
         });
+        console.log(response.data)
         dispatch({
           type: 'SET_UID',
           payload: response.data,

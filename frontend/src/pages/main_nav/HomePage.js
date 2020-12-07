@@ -21,6 +21,7 @@ import HugCard from 'components/HugCard';
 import Panel from 'components/StreakPanel';
 import Header from 'components/Header';
 import gradient from 'assets/gradients/middle.png';
+import { useFocusEffect } from '@react-navigation/native';
 // const gradient = require('assets/gradients/middle.png')
 
 
@@ -56,6 +57,7 @@ export default function HomePage({ navigation, route }) {
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [hugArray, setHugArray] = useState([]);
+  const [isFocused, setIsFocused] = useState();
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
@@ -71,7 +73,21 @@ export default function HomePage({ navigation, route }) {
     fetchHugs();
   }, [])
 
+   // check whether the user is on the page (true) or navigates away from the page (false)
+   useFocusEffect(() => {
+    setIsFocused(true)
+    return () => {
+      setIsFocused(false)
+    }
+  }, []);  
+
+  useEffect(() => {
+    fetchHugs();
+  }, [isFocused])
+
   const fetchHugs = async () => {
+    console.log('fetching hugs (homepage 89)')
+
     const { status, data } = 
       await ReadAPI.getUserHugs(userData.uid);
     if (status) {

@@ -118,6 +118,14 @@ export default function NotificationPage({ navigation, route }) {
         }
     }, []);  
 
+    useEffect(() => {
+        getNotifications();
+    }, [isFocused])
+
+    // add a filler item to move the list down
+    useEffect(() => {
+        getNotifications();
+    }, []);
    
 
     function getTimeElapsed(date_time) {
@@ -134,6 +142,7 @@ export default function NotificationPage({ navigation, route }) {
 
 
     function getNotifications() {
+        console.log('getting notifications (notificaionpage 145)')
         ReadAPI.getNotifications(uid)
             .then(response => {
                 let notifications = response.data.notifications.notifs;
@@ -144,10 +153,7 @@ export default function NotificationPage({ navigation, route }) {
             })
     }
 
-    // add a filler item to move the list down
-    useEffect(() => {
-        getNotifications();
-    }, []);
+    
 
     function catchHug(hugId, id) {
         //console.log(id)
