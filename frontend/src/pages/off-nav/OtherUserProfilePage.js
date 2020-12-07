@@ -54,8 +54,7 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    const { isLightTheme, currentUser } = userData;
-    const { uid } = currentUser;
+    const { isLightTheme, uid } = userData;
     // Misc
     const routeName = route.name;
     const dotsIconDark = require('assets/dots-icon-dark.png');
