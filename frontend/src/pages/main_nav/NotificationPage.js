@@ -107,7 +107,7 @@ export default function NotificationPage({ navigation, route }) {
     const [notifications, setNotifications] = useState([])
     const { userData } = useContext(UserContext);
     // Misc
-    const { uid } = userData.currentUser;
+    const { uid } = userData;
     const routeName = route.name;
     
     // check whether the user is on the page (true) or navigates away from the page (false)

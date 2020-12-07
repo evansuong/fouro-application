@@ -62,7 +62,7 @@ export default function CorkboardPage({ navigation, route }) {
     }, [])
 
     const fetchCorkboard = async () => {
-      const { status, data } = await ReadAPI.buildCorkboard(userData.currentUser.uid);
+      const { status, data } = await ReadAPI.buildCorkboard(userData.uid);
       // console.log('CorkboardPage 66', status, data);
       if (status) {
         setPinnedHugs(data.hugList.hugsList);

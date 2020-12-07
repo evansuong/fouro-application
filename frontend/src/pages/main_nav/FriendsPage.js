@@ -62,7 +62,7 @@ export default function FriendsPage({ navigation, route }) {
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    const { uid } = userData.currentUser;
+    const { uid } = userData;
     const routeName = route.name;
     const r = getFocusedRouteNameFromRoute(route)
 
@@ -77,14 +77,11 @@ export default function FriendsPage({ navigation, route }) {
         }
     }
 
-    console.log('woooooooo')
     useEffect(() => {
-      console.log('uhjgkjvhk')
-        getFriends();
+      getFriends();
     }, [])    
 
     useFocusEffect(() => {
-      console.log('imbroken')
       getFriends();
     }, [r])
   

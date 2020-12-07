@@ -73,7 +73,7 @@ export default function HomePage({ navigation, route }) {
 
   const fetchHugs = async () => {
     const { status, data } = 
-      await ReadAPI.getUserHugs(userData.currentUser.uid);
+      await ReadAPI.getUserHugs(userData.uid);
     if (status) {
       setHugArray(data.userHugs);
     } else {

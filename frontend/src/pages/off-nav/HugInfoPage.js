@@ -71,7 +71,7 @@ export default function HugInfoPage({ navigation, route }) {
 
   const fetchUserData = async () => {
     const { status, data } = 
-      await ReadAPI.getUserProfile(userData.currentUser.uid);
+      await ReadAPI.getUserProfile(userData.uid);
     // console.log(status, data);
     if (status) {
       setFetchedUser(data);
@@ -82,7 +82,7 @@ export default function HugInfoPage({ navigation, route }) {
 
   const fetchEventData = async () => {
     let { status, data } = 
-      await ReadAPI.getHugById(userData.currentUser.uid, hug_id);
+      await ReadAPI.getHugById(userData.uid, hug_id);
     if (status) {
       image = data.images[0];
       data.images = data.images.slice(1, data.images.length);
@@ -102,7 +102,7 @@ export default function HugInfoPage({ navigation, route }) {
         hug_id: hug_id
       }
       const { status, data } = 
-        await UpdateAPI.pin(userData.currentUser.uid, request);
+        await UpdateAPI.pin(userData.uid, request);
       if (status) {
         setPinnedButton(true);
         console.log('hug pinned');
@@ -115,7 +115,7 @@ export default function HugInfoPage({ navigation, route }) {
         hug_id: hug_id
       }
       const { status, data } = 
-        await UpdateAPI.unpin(userData.currentUser.uid, request);
+        await UpdateAPI.unpin(userData.uid, request);
       if (status) {
         console.log('hug unpinned');
         setPinnedButton(false);

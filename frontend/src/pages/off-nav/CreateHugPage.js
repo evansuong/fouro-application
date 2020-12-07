@@ -65,7 +65,7 @@ export default function CreateHugPage({ navigation, route }) {
           base64: base64Strings
         }
         const { status, data } = 
-          await CreateAPI.createHug(userData.currentUser.uid, request);
+          await CreateAPI.createHug(userData.uid, request);
         if (status) {
           console.log('woah');
           console.log(status, data);

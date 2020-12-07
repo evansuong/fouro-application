@@ -32,7 +32,7 @@ export default function NamePage({ navigation, route }) {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
-  const { userData, dispatch } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   // Misc
   const fade = useRef(new Animated.Value(0)).current;
 
@@ -80,14 +80,14 @@ export default function NamePage({ navigation, route }) {
   const submitHandler = async () => {
     setSigningUp(true);
     let userToCreate = {
-      uid: userData.currentUser.uid,
+      uid: userData.uid,
       username: username.trim(),
       firstName: firstName.trim(),
       lastName: lastName.trim(),
     }
 
     let { status, data } = 
-      await CreateAPI.createUser(userData.currentUser.uid, userToCreate);
+      await CreateAPI.createUser(userData.uid, userToCreate);
     if (status && data.out) {
       setTimeout(() => {
         navigation.replace('Pic Upload Page');

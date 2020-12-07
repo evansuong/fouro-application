@@ -80,7 +80,7 @@ export default function LoginPage({ navigation }) {
       const { status, data } = await ReadAPI.getUserProfile(userData.uid);
       if (status) {
         dispatch({
-          type: "SET_USER",
+          type: "SET_USERDATA",
           payload: data,
         });
         navigation.navigate('Main Nav Page', { loggedIn: true });
@@ -143,7 +143,7 @@ export default function LoginPage({ navigation }) {
     }
   });
 
-  if (false) { //userData.currentUser.uid) {
+  if (false) { //userData.uid) {
     return (
       <Animated.View opacity={fade} style={styles.container}>
         <ImageBackground

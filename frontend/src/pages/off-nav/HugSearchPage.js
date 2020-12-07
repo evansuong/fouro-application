@@ -15,7 +15,7 @@ export default function HugSearchPage({ navigation, route }) {
 
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData, isLightTheme } = useContext(UserContext);
-    const { uid } = userData.currentUser;
+    const { uid } = userData;
 
     async function getFriends() {
         const { status, data } = await ReadAPI.getFriends(uid);

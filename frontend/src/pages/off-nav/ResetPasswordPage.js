@@ -56,7 +56,7 @@ export default function ResetPasswordPage({ navigation, route }) {
   function reset() {
     Alert.alert('(NOT SET UP) Reset button pressed!');
     // const { status, data } = 
-    //   await AuthAPI.changePassword(userData.currentUser.uid, newPassword);
+    //   await AuthAPI.changePassword(userData.uid, newPassword);
     // navigation.replace('User Profile Page');
   }
 

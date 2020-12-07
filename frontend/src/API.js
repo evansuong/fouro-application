@@ -40,7 +40,7 @@ export const ReadAPI = {
   },
   getNotifications: async function(uid) {
     let response = {}
-    console.log(uid)
+    // console.log(uid)
     await axios.get(`${server}/notifications/getNotifications/${uid}`)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
@@ -238,8 +238,8 @@ export const DeleteAPI = {
   },
   removeFriend: async function(uid, request) {
     // request: { friendId }
-    console.log('request', request)
-    console.log('asdfasdfasdf')
+    // console.log('request', request)
+    // console.log('asdfasdfasdf')
     let response = {}
     await axios({
       method: 'delete',
