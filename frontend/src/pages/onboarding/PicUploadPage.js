@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import * as ImageManipulator from 'expo-image-manipulator';
 // APIs
-import { UpdateAPI } from '../../API';
+import { ReadAPI, UpdateAPI } from '../../API';
 // Contexts
 import { UserContext } from 'contexts/UserContext';
 // Custom Components
@@ -52,13 +52,12 @@ export default function ProfileSetupPage({ navigation, route }) {
     let base64 = uploadPic.base64;    
     if (base64.length > MAX_UPLOAD_SIZE) {
       const compressFactor = MAX_UPLOAD_SIZE / base64.length;
-      console.log('comp', compressFactor);
       base64 = await getBase64WithImage(compressFactor);
     }
     const request = {
       blob: base64
     }
-    console.log('after compression', request.blob.length);
+    // console.log('after compression', request.blob.length);
     const { status, data } = 
       await UpdateAPI.uploadUserProfilePicture(
         userData.currentUser.uid, request
@@ -68,12 +67,26 @@ export default function ProfileSetupPage({ navigation, route }) {
       console.log(data);
     } else {
       // console.log('data', data);
+      await dispatchUser();
       navigation.replace('Welcome Page');
     }
   }
 
+  const dispatchUser = async () => {
+    console.log('PicUpload 77', userData.currentUser.uid);
+    const { status, data } = 
+        await ReadAPI.getUserProfile(userData.currentUser.uid);
+    if (status) {
+      dispatch({
+        type: 'SET_USER',
+        payload: data,
+      })
+    } else {
+      Alert.alert('Error retrieving profile data');
+    }
+  }
+
   const getBase64WithImage = async (compressFactor) => {
-    console.log('here', Object.keys(uploadPic), uploadPic.uri, uploadPic.height);
     const ORIGINXY = uploadPic.height / 3;
     let manipResult;
     try {
@@ -120,7 +133,7 @@ export default function ProfileSetupPage({ navigation, route }) {
   const pickFromGallery = async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (granted) {
-      console.log('granted');
+      // console.log('granted');
       let data = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [1,1],
@@ -130,7 +143,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       })
       checkUpload(data); 
     } else {
-      console.log('access denied');
+      // console.log('access denied');
       Alert.alert('You need to give up permission to work'); 
     }     
   }
@@ -138,7 +151,7 @@ export default function ProfileSetupPage({ navigation, route }) {
   const pickFromCamera = async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
-      console.log('granted');
+      // console.log('granted');
       let data = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -149,7 +162,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       })
       checkUpload(data); 
     } else {
-      console.log('access denied');
+      // console.log('access denied');
       Alert.alert('You need to give up permission to work');
     }
   }

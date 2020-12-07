@@ -104,7 +104,7 @@ export default function NotificationPage({ navigation, route }) {
     const [isFocused, setIsFocused] = useState(false)
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const [notifications, setNotifications] = useState()
+    const [notifications, setNotifications] = useState([])
     const { userData } = useContext(UserContext);
     // Misc
     const { uid } = userData.currentUser;
@@ -121,7 +121,7 @@ export default function NotificationPage({ navigation, route }) {
     function getNotifications() {
         ReadAPI.getNotifications(uid)
             .then(response => {
-                console.log(response.data.notifications.notifs)
+                // console.log(response.data.notifications.notifs)
                 setNotifications(response.data.notifications.notifs)
             })
     }
@@ -145,7 +145,7 @@ export default function NotificationPage({ navigation, route }) {
     }
 
     function dropHug(hugId, id) {
-        clearNotification(id)
+        clearNotification(hugId)
         // remove hug from database
     }
 
@@ -167,12 +167,12 @@ export default function NotificationPage({ navigation, route }) {
     }
 
     function declineFriendRequest(friendId, id) {
-        clearNotification(id)
+        clearNotification(friendId)
         // remove friend reauest fron database
     } 
 
     function clearNotification(id, type) {
-        const newList = notifications.filter((item) => item.call_id !== id);
+        const newList = notifications.filter((item) => item.callback_id !== id);
         setTimeout(() => {
           setNotifications(newList);
         }, 1000);

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { View, StyleSheet, Image, FlatList, Text } from 'react-native'
+import { View, StyleSheet, Image, FlatList, Text, Alert } from 'react-native'
 // APIs
 import { ReadAPI } from '../../API';
 // Contexts
@@ -62,13 +62,17 @@ export default function CorkboardPage({ navigation, route }) {
     }, [])
 
     const fetchCorkboard = async () => {
-      const { status, data } = await ReadAPI.buildCorkboard(userData.uid);
+      const { status, data } = await ReadAPI.buildCorkboard(userData.currentUser.uid);
+      // console.log('CorkboardPage 66', status, data);
       if (status) {
-        // console.log(data);
-        setPinnedHugs(data.hugList.pinnedHugs);
+        setPinnedHugs(data.hugList.hugsList);
       } else {
-        Alert.alert('Something went wrong when building the corkboard!');
+        Alert.alert('Something went wrong when building the corkboard');
       }
+    }
+
+    const checkPinnedHugs = () => {
+      return pinnedHugs.length == 0;
     }
 
     const styles = StyleSheet.create({
@@ -101,22 +105,22 @@ export default function CorkboardPage({ navigation, route }) {
 
             {/* Hugs list as a grid */}
             {
-              pinnedHugs.length != 0 &&
+              pinnedHugs && !pinnedHugs.empty &&
               <FlatList
-                  data={testData}
-                  // data={pinnedHugs}
-                  // keyExtractor={item => item.hugId}
-                  renderItem={( hug ) => (
-                      <PinnedHug
+                  // data={testData}
+                  data={pinnedHugs}
+                  keyExtractor={item => item.hug_ref}
+                  renderItem={({ item }) => (
+                        <PinnedHug
                           navigation={navigation}
                           unpin={showTrashCan}
-                          picture={hug.item.picture}
-                          date={hug.item.date}
-                          friendName={hug.item.friendName}
-                          // picture={hug.image}
-                          // date={hug.dateTime}
-                          // friendName={hug.friendName}
-                          // id={hug.hugId}
+                          // picture={hug.item.picture}
+                          // date={hug.item.date}
+                          // friendName={hug.item.friendName}
+                          picture={item.image}
+                          date={item.dateTime}
+                          friendName={item.friendName}
+                          id={item.hug_ref}
                       />
                   )}
                   contentContainerStyle={{
@@ -126,7 +130,7 @@ export default function CorkboardPage({ navigation, route }) {
               />
             }
             {
-              pinnedHugs.length == 0 &&
+              checkPinnedHugs() &&
               <View style={styles.noPinnedHugsContainer}>
                 <Text style={[
                   styles.noPinnedHugs, 
@@ -135,7 +139,7 @@ export default function CorkboardPage({ navigation, route }) {
                   :(
                 </Text>
                 <Text style={styles.noPinnedHugs}>
-                  You don't have any pinned hugs. (wtf?) Why don't you pin some! 
+                  You don't have any pinned hugs. Why don't you pin some! 
                   If you don't have any hugs, create one!
                 </Text>
               </View>

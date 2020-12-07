@@ -23,12 +23,9 @@ import BackgroundImg from 'assets/gradients/middle.png';
 
 export default function NamePage({ navigation, route }) {
   // States
-  const [firstName, setFirstName] = useState('V');
-  const [lastName, setLastName] = useState('V');
-  const [username, setUsername] = useState('V');
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
   const [userExists, setUserExists] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [signingUp, setSigningUp] = useState(false);
@@ -82,16 +79,6 @@ export default function NamePage({ navigation, route }) {
 
   const submitHandler = async () => {
     setSigningUp(true);
-    // function to check if user with username is already taken (waiting on backend)
-    // const usernameTaken = await UsersAPI.usernameTaken(username);
-    // if (usernameTaken) {
-    //   setUserExists(true);
-    //   timeout();
-    //   return;
-    // }
-    // await UsersAPI.updateUserProfile(username, firstName, lastName);
-    
-    // console.log(userData);
     let userToCreate = {
       uid: userData.currentUser.uid,
       username: username.trim(),
@@ -99,20 +86,15 @@ export default function NamePage({ navigation, route }) {
       lastName: lastName.trim(),
     }
 
-    dispatch({
-      type: "SET_USER",
-      payload: userToCreate,
-    });
-
     let { status, data } = 
       await CreateAPI.createUser(userData.currentUser.uid, userToCreate);
-    if (status) {
+    if (status && data.out) {
       setTimeout(() => {
         navigation.replace('Pic Upload Page');
       }, 1000);
     } else {
       setSigningUp(false);
-      alert('An error occurred');
+      alert('That username is taken!');
       console.log(data);
     }
   }

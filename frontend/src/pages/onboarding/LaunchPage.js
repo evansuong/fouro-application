@@ -22,7 +22,7 @@ export default function LaunchPage({ navigation }) {
     innerContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: '5%',
+      marginBottom: windowWidth * 0.2,
       // backgroundColor: 'pink'
     },
     logo: {
