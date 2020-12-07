@@ -31,11 +31,13 @@ export default function EditProfilePage({ navigation, route }) {
   const topMarginSize = windowWidth * 0.1 + 5;
   const routeName = route.name
 
+  // TODO: use useEffect to init the fields with current user info
+
   function firstNameEmpty() {
     return firstName === "";
   }
 
-  function lastNameEmpty() {
+  function lastNameEmpty() {                                 
     return lastName === "";
   }
 
