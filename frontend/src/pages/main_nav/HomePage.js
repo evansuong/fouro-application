@@ -21,6 +21,7 @@ import HugCard from 'components/HugCard';
 import Panel from 'components/StreakPanel';
 import Header from 'components/Header';
 import gradient from 'assets/gradients/middle.png';
+import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native'
 // const gradient = require('assets/gradients/middle.png')
 
 
@@ -65,11 +66,17 @@ export default function HomePage({ navigation, route }) {
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
   const routeName = route.name;
+  const r = getFocusedRouteNameFromRoute(route)
   // console.log('HomePage 71', userData);
 
   useEffect(() => {
     fetchHugs();
   }, [])
+
+  // useFocusEffect(() => {
+  //   console.log('fetching hugs');
+  //   fetchHugs();
+  // }, [r])
 
   const fetchHugs = async () => {
     const { status, data } = 

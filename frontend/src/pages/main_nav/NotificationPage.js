@@ -9,7 +9,7 @@ import {
   Image,
   Button,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { getFocusedRouteNameFromRoute, useFocusEffect } from "@react-navigation/native";
 // APIs
 import { CreateAPI, ReadAPI } from "../../API";
 // Contexts
@@ -109,14 +109,15 @@ export default function NotificationPage({ navigation, route }) {
     // Misc
     const { uid } = userData;
     const routeName = route.name;
+    const r = getFocusedRouteNameFromRoute(route)
     
     // check whether the user is on the page (true) or navigates away from the page (false)
-    useFocusEffect(() => {
-        setIsFocused(true)
-        return () => {
-           setIsFocused(false)
-        }
-    }, []);  
+    // useFocusEffect(() => {
+    //     setIsFocused(true)
+    //     return () => {
+    //        setIsFocused(false)
+    //     }
+    // }, []);  
 
    
 
@@ -148,6 +149,11 @@ export default function NotificationPage({ navigation, route }) {
     useEffect(() => {
         getNotifications();
     }, []);
+
+    // useFocusEffect(() => {
+    //   console.log('fetching notifications')
+    //   getNotifications();
+    // }, [r])
 
     function catchHug(hugId, id) {
         //console.log(id)

@@ -66,7 +66,7 @@ export default function App() {
               /* going back to the previous screen. Leave it to see what 
               /* the app will actually look like
               * */
-              screenOptions={{ headerShown: false }}
+              screenOptions={{ headerShown: false, gestureEnabled: false }}
             >
               <Stack.Screen 
                 name="Main Nav Page" 

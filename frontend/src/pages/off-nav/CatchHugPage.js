@@ -106,6 +106,7 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
       for (let i = 0; i < images.length; i++) {
         totalChars += images[i].base64.length;
       }
+      console.log(data);
       const arr = data.uri.split('.');
       const fileExtension = arr[arr.length - 1];
       const validExtension = validExtensions.includes(fileExtension);

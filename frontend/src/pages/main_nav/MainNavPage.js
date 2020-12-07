@@ -8,6 +8,7 @@ import { DimensionContext } from 'contexts/DimensionContext';
 import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage';
 import HomePage from './HomePage';
+import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native'
 
 
 // TODO: follow the gradient thing
@@ -29,6 +30,7 @@ export default function MainNavPage({ route }) {
     const { params } = route;
     const tabWidth = windowWidth / 3;
     const tabHeight = tabWidth / 2.25;
+    const r = getFocusedRouteNameFromRoute(route)
 
     useEffect(() => {
       if (typeof params !== 'undefined' && params.loggedIn !== 'undefined') {

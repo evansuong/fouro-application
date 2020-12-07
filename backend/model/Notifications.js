@@ -91,18 +91,22 @@ const NotificationsAPI = {
    * @param: user id and request id
    * @return none
    */
-  deleteNotification: function (uid, requestId) {
+  deleteNotification: async function (uid, requestId) {
     var notificationCollection = users.doc(uid).collection("notifications");
-    // if (!notificationCollection.exists) {
-    //   console.log("Notifications 97 No such document");
-    // }
-    var user_request_id = notificationCollection.doc(requestId);
 
-    if (user_request_id.get("type") == "hug") {
-      HugsAPI.dropHug(uid, requestId, user_request_id.get("hug_ref"));
+    var userRequestRef = notificationCollection.doc(requestId);
+    var notificationType = await userRequestRef.get("type");
+
+    if (notificationType == "hug") {
+      const hugId = await userRequestRef.get("hug_ref").id;
+      HugsAPI.dropHug(uid, requestId, hugId);
+    } else {
+      await userRequestRef.delete()
     }
 
-    user_request_id.delete().then();
+    await userRequestRef.delete()
+
+    return { out: true }
   },
 };
 

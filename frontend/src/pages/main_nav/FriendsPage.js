@@ -82,6 +82,7 @@ export default function FriendsPage({ navigation, route }) {
     }, [])    
 
     useFocusEffect(() => {
+      console.log('fetching friends');
       getFriends();
     }, [r])
   

@@ -7,7 +7,8 @@ import {
   Keyboard,
   ImageBackground,
   ActivityIndicator,
-  Animated
+  Animated,
+  Alert
 } from 'react-native';
 // APIs
 import AuthAPI from '../../authentication/Authentication';
@@ -78,7 +79,7 @@ export default function LoginPage({ navigation }) {
   const processLoginResponse = async (response) => {
     if (response.status) {
       const { status, data } = await ReadAPI.getUserProfile(response.data);
-      // console.log(data);
+      console.log('LoginPage 82', response.data);
       if (status) {
         dispatch({
           type: "SET_USERDATA",
