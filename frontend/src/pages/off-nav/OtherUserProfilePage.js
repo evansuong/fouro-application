@@ -96,8 +96,6 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
             navigation.goBack();
         }, 500);
     }
-       
-
 
     useEffect(() => {
         getUserStatus();
@@ -134,6 +132,14 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
         // backend call
         setStatus('pending');
         sendFriendRequest();
+    }
+
+    function handleCreateHug() {
+        navigation.navigate('Create Hug', { data: {
+            name: name,
+            profile_pic: profile_pic,
+            user_id: otheruser_id
+        } })
     }
 
      
@@ -242,12 +248,18 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
             />
         let hugButton = 
             <View style={{ width: windowWidth }}>
-                <LinkedButton
+                <TouchableOpacity onPress={handleCreateHug}>
+                    <View style={{ width: windowWidth, backgroundColor: 'red' }}>
+                        <Text>hug</Text>
+                    </View>
+                </TouchableOpacity>
+                {/* <LinkedButton
                     navigation={navigation}
                     link='Create Hug'
                     text='Hug'
                     color='#FB7250'
-                />
+                    onPress={() => console.log(hey)}
+                /> */}
             </View>
            
         let sendFriendRequestButton = 
