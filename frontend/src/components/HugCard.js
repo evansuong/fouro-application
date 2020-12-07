@@ -9,7 +9,7 @@ import { UserContext } from '../contexts/UserContext';
 //       1) reduce the amount of containers for hugText
 //       2) merge no image and image hug cards' styles with flexShrink a const ? 1 : 0
 
-export default function HugCard({ navigation, route, data }) {
+export default function HugCard({ navigation, route, data, image }) {
   
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
@@ -21,9 +21,9 @@ export default function HugCard({ navigation, route, data }) {
     friend_username,
     friend_profile_pic, 
     message, 
-    image, 
     hug_id,
   } = data;
+
   
   const SPACING_SMALL = 5
   const SPACING_MEDIUM = 10;

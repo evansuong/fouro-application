@@ -150,11 +150,15 @@ export default function NotificationPage({ navigation, route }) {
     }
 
     function acceptFriendRequest(friendId, id) {
-        console.log(id)
-        let data = notifications.filter((item) => item.callback_id === friendId)[0]
-        console.log('data', data)
+        let friend = notifications.filter((item) => item.callback_id === friendId)[0]
         clearNotification(id)
-        data = Object.assign({}, { status: data.type, ...data})
+        let data = { 
+            status: friend.type, 
+            profile_pic: friend.friendPfp,
+            name: friend.friendName,
+            username: friend.friend_username,
+            otheruser_id: friend.callback_id,
+        }
         navigation.navigate('Friend Profile', {
             page: 'friendProfile',
             data: data

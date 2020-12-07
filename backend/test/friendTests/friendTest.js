@@ -1,12 +1,12 @@
 let Friends = require("../../model/Friends");
 
-/*
-Friends.FriendsAPI.addFriend(
-  "example@email.com",
-  //"D3ExthKFKOf1D0gOrDqka0Y34Ik1"
-  "otherguy@email.com"
-);
-*/
+async function testAdd() {
+  Friends.FriendsAPI.addFriend(
+    "example@email.com",
+    //"D3ExthKFKOf1D0gOrDqka0Y34Ik1"
+    "otherguy@email.com"
+  );
+}
 
 /*
 Friends.FriendsAPI.removeFriend(
@@ -32,4 +32,15 @@ async function testGetFriend() {
   let test = await Friends.FriendsAPI.getFriendsList("example@email.com");
   console.log(test);
 }
-testGetFriend();
+//testGetFriend();
+
+async function testFriendProfile() {
+  let test = await Friends.FriendsAPI.getFriendProfile(
+    "example@email.com",
+    //"TestManSupreme"
+    "otherguy@email.com"
+  );
+  console.log(test);
+}
+testFriendProfile();
+//testAdd();

@@ -252,6 +252,7 @@ const UpdateHugAPI = {
       images: db.FieldValue.arrayUnion(imageDownloadURLSArray),
     });
     // Call updateUserHugCount()
+    /*
     this.updateUserHugCount(hugId);
     // Call deleteNotification
     // Getting the requestId may be questionable
@@ -261,6 +262,7 @@ const UpdateHugAPI = {
       .collection("notifications");
     requestIdRef = currUserNotifRef.where("hug_id", "==", hugId);
     Notifications.NotificationsAPI.deleteNotification(requestIdRef);
+     */
   },
 
   updateUserHugCount: function (hugId) {
@@ -298,6 +300,10 @@ const ViewHugAPI = {
     // Set the hugData
     const hugQuery = await hugs.doc(hugId).get();
     const hugData = hugQuery.data();
+
+    if (hugData == undefined) {
+      return { out: "Hug does not exist" };
+    }
     // Set the receiver profile
     var receiverProfile = await Users.UsersAPI.getUserProfile(
       hugData.receiver_ref.id
