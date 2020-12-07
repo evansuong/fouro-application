@@ -160,7 +160,7 @@ export default function FriendsPage({ navigation, route }) {
                   :(
                 </Text>
                 <Text style={styles.noFriends}>
-                  You don't have any friends. (lol loser) Why don't you search for some!
+                  You don't have any friends. Why don't you search for some!
                 </Text>
               </View>
             }
