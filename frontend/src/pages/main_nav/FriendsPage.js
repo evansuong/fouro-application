@@ -20,6 +20,7 @@ import SearchPage from '../off-nav/SearchPage'
 // Images/Assets
 import AppStyles from '../../AppStyles'
 import gradient from 'assets/gradients/left.png'
+import { useFocusEffect } from '@react-navigation/native'
 // const gradient = require('assets/gradients/left.png');
 
 
@@ -75,6 +76,10 @@ export default function FriendsPage({ navigation, route }) {
     useEffect(() => {
         getFriends();
     }, [])    
+
+    useFocusEffect(() => {
+      getFriends();
+    }, [])
   
     const renderCards = friend => {
         // console.log(friend)
