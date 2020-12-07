@@ -34,6 +34,7 @@ import {
   Montserrat_600SemiBold
 } from '@expo-google-fonts/montserrat'
 import SearchPage from './src/pages/off-nav/SearchPage';
+import HugSearchPage from './src/pages/off-nav/HugSearchPage';
 
 
 export default function App() {
@@ -122,6 +123,9 @@ export default function App() {
                 name='Catch Hug Page'
                 component={CatchHugPage}/>
 
+              <Stack.Screen
+                name='Search Page'
+                component={HugSearchPage}/>
               
             </Stack.Navigator>
           </NavigationContainer>    

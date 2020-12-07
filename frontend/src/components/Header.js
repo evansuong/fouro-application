@@ -179,6 +179,7 @@ export default function Header(props) {
         'Pic Upload Page': '',
         'Login Page': '',
         'Signup Page': '',
+        'Search Page': '',
     };
 
     // setting button list for header 

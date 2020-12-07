@@ -12,6 +12,7 @@ import { useFocusEffect } from '@react-navigation/native';
 // Contexts
 import { DimensionContext } from '../../contexts/DimensionContext';
 import { UserContext } from '../../contexts/UserContext';
+import { ReadAPI } from '../../API';
 
 
 
@@ -60,21 +61,29 @@ export default function SearchPage({ input, navigation }) {
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    const { isLightTheme } = userData;
-
+    const { isLightTheme, currentUser } = userData;
+    const { uid } = currentUser;
     const Tab = createMaterialTopTabNavigator();
 
-    function toggleSearchList() { setSearchFriends(!searchFriends) }
+
+    // setUserList(testStrangerData.filter(user => user.username === input ))
+    // setUserList(testFriendData.filter(user => user.name === input ))
+
+    function search() {
+        if (searchFriends) {
+            ReadAPI.searchFriends(uid, input).then(response => setUserList(response.data.friends))
+        } else {
+            ReadAPI.searchUsers(uid, input).then(response => setUserList([response.data.user]))
+        }
+    }
+
+    console.log('here')
     
     useEffect(() => {
         if (input === '') {
             setUserList([])
         } else {
-            if (searchFriends) {
-                setUserList(testFriendData.filter(user => user.name === input ))
-            } else {
-                setUserList(testStrangerData.filter(user => user.username === input ))
-            }
+            search()
         }
     }, [input, searchFriends])
 
@@ -84,9 +93,8 @@ export default function SearchPage({ input, navigation }) {
             setSearchFriends(false)
         })
 
-        function viewFriend(userData) {
-            // TODO: change this route name to Other User Profile
-            navigation.navigate('Friend Profile', { data: Object.assign({}, { id: userData.user_id, profile_pic: userData.pfp, ...userData })});
+        function viewStranger(userData) {
+            navigation.navigate('Friend Profile', { data: Object.assign({}, { otheruser_id: userData.user_id, profile_pic: userData.pfp, ...userData })});
         }
 
         let textColor = isLightTheme ? '#000' : '#FFF';
@@ -95,16 +103,17 @@ export default function SearchPage({ input, navigation }) {
         console.log(userData.image)
 
         return (
+            userList[0] ? 
             <ScrollView style={{ backgroundColor: backgroundColor }}>
-            {userList.map(userData => (
-                <TouchableOpacity key={userData.user_id} onPress={() => viewFriend(userData)}>
-                    <View style={{...styles.userCard, borderBottomColor: borderColor}}>
-                        {/* <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.image }}/> */}
-                        <Text style={{...styles.userText, textColor: textColor}}>{userData.name}</Text>
-                    </View>
-                </TouchableOpacity>
-            ))}
-            </ScrollView>
+                {userList.map(userData => (
+                    <TouchableOpacity key={userData.user_id} onPress={() => viewStranger(userData)}>
+                        <View style={{...styles.userCard, borderBottomColor: borderColor}}>
+                            <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.profile_pic }}/> 
+                            <Text style={{...styles.userText, color: textColor}}>{userData.name}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView> : <></>
         )
     }
 
@@ -115,7 +124,7 @@ export default function SearchPage({ input, navigation }) {
         })
 
         function viewUser(userData) {
-            navigation.navigate('Friend Profile', { data: Object.assign({}, { id: userData.user_id, profile_pic: userData.pfp, ...userData })})
+            navigation.navigate('Friend Profile', { data: Object.assign({}, { otheruser_id: userData.user_id, profile_pic: userData.pfp, ...userData })})
         }
 
         let textColor = isLightTheme ? '#000' : '#FFF';
@@ -123,16 +132,17 @@ export default function SearchPage({ input, navigation }) {
         let backgroundColor = isLightTheme ? '#FFF' : '#333'
 
         return (
+            userList && userList.length > 0 ?
             <ScrollView style={{backgroundColor: backgroundColor}}>
             {userList.map(userData => (
                 <TouchableOpacity key={userData.user_id} onPress={() => viewUser(userData)}>
                     <View style={{...styles.userCard, borderBottomColor: borderColor }}>
-                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
+                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.profile_pic }}/> 
                         <Text style={{...styles.userText, color: textColor }}>{userData.name}</Text>
                     </View>
                 </TouchableOpacity>
             ))}
-            </ScrollView>
+            </ScrollView> : <></>
         )
     }
 

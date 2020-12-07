@@ -84,7 +84,7 @@ export default function HomePage({ navigation, route }) {
   function handlePress() {
     setExpanded(!expanded);
     if (expanded) {
-      navigation.navigate('Create Hug');
+      navigation.navigate('Search Page');
       collapse();
     } else {
       expand();
