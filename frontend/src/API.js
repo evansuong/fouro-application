@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const server = 'http://192.168.4.66:3000';
+const server = 'http://192.168.1.170:3000';
 
 const onAccept = (res, response) => {
   console.log('accepting');
@@ -142,7 +142,7 @@ export const CreateAPI = {
     return response
   },
   createHug: async function(uid, request) {
-    // request: { friend_id, message, blobs }
+    // request: { friendId, message, blobs }
     let response = {}
     await axios.post(`${server}/hugs/createHug/${uid}`, request)
     .then(res => onAccept(res, response))

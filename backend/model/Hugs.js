@@ -452,6 +452,7 @@ const ViewHugAPI = {
       }
     }
     var feed = { sharedHugs: results };
+    // console.log('feed');
     return feed;
   },
 };

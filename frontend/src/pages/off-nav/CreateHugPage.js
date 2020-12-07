@@ -58,7 +58,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
         }
         const request = {
           // friend_id: friendData.friend_id,
-          friend_id: 'gary@email.com',
+          friendId: 'gary@email.com',
           message: message,
           blobs: base64Strings
         }
