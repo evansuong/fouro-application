@@ -169,6 +169,7 @@ export default function HomePage({ navigation, route }) {
                 key={hugData.hug_id} 
                 navigation={navigation}
                 data={{...hugData}}
+                image={hugData.image}
               />
             ))}
           </ScrollView>

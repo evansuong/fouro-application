@@ -25,7 +25,7 @@ import gradient from 'assets/gradients/left.png'
 
 
 /*------- testing --------*/
-const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
+// const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
 
 // const [friends, setFriends] = useState([
 //   buildFriendData('1', 'Alex Chow', 'alexchow', pic, '#FE5951'),
@@ -41,15 +41,15 @@ const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/
 //   buildFriendData('11', 'Vicki Chen', 'vchen', pic, '#A4B8B9'),
 // ]);
 
-function buildFriendData(id, name, username, profile_pic, color) {
-  return {
-      user_id: id,
-      name: name,
-      username: username,
-      profile_pic: profile_pic,
-      color: color
-  }
-}
+// function buildFriendData(id, name, username, profile_pic, color) {
+//   return {
+//       user_id: id,
+//       name: name,
+//       username: username,
+//       profile_pic: profile_pic,
+//       color: color
+//   }
+// }
 /*------- end of testing --------*/
 
 
