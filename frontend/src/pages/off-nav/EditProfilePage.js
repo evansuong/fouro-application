@@ -4,7 +4,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Alert
+  Alert,
+  ScrollView
 } from "react-native";
 // APIs
 import AuthAPI from '../../authentication/Authentication';
@@ -18,9 +19,9 @@ import Header from "components/Header"
 
 export default function EditProfilePage({ navigation, route }) {
   // States
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
@@ -30,27 +31,22 @@ export default function EditProfilePage({ navigation, route }) {
   const topMarginSize = windowWidth * 0.1 + 5;
   const routeName = route.name
 
-  function verifyNewPasswordsMatch() {
-    return confirmNewPassword === newPassword;
+  function firstNameEmpty() {
+    return firstName === "";
   }
 
-  function oldPasswordEmpty() {
-    return oldPassword === "";
+  function lastNameEmpty() {
+    return lastName === "";
   }
 
-  function newPasswordEmpty() {
-    return newPassword === "";
-  }
-
-  function validPasswordLength() {
-    return newPassword.length >= 6
+  function usernameEmpty() {
+    return username === "";
   }
 
   function fieldsValid() {
-    return verifyNewPasswordsMatch() && 
-    validPasswordLength() &&
-    !oldPasswordEmpty() && 
-    !newPasswordEmpty()
+    return !firstNameEmpty() && 
+    !lastNameEmpty() &&
+    !usernameEmpty()
   }
 
   function reset() {
@@ -103,54 +99,51 @@ export default function EditProfilePage({ navigation, route }) {
           Edit Profile
         </Text>
         {/* Old Password Input Field */}
+        <ScrollView>
         <CustomTextField
-          titleText="Old Password"
-          setField={setOldPassword}
+          titleText="First Name"
+          setField={setFirstName}
           secureText={true}
           required={true}
         />
         {/* New Password Input Field */}
         <CustomTextField
-          titleText="New Password"
-          setField={setNewPassword}
+          titleText="Last Name"
+          setField={setLastName}
           secureText={true}
           required={true}
         />
         {/* New Password Confirmation Input Field */}
         <CustomTextField
-          titleText="Confirm New Password"
-          setField={setConfirmNewPassword}
+          titleText="Username"
+          setField={setUsername}
           secureText={true}
           required={true}
         />
         {/* Error Messages */}
         <View style={{ marginLeft: 20 }}>
           {
-            !verifyNewPasswordsMatch() &&
+            firstNameEmpty() && 
             <Text style={styles.warning}>
-              New passwords do not match.
+              First name must not be empty.
             </Text>
           }
           {
-            oldPasswordEmpty() && 
+            lastNameEmpty() && 
             <Text style={styles.warning}>
-              You must enter the old password.
+              Last name must not be empty.
             </Text>
           }
           {
-            newPasswordEmpty() && 
+            usernameEmpty() && 
             <Text style={styles.warning}>
-              New password cannot be empty.
-            </Text>
-          }
-          {
-            !validPasswordLength() && 
-            <Text style={styles.warning}>
-              Password must be at least 6 characters long.
+              Username must not be empty.
             </Text>
           }
         </View>
+        </ScrollView>
       </View>
+      
 
       {/* Confirmation/Reset Button */}
       <TouchableOpacity
