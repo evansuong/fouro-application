@@ -51,7 +51,7 @@ export default function HugInfoPage({ navigation, route }) {
   // Misc
   const routeName = route.name;
   const { data } = route.params;
-  console.log(data)
+  console.log("params", data)
   let { hug_id, pinned } = data;
   // sizing
   const textContainerWidth = windowWidth / 1.1;
@@ -87,7 +87,7 @@ export default function HugInfoPage({ navigation, route }) {
     let { status, data } = 
       await ReadAPI.getHugById(userData.uid, hug_id);
     if (status) {
-      console.log(data)
+      console.log("opening hug", data)
       setImage(data.images[0])
       data.images = data.images.slice(1, data.images.length);
       setFetchedHug(data);
@@ -302,7 +302,7 @@ export default function HugInfoPage({ navigation, route }) {
             </Text>
           </View>
 
-          { fetchedHug.completed &&  
+          { fetchedHug.sender_description &&  
           <View style={styles.textAreaUser}>
             {/* Text from self */}
             <Text style={styles.username}>
@@ -335,7 +335,7 @@ export default function HugInfoPage({ navigation, route }) {
       </ScrollView>
 
       {/* Pin Icon */}
-      {fetchedHug.completed && <TouchableOpacity 
+      {fetchedHug.sender_description && <TouchableOpacity 
         style={styles.pinButton}
         onPress={pinHug}>
         {
@@ -355,7 +355,7 @@ export default function HugInfoPage({ navigation, route }) {
       </TouchableOpacity>}
 
       {/* hug back button */}
-      <View style={styles.hugBtnContainer}>
+      {!fetchedHug.sender_description && <View style={styles.hugBtnContainer}>
         <TouchableOpacity
             onPress={hugBack}
           >
@@ -363,7 +363,7 @@ export default function HugInfoPage({ navigation, route }) {
               <Text style={{ color: "#FFF", fontSize: 20, fontFamily: 'Montserrat_400Regular' }}>Hug Back!</Text>
             </View>
           </TouchableOpacity>
-      </View>
+      </View>}
         
     </View>
   )
