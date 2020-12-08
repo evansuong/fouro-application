@@ -17,7 +17,8 @@ export default function UserProfilePage({ navigation, route }) {
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext);
-  const { isLightTheme } = userData;
+  // const { isLightTheme } = userData;
+  const isLightTheme = true;
   // Misc
   const topMarginSize = windowWidth * 0.1;
   const settingMarginTopBottom = windowWidth * 0.03;

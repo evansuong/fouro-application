@@ -10,7 +10,7 @@ export default function UserContextProvider(props) {
     useReducer(userReducer, { isLightTheme: true });
   
   return (
-      <UserContext.Provider value={{ userData, dispatch }}> 
+      <UserContext.Provider value={{ userData, dispatch  }}> 
           {props.children}
       </UserContext.Provider>
   )

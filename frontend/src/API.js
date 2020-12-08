@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const server = 'http://192.168.0.18:3000';
+const server = 'http://192.168.4.66:3000';
 
 const onAccept = (res, response) => {
   // console.log('API 6 accepting');
@@ -218,7 +218,13 @@ export const DeleteAPI = {
   deleteNotification: async function(uid, request) {
     // request = { notificationId }
     let response = {}
-    await axios.delete(`${server}/notifications/deleteNotification/${uid}`, request)
+    await axios({
+      method: 'delete',
+      url: `${server}/notifications/deleteNotification/${uid}`,
+      data: {
+        notificationId: request
+      }
+    })
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
