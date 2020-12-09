@@ -9,7 +9,7 @@ import {
   Image,
   Button,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { getFocusedRouteNameFromRoute, useFocusEffect } from "@react-navigation/native";
 // APIs
 import { CreateAPI, ReadAPI } from "../../API";
 // Contexts
@@ -107,8 +107,9 @@ export default function NotificationPage({ navigation, route }) {
     const [notifications, setNotifications] = useState([])
     const { userData } = useContext(UserContext);
     // Misc
-    const { uid } = userData.currentUser;
+    const { uid } = userData;
     const routeName = route.name;
+    // const r = getFocusedRouteNameFromRoute(route)
     
     // check whether the user is on the page (true) or navigates away from the page (false)
     useFocusEffect(() => {
@@ -118,6 +119,14 @@ export default function NotificationPage({ navigation, route }) {
         }
     }, []);  
 
+    useEffect(() => {
+        getNotifications();
+    }, [isFocused])
+
+    // add a filler item to move the list down
+    useEffect(() => {
+        getNotifications();
+    }, []);
    
 
     function getTimeElapsed(date_time) {
@@ -134,6 +143,7 @@ export default function NotificationPage({ navigation, route }) {
 
 
     function getNotifications() {
+        console.log('getting notifications (notificaionpage 145)')
         ReadAPI.getNotifications(uid)
             .then(response => {
                 let notifications = response.data.notifications.notifs;
@@ -144,20 +154,23 @@ export default function NotificationPage({ navigation, route }) {
             })
     }
 
-    // add a filler item to move the list down
-    useEffect(() => {
-        getNotifications();
-    }, []);
+    
+
+    // useFocusEffect(() => {
+    //   console.log('fetching notifications')
+    //   getNotifications();
+    // }, [r])
 
     function catchHug(hugId, id) {
         //console.log(id)
         let data = notifications.filter((item) => item.callback_id === hugId)[0]
 
         // data = Object.assign({}, {hug_id: data.call_id, ...data})
-        navigation.navigate('Catch Hug Page', { 
-            page: 'hugInfo',
-            data: data,
+        navigation.navigate('Hug Info', { 
+            data: { hug_id: data.callback_id, pinned: false },
         })
+        clearNotification(hugId)
+
         // signify hug as caught to the database
     }
 

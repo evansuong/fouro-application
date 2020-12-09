@@ -21,6 +21,7 @@ import HugCard from 'components/HugCard';
 import Panel from 'components/StreakPanel';
 import Header from 'components/Header';
 import gradient from 'assets/gradients/middle.png';
+import { useFocusEffect } from '@react-navigation/native';
 // const gradient = require('assets/gradients/middle.png')
 
 
@@ -56,6 +57,7 @@ export default function HomePage({ navigation, route }) {
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [hugArray, setHugArray] = useState([]);
+  const [isFocused, setIsFocused] = useState();
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
@@ -65,15 +67,29 @@ export default function HomePage({ navigation, route }) {
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
   const routeName = route.name;
-  console.log('HomePage 71', userData);
+  // console.log('HomePage 71', userData);
 
   useEffect(() => {
     fetchHugs();
   }, [])
 
+   // check whether the user is on the page (true) or navigates away from the page (false)
+   useFocusEffect(() => {
+    setIsFocused(true)
+    return () => {
+      setIsFocused(false)
+    }
+  }, []);  
+
+  useEffect(() => {
+    fetchHugs();
+  }, [isFocused])
+
   const fetchHugs = async () => {
+    console.log('fetching hugs (homepage 89)')
+
     const { status, data } = 
-      await ReadAPI.getUserHugs(userData.currentUser.uid);
+      await ReadAPI.getUserHugs(userData.uid);
     if (status) {
       setHugArray(data.userHugs);
     } else {
@@ -143,7 +159,7 @@ export default function HomePage({ navigation, route }) {
 
         {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
         <View style={{marginTop: 100}}></View>
-        <Button
+        {/* <Button
           title='launch page'
           onPress={() => navigation.navigate('Launch Page')}
         />
@@ -156,7 +172,7 @@ export default function HomePage({ navigation, route }) {
           title='upload page'
           onPress={() => navigation.navigate('Pic Upload Page')}
         />
-      
+       */}
         {/* Hug Cards */}
         <TouchableWithoutFeedback
           onPress={() => dismissCreateButton()}

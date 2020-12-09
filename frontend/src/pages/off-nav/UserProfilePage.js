@@ -33,8 +33,9 @@ export default function UserProfilePage({ navigation, route }) {
   }, [])
 
   const fetchUserData = async () => {
+    console.log(userData.uid);
     const { status, data } = 
-      await ReadAPI.getUserProfile(userData.currentUser.uid);
+      await ReadAPI.getUserProfile(userData.uid);
     // console.log(status, data);
     if (status) {
       setFetchedUser(data);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const server = 'http://192.168.1.170:3000';
+const server = 'http://192.168.0.18:3000';
 
 const onAccept = (res, response) => {
   // console.log('API 6 accepting');
@@ -40,7 +40,7 @@ export const ReadAPI = {
   },
   getNotifications: async function(uid) {
     let response = {}
-    console.log(uid)
+    // console.log(uid)
     await axios.get(`${server}/notifications/getNotifications/${uid}`)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
@@ -123,7 +123,10 @@ export const CreateAPI = {
   sendFriendRequest: async function(uid, request) {// TODO
     // request: { friend_id }
     let response = {}
-    await axios.post(`${server}/notifications/sendFriendRequest/${uid}`, request)
+    await axios({
+      method: 'post',
+      url: `${server}/notifications/sendFriendRequest/${uid}`,
+      data: { friend_id: request }})
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
@@ -212,10 +215,10 @@ export const UpdateAPI = {
 
 
 export const DeleteAPI = {
-  deleteNotification: async function(uid) {
-    // TODO: BROKEN. MISSING JSON REQUEST.
+  deleteNotification: async function(uid, request) {
+    // request = { notificationId }
     let response = {}
-    await axios.delete(`${server}/notifications/deleteNotification/${uid}`)
+    await axios.delete(`${server}/notifications/deleteNotification/${uid}`, request)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
@@ -238,8 +241,8 @@ export const DeleteAPI = {
   },
   removeFriend: async function(uid, request) {
     // request: { friendId }
-    console.log('request', request)
-    console.log('asdfasdfasdf')
+    // console.log('request', request)
+    // console.log('asdfasdfasdf')
     let response = {}
     await axios({
       method: 'delete',

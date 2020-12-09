@@ -54,8 +54,7 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    const { isLightTheme, currentUser } = userData;
-    const { uid } = currentUser;
+    const { isLightTheme, uid } = userData;
     // Misc
     const routeName = route.name;
     const dotsIconDark = require('assets/dots-icon-dark.png');
@@ -75,7 +74,7 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     }
 
     function getUserStatus() {
-        console.log('getting user status')
+        // console.log('getting user status')
         // console.log(otheruser_id)
         setTimeout(() => {
             ReadAPI.getFriendStatus(uid, otheruser_id).then(response => setStatus(response.data.status));
@@ -83,6 +82,7 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     }
 
     function sendFriendRequest() {
+        // console.log("UID", uid)
         CreateAPI.sendFriendRequest(uid, otheruser_id).then(response => console.log(response.status));
     }
 
@@ -97,8 +97,6 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
             navigation.goBack();
         }, 500);
     }
-       
-
 
     useEffect(() => {
         getUserStatus();
@@ -135,6 +133,14 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
         // backend call
         setStatus('pending');
         sendFriendRequest();
+    }
+
+    function handleCreateHug() {
+        navigation.navigate('Create Hug', { data: {
+            name: name,
+            profile_pic: profile_pic,
+            user_id: otheruser_id
+        } })
     }
 
      
@@ -184,10 +190,10 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
         sendFriendRequestButtonStyle: {
             backgroundColor: '#F69D68',
             alignItems: 'center',
-            borderRadius: 20,
+            borderRadius: 30,
             margin: 10,
             width: windowWidth / 1.2, 
-            height: 40, 
+            height: windowHeight * .065, 
             alignItems: 'center', 
             justifyContent: 'center'
         },
@@ -242,18 +248,40 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
               keyExtractor={(item) => item.hug_id}
             />
         let hugButton = 
-            <View style={{ width: windowWidth }}>
-                <LinkedButton
-                    navigation={navigation}
-                    link='Create Hug'
-                    text='Hug'
-                    color='#FB7250'
-                />
-            </View>
-           
+            <TouchableOpacity 
+            style={{
+                ...styles.sendFriendRequestButtonStyle, 
+                ...styles.buttonStyle, 
+                backgroundColor: '#FB7250',
+                shadowColor: '#000',
+                shadowOffset: {
+                width: 5,
+                height: 6,
+                },
+                shadowOpacity: 0.22,
+                shadowRadius: 3,
+                elevation: 14,}}
+                onPress={handleCreateHug}
+            >
+                <Text style={styles.generalText}>
+                    Hug
+                </Text>
+        </TouchableOpacity>
+            
         let sendFriendRequestButton = 
             <TouchableOpacity 
-                style={[styles.sendFriendRequestButtonStyle, styles.buttonStyle]}
+                style={{
+                    ...styles.sendFriendRequestButtonStyle, 
+                    ...styles.buttonStyle,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                    width: 5,
+                    height: 6,
+                    },
+                    shadowOpacity: 0.22,
+                    shadowRadius: 3,
+                    elevation: 14,
+                }}
                 onPress={handleSendRequest}
             >
                 <Text style={styles.generalText}>

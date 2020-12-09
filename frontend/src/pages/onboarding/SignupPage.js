@@ -78,13 +78,11 @@ export default function SignupPage({ navigation, route }) {
   }
 
   const submitHandler = async () => {
+    setSigningUp(true);
     const emailFieldTrim = emailField.trim();
     const passwordFieldTrim = passwordField.trim();
     const passwordConfirmFieldTrim = passwordConfirmField.trim();
     console.log(emailFieldTrim, passwordFieldTrim, passwordConfirmFieldTrim);
-    setSigningUp(true);
-    // check if user with that email already exists (waiting for backend)
-    
     
     let { status, data } = 
       await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
@@ -102,8 +100,8 @@ export default function SignupPage({ navigation, route }) {
     if (status) {
       setMounted(false);
       dispatch({
-        type: "SET_USER",
-        payload: data.providerData,
+        type: "SET_UID",
+        payload: data,
       });
       setTimeout(() => {
         navigation.replace('Name Page');

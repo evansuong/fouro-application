@@ -6,6 +6,7 @@ import { DimensionContext } from 'contexts/DimensionContext';
 import LinkedButton from 'components/LinkedButton';
 // Assets/Images
 import fouroLogo from 'assets/fouro_logo.png';
+import backgroundImg from 'assets/fouro_background.png';
 
 
 export default function LaunchPage({ navigation }) {
@@ -46,7 +47,7 @@ export default function LaunchPage({ navigation }) {
         style={{position: 'absolute', width: '100%', height: '100%'}}
       > */}
       <ImageBackground
-        source={{ uri: `https://picsum.photos/${roundedWidth}/${roundedHeight}`}}
+        source={backgroundImg}
         style={{position: 'absolute', width: '100%', height: '100%'}}
       >
         {/* logo */}

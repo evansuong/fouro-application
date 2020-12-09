@@ -7,7 +7,8 @@ import {
   Keyboard,
   ImageBackground,
   ActivityIndicator,
-  Animated
+  Animated,
+  Alert
 } from 'react-native';
 // APIs
 import AuthAPI from '../../authentication/Authentication';
@@ -72,17 +73,23 @@ export default function LoginPage({ navigation }) {
   const submitHandler = async () => {
     setLoggingIn(true);
     let response = await AuthAPI.loginUser(emailField.trim(), passwordField.trim())
-    processLoginResponse(response)
+    processLoginResponse(response);
   }
 
   const processLoginResponse = async (response) => {
     if (response.status) {
-      const { status, data } = await ReadAPI.getUserProfile(userData.uid);
+      const { status, data } = await ReadAPI.getUserProfile(response.data);
+      console.log('LoginPage 82', response.data);
       if (status) {
         dispatch({
-          type: "SET_USER",
+          type: "SET_USERDATA",
           payload: data,
         });
+        console.log(response.data)
+        dispatch({
+          type: 'SET_UID',
+          payload: response.data,
+        })
         navigation.navigate('Main Nav Page', { loggedIn: true });
       } else {
         Alert.alert('An error occurred');
@@ -143,7 +150,7 @@ export default function LoginPage({ navigation }) {
     }
   });
 
-  if (false) { //userData.currentUser.uid) {
+  if (userData.uid) {
     return (
       <Animated.View opacity={fade} style={styles.container}>
         <ImageBackground

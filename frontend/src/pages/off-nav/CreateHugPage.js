@@ -48,6 +48,7 @@ export default function CreateHugPage({ navigation, route }) {
       // try {
         let base64Strings = [];
         for (let image of images) {
+
           let base64 = image.base64;    
           if (base64.length > MAX_UPLOAD_SIZE) {
             const compressFactor = MAX_UPLOAD_SIZE / base64.length;
@@ -59,13 +60,13 @@ export default function CreateHugPage({ navigation, route }) {
         const request = {
           // friend_id: friendData.friend_id,
           // TODO: Hardcoded
-          friendId: 'gary@email.com',
+          friendId: user_id,
           // TODO: Hardcoded
           message: message,
           base64: base64Strings
         }
         const { status, data } = 
-          await CreateAPI.createHug(userData.currentUser.uid, request);
+          await CreateAPI.createHug(userData.uid, request);
         if (status) {
           console.log('woah');
           console.log(status, data);

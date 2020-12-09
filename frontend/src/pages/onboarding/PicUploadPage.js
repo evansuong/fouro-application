@@ -60,25 +60,23 @@ export default function ProfileSetupPage({ navigation, route }) {
     // console.log('after compression', request.blob.length);
     const { status, data } = 
       await UpdateAPI.uploadUserProfilePicture(
-        userData.currentUser.uid, request
+        userData.uid, request
       );
     if (!status) {
       Alert.alert('An error occurred. The image might have been too big!');
       console.log(data);
     } else {
-      // console.log('data', data);
       await dispatchUser();
       navigation.replace('Welcome Page');
     }
   }
 
   const dispatchUser = async () => {
-    console.log('PicUpload 77', userData.currentUser.uid);
     const { status, data } = 
-        await ReadAPI.getUserProfile(userData.currentUser.uid);
+        await ReadAPI.getUserProfile(userData.uid);
     if (status) {
       dispatch({
-        type: 'SET_USER',
+        type: 'SET_USERDATA',
         payload: data,
       })
     } else {

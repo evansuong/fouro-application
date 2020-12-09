@@ -66,9 +66,21 @@ router.get("/getNotifications/:id", async (req, res) => {
   }
 });
 
-// TODO: NOT STARTED. MISSING JSON REQUEST
 router.delete("/deleteNotification/:id", checkBody, async (req, res) => {
-
+  const uid = req.params.id;
+  const { notificationId } = req.body;
+  if (!notificationId) {
+    res.status(400).send('Request has missing fields');
+    return;
+  } else {
+    try {
+      const response = 
+        await NotificationsAPI.deleteNotification(uid, notificationId);
+      res.status(200).json({ response: response.out });
+    } catch (err) {
+      res.status(400).send(`An error occurred: ${err}`);
+    }
+  }
 });
 
 // VERIFIED
