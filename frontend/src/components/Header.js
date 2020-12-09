@@ -1,6 +1,6 @@
 import { getFocusedRouteNameFromRoute, NavigationHelpersContext } from '@react-navigation/native';
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, LogBox } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
 import MaskedView from '@react-native-masked-view/masked-view';
@@ -24,7 +24,7 @@ const corkboardIconDark = require('assets/corkboard-icon-dark.png');
 const dotsIcon = require('assets/dots-icon.png');
 const dotsIconDark = require('assets/dots-icon-dark.png');
 
-
+LogBox.ignoreAllLogs()
 
 // function formats button data into an object 
 function buildButtonProps(name, icon, onPress) {
@@ -261,6 +261,7 @@ export default function Header(props) {
                         style={styles.input}
                         onChangeText={(val) => setSearchInput(val)}
                         autoCapitalize='none'
+                        placeholder="search username"
                     />
                     :
                     <View style={styles.titleContainer}>

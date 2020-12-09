@@ -179,7 +179,6 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
         height: windowHeight / 5,
         overflow: 'hidden',
         marginTop: windowHeight / 80,
-        backgroundColor: 'pink'
       },
       backgroundImg: {
         // flex: 1,
@@ -283,7 +282,7 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
 
             {
               images.length > 0 && message.length > 0 &&
-              <View style={{marginTop: -20, backgroundColor: 'yellow'}}>
+              <View>
                 <LinkedButton
                   navigation={navigation}
                   link='Main Nav Page'

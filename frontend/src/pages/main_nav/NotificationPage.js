@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { getFocusedRouteNameFromRoute, useFocusEffect } from "@react-navigation/native";
 // APIs
-import { CreateAPI, ReadAPI } from "../../API";
+import { CreateAPI, DeleteAPI, ReadAPI } from "../../API";
 // Contexts
 import { DimensionContext } from "contexts/DimensionContext";
 import { UserContext } from "contexts/UserContext";
@@ -169,7 +169,7 @@ export default function NotificationPage({ navigation, route }) {
         navigation.navigate('Hug Info', { 
             data: { hug_id: data.callback_id, pinned: false },
         })
-        clearNotification(hugId)
+        clearNotification(id)
 
         // signify hug as caught to the database
     }
@@ -184,7 +184,7 @@ export default function NotificationPage({ navigation, route }) {
 
         CreateAPI.addFriend(uid, friendId).then(response => console.log(response.status))
 
-        clearNotification(friendId)
+        clearNotification(id)
         let data = { 
             status: 'Friend', 
             profile_pic: friend.friendPfp,
@@ -207,6 +207,7 @@ export default function NotificationPage({ navigation, route }) {
 
     function clearNotification(id, type) {
         // turn this into a backend call that removes the notif
+        DeleteAPI.deleteNotification(uid, id).then(response => console.log(response))
         const newList = notifications.filter((item) => item.callback_id !== id);
         setTimeout(() => {
           setNotifications(newList);

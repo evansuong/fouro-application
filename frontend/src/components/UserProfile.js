@@ -21,7 +21,8 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
   const usernameDummy = username;
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
-  const { isLightTheme } = userData;
+  // const { isLightTheme } = userData;
+  const isLightTheme = true;
 
   const userInfoHeight = 
     routeName === 'User Profile Page' ? hp('30%') : hp('20%');
