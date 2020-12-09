@@ -5,7 +5,7 @@ var firebase = require("../firebase/admin");
 require("firebase/firestore");
 
 // Backend function imports
-// var Hugs = require("./Hugs");
+const Hugs = require("./Hugs");
 
 // Firestore
 const db = firebase.firestore();
@@ -42,8 +42,6 @@ function calculateFriendColor(last_hug_date) {
   // Times
   let dateInSeconds = Math.floor(Date.now() / SECOND);
   let hugDateInSeconds = last_hug_date.seconds;
-  let time = last_hug_date.toDate().toString();
-  console.log(time);
 
   // Time since last hug in seconds
   let diff = dateInSeconds - hugDateInSeconds;
@@ -96,9 +94,16 @@ const FriendsAPI = {
    * @param {string} userId
    * @param {string} friendId
    */
-  addFriend: function (userId, friendId) {
+  addFriend: async function (userId, friendId) {
+    let userQuery = await usersCollection.doc(userId).get();
+    let friendQuery = await usersCollection.doc(friendId).get();
+
+    if (!userQuery.exists || !friendQuery.exists) {
+      return { out: "User or friend doesn't exist!" };
+    }
+
     // Add friend to user
-    usersCollection
+    await usersCollection
       .doc(userId)
       .collection("friends")
       .doc(friendId)
@@ -108,7 +113,7 @@ const FriendsAPI = {
         user_ref: usersCollection.doc(friendId),
       });
     // Add user to friend
-    usersCollection
+    await usersCollection
       .doc(friendId)
       .collection("friends")
       .doc(userId)
@@ -117,6 +122,8 @@ const FriendsAPI = {
         last_hug_date: new admin.firestore.Timestamp(0, 0), // seconds, nanoseconds
         user_ref: usersCollection.doc(userId),
       });
+
+    return { out: true };
   },
 
   /**
@@ -173,7 +180,6 @@ const FriendsAPI = {
       .then(async (doc) => {
         // Friend is found
         if (doc.exists) {
-          console.log("HI");
           status = "friend";
         } else {
           // If Pending
@@ -213,7 +219,7 @@ const FriendsAPI = {
     const friendsSnapshot = await friendsRef.orderBy("last_hug_date").get();
     // No friends
     if (friendsSnapshot.empty) {
-      console.log("No matching documents.");
+      // console.log("Friends 222 No matching documents.");
       return { friends: friends };
     }
 
@@ -249,8 +255,8 @@ const FriendsAPI = {
    * @param {string} userId
    * @param {string} friendId
    */
-  getFriendProfile: function (userId, friendId) {
-    // return Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
+  getFriendProfile: async function (userId, friendId) {
+    return await Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
   },
 };
 
@@ -274,7 +280,7 @@ const FriendSearchAPI = {
     const friendsSnapshot = await userFriendsRef.get();
     // No friends
     if (friendsSnapshot.empty) {
-      console.log("No matching documents.");
+      // console.log("Friends 283 No matching documents.");
       return { friends: friends };
     }
     // Get all user_id references from friends

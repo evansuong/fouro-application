@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
@@ -11,40 +11,51 @@ function randomPinIcon() {
 }
 
 export default function PinnedHug( { navigation, unpin, picture, date, friendName, id } ) {
+    // States
+    const [startUp, setStartUp] = useState(true);
+    // Contexts
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    // Misc
+    const hugWidth = windowWidth / 2.5;
+    const hugHeight = windowHeight / 3.15;
+    const imgContainerWidth = hugWidth * 0.9;
+    const imgContainerHeight = imgContainerWidth;
+    const margin = windowWidth * 0.03;
+    const pinWidth = imgContainerWidth * 0.2;
+    const pinHeight = pinWidth;
 
-    const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const hugWidth = windowWidth / 2.5
-    const hugHeight = windowHeight / 3.15
-    const imgContainerWidth = hugWidth * 0.9
-    const imgContainerHeight = imgContainerWidth
-    const margin = windowWidth * 0.03
-    const pinWidth = imgContainerWidth * 0.2
-    const pinHeight = pinWidth
+    useEffect(() => {
+      if (startUp) {
+        setStartUp(false);
+      }
+    }, [])
+
+    const data = {
+      image: picture,
+      hug_id: id,
+      pinned: true
+    }
 
     return(
-            /* Hug */
-            <TouchableOpacity
-                onLongPress={() => unpin()}
-                onPress={() => navigation.navigate('Hug Info')}
-                style={[styles.pinnedHug, { width: hugWidth, height: hugHeight, margin: margin }]}>
-
-                <Image
-                    source={randomPinIcon()}
-                    style={{ width: pinWidth, height: pinHeight }}
-                />
-
-                <Image
-                    source={{ uri: picture }} // was picture
-                    style={[styles.hugImage, { width: imgContainerWidth, height: imgContainerHeight }]}
-                />
-
-                {/* metadata */}
-                <View style={styles.metadata}>
-                    <Text style={styles.text}> { date } </Text>
-                    <Text style={styles.text}> { friendName } </Text>
-                </View>
-
-            </TouchableOpacity>
+      /* Hug */
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Hug Info', { data: data })}
+        style={[styles.pinnedHug, { width: hugWidth, height: hugHeight, margin: margin }]}
+      >
+        <Image
+          source={randomPinIcon()}
+          style={{ width: pinWidth, height: pinHeight }}
+        />
+        <Image
+          source={{ uri: picture }} // was picture
+          style={[styles.hugImage, { width: imgContainerWidth, height: imgContainerHeight }]}
+        />
+        {/* metadata */}
+        <View style={styles.metadata}>
+          <Text style={styles.text}> { date } </Text>
+          <Text style={styles.text}> { friendName } </Text>
+        </View>
+      </TouchableOpacity>
     )
 }
 

@@ -18,6 +18,7 @@ import * as Permissions from 'expo-permissions';
 import { CreateAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import CustomTextField from 'components/CustomTextField';
 import PicUploadButton from 'components/PicUploadButton';
@@ -30,36 +31,54 @@ import BackgroundImg from 'assets/gradients/middle.png';
 
 
 // TODO: Remove FriendName and FriendPic parameters
-export default function CreateHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
-    const [message, setMessage] = useState('');
+export default function CreateHugPage({ navigation, route }) {
+    // States
+    const [message, setMessage] = useState('Yooooooo');
     const [images, setImages] = useState([]);
-
+    // Contexts
     const {windowWidth, windowHeight} = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
- 
+    // Misc
     const routeName = route.name;
-    // const { friendData } = route.params.data;
-
+    const MAX_UPLOAD_SIZE = 100000;
+    const validExtensions = ['jpeg', 'jpg'];
+    const { name, profile_pic, user_id, username } = route.params.data;
+    
     const callBackend = async () => {
-      try {
+      // try {
         let base64Strings = [];
         for (let image of images) {
-          const base64 = await getBase64WithImage(image);
+          let base64 = image.base64;    
+          if (base64.length > MAX_UPLOAD_SIZE) {
+            const compressFactor = MAX_UPLOAD_SIZE / base64.length;
+            console.log('CreateHugPage 54', compressFactor);
+            base64 = await getBase64WithImage(image, compressFactor);
+          }
           base64Strings.push(base64);
         }
-        request = {
-          // friendId: friendData.friend_id,
+        const request = {
+          // friend_id: friendData.friend_id,
+          // TODO: Hardcoded
+          friendId: 'gary@email.com',
+          // TODO: Hardcoded
           message: message,
-          blobs: base64Strings
+          base64: base64Strings
         }
-        // const response = await CreateAPI.createHug(userData.uid, request);
-        const { status, data } = await CreateAPI.createHug('temp', request);
-        console.log('data', data);
-        Alert.alert('Hug created!');
-        navigation.navigate('Home Page');
-      } catch (err) {
-        Alert.alert('Hug creation failed. Please try again.')
-      }
+        const { status, data } = 
+          await CreateAPI.createHug(userData.currentUser.uid, request);
+        if (status) {
+          console.log('woah');
+          console.log(status, data);
+          // const CreateAPI.sendHugRequest
+          
+        // Alert.alert('Hug created!');
+        // navigation.navigate('Home Page');
+        } else {
+          Alert.alert('Error creating hug.')
+        }
+      // } catch (err) {
+      //   Alert.alert('Hug creation failed. Please try again.')
+      // }
     }
 
     const pickFromGallery = async () => {
@@ -71,6 +90,7 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
           allowsEditing: true,
           aspect: [1,1],
           quality: 0.5,
+          base64: true
         })
         checkUpload(data); 
       } else {
@@ -79,12 +99,12 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
       }
     }
 
-    const getBase64WithImage = async (uploadPic) => {
+    const getBase64WithImage = async (uploadPic, compressFactor) => {
       const manipResult = await ImageManipulator.manipulateAsync(
         uploadPic.uri,
         [],
         {
-          compress: 0.1,
+          compress: compressFactor,
           format: ImageManipulator.SaveFormat.JPEG,
           base64: true
         }
@@ -93,17 +113,23 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
     }
   
     const checkUpload = (data) => {
+      let totalChars = 0;
+      for (let i = 0; i < images.length; i++) {
+        totalChars += images[i].base64.length;
+      }
       const arr = data.uri.split('.');
       const fileExtension = arr[arr.length - 1];
       const validExtension = validExtensions.includes(fileExtension);
       if (!validExtension) {
         Alert.alert(`Accepted image types are ${validExtensions}`);
+      } else if (totalChars > 100000) {
+        Alert.alert('You\'ve exceeded the limit of 100KB/hug');
       } else if (images.length > 3) {
         Alert.alert('Max limit of uploads reached');
       } else if (data.cancelled) {
         Alert.alert('Image upload cancelled');
       } else if (data.cancelled == false) {
-        setUploadPic(data);
+        setImages(prevImages => [...prevImages, data]);
       }
     }
 
@@ -180,10 +206,6 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
               <Text style={styles.headerText}>
                 Create Hug
               </Text>
-              <Text style={styles.helperHeaderText}>
-                Add a message and images so that you can save a memorable
-                event with {friendName}
-              </Text>
             </View>
 
             <View style={styles.mainContainer}>
@@ -191,12 +213,12 @@ export default function CreateHugPage({ navigation, route, friendName='Placehold
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
                   <Image
-                    source={friendPic ? friendPic : fillerProfilePic}
+                    source={{ uri : profile_pic }}
                     style={styles.profilePic}
                   />
                   <View style={styles.friendTextContainer}>
                     <Text style={styles.friendText}>
-                      {friendName}
+                      Sending hug to {name}
                     </Text>
                   </View>
                 </View>

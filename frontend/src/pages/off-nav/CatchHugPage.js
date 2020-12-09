@@ -30,13 +30,17 @@ import profilePic from 'assets/profilePic.jpg';
 
 
 // TODO: Remove FriendName and FriendPic parameters
-export default function CatchHugPage({ navigation, route, friendName='Placeholder', friendPic }) {
+export default function CatchHugPage({ navigation, route, friendPic }) {
+    // States
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
+    // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    const { hugId, friendPfp } = route.params.data;
-    console.log('in catch hug page:', route.params.data)
+    // Misc
+    const { friendPfp, friend_username, friendName, notification_id, callback_id } = route.params.data;
+    console.log(route.params.data)
+    // console.log('in catch hug page:', route.params.data)
     const routeName = route.name;
 
     const callBackend = async () => {
@@ -48,7 +52,7 @@ export default function CatchHugPage({ navigation, route, friendName='Placeholde
           base64Strings.push(base64);
         }
         request = {
-          hugId: hugId,
+          hugId: callback_id,
           message: message,
           blobs: base64Strings
         }
@@ -186,7 +190,7 @@ export default function CatchHugPage({ navigation, route, friendName='Placeholde
                 Catch Hug
               </Text>
               <Text style={styles.helperHeaderText}>
-                Add to the caught hug with a message and images of your 
+                Add to { friendName }'s hug with a message and images of your 
                 own!
               </Text>
             </View>
@@ -201,7 +205,7 @@ export default function CatchHugPage({ navigation, route, friendName='Placeholde
                   />
                   <View style={styles.friendTextContainer}>
                     <Text style={styles.friendText}>
-                      {friendName}
+                      {friend_username}
                     </Text>
                   </View>
                 </View>

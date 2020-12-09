@@ -7,41 +7,39 @@ import {
   Keyboard,
   Animated,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
+// APIs
+import { CreateAPI } from '../../API';
+// Contexts
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from '../../contexts/UserContext';
+// Custom Components
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
-import { useIsFocused } from '@react-navigation/native';
+// Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
-import { DimensionContext } from '../../contexts/DimensionContext';
-import { CreateAPI } from '../../API';
-import { UserContext } from '../../contexts/UserContext';
 
 
 export default function NamePage({ navigation, route }) {
-  const [firstName, setFirstName] = useState('V');
-  const [lastName, setLastName] = useState('V');
-  const [username, setUsername] = useState('V');
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [username, setUsername] = useState('');
+  // States
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
   const [userExists, setUserExists] = useState(false);
-  const [mounted, setMounted] = useState(true);
   const [startUp, setStartUp] = useState(true);
+  const [signingUp, setSigningUp] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
-  const { userData } = useContext(UserContext);
-
+  const { userData, dispatch } = useContext(UserContext);
+  // Misc
   const fade = useRef(new Animated.Value(0)).current;
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (startUp) {
       setStartUp(false);
       fadeIn();
-    }
-    if (!isFocused) {
-      setMounted(false);
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -59,6 +57,7 @@ export default function NamePage({ navigation, route }) {
     );
 
     return () => {
+      setSigningUp(false);
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
     }
@@ -79,44 +78,27 @@ export default function NamePage({ navigation, route }) {
   }
 
   const submitHandler = async () => {
-    // function to check if user with username is already taken (waiting on backend)
-    // const usernameTaken = await UsersAPI.usernameTaken(username);
-    // if (usernameTaken) {
-    //   setUserExists(true);
-    //   timeout();
-    //   return;
-    // }
-    // await UsersAPI.updateUserProfile(username, firstName, lastName);
-    
+    setSigningUp(true);
     let userToCreate = {
-      uid: userData.uid,
+      uid: userData.currentUser.uid,
       username: username.trim(),
       firstName: firstName.trim(),
       lastName: lastName.trim(),
     }
 
-    dispatch({
-      type: "SET_USER",
-      payload: userToCreate,
-    });
-
-    let { status, data } = await CreateAPI.createUser(userToCreate.uid, userToCreate);
-    if (status) {
-      navigation.navigate('Pic Upload Page');
+    let { status, data } = 
+      await CreateAPI.createUser(userData.currentUser.uid, userToCreate);
+    if (status && data.out) {
+      setTimeout(() => {
+        navigation.replace('Pic Upload Page');
+      }, 1000);
     } else {
-      alert('An error occurred');
+      setSigningUp(false);
+      alert('That username is taken!');
       console.log(data);
     }
   }
 
-  const timeout = () => {
-    if (mounted) {
-      setTimeout(() => {
-        setUserExists(false);
-      }, 5000);
-      return true;
-    }
-  }
 
   const styles = StyleSheet.create({
     errorText: {
@@ -125,13 +107,14 @@ export default function NamePage({ navigation, route }) {
     },
     textContainer: {
       display: 'flex',
+      flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      margin: 20,
+      marginTop: 20,
     },
     whiteBox: {
       backgroundColor: 'rgba(255,255,255,0.2)',
-      paddingBottom: 30,
+      paddingBottom: 20,
       marginLeft: 20,
       marginRight: 20,
       marginBottom: isKeyboardVisible ? windowHeight / 3 : 0,
@@ -140,8 +123,14 @@ export default function NamePage({ navigation, route }) {
       flex: 1,
       resizeMode: 'cover',
       justifyContent: 'center',
-    }
+    },
+    signingText: {
+      color: 'green',
+      fontSize: 18,
+      textAlign: 'center',
+    },
   });
+
 
   return(
     <TouchableWithoutFeedback onPress={() => {
@@ -177,11 +166,14 @@ export default function NamePage({ navigation, route }) {
 
             {
               checkFilled() &&
-              <LinkedButton
-                text='NEXT'
-                color='#FFC24A'
-                onPress={() => submitHandler()}
-              />
+              !signingUp &&
+              <View style={{marginTop: 20,}}>
+                <LinkedButton
+                  text='NEXT'
+                  color='#FFC24A'
+                  onPress={() => submitHandler()}
+                />
+              </View>
             }
             {
               userExists && 
@@ -189,6 +181,15 @@ export default function NamePage({ navigation, route }) {
                 <Text style={styles.errorText}>
                   That username is taken!
                 </Text>
+              </View>
+            }
+            {
+              signingUp &&
+              <View style={styles.textContainer}>
+                <Text style={styles.signingText}>
+                  SSN Retrieved...
+                </Text>
+                <ActivityIndicator />
               </View>
             }
           </View>

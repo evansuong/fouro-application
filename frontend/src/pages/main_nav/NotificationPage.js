@@ -9,17 +9,26 @@ import {
   Image,
   Button,
 } from "react-native";
-import NotificationCard from "components/NotificationCard";
-import { DimensionContext } from "../../contexts/DimensionContext";
-import { UserContext } from "../../contexts/UserContext";
-
 import { useFocusEffect } from "@react-navigation/native";
+// APIs
+import { CreateAPI, ReadAPI } from "../../API";
+// Contexts
+import { DimensionContext } from "contexts/DimensionContext";
+import { UserContext } from "contexts/UserContext";
+// Custom Components
+import NotificationCard from "components/NotificationCard";
+import Header from "components/Header";
+// Images/Assets
 import AppStyles from "../../AppStyles";
-import Header from "../../components/Header";
-import { ReadAPI } from "../../API";
+
+
+
+
+
+/*------- testing --------*/
 
 // temorary test data to simulate backend notification data
-const pic = require("../../../assets/profilePic.jpg");
+const pic = require("assets/profilePic.jpg");
 const gradient = require("assets/gradients/right.png");
 
 // function buildTestHugData(
@@ -82,14 +91,22 @@ const gradient = require("assets/gradients/right.png");
 //     }
 // }
 
+/*------- end of testing --------*/
+
+
+
+
+
 
 export default function NotificationPage({ navigation, route }) {
- 
+    // States
     // stores whether the user is on this page (true) or not (false)
     const [isFocused, setIsFocused] = useState(false)
+    // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext)
-    const [notifications, setNotifications] = useState()
+    const [notifications, setNotifications] = useState([])
     const { userData } = useContext(UserContext);
+    // Misc
     const { uid } = userData.currentUser;
     const routeName = route.name;
     
@@ -101,11 +118,29 @@ export default function NotificationPage({ navigation, route }) {
         }
     }, []);  
 
+   
+
+    function getTimeElapsed(date_time) {
+        let notifDate = new Date(date_time).getTime() / 1000
+        let today = parseInt(new Date().getTime() / 1000)
+        let t = Math.floor(parseInt(today - notifDate) / 86400);
+        console.log(t)
+        if (t < 1) {
+            return 'today'
+        } else {
+            return t.toString() + ' days ago';
+        }
+    }
+
+
     function getNotifications() {
         ReadAPI.getNotifications(uid)
             .then(response => {
-                console.log(response.data.notifications.notifs)
-                setNotifications(response.data.notifications.notifs)
+                let notifications = response.data.notifications.notifs;
+                notifications = notifications.map(notif => (
+                    Object.assign({}, {...notif, date_time: getTimeElapsed(notif.date_time)})
+                ));
+                setNotifications(notifications)
             })
     }
 
@@ -117,27 +152,33 @@ export default function NotificationPage({ navigation, route }) {
     function catchHug(hugId, id) {
         //console.log(id)
         let data = notifications.filter((item) => item.callback_id === hugId)[0]
-        clearNotification(id)
 
         // data = Object.assign({}, {hug_id: data.call_id, ...data})
         navigation.navigate('Catch Hug Page', { 
             page: 'hugInfo',
-            data: data
+            data: data,
         })
         // signify hug as caught to the database
     }
 
     function dropHug(hugId, id) {
-        clearNotification(id)
+        clearNotification(hugId)
         // remove hug from database
     }
 
     function acceptFriendRequest(friendId, id) {
-        console.log(id)
-        let data = notifications.filter((item) => item.callback_id === friendId)[0]
-        console.log('data', data)
-        clearNotification(id)
-        data = Object.assign({}, { status: data.type, ...data})
+        let friend = notifications.filter((item) => item.callback_id === friendId)[0]
+
+        CreateAPI.addFriend(uid, friendId).then(response => console.log(response.status))
+
+        clearNotification(friendId)
+        let data = { 
+            status: 'Friend', 
+            profile_pic: friend.friendPfp,
+            name: friend.friendName,
+            username: friend.friend_username,
+            otheruser_id: friend.callback_id,
+        }
         navigation.navigate('Friend Profile', {
             page: 'friendProfile',
             data: data
@@ -146,13 +187,17 @@ export default function NotificationPage({ navigation, route }) {
     }
 
     function declineFriendRequest(friendId, id) {
-        clearNotification(id)
+        clearNotification(friendId)
         // remove friend reauest fron database
+        
     } 
 
     function clearNotification(id, type) {
-        const newList = notifications.filter((item) => item.call_id !== id);
-        setNotifications(newList)
+        // turn this into a backend call that removes the notif
+        const newList = notifications.filter((item) => item.callback_id !== id);
+        setTimeout(() => {
+          setNotifications(newList);
+        }, 1000);
     }
 
     // notification list styles
@@ -162,6 +207,7 @@ export default function NotificationPage({ navigation, route }) {
             display: 'flex',
             flexShrink: 1,
             alignItems: 'center',
+            marginTop: windowHeight * .14,
         },
         filler: {
             height: windowHeight / 7,
@@ -180,30 +226,31 @@ export default function NotificationPage({ navigation, route }) {
         
 
             <View style={styles.notificationList}>
-                <Button title="adsfasdfdf" onPress={getNotifications}/>
                 {/* actual list */}
                 
                 {notifications && <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
-                    {notifications && notifications.map(( data, index ) => (
-                        data.type === 'friend' ? 
-                        <NotificationCard 
-                            key={data.notification_id} 
-                            callId={data.friendId}
-                            notificationData={data} 
-                            isFocused={isFocused} 
-                            handleAccept={acceptFriendRequest} 
-                            handleDecline={declineFriendRequest} />
-                            : data.type === 'f' ?
-                        <View key={'filler'} style={styles.filler}></View>
-                            :
-                        <NotificationCard 
-                            key={data.notification_id} 
-                            callId={data.hugId}
-                            notificationData={data} 
-                            isFocused={isFocused} 
-                            handleAccept={catchHug} 
-                            handleDecline={dropHug} />
-                    ))}
+                    {notifications && notifications.map(( data, index ) => {
+                        return (
+                            data.type === 'friend' ? 
+                            <NotificationCard 
+                                key={data.notification_id} 
+                                callId={data.friendId}
+                                notificationData={data} 
+                                isFocused={isFocused} 
+                                handleAccept={acceptFriendRequest} 
+                                handleDecline={declineFriendRequest} />
+                                : data.type === 'f' ?
+                            <View key={'filler'} style={styles.filler}></View>
+                                :
+                            <NotificationCard 
+                                key={data.notification_id} 
+                                callId={data.hugId}
+                                notificationData={data} 
+                                isFocused={isFocused} 
+                                handleAccept={catchHug} 
+                                handleDecline={dropHug} />
+                        )
+                    })}
                 </ScrollView>}
             </View>                   
         </View>

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { HugsAPI, UpdateHugAPI, ViewHugAPI } = require('../model/Hugs');
+const { HugsAPI, UpdateHugAPI, ViewHugAPI } = require("../model/Hugs");
 
 router.use(
   express.urlencoded({
@@ -9,10 +9,9 @@ router.use(
 );
 router.use(express.json());
 
-
 function checkBody(req, res, next) {
   if (Object.keys(req.body).length == 0) {
-    res.status(400).send('Missing JSON request body');
+    res.status(400).send("Missing JSON request body");
     return;
   }
   next();
@@ -22,7 +21,7 @@ async function retrieveUserData(req, res, uid) {
   const userRef = usersCollection.doc(uid);
   const user = await userRef.get();
   if (!user.exists) {
-    res.status(400).send('No user with the provided UID was found');
+    res.status(400).send("No user with the provided UID was found");
     return undefined;
   }
   req.body.userRef = userRef;
@@ -32,22 +31,22 @@ async function retrieveUserData(req, res, uid) {
 // const response = HugsAPI.createHug(uid, friend_id, message, blobs);
 
 // Routes
-// TODO: BROKEN. WORKING ON UPLOADING BLOB 
+// TODO: BROKEN. CREATE HUG IS NOT WORKING.
 router.post("/createHug/:id", checkBody, async (req, res) => {
+  console.log("here man");
   const uid = req.params.id;
-  const { friend_id, message, blobs } = req.body;
+  const { friendId, message, base64 } = req.body;
 
-  if (!friend_id || !message || !blobs) {
-    res.status(400).send('Request has missing fields');
+  console.log(friendId, message, base64.length);
+  if (!friendId || !message || !base64) {
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
-      const response = await HugsAPI.createHug(
-        uid, friend_id, message, blobs
-      );
-      console.log('response:', response);
+      const response = await HugsAPI.createHug(uid, friendId, message, base64);
+      console.log("response:", response);
       res.status(200).json(response);
-    } catch(err) {
+    } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }
   }
@@ -59,12 +58,11 @@ router.post("/respondToHug/:id", checkBody, (req, res) => {
   const { hugId, message, blobs } = req.body;
 
   if (!hugId || !message || !blobs) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
-      
-    } catch(err) {
+    } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }
   }
@@ -76,40 +74,41 @@ router.delete("/dropAHug/:id", checkBody, (req, res) => {
   const { requestId, hugId } = req.body;
 
   if (!requestId || !hugId) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
-      
-    } catch(err) {
+    } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }
   }
 });
 
 // TODO: BROKEN (SEE ABOVE)
-router.get("/getUserHugs/:id", (req, res) => {
+router.get("/getUserHugs/:id", async (req, res) => {
   const uid = req.params.id;
-
+  // console.log(uid);
   try {
-    
-  } catch(err) {
+    const response = await ViewHugAPI.getUserHugs(uid);
+    res.status(200).json(response);
+  } catch (err) {
     res.status(400).send(`An error occurred: ${err}`);
   }
 });
 
 // TODO: BROKEN (SEE ABOVE)
-router.get("/getHugById/:id", checkBody, (req, res) => {
+router.get("/getHugById/:id,:hugId", async (req, res) => {
   const uid = req.params.id;
-  const { hugId } = req.body;
+  const hugId = req.params.hugId;
 
   if (!hugId) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
-      
-    } catch(err) {
+      const response = await ViewHugAPI.getHugById(hugId);
+      res.status(200).json(response);
+    } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }
   }

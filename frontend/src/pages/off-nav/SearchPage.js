@@ -1,71 +1,91 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
-import { DimensionContext } from '../../contexts/DimensionContext';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  ScrollView, 
+  TouchableOpacity 
+} from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
+// Contexts
+import { DimensionContext } from '../../contexts/DimensionContext';
 import { UserContext } from '../../contexts/UserContext';
+import { ReadAPI } from '../../API';
 
 
+
+/*------- testing --------*/
 
 const pic = 'https://firebasestorage.googleapis.com/v0/b/cafe-fouro.appspot.com/o/profile_pictures%2FPhoto%20on%203-30-20%20at%205.34%20PM.jpg?alt=media&token=478c304d-37e4-463e-a821-b817b6119edb'
 
+// when we actually pass info to the OtherUserProfilePage, just append isStranger and isPending to the end
+const testFriendData = [
+  {user_id: 1, name: 'e', username: 'a', pfp: pic, isStranger: false, isPending: false},
+  {user_id: 2, name: 'eva', username: 'al', pfp: pic, isStranger: false, isPending: false},
+  {user_id: 3, name: 'eva', username: 'ale', pfp: pic, isStranger: false, isPending: false},
+  {user_id: 4, name: 'evan', username: 'alex', pfp: pic, isStranger: false, isPending: false},
+  {user_id: 5, name: 'evans', username: 'alexc',pfp: pic, isStranger: false, isPending: false},  
+  {user_id: 6, name: 'evansu', username: 'alexch', pfp: pic, isStranger: false, isPending: false},
+  {user_id: 7, name: 'evansuo', username: 'alexchow',pfp: pic, isStranger: false, isPending: false},
+  {user_id: 8, name: 'evansuon', username: 'alexchowmein',pfp: pic, isStranger: false, isPending: false},
+  {user_id: 9, name: 'evansuong', username: 'alexchowmei', pfp: pic, isStranger: false, isPending: false},
+  {user_id: 10, name: 'evansuong', username: 'alexchowmen', pfp: pic, isStranger: false, isPending: false},
+]
+
+// again, pass 
+const testStrangerData = [
+  {user_id: 1, name: 's', username: 'a', pfp: pic, isStranger: true, isPending: false},
+  {user_id: 2, name: 'su', username: 'al', pfp: pic, isStranger: true, isPending: true},
+  {user_id: 3, name: 'suo', username: 'ale', pfp: pic, isStranger: true, isPending: false},
+  {user_id: 4, name: 'suon', username: 'alex', pfp: pic, isStranger: true, isPending: false},
+  {user_id: 5, name: 'suong', username: 'alexc', pfp: pic, isStranger: true, isPending: true},
+  {user_id: 6, name: 'suonge', username: 'alexch', pfp: pic, isStranger: true, isPending: false},
+  {user_id: 7, name: 'suongev', username: 'alexcho', pfp: pic, isStranger: true, isPending: true},
+  {user_id: 8, name: 'suongeva', username: 'alexchow', pfp: pic, isStranger: true, isPending: true},
+  {user_id: 9, name: 'suongevan', username: 'alexchowm', pfp: pic, isStranger: true, isPending: false},
+  {user_id: 10, name: 'suongevan', username: 'alexchowme', pfp: pic, isStranger: true, isPending: false},
+]
+
+/*------- end of testing --------*/
+
+
+
+
+
 export default function SearchPage({ input, navigation }) {
-
-    const { windowWidth, windowHeight } = useContext(DimensionContext);
-    const { userData } = useContext(UserContext);
-    const { isLightTheme } = userData;
-
+    // States
     const [userList, setUserList] = useState([]);
     const [searchFriends, setSearchFriends] = useState(true);
+    // Contexts
+    const { windowWidth, windowHeight } = useContext(DimensionContext);
+    const { userData } = useContext(UserContext);
+    const { isLightTheme, currentUser } = userData;
+    const { uid } = currentUser;
     const Tab = createMaterialTopTabNavigator();
 
-    function toggleSearchList() { setSearchFriends(!searchFriends) }
 
-   
+    // setUserList(testStrangerData.filter(user => user.username === input ))
+    // setUserList(testFriendData.filter(user => user.name === input ))
+
+    function search() {
+        if (searchFriends) {
+            ReadAPI.searchFriends(uid, input).then(response => setUserList(response.data.friends))
+        } else {
+            ReadAPI.searchUsers(uid, input).then(response => setUserList([response.data.user]))
+        }
+    }
+
+    console.log('here')
     
     useEffect(() => {
         if (input === '') {
             setUserList([])
         } else {
-            if (searchFriends) {
-                setUserList(testFriendData.filter(user => user.name === input ))
-            } else {
-                setUserList(testStrangerData.filter(user => user.username === input ))
-            }
+            search()
         }
     }, [input, searchFriends])
-
-    console.log('render')
-
-
-    // when we actually pass info to the OtherUserProfilePage, just append isStranger and isPending to the end
-    const testFriendData = [
-        {user_id: 1, name: 'e', username: 'a', pfp: pic, isStranger: false, isPending: false},
-        {user_id: 2, name: 'eva', username: 'al', pfp: pic, isStranger: false, isPending: false},
-        {user_id: 3, name: 'eva', username: 'ale', pfp: pic, isStranger: false, isPending: false},
-        {user_id: 4, name: 'evan', username: 'alex', pfp: pic, isStranger: false, isPending: false},
-        {user_id: 5, name: 'evans', username: 'alexc',pfp: pic, isStranger: false, isPending: false},  
-        {user_id: 6, name: 'evansu', username: 'alexch', pfp: pic, isStranger: false, isPending: false},
-        {user_id: 7, name: 'evansuo', username: 'alexchow',pfp: pic, isStranger: false, isPending: false},
-        {user_id: 8, name: 'evansuon', username: 'alexchowmein',pfp: pic, isStranger: false, isPending: false},
-        {user_id: 9, name: 'evansuong', username: 'alexchowmei', pfp: pic, isStranger: false, isPending: false},
-        {user_id: 10, name: 'evansuong', username: 'alexchowmen', pfp: pic, isStranger: false, isPending: false},
-    ]
-
-    // again, pass 
-    const testStrangerData = [
-        {user_id: 1, name: 's', username: 'a', pfp: pic, isStranger: true, isPending: false},
-        {user_id: 2, name: 'su', username: 'al', pfp: pic, isStranger: true, isPending: true},
-        {user_id: 3, name: 'suo', username: 'ale', pfp: pic, isStranger: true, isPending: false},
-        {user_id: 4, name: 'suon', username: 'alex', pfp: pic, isStranger: true, isPending: false},
-        {user_id: 5, name: 'suong', username: 'alexc', pfp: pic, isStranger: true, isPending: true},
-        {user_id: 6, name: 'suonge', username: 'alexch', pfp: pic, isStranger: true, isPending: false},
-        {user_id: 7, name: 'suongev', username: 'alexcho', pfp: pic, isStranger: true, isPending: true},
-        {user_id: 8, name: 'suongeva', username: 'alexchow', pfp: pic, isStranger: true, isPending: true},
-        {user_id: 9, name: 'suongevan', username: 'alexchowm', pfp: pic, isStranger: true, isPending: false},
-        {user_id: 10, name: 'suongevan', username: 'alexchowme', pfp: pic, isStranger: true, isPending: false},
-    ]
 
     function searchStrangersList({ route }) {
 
@@ -73,9 +93,8 @@ export default function SearchPage({ input, navigation }) {
             setSearchFriends(false)
         })
 
-        function viewFriend(userData) {
-            // TODO: change this route name to Other User Profile
-            navigation.navigate('Friend Profile', { data: Object.assign({}, { id: userData.user_id, profile_pic: userData.pfp, ...userData })});
+        function viewStranger(userData) {
+            navigation.navigate('Friend Profile', { data: Object.assign({}, { otheruser_id: userData.user_id, profile_pic: userData.pfp, ...userData })});
         }
 
         let textColor = isLightTheme ? '#000' : '#FFF';
@@ -84,16 +103,17 @@ export default function SearchPage({ input, navigation }) {
         console.log(userData.image)
 
         return (
+            userList[0] ? 
             <ScrollView style={{ backgroundColor: backgroundColor }}>
-            {userList.map(userData => (
-                <TouchableOpacity key={userData.user_id} onPress={() => viewFriend(userData)}>
-                    <View style={{...styles.userCard, borderBottomColor: borderColor}}>
-                        {/* <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.image }}/> */}
-                        <Text style={{...styles.userText, textColor: textColor}}>{userData.name}</Text>
-                    </View>
-                </TouchableOpacity>
-            ))}
-            </ScrollView>
+                {userList.map(userData => (
+                    <TouchableOpacity key={userData.user_id} onPress={() => viewStranger(userData)}>
+                        <View style={{...styles.userCard, borderBottomColor: borderColor}}>
+                            <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.profile_pic }}/> 
+                            <Text style={{...styles.userText, color: textColor}}>{userData.name}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView> : <></>
         )
     }
 
@@ -104,7 +124,7 @@ export default function SearchPage({ input, navigation }) {
         })
 
         function viewUser(userData) {
-            navigation.navigate('Friend Profile', { data: Object.assign({}, { id: userData.user_id, profile_pic: userData.pfp, ...userData })})
+            navigation.navigate('Friend Profile', { data: Object.assign({}, { otheruser_id: userData.user_id, profile_pic: userData.pfp, ...userData })})
         }
 
         let textColor = isLightTheme ? '#000' : '#FFF';
@@ -112,16 +132,17 @@ export default function SearchPage({ input, navigation }) {
         let backgroundColor = isLightTheme ? '#FFF' : '#333'
 
         return (
+            userList && userList.length > 0 ?
             <ScrollView style={{backgroundColor: backgroundColor}}>
             {userList.map(userData => (
                 <TouchableOpacity key={userData.user_id} onPress={() => viewUser(userData)}>
                     <View style={{...styles.userCard, borderBottomColor: borderColor }}>
-                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={userData.image}/>
+                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.profile_pic }}/> 
                         <Text style={{...styles.userText, color: textColor }}>{userData.name}</Text>
                     </View>
                 </TouchableOpacity>
             ))}
-            </ScrollView>
+            </ScrollView> : <></>
         )
     }
 

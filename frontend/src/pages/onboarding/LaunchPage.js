@@ -9,9 +9,11 @@ import fouroLogo from 'assets/fouro_logo.png';
 
 
 export default function LaunchPage({ navigation }) {
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
+  // Misc
   const roundedWidth = Math.round(windowWidth / 100) * 100;
-  const roundedHeight = Math.round(windowWidth / 100) * 100;
+  const roundedHeight = Math.round(windowHeight / 100) * 100;
 
   const styles = StyleSheet.create({
     container: {
@@ -20,12 +22,20 @@ export default function LaunchPage({ navigation }) {
     innerContainer: {
       flex: 1,
       justifyContent: 'flex-end',
-      marginBottom: '30%',
+      marginBottom: windowWidth * 0.2,
+      // backgroundColor: 'pink'
     },
     logo: {
+      width: windowWidth * 0.75,
+      height: windowWidth * 0.75,
+    },
+    logoContainer: {
+      position: 'absolute',
+      height: '100%',
       width: windowWidth,
-      height: windowWidth,
-      marginTop: windowWidth / 2,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     }
   })
 
@@ -39,12 +49,15 @@ export default function LaunchPage({ navigation }) {
         source={{ uri: `https://picsum.photos/${roundedWidth}/${roundedHeight}`}}
         style={{position: 'absolute', width: '100%', height: '100%'}}
       >
-        <View>
+        {/* logo */}
+        <View style={styles.logoContainer}>
           <Image
             source={fouroLogo}
             style={styles.logo}
           />
         </View>
+
+        {/* Buttons */}
         <View style={styles.innerContainer}>
           <LinkedButton 
             navigation={navigation} 

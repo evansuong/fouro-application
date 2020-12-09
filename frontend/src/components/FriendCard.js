@@ -86,6 +86,13 @@ export default function FriendCard(props) {
       marginLeft: 20,
       color: isLightTheme ? 'white' : color,
       fontWeight: '500',
+    },
+    innerFriendCardContainer: {
+      flex: 1, 
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      minHeight: pfpWidth + 10,
     }
   });
 
@@ -93,7 +100,17 @@ export default function FriendCard(props) {
     /* the card itself */
     <TouchableOpacity 
       style={styles.friendCardContainer}
-      onPress={() => { navigation.navigate("Friend Profile", { data: friendData })}}
+      onPress={() => { 
+        navigation.navigate("Friend Profile", 
+          { data: {
+              otheruser_id: friendData.user_id,
+              name: friendData.name,
+              username: friendData.username,
+              profile_pic: friendData.profile_pic,
+              status: 'friend',
+            }
+          })
+        }}
       activeOpacity={.9}
     >
 
@@ -114,8 +131,8 @@ export default function FriendCard(props) {
 
         {/* filler profile picture */}
         <View style={styles.pfpContainer2}>
-        </View>
 
+        </View>
       </View>
 
     </TouchableOpacity>

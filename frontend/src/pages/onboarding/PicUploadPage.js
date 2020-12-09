@@ -5,23 +5,40 @@ import {
   Image,
   Alert,
   Animated,
-  ImageBackground
+  ImageBackground,
+  Text,
+  ActivityIndicator,
 } from 'react-native';
 // Expo Imports
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import * as FileSystem from 'expo-file-system';
-import Header from '../../components/Header';
-
-// const fs = require('fs');
+import * as ImageManipulator from 'expo-image-manipulator';
+// APIs
+import { ReadAPI, UpdateAPI } from '../../API';
+// Contexts
+import { UserContext } from 'contexts/UserContext';
+// Custom Components
+import Header from 'components/Header';
+import PicUploadButton from 'components/PicUploadButton';
+import LinkedButton from 'components/LinkedButton';
+// Images/Assets
+import BackgroundImg from 'assets/gradients/middle.png';
+import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 
 
 export default function ProfileSetupPage({ navigation, route }) {
+  // States
   const [uploadPic, setUploadPic] = useState({});
-  const { userData, dispatch } = useContext(UserContext);
   const [startUp, setStartUp] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  // Context
+  const { userData, dispatch } = useContext(UserContext);
+  // Misc
   const fade = useRef(new Animated.Value(0)).current;
   const routeName = route.name;
+  const IMAGE_WIDTH = 1000;
+  const MAX_UPLOAD_SIZE = 100000;
+  const validExtensions = ['jpeg', 'jpg'];
 
   useEffect(() => {
     if (startUp) {
@@ -30,37 +47,74 @@ export default function ProfileSetupPage({ navigation, route }) {
     }
   }, [startUp])
 
-  const IMAGE_WIDTH = 1000;
-  const IMAGE_COMPRESSION = 1;
-  const validExtensions = ['jpeg', 'jpg'];
-
   const callBackend = async () => {
-    const base64 = await getBase64WithImage(uploadPic);
-    request = {
+    setUploading(true);
+    let base64 = uploadPic.base64;    
+    if (base64.length > MAX_UPLOAD_SIZE) {
+      const compressFactor = MAX_UPLOAD_SIZE / base64.length;
+      base64 = await getBase64WithImage(compressFactor);
+    }
+    const request = {
       blob: base64
     }
-    // const response = await UpdateAPI.uploadUserProfilePicture(userData.uid, request);
-    const { status, data } = await UpdateAPI.uploadUserProfilePicture('1', request);
+    // console.log('after compression', request.blob.length);
+    const { status, data } = 
+      await UpdateAPI.uploadUserProfilePicture(
+        userData.currentUser.uid, request
+      );
     if (!status) {
-      Alert.alert('An error occurred');
+      Alert.alert('An error occurred. The image might have been too big!');
       console.log(data);
     } else {
-      console.log('data', data);
-      navigation.navigate('Welcome Page');
+      // console.log('data', data);
+      await dispatchUser();
+      navigation.replace('Welcome Page');
     }
   }
 
-  const getBase64WithImage = async (uploadPic) => {
-    const manipResult = await ImageManipulator.manipulateAsync(
-      uploadPic.uri,
-      [],
-      {
-        compress: 0.1,
-        format: ImageManipulator.SaveFormat.JPEG,
-        base64: true
+  const dispatchUser = async () => {
+    console.log('PicUpload 77', userData.currentUser.uid);
+    const { status, data } = 
+        await ReadAPI.getUserProfile(userData.currentUser.uid);
+    if (status) {
+      dispatch({
+        type: 'SET_USER',
+        payload: data,
+      })
+    } else {
+      Alert.alert('Error retrieving profile data');
+    }
+  }
+
+  const getBase64WithImage = async (compressFactor) => {
+    const ORIGINXY = uploadPic.height / 3;
+    let manipResult;
+    try {
+      manipResult = await ImageManipulator.manipulateAsync(
+        uploadPic.uri,
+        [{crop: {originX: ORIGINXY, originY: ORIGINXY, width: IMAGE_WIDTH, height: IMAGE_WIDTH}}],
+        {
+          compress: compressFactor,
+          format: ImageManipulator.SaveFormat.JPEG,
+          base64: true
+        }
+      )
+    } catch {
+      try {
+        manipResult = await ImageManipulator.manipulateAsync(
+          uploadPic.uri,
+          [],
+          {
+            compress: 0.1,
+            format: ImageManipulator.SaveFormat.JPEG,
+            base64: true
+          }
+        )
+      } catch {
+        Alert.alert('Image dimensions might be incorrect!');
       }
-    )
-    return `data:image/jpeg;base64,${manipResult}`;
+    }
+    return `data:image/jpeg;base64,${manipResult.base64}`;
   }
 
   const checkUpload = (data) => {
@@ -79,7 +133,7 @@ export default function ProfileSetupPage({ navigation, route }) {
   const pickFromGallery = async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (granted) {
-      console.log('granted');
+      // console.log('granted');
       let data = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [1,1],
@@ -89,7 +143,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       })
       checkUpload(data); 
     } else {
-      console.log('access denied');
+      // console.log('access denied');
       Alert.alert('You need to give up permission to work'); 
     }     
   }
@@ -97,7 +151,7 @@ export default function ProfileSetupPage({ navigation, route }) {
   const pickFromCamera = async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
-      console.log('granted');
+      // console.log('granted');
       let data = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -108,7 +162,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       })
       checkUpload(data); 
     } else {
-      console.log('access denied');
+      // console.log('access denied');
       Alert.alert('You need to give up permission to work');
     }
   }
@@ -144,7 +198,9 @@ export default function ProfileSetupPage({ navigation, route }) {
           {/* Profile Picture Holder */}
           <View style={styles.picContainer}>
             <Image
-              source={isEmpty(uploadPic) || uploadPic.cancelled ? fillerProfilePic : {uri: `${uploadPic.uri}`}}
+              source={isEmpty(uploadPic) || uploadPic.cancelled ? 
+                fillerProfilePic : {uri: `${uploadPic.uri}`}
+              }
               style={styles.profilePicture}
             />
           </View>
@@ -159,18 +215,27 @@ export default function ProfileSetupPage({ navigation, route }) {
               text='Take a profile picture'
               onPress={() => pickFromCamera()}
             />
+            <Text style={styles.note}>
+              'Take a profile picture': Your profile picture will be taken from the tiny middle portion 
+            </Text>
           </View>
 
           {/* Conditional Submit */}
           { 
             uploadedPic() && 
+            !uploading &&
             <View style={styles.submit}>
               <LinkedButton
-                text='NEXT'
-                // Should this be yellow or grey?
+                text='COMPLETE'
                 color='#FFC24A'
                 onPress={() => callBackend()}
               />
+            </View>
+          }
+          {
+            uploading &&
+            <View style={styles.textContainer}>
+              <ActivityIndicator />
             </View>
           }
         </View>
@@ -231,5 +296,19 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     marginLeft: 20,
     marginRight: 20,
-  }
+  },
+  note: {
+    color: 'red', 
+    fontSize: 10, 
+    marginTop: 10, 
+    width: 200, 
+    textAlign: 'center'
+  },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
 })

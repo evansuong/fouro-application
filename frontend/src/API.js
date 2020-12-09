@@ -1,25 +1,23 @@
 import axios from 'axios';
 
-const server = 'http://192.168.4.66:3000';
+const server = 'http://192.168.1.170:3000';
 
 const onAccept = (res, response) => {
-  console.log('accepting');
+  // console.log('API 6 accepting');
+  // console.log('API 7', response);
   response.status = true;
   response.data = res.data;
 }
 
 const onReject = (err, response) => {
-  console.log('rejecting');
+  // console.log('API 12 rejecting');
+  // console.log('API 13', response);
   console.log(err.code);
   console.log(err.message);
   console.log(err.stack);
   response.status = false;
   response.data = err.code;
 }
-
-
-
-
 
 export const ReadAPI = {
   test: function() {
@@ -55,18 +53,10 @@ export const ReadAPI = {
     .catch(err => onReject(err, response));
     return response
   },
-  getHugById: async function(uid, request) {
+  getHugById: async function(uid, hugId) {
     // request: { hugId }
     let response = {}
-    await axios.get(`${server}/hugs/getHugById/${uid}`, request)
-    .then(res => onAccept(res, response))
-    .catch(err => onReject(err, response));
-    return response
-  },
-  getHugById: async function(uid, request) {
-    // request: { hugId }
-    let response = {}
-    await axios.get(`${server}/hugs/getHugById/${uid}`, request)
+    await axios.get(`${server}/hugs/getHugById/${uid},${hugId}`)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
@@ -78,10 +68,9 @@ export const ReadAPI = {
     .catch(err => onReject(err, response));
     return response
   },
-  getFriendStatus: async function(uid, request) {
-    // request: { friendId }
+  getFriendStatus: async function(uid, friendId) {//TODO
     let response = {}
-    await axios.get(`${server}/friends/getFriendStatus/${uid}`, request)
+    await axios.get(`${server}/friends/getFriendStatus/${uid},${friendId}`)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
@@ -93,26 +82,25 @@ export const ReadAPI = {
     .catch(err => onReject(err, response));
     return response
   },
-  getFriendProfile: async function(uid, request) {
-    // request: { friendId }
+  getFriendProfile: async function(uid, friendId) {
     let response = {}
-    await axios.get(`${server}/friends/getFriendProfile/${uid}`, request)
+    await axios.get(`${server}/friends/getFriendProfile/${uid},${friendId}` )
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
   },
-  searchFriends: async function(uid, request) {
+  searchFriends: async function(uid, name) {//TODO
     // request: { name }
     let response = {}
-    await axios.get(`${server}/friends/searchFriends/${uid}`, request)
+    await axios.get(`${server}/friends/searchFriends/${uid},${name}`)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
   },
-  searchUsers: async function(uid, request) {
+  searchUsers: async function(uid, username) {//TODO
     // request: { name }
     let response = {}
-    await axios.get(`${server}/friends/searchUsers/${uid}`, request)
+    await axios.get(`${server}/friends/searchUsers/${uid},${username}`)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response
@@ -130,10 +118,9 @@ export const CreateAPI = {
     await axios.post(`${server}/users/createNewUser/${uid}`, request)
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
-    console.log('wowowoow:', response);
     return response
   },
-  sendFriendRequest: async function(uid, request) {
+  sendFriendRequest: async function(uid, request) {// TODO
     // request: { friend_id }
     let response = {}
     await axios.post(`${server}/notifications/sendFriendRequest/${uid}`, request)
@@ -150,7 +137,7 @@ export const CreateAPI = {
     return response
   },
   createHug: async function(uid, request) {
-    // request: { friend_id, message, blobs }
+    // request: { friendId, message, blobs }
     let response = {}
     await axios.post(`${server}/hugs/createHug/${uid}`, request)
     .then(res => onAccept(res, response))
@@ -165,6 +152,13 @@ export const CreateAPI = {
     .catch(err => onReject(err, response));
     return response
   },
+  addFriend: async function(uid, request) {
+    let response = {}
+    await axios.post(`${server}/friends/addFriend/${uid},${request}`)
+    .then(res => onAccept(res, response))
+    .catch(err => onReject(err, response));
+    return response
+  }
 }
 
 
@@ -244,8 +238,16 @@ export const DeleteAPI = {
   },
   removeFriend: async function(uid, request) {
     // request: { friendId }
+    console.log('request', request)
+    console.log('asdfasdfasdf')
     let response = {}
-    await axios.delete(`${server}/friends/removeFriend/${uid}`, request)
+    await axios({
+      method: 'delete',
+      url: `${server}/friends/removeFriend/${uid}`,
+      data: {
+        friendId: request
+      }
+    })
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response

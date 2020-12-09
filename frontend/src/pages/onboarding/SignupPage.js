@@ -31,25 +31,21 @@ export default function SignupPage({ navigation, route }) {
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
-  const [startUp, setStartUp] = useState(false);
+  const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+  // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { dispatch } = useContext(UserContext);
+  // Misc
   const routeName = route.name;
-
   const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
+  const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
   useEffect(() => {
-    if (!startUp) {
-      setStartUp(true);
-      fadeIn();
-    }
-    if (!isFocused) {
-      setSigningUp(false);
+    if (startUp) {
       setStartUp(false);
-      setMounted(false);
+      fadeIn();
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -67,6 +63,7 @@ export default function SignupPage({ navigation, route }) {
     );
 
     return () => {
+      setSigningUp(false);
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
     }
@@ -91,29 +88,31 @@ export default function SignupPage({ navigation, route }) {
     
     let { status, data } = 
       await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
+    // console.log(data, status);
     if (status) {
-      processSignupResponse(data);
+      processSignupResponse(data, status);
     } else {
-      Alert.alert('An error occurred');
+      setSigningUp(false);
+      Alert.alert('Error. Maybe a user with that email already exists?');
       console.log(data);
     }
   }
 
-  const processSignupResponse = (response) => {
-    if (response.status) {
+  const processSignupResponse = (data, status) => {
+    if (status) {
       setMounted(false);
       dispatch({
         type: "SET_USER",
-        payload: response.data,
+        payload: data.providerData,
       });
-      navigation.navigate('Name Page');
+      setTimeout(() => {
+        navigation.replace('Name Page');
+      }, 500);
     } else {
       setSigningUp(false);
-      alert(response.data);
+      alert(data);
     }
   }
-
-  const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
 
   const checkLength = () => {
     if (passwordField.length < 6) {
@@ -148,15 +147,6 @@ export default function SignupPage({ navigation, route }) {
     return passwordField === passwordConfirmField;
   }
 
-  const timeout = () => {
-    if (mounted) {
-      setTimeout(() => {
-        setUserExists(false);
-      }, 5000);
-      return true;
-    }
-  }
-
   const styles = StyleSheet.create({
     container: {
       flex: 1
@@ -177,6 +167,7 @@ export default function SignupPage({ navigation, route }) {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      marginTop: 20,
     },
     backgroundImg: {
       flex: 1,
@@ -195,7 +186,7 @@ export default function SignupPage({ navigation, route }) {
     },
     whiteBox: {
       backgroundColor: 'rgba(255,255,255,0.2)',
-      paddingBottom: 30,
+      paddingBottom: 20,
       marginLeft: 20,
       marginRight: 20,
       marginBottom: isKeyboardVisible ? windowHeight / 3 : 0,
@@ -218,14 +209,14 @@ export default function SignupPage({ navigation, route }) {
           <View style={styles.whiteBox}>
             <CustomTextField 
               titleText='Email' 
-              placeholder='eg rikhilna@ucsd.edu'
+              placeholder='e.g., abc123@gmail.com'
               setField={setEmailField}
               required={true}
             />
 
             <CustomTextField
               titleText='Password'
-              placeholder='eg password'
+              placeholder='Password'
               setField={setPasswordField}
               secureText={true}
               required={true}
@@ -233,7 +224,7 @@ export default function SignupPage({ navigation, route }) {
 
             <CustomTextField
               titleText='Password Confirmation'
-              placeholder='eg password'
+              placeholder='Password'
               setField={setPasswordConfirmField}
               secureText={true}
               required={true}
@@ -273,11 +264,14 @@ export default function SignupPage({ navigation, route }) {
               checkEmailValid() &&
               passwordMatch() && 
               checkLength() &&
-              <LinkedButton
-                text='NEXT'
-                color='#FFC24A'
-                onPress={() => submitHandler()}
-              />
+              !signingUp &&
+              <View style={{marginTop: 20,}}>
+                <LinkedButton
+                  text='NEXT'
+                  color='#FFC24A'
+                  onPress={() => submitHandler()}
+                />
+              </View>
             }
             {
               userExists &&
@@ -291,7 +285,7 @@ export default function SignupPage({ navigation, route }) {
               signingUp &&
               <View style={styles.textContainer}>
                 <Text style={styles.signingText}>
-                  Signing up...
+                  Gathering Data...
                 </Text>
                 <ActivityIndicator />
               </View>
