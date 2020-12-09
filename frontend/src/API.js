@@ -218,7 +218,13 @@ export const DeleteAPI = {
   deleteNotification: async function(uid, request) {
     // request = { notificationId }
     let response = {}
-    await axios.delete(`${server}/notifications/deleteNotification/${uid}`, request)
+    await axios({
+      method: 'delete',
+      url: `${server}/notifications/deleteNotification/${uid}`,
+      data: {
+        notificationId: request
+      }
+    })
     .then(res => onAccept(res, response))
     .catch(err => onReject(err, response));
     return response

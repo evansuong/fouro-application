@@ -134,7 +134,6 @@ export default function HugInfoPage({ navigation, route }) {
   }
 
   function checkImages() {
-    console.log("checkImages ", typeof fetchedHug !== 'undefined', typeof fetchedHug.images !== 'undefined', fetchedHug.images.length > 0)
     return typeof fetchedHug !== 'undefined' && 
            typeof fetchedHug.images !== 'undefined' && 
            fetchedHug.images.length > 0
