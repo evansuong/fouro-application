@@ -24,30 +24,15 @@ const NotificationsAPI = {
     const notificationSnapshot = await users
       .doc(uid)
       .collection("notifications")
+      .orderBy("date_time", "desc")
       .get()
-      .then((sub) => {
-        if (sub.docs.length == 0) {
-          // console.log("Notifications 32 subcollection does not exist");
-          exist = false;
-        }
-      });
 
     // No notification collection
-    if (!exist) {
-      return { notifs: [] };
-    }
-
-    notificationCollection = await users.doc(uid).collection("notifications");
-    const notificationSnapshot = await notificationCollection
-      .orderBy("date_time", "desc")
-      .get(); //sort notifications by date/time
-
-    // No notifications
     if (notificationSnapshot.empty) {
-      // console.log("Notifications 47 No matching documents.");
       return { notifs: notifications };
     }
-    //get all the notification_id's
+
+    // get all the notification_id's
     let notificationData = [];
     notificationSnapshot.forEach((doc) => {
       notificationData = [...notificationData, doc];

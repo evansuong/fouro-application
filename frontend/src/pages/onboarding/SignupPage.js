@@ -243,7 +243,7 @@ export default function SignupPage({ navigation, route }) {
               !checkEmailValid() &&
               <View style={styles.textContainer}>
                 <Text style={styles.errorText}>
-                  Email is badly formatted!
+                  Email format is incorrect!
                 </Text>
               </View>
             }
