@@ -26,8 +26,10 @@ import { ReadAPI } from '../../API';
 
 export default function LoginPage({ navigation }) {
     // States
-  const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('');
+  // const [emailField, setEmailField] = useState('demo@gmail.com');
+  // const [passwordField, setPasswordField] = useState('password');
+  const [emailField, setEmailField] = useState('rikhilna@gmail.com');
+  const [passwordField, setPasswordField] = useState('gggggg');
   const [loggingIn, setLoggingIn] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
