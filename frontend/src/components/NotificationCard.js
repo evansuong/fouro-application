@@ -19,7 +19,7 @@ const FADE_ANIMATION_DURATION_MS = 300;
 const VISIBLE = 1;
 const HIDDEN = 0;
 
-console.log(Platform.OS)
+// console.log(Platform.OS)
 
 /**
  */
@@ -114,8 +114,10 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             display: 'flex', 
             backgroundColor: backgroundColor,
             marginVertical: windowWidth / 75,
-            marginRight: windowWidth / 75,
-            marginLeft: marginL ? marginL : windowWidth / 75,
+            // marginRight: windowWidth / 75,
+            // marginLeft: marginL ? marginL : windowWidth / 75,
+            marginRight: marginL ? marginL : windowWidth / 75,
+            marginLeft: windowWidth / 75,
             width: windowWidth / 1.1,
         }}>
             <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
@@ -196,6 +198,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                             <TouchableOpacity 
                                 disabled={!expanded} 
                                 onPress={() => {
+                                  console.log('Notif Card 199', notification_id);
                                   handleDisappear();
                                   handleDecline(notification_id, notification_id);
                                 }}

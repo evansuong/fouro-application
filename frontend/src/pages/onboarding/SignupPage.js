@@ -26,7 +26,7 @@ import Header from '../../components/Header';
 
 export default function SignupPage({ navigation, route }) {
   const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('');
+  const [passwordField, setPasswordField] = useState('gggggg');
   const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);

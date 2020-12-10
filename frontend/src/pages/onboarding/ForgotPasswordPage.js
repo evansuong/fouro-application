@@ -24,10 +24,9 @@ import { ReadAPI } from '../../API';
 
 
 
-export default function LoginPage({ navigation }) {
+export default function ForgotPasswordPage({ navigation }) {
   // States
-  const [emailField, setEmailField] = useState('rikhilna@gmail.com');
-  const [passwordField, setPasswordField] = useState('gggggg');
+  const [emailField, setEmailField] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);

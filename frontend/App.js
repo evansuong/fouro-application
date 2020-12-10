@@ -14,6 +14,7 @@ import SignupPage from './src/pages/onboarding/SignupPage';
 import PicUploadPage from './src/pages/onboarding/PicUploadPage';
 import NamePage from './src/pages/onboarding/NamePage';
 import WelcomePage from './src/pages/onboarding/WelcomePage';
+import ForgotPasswordPage from './src/pages/onboarding/ForgotPasswordPage';
 import ResetPasswordPage from './src/pages/off-nav/ResetPasswordPage';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -127,6 +128,10 @@ export default function App() {
               <Stack.Screen
                 name='Search Page'
                 component={HugSearchPage}/>
+
+              <Stack.Screen
+                name='Forgot Password'
+                component={ForgotPasswordPage}/>
               
             </Stack.Navigator>
           </NavigationContainer>    

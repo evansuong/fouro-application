@@ -100,7 +100,7 @@ const PinAPI = {
    */
   unpinHugFromCorkboard: async function (uid, userHugId) {
     try {
-      console.log(uid, userHugId);
+      // console.log(uid, userHugId);
       await users.doc(uid).collection('user_hugs').doc(userHugId).update({
         pinned: false,
       })

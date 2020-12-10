@@ -23,8 +23,8 @@ import BackgroundImg from 'assets/gradients/middle.png';
 
 export default function NamePage({ navigation, route }) {
   // States
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState('V');
+  const [lastName, setLastName] = useState('V');
   const [username, setUsername] = useState('');
   const [userExists, setUserExists] = useState(false);
   const [startUp, setStartUp] = useState(true);

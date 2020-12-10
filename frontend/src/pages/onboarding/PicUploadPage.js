@@ -49,7 +49,8 @@ export default function ProfileSetupPage({ navigation, route }) {
 
   const callBackend = async () => {
     setUploading(true);
-    let base64 = uploadPic.base64;    
+    let base64 = uploadPic.base64;
+    console.log('PicUpload 53', base64.length);
     if (base64.length > MAX_UPLOAD_SIZE) {
       const compressFactor = MAX_UPLOAD_SIZE / base64.length;
       base64 = await getBase64WithImage(compressFactor);
@@ -64,6 +65,7 @@ export default function ProfileSetupPage({ navigation, route }) {
       );
     if (!status) {
       Alert.alert('An error occurred. The image might have been too big!');
+      setUploading(false);
       console.log(data);
     } else {
       await dispatchUser();

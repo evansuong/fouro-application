@@ -92,6 +92,7 @@ const NotificationsAPI = {
    * @return none
    */
   deleteNotification: async function (uid, requestId) {
+    console.log('deleting');
     var notificationCollection = users.doc(uid).collection("notifications");
 
     var userRequestRef = notificationCollection.doc(requestId);
