@@ -140,7 +140,7 @@ export default function CatchHugPage({ navigation, route }) {
         } else {
           Alert.alert('Error catching hug.');
         }
-      }, 1000);          
+      }, 3000);          
     }
 
     const isEmpty = (obj) => {
