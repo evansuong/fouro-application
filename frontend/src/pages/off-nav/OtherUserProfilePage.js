@@ -3,7 +3,8 @@ import { View,
   Text,
   StyleSheet, 
   FlatList, 
-  TouchableOpacity 
+  TouchableOpacity, 
+  Alert
 } from 'react-native';
 import OptionsMenu from "react-native-options-menu";
 // Contexts
@@ -130,9 +131,25 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
    
     // TODO: SHOULD BE ABLE TO UNDO A FRIEND REQUEST, ASK BACKEND ABOUT THAT
     function handleSendRequest() {
-        // backend call
-        setStatus('pending');
-        sendFriendRequest();
+      // backend call
+      const firstName = name.split(' ')[0];
+      Alert.alert(
+        'Confirm Friend Request',
+        `Are you sure you want to add ${firstName}?`,
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('OtherUserProfile 141 Canceled'),
+          },
+          { 
+            text: 'Ye',
+            onPress: () => {
+              setStatus('pending');
+              sendFriendRequest();
+            }
+          }
+        ]
+      )
     }
 
     function handleCreateHug() {
@@ -348,8 +365,9 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
                 
             </View>
             <View style={styles.buttonContainer}>
-                {button}
+              {button}
             </View>
+            
             
         </View> : <></>
     )

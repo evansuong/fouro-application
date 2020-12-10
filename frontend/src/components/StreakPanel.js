@@ -33,7 +33,7 @@ export default function StreakPanel({ mode }) {
 
   function handlePress() {
     setExpanded(!expanded);
-    console.log(height, expanded);
+    console.log('StreakPanel 36', height, expanded);
     if (height < 81 && expanded) {
       console.log('fixing');
       setExpanded(false);

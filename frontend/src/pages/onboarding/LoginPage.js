@@ -4,6 +4,7 @@ import {
   Text, 
   View, 
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Keyboard,
   ImageBackground,
   ActivityIndicator,
@@ -12,6 +13,7 @@ import {
 } from 'react-native';
 // APIs
 import AuthAPI from '../../authentication/Authentication';
+import { ReadAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
 import { UserContext } from 'contexts/UserContext';
@@ -20,14 +22,13 @@ import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
 // Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
-import { ReadAPI } from '../../API';
 
 
 
 export default function LoginPage({ navigation }) {
-    // States
-  const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('');
+  // States
+  const [emailField, setEmailField] = useState('rikhilna@gmail.com');
+  const [passwordField, setPasswordField] = useState('gggggg');
   const [loggingIn, setLoggingIn] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -74,6 +75,10 @@ export default function LoginPage({ navigation }) {
     setLoggingIn(true);
     let response = await AuthAPI.loginUser(emailField.trim(), passwordField.trim())
     processLoginResponse(response);
+  }
+
+  const forgotPasswordRedirect = () => {
+    navigation.navigate('Forgot Password');
   }
 
   const processLoginResponse = async (response) => {
@@ -147,6 +152,16 @@ export default function LoginPage({ navigation }) {
       fontSize: 40,
       fontFamily: 'Montserrat_500Medium',
       textAlign: 'center',
+    },
+    forgotPasswordContainer: {
+      marginTop: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+    }, 
+    forgotPasswordText: {
+      color: 'red',
+      fontFamily: 'Montserrat_400Regular',
     }
   });
 
@@ -198,13 +213,24 @@ export default function LoginPage({ navigation }) {
               />
 
               {
-                // checkFilled() && 
+                checkFilled() && 
                 <LinkedButton
                   text='LOGIN'
                   color='#FB7250'
                   onPress={() => submitHandler()}
                 />
               }
+
+              <TouchableOpacity
+                onPress={() => forgotPasswordRedirect()}
+              >
+                <View style={styles.forgotPasswordContainer}>
+                  <Text style={styles.forgotPasswordText}>
+                    Forgot Password
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              
               {
                 loggingIn &&
                 <View style={styles.textContainer}>

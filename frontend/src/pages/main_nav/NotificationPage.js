@@ -133,7 +133,7 @@ export default function NotificationPage({ navigation, route }) {
         let notifDate = new Date(date_time).getTime() / 1000
         let today = parseInt(new Date().getTime() / 1000)
         let t = Math.floor(parseInt(today - notifDate) / 86400);
-        console.log(t)
+        // console.log(t)
         if (t < 1) {
             return 'today'
         } else {
@@ -147,9 +147,10 @@ export default function NotificationPage({ navigation, route }) {
         ReadAPI.getNotifications(uid)
             .then(response => {
                 let notifications = response.data.notifications.notifs;
-                notifications = notifications.map(notif => (
-                    Object.assign({}, {...notif, date_time: getTimeElapsed(notif.date_time)})
-                ));
+                notifications = notifications.map(notif => {
+                    // console.log('Notifications 151', notif.notification_id)
+                    return Object.assign({}, {...notif, date_time: getTimeElapsed(notif.date_time)})
+                });
                 setNotifications(notifications)
             })
     }
@@ -182,7 +183,7 @@ export default function NotificationPage({ navigation, route }) {
     function acceptFriendRequest(friendId, id) {
         let friend = notifications.filter((item) => item.callback_id === friendId)[0]
 
-        CreateAPI.addFriend(uid, friendId).then(response => console.log(response.status))
+        CreateAPI.addFriend(uid, friendId).then();
 
         clearNotification(id)
         let data = { 
@@ -206,9 +207,13 @@ export default function NotificationPage({ navigation, route }) {
     } 
 
     function clearNotification(id, type) {
+        // console.log('NotificationPage 209', notifications);
         // turn this into a backend call that removes the notif
-        DeleteAPI.deleteNotification(uid, id).then(response => console.log(response))
-        const newList = notifications.filter((item) => item.callback_id !== id);
+        DeleteAPI.deleteNotification(uid, id).then()
+        const newList = notifications.filter((item) => {
+          // console.log('NotifPage 213', item.callback_id, id)
+          return item.notification_id !== id
+        });
         setTimeout(() => {
           setNotifications(newList);
         }, 1000);
@@ -244,6 +249,7 @@ export default function NotificationPage({ navigation, route }) {
                 
                 {notifications && <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
                     {notifications && notifications.map(( data, index ) => {
+                        // console.log('Notifications 252', data.notification_id);
                         return (
                             data.type === 'friend' ? 
                             <NotificationCard 

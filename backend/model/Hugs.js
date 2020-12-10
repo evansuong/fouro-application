@@ -42,7 +42,7 @@ const HugsAPI = {
     }
 
     // Traverse through base64 strings
-    console.log(base64Array.length);
+    // console.log(base64Array.length);
     for (let i = 0; i < base64Array.length; i++) {
       let baseString = base64Array[i];
       // Get only the data of the base64
@@ -51,7 +51,7 @@ const HugsAPI = {
       // Path to image is: hug_images/[topLevelHug.id]/Timestamp in milliseconds[i]
       // Where "i" is the ith string in the base64Array
       let path = `${imageName}-${i}.jpg`;
-      console.log(path);
+      // console.log(path);
       const hugImageRef = storageRef.child(path);
 
       //convert base64 to buffer / blob
