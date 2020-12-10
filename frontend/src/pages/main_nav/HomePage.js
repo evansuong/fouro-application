@@ -4,11 +4,11 @@ import {
   Button, 
   Text, 
   View, 
-  ScrollView,
   Animated,
   TouchableWithoutFeedback,
   Image,
   Alert,
+  FlatList
 } from 'react-native';
 import AppStyles from '../../AppStyles';
 // APIs
@@ -21,6 +21,8 @@ import HugCard from 'components/HugCard';
 import Panel from 'components/StreakPanel';
 import Header from 'components/Header';
 import gradient from 'assets/gradients/middle.png';
+import { useFocusEffect } from '@react-navigation/native';
+import StreakPanel from '../../components/StreakPanel';
 // const gradient = require('assets/gradients/middle.png')
 
 
@@ -56,29 +58,54 @@ export default function HomePage({ navigation, route }) {
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [hugArray, setHugArray] = useState([]);
+  const [isFocused, setIsFocused] = useState();
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
-  const { userData } = useContext(UserContext);
+  const { userData, dispatch } = useContext(UserContext);
   const { isLightTheme } = userData;
   // Misc
   const width = useRef(new Animated.Value(60)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
   const routeName = route.name;
-  console.log('HomePage 71', userData);
+  // console.log('HomePage 71', userData);
 
   useEffect(() => {
     fetchHugs();
   }, [])
 
+  //  // check whether the user is on the page (true) or navigates away from the page (false)
+  //  useFocusEffect(() => {
+  //   setIsFocused(true)
+  //   return () => {
+  //     setIsFocused(false)
+  //   }
+  // }, []);  
+
+  // useEffect(() => {
+  //   fetchHugs();
+  // }, [isFocused])
+
   const fetchHugs = async () => {
+    console.log('fetching hugs (homepage 89)')
+
     const { status, data } = 
-      await ReadAPI.getUserHugs(userData.currentUser.uid);
+      await ReadAPI.getUserHugs(userData.uid);
     if (status) {
       setHugArray(data.userHugs);
+      let streakCount = data.userHugs.length > 0 ? 1 : 0;
+      dispatch({
+        type: "INCREMENT_STREAK_COUNT",
+        payload: {
+          streakCount: streakCount,
+          hugCount: data.userHugs.length
+        }
+      })
     } else {
       Alert.alert('Something went wrong when fetching hugs');
     }
+
+
   }
 
   function handlePress() {
@@ -129,6 +156,18 @@ export default function HomePage({ navigation, route }) {
   let padding = expanded ? 15 : 0;
   let paddingLeft = expanded ? 15 : '48%';
 
+  const renderCards = data => {
+    let hugData = data.item;
+    return (
+      <HugCard 
+        key={hugData.hug_id} 
+        navigation={navigation}
+        data={{...hugData}}
+        image={hugData.image}
+      />
+    )
+  }
+
 
     return (
 
@@ -143,7 +182,7 @@ export default function HomePage({ navigation, route }) {
 
         {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
         <View style={{marginTop: 100}}></View>
-        <Button
+        {/* <Button
           title='launch page'
           onPress={() => navigation.navigate('Launch Page')}
         />
@@ -156,26 +195,24 @@ export default function HomePage({ navigation, route }) {
           title='upload page'
           onPress={() => navigation.navigate('Pic Upload Page')}
         />
-      
+       */}
         {/* Hug Cards */}
         <TouchableWithoutFeedback
           onPress={() => dismissCreateButton()}
         >
-          <ScrollView 
-            contentContainerStyle={{alignItems: 'center', paddingTop: 10, width: windowWidth }}
-            overScrollMode='always'
-          >
-            {hugArray.map(hugData => (
-              <HugCard 
-                key={hugData.hug_id} 
-                navigation={navigation}
-                data={{...hugData}}
-                image={hugData.image}
-              />
-            ))}
-          </ScrollView>
+          <FlatList
+            contentContainerStyle={{ alignItems: 'center', paddingTop: 10, width: windowWidth }}
+            data={hugArray}
+            keyExtractor={ item => item.user_id}
+            renderItem={renderCards}
+            onRefresh={fetchHugs}
+            refreshing={false}
+            />
         </TouchableWithoutFeedback>
 
+        <View style={styles.streakContainer}>
+          <StreakPanel/> 
+        </View>
 
         {/* Create Hug Button */}
         <TouchableWithoutFeedback
@@ -222,6 +259,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,  
     elevation: 2,
+  },
+  streakContainer: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
   },
   createHugText: {
     fontSize: 20,

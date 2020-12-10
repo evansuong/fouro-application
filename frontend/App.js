@@ -14,6 +14,7 @@ import SignupPage from './src/pages/onboarding/SignupPage';
 import PicUploadPage from './src/pages/onboarding/PicUploadPage';
 import NamePage from './src/pages/onboarding/NamePage';
 import WelcomePage from './src/pages/onboarding/WelcomePage';
+import ForgotPasswordPage from './src/pages/onboarding/ForgotPasswordPage';
 import ResetPasswordPage from './src/pages/off-nav/ResetPasswordPage';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -60,12 +61,13 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator 
               style={styles.appContainer}
+              initialRouteName='Launch Page'
               /** 
                * comment out the line below when you need the header for 
               /* going back to the previous screen. Leave it to see what 
               /* the app will actually look like
               * */
-              screenOptions={{ headerShown: false }}
+              screenOptions={{ headerShown: false, gestureEnabled: false }}
             >
               <Stack.Screen 
                 name="Main Nav Page" 
@@ -126,6 +128,10 @@ export default function App() {
               <Stack.Screen
                 name='Search Page'
                 component={HugSearchPage}/>
+
+              <Stack.Screen
+                name='Forgot Password'
+                component={ForgotPasswordPage}/>
               
             </Stack.Navigator>
           </NavigationContainer>    

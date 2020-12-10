@@ -17,7 +17,8 @@ export default function UserProfilePage({ navigation, route }) {
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext);
-  const { isLightTheme } = userData;
+  // const { isLightTheme } = userData;
+  const isLightTheme = true;
   // Misc
   const topMarginSize = windowWidth * 0.1;
   const settingMarginTopBottom = windowWidth * 0.03;
@@ -33,8 +34,9 @@ export default function UserProfilePage({ navigation, route }) {
   }, [])
 
   const fetchUserData = async () => {
+    console.log(userData.uid);
     const { status, data } = 
-      await ReadAPI.getUserProfile(userData.currentUser.uid);
+      await ReadAPI.getUserProfile(userData.uid);
     // console.log(status, data);
     if (status) {
       setFetchedUser(data);
@@ -53,12 +55,20 @@ export default function UserProfilePage({ navigation, route }) {
     button: {
       backgroundColor: 'orange',
       height: buttonHeight,
-      width: windowWidth - buttonMargin,
-      borderRadius: 10,
+      width: windowWidth * .8,
+      borderRadius: 30,
       alignItems: 'center',
       justifyContent: 'center',
       margin: buttonMargin,
       marginBottom: windowHeight / 20,
+      shadowColor: '#000',
+      shadowOffset: {
+          width: 5,
+          height: 6,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 3,
+      elevation: 14,
     },
     buttonText: {
       color: 'white',

@@ -3,7 +3,8 @@ let Users = require("../model/Users");
 async function testGetNotifications() {
   let test = await Notifications.NotificationsAPI.getNotifications(
     //"example@email.com"
-    "D3ExthKFKOf1D0gOrDqka0Y34Ik1"
+    //"D3ExthKFKOf1D0gOrDqka0Y34Ik1"
+    "GZm198LsAbSEYRK040xGTaD383B3"
   );
   console.log(test);
 }

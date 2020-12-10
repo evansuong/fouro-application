@@ -237,7 +237,7 @@ const FriendsAPI = {
       // Get the actual userDocument from the friend stored reference
       let userDoc = await friendPromises[i].get();
       if (!userDoc.exists) {
-        console.log("No such document!");
+        console.log("Friends 240 No such document!");
       } else {
         // Helper function fill
         let friend = userFill(userDoc);
@@ -257,6 +257,35 @@ const FriendsAPI = {
    */
   getFriendProfile: async function (userId, friendId) {
     return await Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
+  },
+
+  /**
+   * Update Friend Hug Counts to be used for Friend list sorting
+   * @param {string} user1
+   * @param {string} user2
+   * @param {timestamp} date_time
+   */
+  updateFriendHugDate: function (user1, user2, date_time) {
+    let user1Ref = usersCollection.doc(user1);
+    let user2Ref = usersCollection.doc(user2);
+
+    // Update user1 who has user2 as a friend
+    user1Ref
+      .collection("friends")
+      .doc(user2)
+      .update({
+        last_hug_date: date_time,
+      })
+      .then(console.log(user1 + " friend date updated!"));
+
+    // Update user2 who has user1 as a friend
+    user2Ref
+      .collection("friends")
+      .doc(user1)
+      .update({
+        last_hug_date: date_time,
+      })
+      .then(console.log(user2 + " friend date updated!"));
   },
 };
 
@@ -294,7 +323,7 @@ const FriendSearchAPI = {
       // Get the actual userDoc from the friend stored reference
       let userDoc = await friendPromises[i].get();
       if (!userDoc.exists) {
-        console.log("No such document!");
+        console.log("Friends 297 No such document!");
       } else if (userDoc.get("first_name") === nameQuery) {
         // If first_name matches nameQuery
         let friend = userFill(userDoc);

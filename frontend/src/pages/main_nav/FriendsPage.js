@@ -62,12 +62,14 @@ export default function FriendsPage({ navigation, route }) {
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
-    const { uid } = userData.currentUser;
+    const { uid } = userData;
     const routeName = route.name;
     const r = getFocusedRouteNameFromRoute(route)
 
     async function getFriends() {
         const { status, data } = await ReadAPI.getFriends(uid);
+        console.log('fetching friends');
+
         if (status) {
           if (data.friends.length != friends.length) {
             setFriends(data.friends);
@@ -77,16 +79,9 @@ export default function FriendsPage({ navigation, route }) {
         }
     }
 
-    console.log('woooooooo')
     useEffect(() => {
-      console.log('uhjgkjvhk')
-        getFriends();
-    }, [])    
-
-    useFocusEffect(() => {
-      console.log('imbroken')
       getFriends();
-    }, [r])
+    }, [])   
   
     const renderCards = friend => {
         // console.log(friend)
@@ -119,7 +114,8 @@ export default function FriendsPage({ navigation, route }) {
       },
       flatListContainer: {
         display: 'flex', 
-        flexShrink: 1
+        flexShrink: 1,
+        zIndex: 3,
       },
       noFriends: {
         fontSize: 20, 
@@ -149,19 +145,21 @@ export default function FriendsPage({ navigation, route }) {
               Friends
             </Header>
             {
-              friends.length != 0 &&
+              // friends.length != 0 &&
               <View style={styles.flatListContainer}>
                 <FlatList
                   data={friends}
                   keyExtractor={item => item.user_id}
                   renderItem={renderCards}
                   contentContainerStyle={styles.friendCard}
+                  refreshing={false}
+                  onRefresh={getFriends}
                 />
               </View>
             } 
             {
               friends.length == 0 &&
-              <View style={styles.noFriendsContainer}>
+              <View style={{...styles.noFriendsContainer, position: 'absolute', top: windowHeight * .35, alignSelf: 'center' }}>
                 <Text style={[
                   styles.noFriends, 
                   {transform: [{ rotate: '90deg'}], fontSize: 50}
@@ -169,7 +167,7 @@ export default function FriendsPage({ navigation, route }) {
                   :(
                 </Text>
                 <Text style={styles.noFriends}>
-                  You don't have any friends. (lol loser) Why don't you search for some!
+                  You don't have any friends. Why don't you search for some!
                 </Text>
               </View>
             }

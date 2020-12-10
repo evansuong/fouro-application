@@ -49,7 +49,8 @@ export default function ProfileSetupPage({ navigation, route }) {
 
   const callBackend = async () => {
     setUploading(true);
-    let base64 = uploadPic.base64;    
+    let base64 = uploadPic.base64;
+    console.log('PicUpload 53', base64.length);
     if (base64.length > MAX_UPLOAD_SIZE) {
       const compressFactor = MAX_UPLOAD_SIZE / base64.length;
       base64 = await getBase64WithImage(compressFactor);
@@ -60,26 +61,25 @@ export default function ProfileSetupPage({ navigation, route }) {
     // console.log('after compression', request.blob.length);
     const { status, data } = 
       await UpdateAPI.uploadUserProfilePicture(
-        userData.currentUser.uid, request
+        userData.uid, request
       );
     if (!status) {
       Alert.alert('An error occurred. The image might have been too big!');
+      setUploading(false);
       console.log(data);
     } else {
-      // console.log('data', data);
       await dispatchUser();
       navigation.replace('Welcome Page');
     }
   }
 
   const dispatchUser = async () => {
-    console.log('PicUpload 77', userData.currentUser.uid);
     const { status, data } = 
-        await ReadAPI.getUserProfile(userData.currentUser.uid);
+        await ReadAPI.getUserProfile(userData.uid);
     if (status) {
       dispatch({
-        type: 'SET_USER',
-        payload: data,
+        type: 'SET_USER_DATA',
+        payload: Object.assign({}, {...data, streakCount: 0, hugCount: 0})
       })
     } else {
       Alert.alert('Error retrieving profile data');

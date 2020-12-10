@@ -2,8 +2,44 @@
 
 Fouro is an iOS/Android application that allows you to send virtual hugs to friends and feel close
 and connected to others. Fouro will help remind you to reach out to friends you haven't connected with
-in a while as well as serve as a platform to share and store memories together. Send and receive hugs 
+in a while as well as serve as a platform to share and store memories together. Send and receive hugs
 with friends and stay socially connected to loved ones around you!
+
+## Team Care and Friendship Everyday (CAFE)
+
+Alana Klopstein - Project Manager
+
+Alex Chow - Software Dev Lead
+
+Eman Sherif - Software Architect
+
+Evan Serrano - Business Analyst
+
+Evan Suong - User Interface Specialist
+
+Rickesh Khilnani - Senior System Analyst
+
+Terry Feng - Database Specialist
+
+Tyus Liu - Software Dev Lead
+
+Vicki Chen - Quality Assurance Lead
+
+Vivian Tang - Quality Assurance Lead
+
+Vuk Radovanovic - Algorithm Specialist
+
+## Technologies
+
+NERF Stack
+
+N - NodeJS
+
+E - Express
+
+R - React Native
+
+F - Firebase
 
 ## Setup
 
@@ -13,40 +49,33 @@ with friends and stay socially connected to loved ones around you!
 
         npm install -g expo-cli
 
-3.  Setup Backend Firebase Configuration (see [./backend](./backend) README)
+3.  Setup backend dependencies and run server
 
-4.  Install dependencies in BOTH backend and frontend:
+        cd backend
+        npm install
+        npm run server
 
-    1. In [./backend](./backend) AND [./frontend](./frontend) and run:
+4.  Open a new terminal and install dependencies in frontend:
 
-       ```
-       npm install
-       ```
-
-5.  Run application with Expo from [./frontend](./frontend) directory
-
+        cd frontend
+        npm install
         npm start
 
-6.  Run from Android Virtual Device (AVD) or install Expo Client on your mobile device
+5.  Install Expo Client on your iOS/Android device
 
-7.  Scan QR code with your camera
+6.  Scan the Expo QR code with your camera
 
 ## Pulling changes
 
 **Before you start working, make sure to type:**
 
-    npm run sync
-
-    OR (if the top command doesn't work)
-
-    npm run sync2
-
-    OR (if neither works)
-
     ./sync.sh
 
-This makes sure that your current branch is up to date with the master branch. You will also have to resolve merge conflicts and choose which parts of the code get to stay.
+OR
 
+    bash sync.sh
+
+This makes sure that your current branch is up to date with the master branch. You will also have to resolve merge conflicts and choose which parts of the code get to stay.
 
 If you don't have the `origin` variable set, run:
 
@@ -85,27 +114,3 @@ When working, make sure to work on your own feature branch
 5.  Create a pull request on Github by going to your branch and clicking on "pull request"
 
 6.  Make the pull request and one of us will look over the code and merge it to the `master` branch to save the changes
-
-## Team Care and Friendship Everyday (CAFE)
-
-Alana Klopstein - Project Manager
-
-Alex Chow - Software Dev Lead
-
-Eman Sherif - Software Architect
-
-Evan Serrano - Business Analyst
-
-Evan Suong - User Interface Specialist
-
-Rickesh Khilnani - Senior System Analyst
-
-Terry Feng - Database Specialist
-
-Tyus Liu - Software Dev Lead
-
-Vicki Chen - Quality Assurance Lead
-
-Vivian Tang - Quality Assurance Lead
-
-Vuk Radovanovic - Algorithm Specialist

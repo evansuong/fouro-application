@@ -15,7 +15,7 @@ export default function HugSearchPage({ navigation, route }) {
 
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData, isLightTheme } = useContext(UserContext);
-    const { uid } = userData.currentUser;
+    const { uid } = userData;
 
     async function getFriends() {
         const { status, data } = await ReadAPI.getFriends(uid);
@@ -57,6 +57,15 @@ export default function HugSearchPage({ navigation, route }) {
             width: windowWidth,
             display: 'flex',
             alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 2,
+            elevation: 4,
+            zIndex: 3,
         }, 
         pageContainer: {
             display: 'flex',
@@ -65,8 +74,8 @@ export default function HugSearchPage({ navigation, route }) {
             height: windowHeight,
         },
         header: {
-            height: windowHeight * .15,
-            backgroundColor: '#E57777',
+            height: windowHeight * .13,
+            backgroundColor: '#FCA661',
             width: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -76,6 +85,16 @@ export default function HugSearchPage({ navigation, route }) {
             fontSize: 25,
             fontWeight: 'bold',
             marginTop: windowHeight * .03,
+            color: 'white',
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 2,
+            elevation: 4,
+            zIndex: 3,
         },  
         text: {
             fontSize: 23,
