@@ -6,33 +6,28 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ImageBackground,
-  ActivityIndicator,
   Animated,
   Alert
 } from 'react-native';
 // APIs
-import AuthAPI from '../../authentication/Authentication';
+import { UpdateAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
-import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
 // Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
-import { ReadAPI } from '../../API';
 
 
 
 export default function ForgotPasswordPage({ navigation }) {
   // States
   const [emailField, setEmailField] = useState('');
-  const [loggingIn, setLoggingIn] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
-  const { userData, dispatch } = useContext(UserContext)
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -61,6 +56,16 @@ export default function ForgotPasswordPage({ navigation }) {
     }
   }, []);
 
+  const submitHandler = async () => {
+    const { status, data } = 
+      await UpdateAPI.forgotPassword({ request: emailField });
+    if (status) {
+      Alert.alert(`Reset password link sent to ${emailField}`);
+    } else {
+      Alert.alert('Something went wrong when sending the reset link');
+    }
+  }
+
   const fadeIn = () => {
     Animated.timing(fade, {
       toValue: 1,
@@ -69,40 +74,8 @@ export default function ForgotPasswordPage({ navigation }) {
     }).start();
   }
 
-  const submitHandler = async () => {
-    setLoggingIn(true);
-    let response = await AuthAPI.loginUser(emailField.trim(), passwordField.trim())
-    processLoginResponse(response);
-  }
-
-  const processLoginResponse = async (response) => {
-    if (response.status) {
-      const { status, data } = await ReadAPI.getUserProfile(response.data);
-      console.log('LoginPage 82', response.data);
-      if (status) {
-        dispatch({
-          type: "SET_USERDATA",
-          payload: data,
-        });
-        console.log(response.data)
-        dispatch({
-          type: 'SET_UID',
-          payload: response.data,
-        })
-        navigation.navigate('Main Nav Page', { loggedIn: true });
-      } else {
-        Alert.alert('An error occurred');
-        console.log(data);
-      }
-    } else {
-      setLoggingIn(false);
-      alert("No users found with those credentials")
-    }
-  }
-
   const checkFilled = () => {
-    return emailField !== '' && 
-      passwordField !== '';
+    return emailField !== '';
   }
 
   const styles = StyleSheet.create({
@@ -149,74 +122,37 @@ export default function ForgotPasswordPage({ navigation }) {
     }
   });
 
-  if (userData.uid) {
-    return (
+  return (
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss();
+      console.log('dismissed keyboard');
+    }}>
       <Animated.View opacity={fade} style={styles.container}>
         <ImageBackground
           source={BackgroundImg}
           style={styles.backgroundImage}
         >
-          <View style={styles.titleTextContainer}>
-            <Text style={styles.titleText}>
-              You're already logged in!
-            </Text>
-          </View>
-        </ImageBackground>
-      </Animated.View>
-    )
-  } else {
-    return (
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        console.log('dismissed keyboard');
-      }}>
-        <Animated.View opacity={fade} style={styles.container}>
-          <ImageBackground
-            source={BackgroundImg}
-            style={styles.backgroundImage}
-          >
-            <View style={styles.titleTextContainer}>
-              <Text style={styles.titleText}>
-                Welcome Back
-              </Text>
-            </View>
-            <View style={styles.whiteBox}>
-              <CustomTextField 
-                titleText='Email' 
-                placeholder='e.g., abc123@gmail.com'
-                setField={setEmailField}
-                required={true}
-              />
+          <View style={styles.whiteBox}>
+            <CustomTextField 
+              titleText='Email' 
+              placeholder='e.g., abc123@gmail.com'
+              setField={setEmailField}
+              required={true}
+            />
 
-              <CustomTextField
-                titleText='Password'
-                placeholder='Password'
-                setField={setPasswordField}
-                secureText={true}
-                required={true}
-              />
-
-              {
-                // checkFilled() && 
+            {
+              checkFilled() && 
+              <View style={{marginTop: 10,}}>
                 <LinkedButton
-                  text='LOGIN'
+                  text='SEND RESET LINK'
                   color='#FB7250'
                   onPress={() => submitHandler()}
                 />
-              }
-              {
-                loggingIn &&
-                <View style={styles.textContainer}>
-                  <Text style={styles.loggingText}>
-                    Logging in...
-                  </Text>
-                  <ActivityIndicator />
-                </View>
-              }
-            </View>
-          </ImageBackground>
-        </Animated.View>
-      </TouchableWithoutFeedback>
-    );
-  }
+              </View>
+            }
+          </View>
+        </ImageBackground>
+      </Animated.View>
+    </TouchableWithoutFeedback>
+  );
 }
