@@ -1,5 +1,6 @@
 // Require
 const express = require("express");
+const ManageAccount = require("../model/ManageAccount");
 const ManageAccountAPI = require("../model/ManageAccount");
 const router = express.Router();
 router.use(
@@ -23,6 +24,12 @@ router.put("/changePassword/:id", (req, res) => {
 router.delete("/deleteAccount/:id", (req, res) => {
   console.log(req.params.id);
   let response = ManageAccountAPI.deleteAccount(req.params.id);
+  res.status(200).json(response);
+});
+
+// TODO: NOT TESTED
+router.put("forgotPassword", (req, res) => {
+  let response = ManageAccountAPI.forgotPassword(req.body.email);
   res.status(200).json(response);
 });
 
