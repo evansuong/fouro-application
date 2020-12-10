@@ -9,24 +9,23 @@ const ManageAccountAPI = {
   
   //update password from within the app.
   changePassword: async function (uid, newPassword) {
-    var successful;
-
     if(uid == null) {
-      console.log("No user signed in.");
-      return { out: false };
+      return { out: false, data: "No user signed in." };
     }
 
-    await admin
-      .auth()
-      .updateUser(uid, { password: newPassword })
-      .then((successful = true))
-      .catch((error) => {
-        successful = false;
-        console.log("Error updating password:", error);
-        return { out: successful };
-      });
+    await admin.auth().updateUser(uid, { password: newPassword }).then(function () {
+      response = {
+        out: true,
+        data: ""
+      };
+    }).catch(function(error) {
+      response = {
+        out:false,
+        data: error.message
+      };
+    })
 
-    return { out: successful };
+    return response;
   },
 
 
@@ -59,8 +58,7 @@ const ManageAccountAPI = {
   */
   deleteAccount: async function (uid) {
     if(uid == null) {
-      console.log("No user in parameter to deleteAccount.");
-      return { out: false };
+      return { out: false, data: "No user in parameter to deleteAccount." };
     }
 
     // delete document associated with user
@@ -70,25 +68,36 @@ const ManageAccountAPI = {
       .doc(uid)
       .delete()
       .then(async function () {
-        // delete user from authentication
-        await admin
-          .auth()
-          .deleteUser(uid)
-          .then(() => {
-            console.log("Successfully deleted user");
-            response = { out: true };
-          })
-          .catch((error) => {
-            console.log("Error deleting user: ", error);
-            response = { out: false };
-          });
+        response = { 
+          out: true, 
+          data: "Successfully deleted user from firestore... " 
+        };
       })
       .catch((error) => {
-        console.log("Error deleting document associated with user: ", error);
-        response = { out: false };
+        response = { 
+          out: false, 
+          data: error.message
+        };
       });
 
-    return response;
+      // delete user from authentication.  output is combined with that of firestore deletion output
+    await admin
+      .auth()
+      .deleteUser(uid)
+      .then(async function () {
+        response2 = { 
+          out: response.out && true,
+          data: response.data + "Successfully deleted user from auth"
+        };
+      })
+      .catch((error) => {
+        response2 = { 
+          out: response.out && false,
+          data: response.data + error.message
+        };
+      });
+
+    return response2;
   },
 };
 

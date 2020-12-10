@@ -1,7 +1,6 @@
 // Require
 const express = require("express");
-const ManageAccount = require("../model/ManageAccount");
-const ManageAccountAPI = require("../model/ManageAccount");
+const { ManageAccountAPI } = require("../model/ManageAccount");
 const router = express.Router();
 router.use(
   express.urlencoded({
@@ -11,22 +10,37 @@ router.use(
 router.use(express.json());
 
 // Routes
-// TODO: NOT TESTED
-router.put("/changePassword/:id", (req, res) => {
-  let response = ManageAccountAPI.changePassword(
+// VERIFIED
+router.put("/changePassword/:id", async (req, res) => {
+  let response = await ManageAccountAPI.changePassword(
     req.params.id,
     req.body.newPassword
   );
-  res.status(200).json(response);
+  if(response.out) {
+    res.status(200).json(response);
+  } else {
+    console.log(response.data);
+    res.status(400).send(
+      'Something went wrong when changing the user\'s password'
+    );
+  }
 });
 
 // VERIFIED
-router.delete("/deleteAccount/:id", (req, res) => {
+router.delete("/deleteAccount/:id", async (req, res) => {
   // console.log(req.params.id);
-  let response = ManageAccountAPI.deleteAccount(req.params.id);
-  res.status(200).json(response);
+  let response = await ManageAccountAPI.deleteAccount(req.params.id);
+  if(response.out) {
+    res.status(200).json(response);
+  } else {
+    console.log(response.data);
+    res.status(400).send(
+      'Something went wrong when deleting the user\'s account'
+    );
+  }
 });
 
+// VERIFIED
 router.put('/forgotPassword', async (req, res) => {
   const { email } = req.body;
   let response = await ManageAccountAPI.forgotPassword(email);
@@ -37,6 +51,6 @@ router.put('/forgotPassword', async (req, res) => {
       'Something went wrong when sending the password reset email'
     );
   }
-})
+});
 
 module.exports = router;
