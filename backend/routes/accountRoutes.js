@@ -27,13 +27,6 @@ router.delete("/deleteAccount/:id", (req, res) => {
   res.status(200).json(response);
 });
 
-<<<<<<< HEAD
-// TODO: NOT TESTED
-router.put("forgotPassword", (req, res) => {
-  let response = ManageAccountAPI.forgotPassword(req.body.email);
-  res.status(200).json(response);
-});
-=======
 router.put('/forgotPassword', async (req, res) => {
   const { email } = req.body;
   let response = await ManageAccountAPI.forgotPassowrd(email);
@@ -45,6 +38,5 @@ router.put('/forgotPassword', async (req, res) => {
     );
   }
 })
->>>>>>> 52831b8a0ecede3943b649d75b5a79061f80a254
 
 module.exports = router;
