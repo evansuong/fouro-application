@@ -6,6 +6,7 @@ import {
   Animated, 
   Image, 
   TouchableOpacity,
+  Alert,
 } from 'react-native'
 import { call } from 'react-native-reanimated';
 import { DimensionContext } from '../contexts/DimensionContext';
@@ -26,7 +27,15 @@ const HIDDEN = 0;
 export default function NotificationCard({ notificationData, isFocused, handleAccept, handleDecline }) {
 
     // prop destructuring: { notification type, user that generated notif, sender pp, notification id }
-    const { callback_id, date_time, friendName, friendPfp, friend_username, notification_id, type } = notificationData;  
+    const { 
+      callback_id, 
+      date_time, 
+      friendName, 
+      friendPfp, 
+      friend_username, 
+      notification_id, 
+      type 
+    } = notificationData;  
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
 
@@ -72,6 +81,28 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
       }).start();
     }
 
+    function handleConfirmAlert() {
+      Alert.alert(
+        'Confirm Delete', 
+        `Are you sure you want to delete your notification from ${friendName}?`,
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('NotifCard 83 Cancel Pressed')
+          },
+          {
+            text: 'Ye',
+            onPress: () => processDeletion()
+          }
+        ])
+    }
+
+    function processDeletion() {
+      console.log('Notif Card 199', notification_id);
+      handleDisappear();
+      handleDecline(notification_id, notification_id);
+    }
+
     // expand animation definition
     function expand() {
          // Will change fadeAnim value to 1 in 5 seconds
@@ -115,9 +146,9 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             backgroundColor: backgroundColor,
             marginVertical: windowWidth / 75,
             // marginRight: windowWidth / 75,
-            // marginLeft: marginL ? marginL : windowWidth / 75,
-            marginRight: marginL ? marginL : windowWidth / 75,
-            marginLeft: windowWidth / 75,
+            marginLeft: marginL,
+            // marginRight: marginL ? marginL : windowWidth / 75,
+            // marginLeft: windowWidth / 75,
             width: windowWidth / 1.1,
         }}>
             <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
@@ -197,11 +228,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                             {/* decline button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => {
-                                  console.log('Notif Card 199', notification_id);
-                                  handleDisappear();
-                                  handleDecline(notification_id, notification_id);
-                                }}
+                                onPress={() => handleConfirmAlert()}
                             >
                                 <Animated.View 
                                     style={{ 

@@ -130,7 +130,8 @@ export default function CreateHugPage({ navigation, route }) {
         setCallingBackend(false);
         navigation.navigate('Main Nav Page');
         if (status) {
-          Alert.alert('Hug created!');
+          const firstName = name.split(' ')[0]
+          Alert.alert(`Hug sent to ${firstName}!`);
         } else {
           Alert.alert('Error creating hug.');
         }
