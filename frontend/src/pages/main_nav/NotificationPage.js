@@ -4,8 +4,8 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  PickerIOSItem,
-  LayoutAnimation,
+  RefreshControl,
+  FlatList,
   Image,
   Button,
 } from "react-native";
@@ -119,9 +119,9 @@ export default function NotificationPage({ navigation, route }) {
         }
     }, []);  
 
-    useEffect(() => {
-        getNotifications();
-    }, [isFocused])
+    // useEffect(() => {
+    //     getNotifications();
+    // }, [isFocused])
 
     // add a filler item to move the list down
     useEffect(() => {
@@ -219,6 +219,30 @@ export default function NotificationPage({ navigation, route }) {
         }, 1000);
     }
 
+    const renderCards = notification => {
+        let data = notification.item;
+        return (
+            data.type === 'friend' ? 
+            <NotificationCard 
+                key={data.notification_id} 
+                callId={data.friendId}
+                notificationData={data} 
+                isFocused={isFocused} 
+                handleAccept={acceptFriendRequest} 
+                handleDecline={declineFriendRequest} />
+                : data.type === 'f' ?
+            <View key={'filler'} style={styles.filler}></View>
+                :
+            <NotificationCard 
+                key={data.notification_id} 
+                callId={data.hugId}
+                notificationData={data} 
+                isFocused={isFocused} 
+                handleAccept={catchHug} 
+                handleDecline={dropHug} />
+        )
+    }
+
     // notification list styles
     const styles = StyleSheet.create({
         notificationList: {
@@ -247,32 +271,17 @@ export default function NotificationPage({ navigation, route }) {
             <View style={styles.notificationList}>
                 {/* actual list */}
                 
-                {notifications && <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
-                    {notifications && notifications.map(( data, index ) => {
-                        // console.log('Notifications 252', data.notification_id);
-                        return (
-                            data.type === 'friend' ? 
-                            <NotificationCard 
-                                key={data.notification_id} 
-                                callId={data.friendId}
-                                notificationData={data} 
-                                isFocused={isFocused} 
-                                handleAccept={acceptFriendRequest} 
-                                handleDecline={declineFriendRequest} />
-                                : data.type === 'f' ?
-                            <View key={'filler'} style={styles.filler}></View>
-                                :
-                            <NotificationCard 
-                                key={data.notification_id} 
-                                callId={data.hugId}
-                                notificationData={data} 
-                                isFocused={isFocused} 
-                                handleAccept={catchHug} 
-                                handleDecline={dropHug} />
-                        )
-                    })}
-                </ScrollView>}
-            </View>                   
+                {/* {notifications &&  */}
+                <FlatList
+                    contentContainerStyle={{alignItems: 'center', paddingTop: 10, width: windowWidth * .9}}
+                    data={notifications}
+                    keyExtractor={item => item.callback_id}
+                    onRefresh={getNotifications}
+                    refreshing={false}
+                    renderItem={renderCards}
+                />
+
+            </View>                      
         </View>
     )
 } 
