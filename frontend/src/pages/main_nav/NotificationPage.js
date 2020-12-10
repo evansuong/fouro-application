@@ -148,7 +148,7 @@ export default function NotificationPage({ navigation, route }) {
             .then(response => {
                 let notifications = response.data.notifications.notifs;
                 notifications = notifications.map(notif => {
-                    console.log('Notifications 151', notif.notification_id)
+                    // console.log('Notifications 151', notif.notification_id)
                     return Object.assign({}, {...notif, date_time: getTimeElapsed(notif.date_time)})
                 });
                 setNotifications(notifications)
@@ -211,7 +211,7 @@ export default function NotificationPage({ navigation, route }) {
         // turn this into a backend call that removes the notif
         DeleteAPI.deleteNotification(uid, id).then()
         const newList = notifications.filter((item) => {
-          console.log('NotifPage 213', item.callback_id, id)
+          // console.log('NotifPage 213', item.callback_id, id)
           return item.notification_id !== id
         });
         setTimeout(() => {
@@ -249,7 +249,7 @@ export default function NotificationPage({ navigation, route }) {
                 
                 {notifications && <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
                     {notifications && notifications.map(( data, index ) => {
-                        console.log('Notifications 252', data.notification_id);
+                        // console.log('Notifications 252', data.notification_id);
                         return (
                             data.type === 'friend' ? 
                             <NotificationCard 

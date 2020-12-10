@@ -84,7 +84,10 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
     function handleConfirmAlert() {
       Alert.alert(
         'Confirm Delete', 
-        `Are you sure you want to delete your notification from ${friendName}?`,
+        type == 'friend' ? 
+          `Are you sure you want to reject the friend request from ${friendName}?`
+          :
+          `Are you sure you want to drop the hug request from ${friendName}?`,
         [
           {
             text: 'Cancel',
@@ -94,7 +97,8 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             text: 'Ye',
             onPress: () => processDeletion()
           }
-        ])
+        ]
+      )
     }
 
     function processDeletion() {
