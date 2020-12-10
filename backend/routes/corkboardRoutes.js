@@ -24,10 +24,11 @@ function checkBody(req, res, next) {
 // TODO: NOT TESTED
 router.get("/buildCorkboard/:id", async (req, res) => {
   const uid = req.params.id;
-  // console.log('corkboardRoutes 28', uid);
+  console.log('corkboardRoutes 28', uid);
 
   try {
     const response = await CorkboardAPI.buildCorkboard(uid);
+    console.log(response);
     res.status(200).json(response);
   } catch (err) {
     res.status(400).send(`An error occurred: ${err}`);

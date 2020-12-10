@@ -447,40 +447,9 @@ const ViewHugAPI = {
     }
     var feed = { userHugs: results };
     return feed;
-
-    // PAGINATED VERSION
-    // var first = db
-    //     .collection("users")
-    //     .doc(currUser.uid)
-    //     .collection("user_hugs")
-    //     .orderBy("date_time")
-    //     .limit(25);
-    // return first.get().then(function (documentSnapshots) {
-    //     // Get the last visible document
-    //     var lastVisible =
-    //         documentSnapshots.docs[documentSnapshots.docs.length - 1];
-    //     console.log("last", lastVisible);
-
-    //     // Construct a new query starting at this document,
-    //     // get the next 25 hugs.
-    //     var next = db
-    //         .collection("users")
-    //         .doc(currUser.uid)
-    //         .collection("user_hugs")
-    //         .orderBy("date_time")
-    //         .limit(25);
-    // });
   },
 
   getSharedHugs: async function (currentUser, targetUser) {
-    // GET ALL VERSION
-
-    // Set the hugData
-    // const currUser = Users.UsersAPI.getUserProfile(currentUser);
-    // const currUserName = currUser.name;
-    // const currUserUsername = currUser.username;
-    // const currUserProfilePic = currUser.profile_pic;
-
     var results = [];
     const hugsQuery = await hugs
       .orderBy("date_time", "desc")
@@ -523,9 +492,9 @@ const ViewHugAPI = {
         results = [...results, loadIn];
       }
     }
-    var feed = { sharedHugs: results };
-    // console.log('feed');
-    return feed;
+
+    console.log(results);
+    return { sharedHugs: results };
   },
 };
 
