@@ -21,15 +21,15 @@ const storage = firebase2.storage();
 
 function convertDate(date) {
   const dateStr = date.toString();
-  const dateArr = dateStr.split(' ');
+  const dateArr = dateStr.split(" ");
   let hours = date.getHours();
   let minutes = date.getMinutes();
-  let ampm = hours >= 12 ? 'pm' : 'am';
+  let ampm = hours >= 12 ? "pm" : "am";
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? '0'+minutes : minutes;
-  let strTime = hours + ':' + minutes + ampm;
-  return `${dateArr[0]} ${dateArr[1]} ${dateArr[2]} ${dateArr[3]} ${strTime}`
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  let strTime = hours + ":" + minutes + ampm;
+  return `${dateArr[0]} ${dateArr[1]} ${dateArr[2]} ${dateArr[3]} ${strTime}`;
 }
 
 const HugsAPI = {
@@ -171,16 +171,17 @@ const HugsAPI = {
     const topLevelHugData = topLevelHugQuery.data();
     const friendId = topLevelHugData.sender_ref.id;
     // delete requestId
-    await users.doc(currUser.id).collection("notifications").doc(requestId)
-      .delete()
-    // // delete the receiever's hug
-    const hugRef = await hugs.doc(hugId).get('sender_ref');
-    await users.doc(currUser.id).collection('user_hugs').doc(hugId)
-      .delete()
-    // delete the sender's hug
-    await users.doc(friendId).collection('user_hugs').doc(hugId)
+    await users
+      .doc(currUser.id)
+      .collection("notifications")
+      .doc(requestId)
       .delete();
-    await users.doc(hugRef.id).delete()
+    // // delete the receiever's hug
+    const hugRef = await hugs.doc(hugId).get("sender_ref");
+    await users.doc(currUser.id).collection("user_hugs").doc(hugId).delete();
+    // delete the sender's hug
+    await users.doc(friendId).collection("user_hugs").doc(hugId).delete();
+    await users.doc(hugRef.id).delete();
     // Remove hug images from storage
 
     // TODO: Loop through each element in the images array of hugId
@@ -195,7 +196,7 @@ const HugsAPI = {
     // Delete the global hug document
     await topLevelHug.delete();
 
-    return { out: true }
+    return { out: true };
   },
 
   deleteAllImagesInArray: function (imagesArray) {
@@ -291,7 +292,7 @@ const UpdateHugAPI = {
 
       await users
         .doc(hugData.sender_ref.id)
-        .collection('user_hugs')
+        .collection("user_hugs")
         .doc(hugId)
         .update({
           completed: true,
@@ -308,11 +309,11 @@ const UpdateHugAPI = {
         });
 
       // Call updateUserHugCount()
-      this.updateUserHugCount()
+      this.updateUserHugCount();
 
-      return { out: true }
-    } catch(err) {
-      console.log('Hugs 315 Error occurred responding to hug', err);
+      return { out: true };
+    } catch (err) {
+      console.log("Hugs 315 Error occurred responding to hug", err);
     }
     /*
     this.updateUserHugCount(hugId);
@@ -336,6 +337,7 @@ const UpdateHugAPI = {
           // Increment receiver and sender hug count
           let receiverId = doc.data().receiver_ref.id;
           let senderId = doc.data().sender_ref.id;
+          console.log(receiverId, senderId);
           Users.UsersAPI.increaseHugCount(receiverId);
           Users.UsersAPI.increaseHugCount(senderId);
           // Update each user's user_hug to completed : true

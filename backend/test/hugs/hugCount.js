@@ -17,9 +17,19 @@ try {
 let death = [test, test, test];
 let hi = [];
 
+/*
 Hugs.HugsAPI.createHug(
   "example@email.com",
   "otherguy@email.com",
   "Sup Dude",
   hi
 );
+
+Hugs.UpdateHugAPI.respondToHug(
+  "outerguy@email.com",
+  "4GO35lG4sEpRHyZkvcfG",
+  "yay",
+  []
+)
+*/
+Hugs.UpdateHugAPI.updateUserHugCount("hug1");
