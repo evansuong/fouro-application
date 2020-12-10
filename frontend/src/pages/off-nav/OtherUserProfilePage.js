@@ -365,8 +365,9 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
                 
             </View>
             <View style={styles.buttonContainer}>
-                {button}
+              {button}
             </View>
+            
             
         </View> : <></>
     )

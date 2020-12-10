@@ -46,6 +46,7 @@ export default function CorkboardPage({ navigation, route }) {
     // States
     const [startUp, setStartUp] = useState(true);
     const [pinnedHugs, setPinnedHugs] = useState([]);
+    const [emptyBoard, setEmptyBoard] = useState(false);
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
@@ -54,12 +55,21 @@ export default function CorkboardPage({ navigation, route }) {
     const margin = windowWidth * 0.03;
 
     useEffect(() => {
+      load();
+    }, [])
+
+    const load = async () => {
       if (startUp) {
-        fetchCorkboard();
+        await fetchCorkboard();
         // setPinnedHugs(hugList);
         setStartUp(false);
       }
-    }, [])
+      setTimeout(() => {
+        if (pinnedHugs.length == 0) {
+          setEmptyBoard(true);
+        }
+      }, 2000)
+    }
 
     const fetchCorkboard = async () => {
       const { status, data } = await ReadAPI.buildCorkboard(userData.uid);
@@ -130,7 +140,7 @@ export default function CorkboardPage({ navigation, route }) {
               />
             }
             {
-              checkPinnedHugs() &&
+              emptyBoard && pinnedHugs.length == 0 &&
               <View style={styles.noPinnedHugsContainer}>
                 <Text style={[
                   styles.noPinnedHugs, 
