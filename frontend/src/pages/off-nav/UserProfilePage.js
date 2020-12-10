@@ -55,12 +55,20 @@ export default function UserProfilePage({ navigation, route }) {
     button: {
       backgroundColor: 'orange',
       height: buttonHeight,
-      width: windowWidth - buttonMargin,
-      borderRadius: 10,
+      width: windowWidth * .8,
+      borderRadius: 30,
       alignItems: 'center',
       justifyContent: 'center',
       margin: buttonMargin,
       marginBottom: windowHeight / 20,
+      shadowColor: '#000',
+      shadowOffset: {
+          width: 5,
+          height: 6,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 3,
+      elevation: 14,
     },
     buttonText: {
       color: 'white',

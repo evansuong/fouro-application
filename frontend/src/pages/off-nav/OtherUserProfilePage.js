@@ -67,10 +67,11 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     //       e.g., "stranger", "friend", "pending"
 
     // console.log('from other user profile page:', data)
+    // console.log("OTHERUSERPROFILEPAGE70", status)
 
     function getSharedHugs() {
         // console.log('quering')
-        ReadAPI.getFriendProfile(uid, otheruser_id).then(response => setHugs(response.data.sharedHugs));
+        ReadAPI.getFriendProfile(uid, otheruser_id).then(response => console.log(response.data));
         // setHugs(ReadAPI.getFriendProfile(uid, otheruser_id))
     }
 
@@ -94,9 +95,7 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     function removeFriendFromList() {
         // removeFriend(user_id
         DeleteAPI.removeFriend(uid, otheruser_id).then(response => { if (!response.status) { alert('cannot remove friend') }});
-        setTimeout(() => {
-            navigation.goBack();
-        }, 500);
+        getUserStatus();
     }
 
     useEffect(() => {
@@ -184,8 +183,25 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
             paddingTop: 5,
             paddingBottom: 10,
         },
+        buttonStyle: {
+            width: windowWidth * .8,
+            height: windowHeight * .07,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 100,
+        },
+        activeButton: {
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 5,
+                height: 6,
+            },
+            shadowOpacity: 0.22,
+            shadowRadius: 3,
+            elevation: 14,
+        }, 
         hugButtonStyle: {
-            backgroundColor: '#FB7250',
             alignItems: 'center',
             borderRadius: 20,
             margin: 10,
@@ -205,7 +221,6 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
             justifyContent: 'center'
         },
         sendFriendRequestButtonStyle: {
-            backgroundColor: '#F69D68',
             alignItems: 'center',
             borderRadius: 30,
             margin: 10,
@@ -233,7 +248,7 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
             zIndex: 4,
         },
         button: {
-            width: windowWidth / 1.2, 
+            width: windowWidth * 0.8, 
         },
         btnImage: {
             width: windowWidth / 15,
@@ -267,17 +282,10 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
         let hugButton = 
             <TouchableOpacity 
             style={{
-                ...styles.sendFriendRequestButtonStyle, 
-                ...styles.buttonStyle, 
-                backgroundColor: '#FB7250',
-                shadowColor: '#000',
-                shadowOffset: {
-                width: 5,
-                height: 6,
-                },
-                shadowOpacity: 0.22,
-                shadowRadius: 3,
-                elevation: 14,}}
+                    backgroundColor: '#FB7250',        
+                    ...styles.buttonStyle, 
+                    ...styles.activeButton,
+                }}
                 onPress={handleCreateHug}
             >
                 <Text style={styles.generalText}>
@@ -288,16 +296,9 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
         let sendFriendRequestButton = 
             <TouchableOpacity 
                 style={{
-                    ...styles.sendFriendRequestButtonStyle, 
+                    backgroundColor: '#FCA661',
                     ...styles.buttonStyle,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                    width: 5,
-                    height: 6,
-                    },
-                    shadowOpacity: 0.22,
-                    shadowRadius: 3,
-                    elevation: 14,
+                    ...styles.activeButton,
                 }}
                 onPress={handleSendRequest}
             >
@@ -308,7 +309,10 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
 
         let pendingButton = 
             <TouchableOpacity 
-                style={styles.pendingButtonStyle}
+                style={{
+                    backgroundColor: '#999',
+                    ...styles.buttonStyle,
+                }}
                 activeOpacity={1}
             >
                 <Text style={styles.generalText}>

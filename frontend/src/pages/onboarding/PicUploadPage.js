@@ -78,8 +78,8 @@ export default function ProfileSetupPage({ navigation, route }) {
         await ReadAPI.getUserProfile(userData.uid);
     if (status) {
       dispatch({
-        type: 'SET_USERDATA',
-        payload: data,
+        type: 'SET_USER_DATA',
+        payload: Object.assign({}, {...data, streakCount: 0, hugCount: 0})
       })
     } else {
       Alert.alert('Error retrieving profile data');

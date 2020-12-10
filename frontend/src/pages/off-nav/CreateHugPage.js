@@ -29,6 +29,7 @@ import Header from 'components/Header';
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 import profilePic from 'assets/profilePic.jpg';
 import BackgroundImg from 'assets/gradients/middle.png';
+import { TextInput } from 'react-native-paper';
 
 
 // TODO: Remove FriendName and FriendPic parameters
@@ -145,14 +146,28 @@ export default function CreateHugPage({ navigation, route }) {
     const styles = StyleSheet.create({
       mainContainer: {
         overflow: 'hidden',
-        height: windowHeight / 1.45,
+        height: windowHeight * .75,
       },
       profilePic: {
         width: windowWidth / 4,
         height: windowWidth / 4,
         borderRadius: 50,
-        marginLeft: windowWidth / 14,
       },
+      profilePicContainer: {
+        borderColor: '#FFF',
+        borderWidth: 3,
+        borderRadius: 100,
+        marginLeft: windowWidth * .05,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
+      },  
       friendInfoContainer: {
         flexDirection: 'row',
         width: windowWidth,
@@ -162,28 +177,50 @@ export default function CreateHugPage({ navigation, route }) {
         alignItems: 'center',
         marginLeft: windowWidth / 18,
         padding: 10,
-        borderBottomWidth: 2,
         borderColor: 'black',
         width: windowWidth / 1.8,
       },
       friendText: {
-        fontSize: 15,
+        fontSize: 20,
       },
       picContainer: {
         width: windowWidth,
-        height: windowHeight / 5,
+        height: windowHeight * .25,
         overflow: 'hidden',
-        marginTop: windowHeight / 80,
+        marginTop: windowHeight * .05,
+
       },
+      pics: {
+        borderRadius: 10,
+        borderColor: '#FFF',
+        borderWidth: 3,
+      },  
       backgroundImg: {
         height: windowHeight,
         resizeMode: 'cover',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
       },
       header: {
         width: windowWidth,
         alignItems: 'center',
         marginTop: windowHeight / 16,
-        marginBottom: windowHeight / 40
+        marginBottom: windowHeight / 40,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
+        zIndex: 3,
       },
       headerText: {
         fontSize: 25,
@@ -236,13 +273,19 @@ export default function CreateHugPage({ navigation, route }) {
               {/* Friend Info */}
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
-                  <Image
-                    source={{ uri : profile_pic }}
-                    style={styles.profilePic}
-                  />
+                  <View style={styles.profilePicContainer}> 
+                    <Image
+                      source={{ uri : profile_pic }}
+                      style={styles.profilePic}
+                    />
+                  </View>
+                  
                   <View style={styles.friendTextContainer}>
                     <Text style={styles.friendText}>
-                      Sending hug to {name}
+                      Sending hug to:
+                    </Text>
+                    <Text style={styles.friendText}>
+                      {name}
                     </Text>
                   </View>
                 </View>
@@ -284,6 +327,7 @@ export default function CreateHugPage({ navigation, route }) {
                         height: windowWidth / 3, 
                         marginTop: 10, 
                         marginLeft: 10,
+                        ...styles.pics
                       }}
                     />
                   ))}

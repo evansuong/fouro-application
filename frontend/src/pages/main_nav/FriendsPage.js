@@ -68,6 +68,8 @@ export default function FriendsPage({ navigation, route }) {
 
     async function getFriends() {
         const { status, data } = await ReadAPI.getFriends(uid);
+        console.log('fetching friends');
+
         if (status) {
           if (data.friends.length != friends.length) {
             setFriends(data.friends);
@@ -79,12 +81,7 @@ export default function FriendsPage({ navigation, route }) {
 
     useEffect(() => {
       getFriends();
-    }, [])    
-
-    useFocusEffect(() => {
-      console.log('fetching friends');
-      getFriends();
-    }, [r])
+    }, [])   
   
     const renderCards = friend => {
         // console.log(friend)
@@ -117,7 +114,8 @@ export default function FriendsPage({ navigation, route }) {
       },
       flatListContainer: {
         display: 'flex', 
-        flexShrink: 1
+        flexShrink: 1,
+        zIndex: 3,
       },
       noFriends: {
         fontSize: 20, 
@@ -147,19 +145,21 @@ export default function FriendsPage({ navigation, route }) {
               Friends
             </Header>
             {
-              friends.length != 0 &&
+              // friends.length != 0 &&
               <View style={styles.flatListContainer}>
                 <FlatList
                   data={friends}
                   keyExtractor={item => item.user_id}
                   renderItem={renderCards}
                   contentContainerStyle={styles.friendCard}
+                  refreshing={false}
+                  onRefresh={getFriends}
                 />
               </View>
             } 
             {
               friends.length == 0 &&
-              <View style={styles.noFriendsContainer}>
+              <View style={{...styles.noFriendsContainer, position: 'absolute', top: windowHeight * .35, alignSelf: 'center' }}>
                 <Text style={[
                   styles.noFriends, 
                   {transform: [{ rotate: '90deg'}], fontSize: 50}
