@@ -22,14 +22,14 @@ Hugs.HugsAPI.createHug(
   "example@email.com",
   "otherguy@email.com",
   "Sup Dude",
-  hi
+  death
 );
+*/
 
 Hugs.UpdateHugAPI.respondToHug(
-  "outerguy@email.com",
-  "4GO35lG4sEpRHyZkvcfG",
-  "yay",
-  []
-)
-*/
-Hugs.UpdateHugAPI.updateUserHugCount("hug1");
+  "otherguy@email.com",
+  "BSn6aZURanRdzSJGyNdb",
+  "IT WORKS",
+  death
+);
+//Hugs.UpdateHugAPI.updateUserHugCount("hug1");

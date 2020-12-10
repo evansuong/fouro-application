@@ -9,6 +9,7 @@ global.XMLHttpRequest = require("xhr2");
 // Import
 const Users = require("./Users");
 const Notifications = require("./Notifications");
+const Friends = require("./Friends");
 
 // Firestore
 const db = firebase.firestore();
@@ -35,7 +36,7 @@ function convertDate(date) {
 const HugsAPI = {
   // HELPER FUNCTIONS
   uploadBase64ArrayToHugs: async function (base64Array, imageName) {
-    var downloadURLArrays = [];
+    let downloadURLArrays = [];
     // Edge check
     if (base64Array.length == 0) {
       return downloadURLArrays;
@@ -244,90 +245,10 @@ const HugsAPI = {
 };
 
 const UpdateHugAPI = {
-  // currentUser must be the receiver of a hug
-  respondToHug: async function (currentUser, hugId, message, base64) {
-    try {
-      // Set current user
-      var currUser = users.doc(currentUser);
-      var topLevelHug = hugs.doc();
-      // Process the image
-      // Set the date of the hug (also used to ID image)
-      let dateInMillis = Date.now();
-      let dateInSeconds = Math.floor(dateInMillis / 1000);
-      var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
-      // Create a unique image ID
-      var imageName = `hug_images/${topLevelHug.id}/${dateInMillis}`;
-      // Set a var to an array of the downloadURLs
-      var imageDownloadURLSArray = await HugsAPI.uploadBase64ArrayToHugs(
-        base64,
-        imageName
-      );
-
-      const hugQuery = await hugs.doc(hugId).get();
-      const hugData = hugQuery.data();
-
-      // Update the top level hug to include more pictures and the receiver's message
-      await hugs.doc(hugId).update({
-        completed: true,
-        receiver_description: message,
-        images: [...hugData.images, ...imageDownloadURLSArray],
-      });
-
-      await currUser
-        .collection("user_hugs")
-        .doc(hugId)
-        .update({
-          completed: true,
-          date_time: dateTime,
-        })
-        .then(function (docRef) {
-          console.log(
-            "Document updated with ID: " +
-              currUser.collection("user_hugs").doc(hugId).id
-          );
-        })
-        .catch(function (error) {
-          console.error("Error adding document: ", error);
-        });
-
-      await users
-        .doc(hugData.sender_ref.id)
-        .collection("user_hugs")
-        .doc(hugId)
-        .update({
-          completed: true,
-          date_time: dateTime,
-        })
-        .then(function (docRef) {
-          console.log(
-            "Document updated with ID: " +
-              currUser.collection("user_hugs").doc(hugId).id
-          );
-        })
-        .catch(function (error) {
-          console.error("Error adding document: ", error);
-        });
-
-      // Call updateUserHugCount()
-      this.updateUserHugCount();
-
-      return { out: true };
-    } catch (err) {
-      console.log("Hugs 315 Error occurred responding to hug", err);
-    }
-    /*
-    this.updateUserHugCount(hugId);
-    // Call deleteNotification
-    // Getting the requestId may be questionable
-    currUserNotifRef = db
-      .colection("users")
-      .doc(currUser.id)
-      .collection("notifications");
-    requestIdRef = currUserNotifRef.where("hug_id", "==", hugId);
-    Notifications.NotificationsAPI.deleteNotification(requestIdRef);
-     */
-  },
-
+  /**
+   * Helper Function for Respond to Hug
+   * @param {string} hugId
+   */
   updateUserHugCount: function (hugId) {
     db.collection("hugs")
       .doc(hugId)
@@ -338,8 +259,8 @@ const UpdateHugAPI = {
           let receiverId = doc.data().receiver_ref.id;
           let senderId = doc.data().sender_ref.id;
           console.log(receiverId, senderId);
-          Users.UsersAPI.increaseHugCount(receiverId);
-          Users.UsersAPI.increaseHugCount(senderId);
+          Users.HugCountAPI.increaseHugCount(receiverId);
+          Users.HugCountAPI.increaseHugCount(senderId);
           // Update each user's user_hug to completed : true
           users.doc(receiverId).update({
             completed: true,
@@ -354,6 +275,92 @@ const UpdateHugAPI = {
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
+  },
+
+  /**
+   * Allow the user to respond to hug
+   * @param {string} currentUser
+   * @param {string} hugId
+   * @param {string} message
+   * @param {[string]} base64
+   */
+  respondToHug: async function (currentUser, hugId, message, base64) {
+    try {
+      let currUserRef = users.doc(currentUser);
+      // Set the date of the hug (also used to ID image)
+      let dateInMillis = Date.now();
+      let dateInSeconds = Math.floor(dateInMillis / 1000);
+      let dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
+      // Create a unique image ID
+      let imageRef = `hug_images/${hugId}/${dateInMillis}`;
+      // Set a var to an array of the downloadURLs
+      let imageDownloadURLSArray = await HugsAPI.uploadBase64ArrayToHugs(
+        base64,
+        imageRef
+      );
+
+      const hugQuery = await hugs.doc(hugId).get();
+      const hugData = hugQuery.data();
+
+      // Update the top level hug to include more pictures and the receiver's message
+      await hugs.doc(hugId).update({
+        completed: true,
+        receiver_description: message,
+        images: [...hugData.images, ...imageDownloadURLSArray],
+      });
+
+      await currUserRef
+        .collection("user_hugs")
+        .doc(hugId)
+        .update({
+          completed: true,
+          date_time: hugData.date_time,
+        })
+        .then(function (docRef) {
+          console.log(
+            "Document updated with ID: " +
+              currUserRef.collection("user_hugs").doc(hugId).id
+          );
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+
+      await users
+        .doc(hugData.sender_ref.id)
+        .collection("user_hugs")
+        .doc(hugId)
+        .update({
+          completed: true,
+          date_time: hugData.date_time,
+        })
+        .then(function (docRef) {
+          console.log(
+            "Document updated with ID: " +
+              users
+                .doc(hugData.sender_ref.id)
+                .collection("user_hugs")
+                .doc(hugId).id
+          );
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+
+      // Update User Hug Counts
+      this.updateUserHugCount(hugId);
+      // Update both users' hug dates
+      console.log("hi");
+      Friends.FriendsAPI.updateFriendHugDate(
+        currentUser,
+        hugData.sender_ref.id,
+        hugData.date_time
+      );
+
+      return { out: true };
+    } catch (err) {
+      console.log("Hugs 315 Error occurred responding to hug", err);
+    }
   },
 };
 

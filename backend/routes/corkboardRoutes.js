@@ -21,10 +21,9 @@ function checkBody(req, res, next) {
 }
 
 //Routes
-// TODO: NOT TESTED
 router.get("/buildCorkboard/:id", async (req, res) => {
   const uid = req.params.id;
-  console.log('corkboardRoutes 28', uid);
+  console.log("corkboardRoutes 28", uid);
 
   try {
     const response = await CorkboardAPI.buildCorkboard(uid);
@@ -35,15 +34,14 @@ router.get("/buildCorkboard/:id", async (req, res) => {
   }
 });
 
-// TODO: NOT TESTED
 router.put("/pin/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { hug_id } = req.body;
 
-  console.log('corkboardRoutes 43', uid, hug_id);
+  console.log("corkboardRoutes 43", uid, hug_id);
 
   if (!hug_id) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
@@ -55,15 +53,14 @@ router.put("/pin/:id", checkBody, async (req, res) => {
   }
 });
 
-// TODO: NOT TESTED
 router.put("/unpin/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { hug_id } = req.body;
 
-  console.log('corkboardRoutes 63', uid, hug_id);
+  console.log("corkboardRoutes 63", uid, hug_id);
 
   if (!hug_id) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
