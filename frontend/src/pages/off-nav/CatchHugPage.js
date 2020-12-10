@@ -73,6 +73,7 @@ export default function CatchHugPage({ navigation, route }) {
       if (data.cancelled) {
         Alert.alert('Image upload was canceled')
       } else {
+        // console.log('CatchHug Length', data.base64.length);
         const arr = data.uri.split('.');
         const fileExtension = arr[arr.length - 1];
         const validExtension = validExtensions.includes(fileExtension);
@@ -80,8 +81,9 @@ export default function CatchHugPage({ navigation, route }) {
           Alert.alert(`Accepted image types are ${validExtensions}`);
         } else {
           const compressedBase64 = await compressImage(data);
-          console.log('CreateHug 82', totalChars);
-          console.log('CreateHug 83', compressedBase64.length + totalChars);
+          // console.log('Compress Base64', compressedBase64.length);
+          // console.log('CatchHug 82', totalChars);
+          // console.log('CatchHugHug 83', compressedBase64.length + totalChars);
           if (compressedBase64.length + totalChars < MAX_UPLOAD_SIZE) {
             setTotalChars(prevTotalChars => 
               prevTotalChars + compressedBase64.length
@@ -99,13 +101,14 @@ export default function CatchHugPage({ navigation, route }) {
       let base64 = data.base64;    
       if (base64.length > MAX_UPLOAD_SIZE) {
         const compressFactor = MAX_UPLOAD_SIZE / base64.length;
-        console.log('CreateHugPage 54', compressFactor);
+        // console.log('CreateHugPage 54', compressFactor);
         base64 = await getBase64WithImage(data, compressFactor);
       }
       return base64;
     }
 
     const getBase64WithImage = async (data, compressFactor) => {
+      // console.log('CatchHug 111', data.base64.length);
       const manipResult = await ImageManipulator.manipulateAsync(
         data.uri,
         [],
@@ -115,7 +118,8 @@ export default function CatchHugPage({ navigation, route }) {
           base64: true
         }
       )
-      return `data:image/jpeg;base64,${manipResult}`;
+      // console.log(manipResult.base64.length);
+      return `data:image/jpeg;base64,${manipResult.base64}`;
     }
 
     const callBackend = async () => {

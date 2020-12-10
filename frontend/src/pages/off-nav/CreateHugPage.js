@@ -113,7 +113,7 @@ export default function CreateHugPage({ navigation, route }) {
           base64: true
         }
       )
-      return `data:image/jpeg;base64,${manipResult}`;
+      return `data:image/jpeg;base64,${manipResult.base64}`;
       }
 
     const callBackend = async () => {
