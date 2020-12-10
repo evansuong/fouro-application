@@ -138,7 +138,7 @@ const HugsAPI = {
       .set({
         completed: false,
         date_time: dateTime, //dateTime is an actual DateTime object (timestamp?)
-        friend_ref: users.doc(friendId),
+        friend_ref: users.doc(currentUser),
         hug_ref: topLevelHug, //Use the ref to the top level hug ^^
         pinned: false,
       })
