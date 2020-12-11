@@ -65,6 +65,15 @@ F - Firebase
 
 6.  Scan the Expo QR code with your camera
 
+7.  Copy your computer IP address from the Expo Link (looks something like this, between second "/" and ":")
+
+        exp://192.168.50.1:19000
+              ^          ^
+
+8.  Paste your computer IP in [./frontend/src/API.js](./frontend/src/API.js) on line 3:
+
+        const server = "http://<YOUR-IP-HERE>:3000";
+
 ## Pulling changes
 
 **Before you start working, make sure to type:**

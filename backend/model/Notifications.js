@@ -25,7 +25,7 @@ const NotificationsAPI = {
       .doc(uid)
       .collection("notifications")
       .orderBy("date_time", "desc")
-      .get()
+      .get();
 
     // No notification collection
     if (notificationSnapshot.empty) {
@@ -38,13 +38,13 @@ const NotificationsAPI = {
       notificationData = [...notificationData, doc];
     });
 
-    let newUser = {}; //JSON object of user who sent notification
+    let notif = {}; //JSON object of user who sent notification
     for (let i = 0; i < notificationData.length; i++) {
       const userId = await notificationData[i].get("user_ref").id;
       const userResponse = await UsersAPI.getUserProfile(userId);
       //if the notification type is a hug
       if ((await notificationData[i].get("type")) == "hug") {
-        newUser = {
+        notif = {
           friendName: userResponse.name,
           friend_username: userResponse.username,
           date_time: notificationData[i].get("date_time").toDate().toString(),
@@ -55,7 +55,7 @@ const NotificationsAPI = {
         };
         //if the notification type is a friend
       } else {
-        newUser = {
+        notif = {
           friendName: userResponse.name,
           friend_username: userResponse.username,
           date_time: notificationData[i].get("date_time").toDate().toString(),
@@ -66,7 +66,7 @@ const NotificationsAPI = {
         };
       }
       //push the users notification
-      notifications.push(newUser);
+      notifications.push(notif);
     }
     //wrapped in json
     return { notifs: notifications };
@@ -77,7 +77,7 @@ const NotificationsAPI = {
    * @return none
    */
   deleteNotification: async function (uid, requestId) {
-    console.log('deleting');
+    console.log("deleting");
     var notificationCollection = users.doc(uid).collection("notifications");
 
     var userRequestRef = notificationCollection.doc(requestId);
@@ -85,14 +85,12 @@ const NotificationsAPI = {
 
     if (notificationType == "hug") {
       const hugId = await userRequestRef.get("hug_ref").id;
-      HugsAPI.dropHug(uid, requestId, hugId);
-    } else {
-      await userRequestRef.delete()
+      await HugsAPI.dropHug(uid, requestId, hugId);
     }
 
-    await userRequestRef.delete()
+    await userRequestRef.delete();
 
-    return { out: true }
+    return { out: true };
   },
 };
 
