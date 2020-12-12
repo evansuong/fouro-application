@@ -109,7 +109,7 @@ router.get("/getUserCounts/:id", async (req, res) => {
   if (!uid) {
     res.status(400).send('Request has missing fields');
   } else {
-    const countResponse = await HugCountAPI.getUserCount(uid);
+    const countResponse = await HugCountAPI.getUserCounts(uid);
     res.status(200).json(countResponse);
   }
 });
