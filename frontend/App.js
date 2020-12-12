@@ -16,6 +16,9 @@ import NamePage from './src/pages/onboarding/NamePage';
 import WelcomePage from './src/pages/onboarding/WelcomePage';
 import ForgotPasswordPage from './src/pages/onboarding/ForgotPasswordPage';
 import ResetPasswordPage from './src/pages/off-nav/ResetPasswordPage';
+import SearchPage from './src/pages/off-nav/SearchPage';
+import HugSearchPage from './src/pages/off-nav/HugSearchPage';
+import EditProfilePage from './src/pages/off-nav/EditProfilePage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -125,6 +128,10 @@ export default function App() {
               <Stack.Screen
                 name='Search Page'
                 component={HugSearchPage}/>
+
+              <Stack.Screen
+                name='Edit Profile Page'
+                component={EditProfilePage}/>
 
               <Stack.Screen
                 name='Forgot Password'
