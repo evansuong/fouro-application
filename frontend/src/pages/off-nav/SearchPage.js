@@ -66,12 +66,16 @@ export default function SearchPage({ input, navigation }) {
 
   function search() {
     if (searchFriends) {
-      ReadAPI.searchFriends(uid, input).then(response => 
-        setUserList(response.data.friends)
+      ReadAPI.searchFriends(uid, input).then(response => {
+          setUserList(response.data.friends)
+        }
       )
     } else {
-      ReadAPI.searchUsers(uid, input).then(response => 
-        setUserList([response.data.user])
+      ReadAPI.searchUsers(uid, input).then(response => {
+        if (response.data.user.length != 0) {
+          setUserList([response.data.user])
+        }
+      }
       )
     }
   }
@@ -107,9 +111,10 @@ export default function SearchPage({ input, navigation }) {
     let backgroundColor = isLightTheme ? '#FFF' : '#333'
 
     return (
-      userList[0] ? 
+      userList.length > 0 && userList[0] ? 
       <ScrollView style={{ backgroundColor: backgroundColor }}>
-        {userList.map(userData => (
+        {userList.map(userData => {
+          return (
           <TouchableOpacity 
             key={userData.user_id} 
             onPress={() => viewStranger(userData)}
@@ -130,7 +135,7 @@ export default function SearchPage({ input, navigation }) {
               </Text>
             </View>
           </TouchableOpacity>
-        ))}
+        )})}
       </ScrollView> : <></>
     )
   }

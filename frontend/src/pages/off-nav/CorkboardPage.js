@@ -1,5 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { View, StyleSheet, Image, FlatList, Text, Alert } from 'react-native'
+import { 
+  View, 
+  StyleSheet, 
+  Image, 
+  FlatList, 
+  Text, 
+  Alert,
+  ActivityIndicator
+} from 'react-native'
 // APIs
 import { ReadAPI } from '../../API';
 // Contexts
@@ -44,8 +52,7 @@ const testData = [
 export default function CorkboardPage({ navigation, route }) {
     // States
     const [startUp, setStartUp] = useState(true);
-    const [pinnedHugs, setPinnedHugs] = useState([]);
-    const [emptyBoard, setEmptyBoard] = useState(false);
+    const [pinnedHugs, setPinnedHugs] = useState();
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
@@ -62,31 +69,25 @@ export default function CorkboardPage({ navigation, route }) {
         await fetchCorkboard();
         setStartUp(false);
       }
-      setTimeout(() => {
-        if (pinnedHugs.length == 0) {
-          setEmptyBoard(true);
-        }
-      }, 2000)
     }
 
     const fetchCorkboard = async () => {
       const { status, data } = await ReadAPI.buildCorkboard(userData.uid);
       if (status) {
+        console.log('CorkboardPage 82', data);
         setPinnedHugs(data.hugsList);
       } else {
         Alert.alert('Something went wrong when building the corkboard');
       }
     }
 
-    const checkPinnedHugs = () => {
-      return pinnedHugs.length == 0;
-    }
-
     const styles = StyleSheet.create({
       corkboardImage: {
         position: 'absolute',
         resizeMode: 'contain',
-        zIndex: 0
+        zIndex: 0,
+        // TODO: Below css might be problematic for background image size
+        height: windowHeight,
       },
       noPinnedHugs: {
         fontSize: 20, 
@@ -103,10 +104,22 @@ export default function CorkboardPage({ navigation, route }) {
       contentContainerStyle: {
         paddingBottom: margin, 
         paddingTop: margin + windowWidth * 0.2
+      },
+      loadingContainer: {
+        flex: 1, 
+        resizeMode: 'cover', 
+        justifyContent: 'center'
       }
     })
 
-    return (
+    if (!pinnedHugs) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size='large'/>
+        </View>
+      )
+    } else {
+      return (
         <View style={{ alignItems: 'center'}}>
             <Image
                 source={corkboardImg}
@@ -120,7 +133,7 @@ export default function CorkboardPage({ navigation, route }) {
 
             {/* Hugs list as a grid */}
             {
-              pinnedHugs && !pinnedHugs.empty &&
+              pinnedHugs.length != 0 &&
               <FlatList
                 data={pinnedHugs}
                 keyExtractor={item => item.hug_ref}
@@ -139,7 +152,7 @@ export default function CorkboardPage({ navigation, route }) {
               />
             }
             {
-              emptyBoard && pinnedHugs.length == 0 &&
+              pinnedHugs.length == 0 &&
               <View style={styles.noPinnedHugsContainer}>
                 <Text style={[
                   styles.noPinnedHugs, 
@@ -154,5 +167,6 @@ export default function CorkboardPage({ navigation, route }) {
               </View>
             }        
         </View>
-    )
+      )
+    }
 }

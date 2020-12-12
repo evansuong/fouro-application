@@ -99,7 +99,7 @@ export const ReadAPI = {
     return response;
   },
   searchFriends: async function (uid, name) {
-    //TODO
+    //TODO: ?
     // request: { name }
     let response = {};
     await axios

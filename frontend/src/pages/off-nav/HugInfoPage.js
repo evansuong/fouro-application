@@ -7,7 +7,8 @@ import {
   ScrollView, 
   StatusBar, 
   TouchableOpacity, 
-  Alert
+  Alert,
+  ActivityIndicator,
 } from 'react-native'
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
@@ -42,7 +43,7 @@ export default function HugInfoPage({ navigation, route }) {
   const [pinnedButton, setPinnedButton] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [fetchedUser, setFetchedUser] = useState({});
-  const [fetchedHug, setFetchedHug] = useState({});
+  const [fetchedHug, setFetchedHug] = useState();
   const [image, setImage] = useState();
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
@@ -51,7 +52,7 @@ export default function HugInfoPage({ navigation, route }) {
   // Misc
   const routeName = route.name;
   const { data } = route.params;
-  let { hug_id, pinned } = data;
+  let { hug_id, notification_id, clearFunction, pinned } = data;
   // sizing
   const textContainerWidth = windowWidth / 1.1;
   const textWidth = textContainerWidth / 1.3;
@@ -118,6 +119,8 @@ export default function HugInfoPage({ navigation, route }) {
       friendPfp: fetchedHug.sender_profile_picture,
       hugId: hug_id,
       friendId: fetchedHug.sender_id,
+      notification_id: notification_id,
+      clearFunction: clearFunction,
     } })
   }
 
@@ -269,108 +272,121 @@ export default function HugInfoPage({ navigation, route }) {
       color: "#FFF", 
       fontSize: 20, 
       fontFamily: 'Montserrat_400Regular'
+    },
+    loadingContainer: {
+      flex: 1, 
+      resizeMode: 'cover', 
+      justifyContent: 'center'
     }
   })
   
-  return (
-    <View style={styles.pageContainer}>
-      {/* header */}
-      <Header 
-        routeName={routeName} 
-        navigation={navigation} 
-        onMainNav={false} 
-      />
-      {/* Main Container */}
-      <ScrollView style={styles.mainContainer}>
-        <View style={styles.header}>
-          {/* Hug Date */}
-          <Text style={styles.hugDateText}>
-            {fetchedHug.date_time}
-          </Text>
-          {/* First hug picture */}
-          <Image 
-            source={{ uri: image }} 
-            style={styles.imageContainer}
-          />
-        </View>
-    
-        <View style={styles.notificationContent}>    
-          <View style={styles.textAreaFriend}>
-            {/* Text from friend */}
-            <Text style={styles.username}>
-              {`@${fetchedHug.sender_username}`}
-            </Text>
-            <Text style={styles.message}>
-              {fetchedHug.sender_description}
-            </Text>
-          </View>
-
-          {
-            checkDescription() &&  
-            <View style={styles.textAreaUser}>
-              {/* Text from self */}
-              <Text style={styles.username}>
-                {`@${fetchedHug.receiver_username}`}
-              </Text>
-              <Text style={{ ...styles.message, width: textWidth }}>
-                {fetchedHug.receiver_description}
-              </Text>
-            </View>  
-          }
-          
-        </View>            
-
-        {/* More Hug Images */}
-        <View style={styles.images}>
-          {
-            checkImages() &&
-            <ScrollView horizontal={true}>
-              {fetchedHug.images.map((img, index) => (
-                <Image 
-                  source={{uri: img}} 
-                  style={styles.imageContainer} key={index}
-                />
-              ))}
-            </ScrollView>
-          }
-        </View>
-      </ScrollView>
-
-      {/* Pin Icon */}
-      {
-        checkDescription() && 
-        <TouchableOpacity style={styles.pinButton}onPress={pinHug}>
-        {
-          pinnedButton &&
-          <Image 
-            source={require('assets/pinIcons/0015.png')}
-            style={styles.pinButtonIcon}
-          />
-        }
-        {
-          !pinnedButton &&
-          <Image 
-            source={require('assets/pinIcons/0015_bw.png')}
-            style={styles.pinButtonIcon}
-          />
-        }
-        </TouchableOpacity>
-      }
-
-      {/* hug back button */}
-      {
-        !checkDescription() && <View style={styles.hugBtnContainer}>
-        <TouchableOpacity
-          onPress={hugBack}
-        >
-          <View style={styles.hugBackBtnContainer}>
-            <Text style={styles.hugBackBtn}>
-              Hug Back!
-            </Text>
-          </View>
-        </TouchableOpacity>
+  if (!fetchedHug) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size='large'/>
       </View>
-      }
-    </View>
-  )
+    )
+  } else {
+    return (
+      <View style={styles.pageContainer}>
+        {/* header */}
+        <Header 
+          routeName={routeName} 
+          navigation={navigation} 
+          onMainNav={false} 
+        />
+        {/* Main Container */}
+        <ScrollView style={styles.mainContainer}>
+          <View style={styles.header}>
+            {/* Hug Date */}
+            <Text style={styles.hugDateText}>
+              {fetchedHug.date_time}
+            </Text>
+            {/* First hug picture */}
+            <Image 
+              source={{ uri: image }} 
+              style={styles.imageContainer}
+            />
+          </View>
+      
+          <View style={styles.notificationContent}>    
+            <View style={styles.textAreaFriend}>
+              {/* Text from friend */}
+              <Text style={styles.username}>
+                {`@${fetchedHug.sender_username}`}
+              </Text>
+              <Text style={styles.message}>
+                {fetchedHug.sender_description}
+              </Text>
+            </View>
+
+            {
+              checkDescription() &&  
+              <View style={styles.textAreaUser}>
+                {/* Text from self */}
+                <Text style={styles.username}>
+                  {`@${fetchedHug.receiver_username}`}
+                </Text>
+                <Text style={{ ...styles.message, width: textWidth }}>
+                  {fetchedHug.receiver_description}
+                </Text>
+              </View>  
+            }
+            
+          </View>            
+
+          {/* More Hug Images */}
+          <View style={styles.images}>
+            {
+              checkImages() &&
+              <ScrollView horizontal={true}>
+                {fetchedHug.images.map((img, index) => (
+                  <Image 
+                    source={{uri: img}} 
+                    style={styles.imageContainer} key={index}
+                  />
+                ))}
+              </ScrollView>
+            }
+          </View>
+        </ScrollView>
+
+        {/* Pin Icon */}
+        {
+          checkDescription() && 
+          <TouchableOpacity style={styles.pinButton}onPress={pinHug}>
+          {
+            pinnedButton &&
+            <Image 
+              source={require('assets/pinIcons/0015.png')}
+              style={styles.pinButtonIcon}
+            />
+          }
+          {
+            !pinnedButton &&
+            <Image 
+              source={require('assets/pinIcons/0015_bw.png')}
+              style={styles.pinButtonIcon}
+            />
+          }
+          </TouchableOpacity>
+        }
+
+        {/* hug back button */}
+        {
+          !checkDescription() && <View style={styles.hugBtnContainer}>
+          <TouchableOpacity
+            onPress={hugBack}
+          >
+            <View style={styles.hugBackBtnContainer}>
+              <Text style={styles.hugBackBtn}>
+                Hug Back!
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        }
+      </View>
+    )
+  }
 }

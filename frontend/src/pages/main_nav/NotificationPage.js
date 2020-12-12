@@ -156,9 +156,14 @@ export default function NotificationPage({ navigation, route }) {
           notifications.filter((item) => item.callback_id === hugId)[0];
 
         navigation.navigate('Hug Info', { 
-            data: { hug_id: data.callback_id, pinned: false },
+            data: { 
+              hug_id: data.callback_id, 
+              notification_id: id, 
+              clearFunction: clearNotification,
+              pinned: false 
+            },
         })
-        clearNotification(id)
+        // clearNotification(id)
 
         // signify hug as caught to the database
     }
@@ -202,7 +207,7 @@ export default function NotificationPage({ navigation, route }) {
           notifications.filter((item) => item.notification_id !== id);
         setTimeout(() => {
           setNotifications(newList);
-        }, 1000);
+        }, 400);
     }
 
     const renderCards = notification => {

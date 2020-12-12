@@ -49,7 +49,11 @@ function buildTestData(name, text, img, id) {
 
 
 
-export default function OtherUserProfilePage({ navigation, route, setFriendPage }) {
+export default function OtherUserProfilePage({ 
+  navigation, 
+  route, 
+  setFriendPage 
+}) {
     // States
     const [hugs, setHugs] = useState();
     const [status, setStatus] = useState();
@@ -65,6 +69,11 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     const isStranger = status !== 'friend' ? true : false;
     const isPending = status === 'pending' ? true : false;
     const topMarginSize = windowWidth * 0.1;
+
+    useEffect(() => {
+      getUserStatus();
+      getSharedHugs();
+    }, [otheruser_id]);
 
     function getSharedHugs() {
       setHugs(ReadAPI.getFriendProfile(uid, otheruser_id));
@@ -100,10 +109,9 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
       getUserStatus();
     }
 
-    useEffect(() => {
-      getUserStatus();
-      getSharedHugs();
-    }, [otheruser_id]);
+    function cancelOption() {
+      console.log('OtherUser 109 Canceled');
+    }
 
     const renderHug = (( item ) => 
       <HugCard 
@@ -345,8 +353,8 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
                 <OptionsMenu
                     button={dotsIconDark}
                     buttonStyle={styles.btnImage}
-                    options={["remove friend"]}
-                    actions={[removeFriendFromList]} />
+                    options={['Remove Friend', 'Cancel']}
+                    actions={[removeFriendFromList, cancelOption]} />
                 </View>
             }
 

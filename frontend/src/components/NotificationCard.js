@@ -73,7 +73,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
 
     function handleDisappear() {
       Animated.timing(marginL, {
-        toValue: windowWidth * 1.3,
+        toValue: windowWidth * 2,
         duration: 500,
         useNativeDriver: false,
       }).start();

@@ -50,7 +50,9 @@ export default function CatchHugPage({ navigation, route }) {
       friendName, 
       friendUsername, 
       friendPfp, 
-      hugId 
+      hugId,
+      notification_id,
+      clearFunction, 
     } = route.params.data;
 
     const routeName = route.name;
@@ -131,6 +133,7 @@ export default function CatchHugPage({ navigation, route }) {
 
       setTimeout(() => {
         setCallingBackend(false);
+        clearFunction(notification_id);
         navigation.navigate('Main Nav Page');
         if (status) {
           Alert.alert(`Hugged ${friendName} back!`);
@@ -169,7 +172,8 @@ export default function CatchHugPage({ navigation, route }) {
         width: windowWidth / 1.8,
       },
       friendText: {
-        fontSize: 15,
+        fontSize: 16,
+        fontFamily: 'Montserrat_400Regular'
       },
       picContainer: {
         width: windowWidth,
@@ -215,7 +219,24 @@ export default function CatchHugPage({ navigation, route }) {
         height: windowWidth / 3, 
         marginTop: 10, 
         marginLeft: 10,
-      }
+        borderRadius: 10,
+        borderColor: '#FFF',
+        borderWidth: 3,
+      },
+      profilePicContainer: {
+        borderColor: '#FFF',
+        borderWidth: 3,
+        borderRadius: 100,
+        marginLeft: windowWidth * .05,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
+      },
     });
 
     return (
@@ -245,10 +266,12 @@ export default function CatchHugPage({ navigation, route }) {
               {/* Friend Info */}
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
-                  <Image
-                    source={{ uri: friendPfp }}
-                    style={styles.profilePic}
-                  />
+                  <View style={styles.profilePicContainer}> 
+                    <Image
+                      source={{ uri: friendPfp }}
+                      style={styles.profilePic}
+                    />
+                  </View>
                   <View style={styles.friendTextContainer}>
                     <Text style={styles.friendText}>
                       {friendUsername}
@@ -305,8 +328,6 @@ export default function CatchHugPage({ navigation, route }) {
               !callingBackend &&
               <View>
                 <LinkedButton
-                  navigation={navigation}
-                  link='Main Nav Page'
                   text='SEND HUG'
                   color='#FB7250'
                   onPress={() => callBackend()}

@@ -129,14 +129,16 @@ export default function CreateHugPage({ navigation, route }) {
             friend_id: user_id,
             hug_id: data.out,
           }
-          const { hugStatus, hugData } = 
-            await CreateAPI.sendHugRequest(userData.uid, hugRequest);
-          if (hugStatus) {
+
+          // TODO: WAIT FOR TERRY'S BACKEND PUSH. THEN UNCOMMENT>
+          // const { hugStatus, hugData } = 
+          //   await CreateAPI.sendHugRequest(userData.uid, hugRequest);
+          // if (hugStatus) {
             const firstName = name.split(' ')[0]
             Alert.alert(`Hug sent to ${firstName}!`);
-          } else {
-            Alert.alert('Hug created, but could not send notification.')
-          }
+          // } else {
+          //   Alert.alert('Hug created, but could not send notification.')
+          // }
         } else {
           Alert.alert('Error creating hug.');
         }
@@ -167,7 +169,6 @@ export default function CreateHugPage({ navigation, route }) {
             width: 0,
             height: 2,
         },
-
         shadowOpacity: 0.3,
         shadowRadius: 2,
         elevation: 4,
@@ -185,7 +186,8 @@ export default function CreateHugPage({ navigation, route }) {
         width: windowWidth / 1.8,
       },
       friendText: {
-        fontSize: 20,
+        fontSize: 16,
+        fontFamily: 'Montserrat_400Regular'
       },
       picContainer: {
         width: windowWidth,
@@ -198,6 +200,10 @@ export default function CreateHugPage({ navigation, route }) {
         borderRadius: 10,
         borderColor: '#FFF',
         borderWidth: 3,
+        width: windowWidth / 3, 
+        height: windowWidth / 3, 
+        marginTop: 10, 
+        marginLeft: 10,
       },  
       backgroundImg: {
         height: windowHeight,
@@ -323,13 +329,7 @@ export default function CreateHugPage({ navigation, route }) {
                       source={isEmpty(item) || item.cancelled ? 
                         profilePic : {uri: `${item.uri}`}
                       }
-                      style={{
-                        width: windowWidth / 3, 
-                        height: windowWidth / 3, 
-                        marginTop: 10, 
-                        marginLeft: 10,
-                        ...styles.pics
-                      }}
+                      style={styles.pics}
                     />
                   ))}
                   </View>
