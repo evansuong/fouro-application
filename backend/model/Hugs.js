@@ -275,8 +275,6 @@ const UpdateHugAPI = {
       let currUserRef = users.doc(currentUser);
       // Set the date of the hug (also used to ID image)
       let dateInMillis = Date.now();
-      let dateInSeconds = Math.floor(dateInMillis / 1000);
-      let dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
       // Create a unique image ID
       let imageRef = `hug_images/${hugId}/${dateInMillis}`;
       // Set a var to an array of the downloadURLs
@@ -336,7 +334,6 @@ const UpdateHugAPI = {
       // Update User Hug Counts
       this.updateUserHugCount(hugId);
       // Update both users' hug dates
-      console.log("hi");
       Friends.FriendsAPI.updateFriendHugDate(
         currentUser,
         hugData.sender_ref.id,
@@ -351,7 +348,6 @@ const UpdateHugAPI = {
 };
 
 const ViewHugAPI = {
-  // TODO: MAKE SURE OUTPUTS STRING JSON
   getHugById: async function (hugId) {
     var fullHugInfo = {};
     // Set the hugData
@@ -390,16 +386,13 @@ const ViewHugAPI = {
     } else {
       console.log("Hugs 347 No such document!");
     }
-    // console.log(fullHugInfo.sender_description);
+
     return fullHugInfo;
   },
 
   // Gets all hugs from the currently logged in user
-  // TODO: not sure how to use the paginated data "next"
-  // TODO: delete one of the versions. not sure how to return multiple docs?
   getUserHugs: async function (currentUser) {
-    // GET ALL VERSION
-
+    // Unpaginated
     var results = [];
     const userHugsQuery = await users
       .doc(currentUser)
