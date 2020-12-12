@@ -5,8 +5,8 @@ const firebase = require("../../firebase/admin");
 const db = firebase.firestore();
 let docRef = db.collection("users").doc("example@email.com");
 
-console.log(docRef);
-console.log(docRef.id);
+//console.log(docRef);
+//console.log(docRef.id);
 
 //Friends.FriendSearchAPI.searchFriends("hi", "hHasdlkj");
 
@@ -24,7 +24,16 @@ search();
 */
 
 async function search2() {
-  let match = await Friends.FriendSearchAPI.searchUsers("example");
-  console.log(match);
+  let test = await Friends.FriendSearchAPI.searchUsers(
+    "example@email.com",
+    "evanjserrano"
+  );
+  console.log("should be 1 guy", test);
+  let match = await Friends.FriendSearchAPI.searchUsers(
+    "zbctIWFW8aO1Yg9ccK38w7ZDdP72",
+    "evanjserrano"
+  );
+  console.log("should be empty", match);
 }
+
 search2();

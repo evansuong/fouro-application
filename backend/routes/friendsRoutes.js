@@ -126,7 +126,7 @@ router.get("/searchUsers/:id,:query", async (req, res) => {
     return;
   } else {
     try {
-      let response = await FriendSearchAPI.searchUsers(query);
+      let response = await FriendSearchAPI.searchUsers(uid, query);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);

@@ -85,7 +85,7 @@ const NotificationsAPI = {
 
     if (notificationType == "hug") {
       const hugId = await userRequestRef.get("hug_ref").id;
-      await HugsAPI.dropHug(uid, requestId, hugId);
+      await HugsAPI.dropHug(uid, hugId);
     }
 
     await userRequestRef.delete();
