@@ -7,7 +7,8 @@ import {
   ScrollView, 
   StatusBar, 
   TouchableOpacity, 
-  Alert
+  Alert,
+  ActivityIndicator,
 } from 'react-native'
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
@@ -42,7 +43,7 @@ export default function HugInfoPage({ navigation, route }) {
   const [pinnedButton, setPinnedButton] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [fetchedUser, setFetchedUser] = useState({});
-  const [fetchedHug, setFetchedHug] = useState({});
+  const [fetchedHug, setFetchedHug] = useState();
   const [image, setImage] = useState();
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
@@ -51,9 +52,7 @@ export default function HugInfoPage({ navigation, route }) {
   // Misc
   const routeName = route.name;
   const { data } = route.params;
-  // console.log("params", data)
-  let { hug_id, pinned } = data;
-  console.log("PINNED 56", pinned)
+  let { hug_id, notification_id, clearFunction, pinned } = data;
   // sizing
   const textContainerWidth = windowWidth / 1.1;
   const textWidth = textContainerWidth / 1.3;
@@ -67,16 +66,12 @@ export default function HugInfoPage({ navigation, route }) {
       setStartUp(false);
       fetchUserData();
       fetchEventData();
-      // if (typeof image === 'undefined') {
-      //   image = friend_profile_pic;
-      // }
     }
   }, []);
 
   const fetchUserData = async () => {
     const { status, data } = 
       await ReadAPI.getUserProfile(userData.uid);
-    console.log("HUGINFOPAGE 77", status, data);
     if (status) {
       setFetchedUser(data);
     } else {
@@ -88,9 +83,7 @@ export default function HugInfoPage({ navigation, route }) {
     let { status, data } = 
       await ReadAPI.getHugById(userData.uid, hug_id);
     if (status) {
-      console.log("opening hug", data)
       setImage(data.images[0])
-      console.log('image HugInfoPage 93', data)
       data.images = data.images.slice(1, data.images.length);
       setFetchedHug(data);
       setPinnedButton(pinned)
@@ -101,9 +94,6 @@ export default function HugInfoPage({ navigation, route }) {
 
   async function pinHug() {
     if(!pinnedButton) {
-      // call the backend function for pinning
-      // console.log()
-      console.log('HugInfoPage 99', hug_id);
       const request = {
         hug_id: hug_id
       }
@@ -112,7 +102,6 @@ export default function HugInfoPage({ navigation, route }) {
         data.out && setPinnedButton(true)
       });
     } else {
-      // call the backend function for unpinning
       const request = {
         hug_id: hug_id
       }
@@ -130,12 +119,12 @@ export default function HugInfoPage({ navigation, route }) {
       friendPfp: fetchedHug.sender_profile_picture,
       hugId: hug_id,
       friendId: fetchedHug.sender_id,
+      notification_id: notification_id,
+      clearFunction: clearFunction,
     } })
   }
 
   function checkImages() {
-    console.log(Object.keys(fetchedHug).length > 0)
-    // console.log("checkImages ", typeof fetchedHug !== 'undefined', typeof fetchedHug.images !== 'undefined', fetchedHug.images.length > 0)
     return Object.keys(fetchedHug).length > 0 &&
           typeof fetchedHug !== 'undefined' && 
            typeof fetchedHug.images !== 'undefined' && 
@@ -149,7 +138,8 @@ export default function HugInfoPage({ navigation, route }) {
   const styles = StyleSheet.create({
     pageContainer: {
       width: windowWidth,
-      height: windowHeight
+      height: windowHeight,
+      backgroundColor: 'white'
     },
     mainContainer: {
       backgroundColor: 'white',
@@ -270,110 +260,133 @@ export default function HugInfoPage({ navigation, route }) {
       bottom: windowHeight * .05,
 
     },
-    hugBackBtn: {
+    hugBackBtnContainer: {
       width: windowWidth * .8,
       backgroundColor: '#E57777',
       display: 'flex',
       alignItems: 'center',
       padding: 15,
       borderRadius: 100,
+    },
+    hugBackBtn: {
+      color: "#FFF", 
+      fontSize: 20, 
+      fontFamily: 'Montserrat_400Regular'
+    },
+    loadingContainer: {
+      flex: 1, 
+      resizeMode: 'cover', 
+      justifyContent: 'center'
     }
   })
   
-  return (
-    <View style={{ ...styles.pageContainer, backgroundColor: 'white' }}>
-      {/* header */}
-      <Header 
-        routeName={routeName} 
-        navigation={navigation} 
-        onMainNav={false} 
-      />
-      {/* Main Container */}
-      <ScrollView style={styles.mainContainer}>
-        <View style={styles.header}>
-          {/* Hug Date */}
-          <Text style={styles.hugDateText}>
-            {fetchedHug.date_time}
-          </Text>
-          {/* First hug picture */}
-          <Image 
-            source={{ uri: image }} 
-            style={styles.imageContainer}
-          />
-        </View>
-    
-        <View style={styles.notificationContent}>    
-          <View style={styles.textAreaFriend}>
-            {/* Text from friend */}
-            <Text style={styles.username}>
-              {`@${fetchedHug.sender_username}`}
+  if (!fetchedHug) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size='large'/>
+      </View>
+    )
+  } else {
+    return (
+      <View style={styles.pageContainer}>
+        {/* header */}
+        <Header 
+          routeName={routeName} 
+          navigation={navigation} 
+          onMainNav={false} 
+        />
+        {/* Main Container */}
+        <ScrollView style={styles.mainContainer}>
+          <View style={styles.header}>
+            {/* Hug Date */}
+            <Text style={styles.hugDateText}>
+              {fetchedHug.date_time}
             </Text>
-            <Text style={styles.message}>
-              {fetchedHug.sender_description}
-            </Text>
+            {/* First hug picture */}
+            <Image 
+              source={{ uri: image }} 
+              style={styles.imageContainer}
+            />
           </View>
+      
+          <View style={styles.notificationContent}>    
+            <View style={styles.textAreaFriend}>
+              {/* Text from friend */}
+              <Text style={styles.username}>
+                {`@${fetchedHug.sender_username}`}
+              </Text>
+              <Text style={styles.message}>
+                {fetchedHug.sender_description}
+              </Text>
+            </View>
 
-          {checkDescription() &&  
-          <View style={styles.textAreaUser}>
-            {/* Text from self */}
-            <Text style={styles.username}>
-              {`@${fetchedHug.receiver_username}`}
-            </Text>
-            <Text style={{ ...styles.message, width: textWidth }}>
-              {fetchedHug.receiver_description}
-            </Text>
-          </View>  
-          }
-          
-        </View>            
+            {
+              checkDescription() &&  
+              <View style={styles.textAreaUser}>
+                {/* Text from self */}
+                <Text style={styles.username}>
+                  {`@${fetchedHug.receiver_username}`}
+                </Text>
+                <Text style={{ ...styles.message, width: textWidth }}>
+                  {fetchedHug.receiver_description}
+                </Text>
+              </View>  
+            }
+            
+          </View>            
 
-        {/* More Hug Images */}
-        <View style={styles.images}>
+          {/* More Hug Images */}
+          <View style={styles.images}>
+            {
+              checkImages() &&
+              <ScrollView horizontal={true}>
+                {fetchedHug.images.map((img, index) => (
+                  <Image 
+                    source={{uri: img}} 
+                    style={styles.imageContainer} key={index}
+                  />
+                ))}
+              </ScrollView>
+            }
+          </View>
+        </ScrollView>
+
+        {/* Pin Icon */}
+        {
+          checkDescription() && 
+          <TouchableOpacity style={styles.pinButton}onPress={pinHug}>
           {
-            checkImages() &&
-            <ScrollView horizontal={true}>
-              {fetchedHug.images.map((img, index) => (
-                <Image 
-                  source={{uri: img}} 
-                  style={styles.imageContainer} key={index}
-                />
-              ))}
-            </ScrollView>
+            pinnedButton &&
+            <Image 
+              source={require('assets/pinIcons/0015.png')}
+              style={styles.pinButtonIcon}
+            />
           }
-        </View>
-      </ScrollView>
-
-      {/* Pin Icon */}
-      {checkDescription() && <TouchableOpacity 
-        style={styles.pinButton}
-        onPress={pinHug}>
-        {
-          pinnedButton &&
-          <Image 
-            source={require('assets/pinIcons/0015.png')}
-            style={styles.pinButtonIcon}
-          />
+          {
+            !pinnedButton &&
+            <Image 
+              source={require('assets/pinIcons/0015_bw.png')}
+              style={styles.pinButtonIcon}
+            />
+          }
+          </TouchableOpacity>
         }
-        {
-          !pinnedButton &&
-          <Image 
-            source={require('assets/pinIcons/0015_bw.png')}
-            style={styles.pinButtonIcon}
-          />
-        }
-      </TouchableOpacity>}
 
-      {/* hug back button */}
-      {!checkDescription() && <View style={styles.hugBtnContainer}>
-        <TouchableOpacity
+        {/* hug back button */}
+        {
+          !checkDescription() && <View style={styles.hugBtnContainer}>
+          <TouchableOpacity
             onPress={hugBack}
           >
-            <View style={styles.hugBackBtn}>
-              <Text style={{ color: "#FFF", fontSize: 20, fontFamily: 'Montserrat_400Regular' }}>Hug Back!</Text>
+            <View style={styles.hugBackBtnContainer}>
+              <Text style={styles.hugBackBtn}>
+                Hug Back!
+              </Text>
             </View>
           </TouchableOpacity>
-      </View>}
-        
-    </View>
-  )
+        </View>
+        }
+      </View>
+    )
+  }
 }

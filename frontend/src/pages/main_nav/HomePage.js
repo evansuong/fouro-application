@@ -4,11 +4,11 @@ import {
   Button, 
   Text, 
   View, 
-  ScrollView,
   Animated,
   TouchableWithoutFeedback,
   Image,
   Alert,
+  FlatList
 } from 'react-native';
 import AppStyles from '../../AppStyles';
 // APIs
@@ -22,6 +22,7 @@ import Panel from 'components/StreakPanel';
 import Header from 'components/Header';
 import gradient from 'assets/gradients/middle.png';
 import { useFocusEffect } from '@react-navigation/native';
+import StreakPanel from '../../components/StreakPanel';
 // const gradient = require('assets/gradients/middle.png')
 
 
@@ -60,38 +61,31 @@ export default function HomePage({ navigation, route }) {
   const [isFocused, setIsFocused] = useState();
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
-  const { userData } = useContext(UserContext);
+  const { userData, dispatch } = useContext(UserContext);
   const { isLightTheme } = userData;
   // Misc
   const width = useRef(new Animated.Value(60)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
   const routeName = route.name;
-  // console.log('HomePage 71', userData);
 
   useEffect(() => {
     fetchHugs();
   }, [])
 
-   // check whether the user is on the page (true) or navigates away from the page (false)
-   useFocusEffect(() => {
-    setIsFocused(true)
-    return () => {
-      setIsFocused(false)
-    }
-  }, []);  
-
-  useEffect(() => {
-    fetchHugs();
-  }, [isFocused])
-
   const fetchHugs = async () => {
-    console.log('fetching hugs (homepage 89)')
-
     const { status, data } = 
       await ReadAPI.getUserHugs(userData.uid);
     if (status) {
       setHugArray(data.userHugs);
+      let streakCount = data.userHugs.length > 0 ? 1 : 0;
+      dispatch({
+        type: "INCREMENT_STREAK_COUNT",
+        payload: {
+          streakCount: streakCount,
+          hugCount: data.userHugs.length
+        }
+      })
     } else {
       Alert.alert('Something went wrong when fetching hugs');
     }
@@ -109,8 +103,7 @@ export default function HomePage({ navigation, route }) {
 
   function dismissCreateButton() {
     setExpanded(false);
-    collapse();
-                
+    collapse();       
   }
 
   function expand() {
@@ -145,105 +138,115 @@ export default function HomePage({ navigation, route }) {
   let padding = expanded ? 15 : 0;
   let paddingLeft = expanded ? 15 : '48%';
 
-
+  const renderCards = data => {
+    let hugData = data.item;
     return (
+      <HugCard 
+        key={hugData.hug_id} 
+        navigation={navigation}
+        data={{...hugData}}
+        image={hugData.image}
+      />
+    )
+  }
 
-      <View style={AppStyles.navPageContainer}>
-        {/* background */}
-        <Image
-          source={gradient}
-          style={AppStyles.background}
+  const styles = StyleSheet.create({
+    createHugButtonContainer: {
+      flexDirection: 'row',
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
+      borderRadius: 50,
+      height: 60,
+      color: 'white',
+      display: 'flex',
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
+      
+      shadowColor: '#000',
+      shadowOffset: { height: 2, width: 1 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,  
+      elevation: 2,
+    },
+    streakContainer: {
+      position: 'absolute',
+      bottom: 10,
+      left: 10,
+    },
+    createHugText: {
+      fontSize: 20,
+      color: '#FFF',
+    },
+    background: {
+      position: 'absolute',
+    },
+    flatListContainer: {
+      alignItems: 'center', 
+      paddingTop: 10, 
+      width: windowWidth,
+    }
+  })  
+
+
+  return (
+    <View style={AppStyles.navPageContainer}>
+      {/* background */}
+      <Image
+        source={gradient}
+        style={AppStyles.background}
+      />
+
+      <Header 
+        routeName={routeName} 
+        navigation={navigation} 
+        onMainNav={true}
+      >
+        Hug Feed
+      </Header>
+
+      <View style={{marginTop: 100}}></View>
+
+      {/* Hug Cards */}
+      <TouchableWithoutFeedback
+        onPress={() => dismissCreateButton()}
+      >
+        <FlatList
+          contentContainerStyle={styles.flatListContainer}
+          data={hugArray}
+          keyExtractor={ item => item.hug_id}
+          renderItem={renderCards}
+          onRefresh={fetchHugs}
+          refreshing={false}
         />
+      </TouchableWithoutFeedback>
 
-        <Header routeName={routeName} navigation={navigation} onMainNav={true}>Hug Feed</Header>
+      <View style={styles.streakContainer}>
+        <StreakPanel/> 
+      </View>
 
-        {/* TEMP VIEW TO MOVE REST OF PAGE DOWN REMOVE AFTER */}
-        <View style={{marginTop: 100}}></View>
-        {/* <Button
-          title='launch page'
-          onPress={() => navigation.navigate('Launch Page')}
-        />
-        <Button
-          title='welcome page'
-          onPress={() => navigation.navigate('Welcome Page')}
-        />
+      {/* Create Hug Button */}
+      <TouchableWithoutFeedback
+        onPress={handlePress}
+      >
+        <Animated.View style={{
+          ...styles.createHugButtonContainer, 
+          width:width, 
+          backgroundColor: 'rgba(0, 0, 0, .5)', 
+          padding: padding, 
+          paddingLeft: paddingLeft 
+        }}>
+          <Text style={styles.createHugText}>
+            +
+          </Text>
 
-        <Button
-          title='upload page'
-          onPress={() => navigation.navigate('Pic Upload Page')}
-        />
-       */}
-        {/* Hug Cards */}
-        <TouchableWithoutFeedback
-          onPress={() => dismissCreateButton()}
-        >
-          <ScrollView 
-            contentContainerStyle={{alignItems: 'center', paddingTop: 10, width: windowWidth }}
-            overScrollMode='always'
-          >
-            {hugArray.map(hugData => (
-              <HugCard 
-                key={hugData.hug_id} 
-                navigation={navigation}
-                data={{...hugData}}
-                image={hugData.image}
-              />
-            ))}
-          </ScrollView>
-        </TouchableWithoutFeedback>
-
-
-        {/* Create Hug Button */}
-        <TouchableWithoutFeedback
-          onPress={handlePress}
-        >
-          <Animated.View style={{
-            ...styles.createHugButtonContainer, 
-            width:width, 
-            backgroundColor: 'rgba(0, 0, 0, .5)', 
-            padding: padding, 
-            paddingLeft: paddingLeft 
-          }}>
+          <Animated.View opacity={fade}>
             <Text style={styles.createHugText}>
-              +
+              Create Hug
             </Text>
-
-            <Animated.View opacity={fade}>
-              <Text style={styles.createHugText}>
-                Create Hug
-              </Text>
-            </Animated.View>
           </Animated.View>
-        </TouchableWithoutFeedback>
+        </Animated.View>
+      </TouchableWithoutFeedback>
     </View>
   )
 }
-
-
-const styles = StyleSheet.create({
-  createHugButtonContainer: {
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    borderRadius: 50,
-    height: 60,
-    color: 'white',
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 1 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,  
-    elevation: 2,
-  },
-  createHugText: {
-    fontSize: 20,
-    color: '#FFF',
-  },
-  background: {
-    position: 'absolute',
-  }
-})  

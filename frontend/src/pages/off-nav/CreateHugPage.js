@@ -29,6 +29,7 @@ import Header from 'components/Header';
 import fillerProfilePic from 'assets/fillerProfilePic.jpg';
 import profilePic from 'assets/profilePic.jpg';
 import BackgroundImg from 'assets/gradients/middle.png';
+import { TextInput } from 'react-native-paper';
 
 
 // TODO: Remove FriendName and FriendPic parameters
@@ -51,7 +52,6 @@ export default function CreateHugPage({ navigation, route }) {
     const pickFromGallery = async () => {
       const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (granted) {
-        console.log('granted');
         let data = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
@@ -59,10 +59,8 @@ export default function CreateHugPage({ navigation, route }) {
           quality: 0.5,
           base64: true
         })
-        // console.log(Object.keys(data));
         await checkUpload(data); 
       } else {
-        console.log('access denied');
         Alert.alert('You need to give permission to upload a picture!');
       }
     }
@@ -78,8 +76,6 @@ export default function CreateHugPage({ navigation, route }) {
           Alert.alert(`Accepted image types are ${validExtensions}`);
         } else {
           const compressedBase64 = await compressImage(data);
-          console.log('CreateHug 82', totalChars);
-          console.log('CreateHug 83', compressedBase64.length + totalChars);
           if (compressedBase64.length + totalChars < MAX_UPLOAD_SIZE) {
             setTotalChars(prevTotalChars => 
               prevTotalChars + compressedBase64.length
@@ -97,7 +93,6 @@ export default function CreateHugPage({ navigation, route }) {
       let base64 = data.base64;    
       if (base64.length > MAX_UPLOAD_SIZE) {
         const compressFactor = MAX_UPLOAD_SIZE / base64.length;
-        console.log('CreateHugPage 54', compressFactor);
         base64 = await getBase64WithImage(data, compressFactor);
       }
       return base64;
@@ -126,12 +121,24 @@ export default function CreateHugPage({ navigation, route }) {
       const { status, data } = 
         await CreateAPI.createHug(userData.uid, request);
       
-      setTimeout(() => {
+      setTimeout(async () => {
         setCallingBackend(false);
         navigation.navigate('Main Nav Page');
         if (status) {
-          const firstName = name.split(' ')[0]
-          Alert.alert(`Hug sent to ${firstName}!`);
+          const hugRequest = {
+            friend_id: user_id,
+            hug_id: data.out,
+          }
+
+          // TODO: WAIT FOR TERRY'S BACKEND PUSH. THEN UNCOMMENT>
+          // const { hugStatus, hugData } = 
+          //   await CreateAPI.sendHugRequest(userData.uid, hugRequest);
+          // if (hugStatus) {
+            const firstName = name.split(' ')[0]
+            Alert.alert(`Hug sent to ${firstName}!`);
+          // } else {
+          //   Alert.alert('Hug created, but could not send notification.')
+          // }
         } else {
           Alert.alert('Error creating hug.');
         }
@@ -145,14 +152,27 @@ export default function CreateHugPage({ navigation, route }) {
     const styles = StyleSheet.create({
       mainContainer: {
         overflow: 'hidden',
-        height: windowHeight / 1.45,
+        height: windowHeight * .75,
       },
       profilePic: {
         width: windowWidth / 4,
         height: windowWidth / 4,
         borderRadius: 50,
-        marginLeft: windowWidth / 14,
       },
+      profilePicContainer: {
+        borderColor: '#FFF',
+        borderWidth: 3,
+        borderRadius: 100,
+        marginLeft: windowWidth * .05,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
+      },  
       friendInfoContainer: {
         flexDirection: 'row',
         width: windowWidth,
@@ -162,28 +182,55 @@ export default function CreateHugPage({ navigation, route }) {
         alignItems: 'center',
         marginLeft: windowWidth / 18,
         padding: 10,
-        borderBottomWidth: 2,
         borderColor: 'black',
         width: windowWidth / 1.8,
       },
       friendText: {
-        fontSize: 15,
+        fontSize: 16,
+        fontFamily: 'Montserrat_400Regular'
       },
       picContainer: {
         width: windowWidth,
-        height: windowHeight / 5,
+        height: windowHeight * .25,
         overflow: 'hidden',
-        marginTop: windowHeight / 80,
+        marginTop: windowHeight * .05,
+
       },
+      pics: {
+        borderRadius: 10,
+        borderColor: '#FFF',
+        borderWidth: 3,
+        width: windowWidth / 3, 
+        height: windowWidth / 3, 
+        marginTop: 10, 
+        marginLeft: 10,
+      },  
       backgroundImg: {
         height: windowHeight,
         resizeMode: 'cover',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
       },
       header: {
         width: windowWidth,
         alignItems: 'center',
         marginTop: windowHeight / 16,
-        marginBottom: windowHeight / 40
+        marginBottom: windowHeight / 40,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
+        zIndex: 3,
       },
       headerText: {
         fontSize: 25,
@@ -211,10 +258,7 @@ export default function CreateHugPage({ navigation, route }) {
     });
 
     return (
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        console.log('dismissed keyboard')
-      }}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View>
           <Header 
             routeName={routeName} 
@@ -236,13 +280,19 @@ export default function CreateHugPage({ navigation, route }) {
               {/* Friend Info */}
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
-                  <Image
-                    source={{ uri : profile_pic }}
-                    style={styles.profilePic}
-                  />
+                  <View style={styles.profilePicContainer}> 
+                    <Image
+                      source={{ uri : profile_pic }}
+                      style={styles.profilePic}
+                    />
+                  </View>
+                  
                   <View style={styles.friendTextContainer}>
                     <Text style={styles.friendText}>
-                      Sending hug to {name}
+                      Sending hug to:
+                    </Text>
+                    <Text style={styles.friendText}>
+                      {name}
                     </Text>
                   </View>
                 </View>
@@ -279,12 +329,7 @@ export default function CreateHugPage({ navigation, route }) {
                       source={isEmpty(item) || item.cancelled ? 
                         profilePic : {uri: `${item.uri}`}
                       }
-                      style={{
-                        width: windowWidth / 3, 
-                        height: windowWidth / 3, 
-                        marginTop: 10, 
-                        marginLeft: 10,
-                      }}
+                      style={styles.pics}
                     />
                   ))}
                   </View>

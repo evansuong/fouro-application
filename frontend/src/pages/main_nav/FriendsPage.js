@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -7,21 +7,21 @@ import {
   FlatList, 
   Image, 
   Alert
-} from 'react-native'
+} from 'react-native';
 // APIs
-import { ReadAPI } from '../../API'
+import { ReadAPI } from '../../API';
 // Contexts
-import { DimensionContext } from 'contexts/DimensionContext'
-import { UserContext } from 'contexts/UserContext'
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
 // Custom Components
-import FriendCard from 'components/FriendCard'
-import Header from 'components/Header'
-import SearchPage from '../off-nav/SearchPage'
+import FriendCard from 'components/FriendCard';
+import Header from 'components/Header';
 // Images/Assets
-import AppStyles from '../../AppStyles'
-import gradient from 'assets/gradients/left.png'
-import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native'
-// const gradient = require('assets/gradients/left.png');
+import AppStyles from '../../AppStyles';
+import gradient from 'assets/gradients/left.png';
+import { 
+  getFocusedRouteNameFromRoute 
+} from '@react-navigation/native';
 
 
 
@@ -79,22 +79,15 @@ export default function FriendsPage({ navigation, route }) {
 
     useEffect(() => {
       getFriends();
-    }, [])    
-
-    useFocusEffect(() => {
-      console.log('fetching friends');
-      getFriends();
-    }, [r])
+    }, [])   
   
     const renderCards = friend => {
-        // console.log(friend)
-        return  <FriendCard
-                    friendData={friend.item}
-                    // friendData={...friend}
-                    navigation={navigation}
-                    height={windowHeight / 15}
-                    width={windowWidth - 40}
-                />        
+      return  <FriendCard
+                friendData={friend.item}
+                navigation={navigation}
+                height={windowHeight / 15}
+                width={windowWidth - 40}
+              />        
     }
 
     const styles = StyleSheet.create({
@@ -117,7 +110,8 @@ export default function FriendsPage({ navigation, route }) {
       },
       flatListContainer: {
         display: 'flex', 
-        flexShrink: 1
+        flexShrink: 1,
+        zIndex: 3,
       },
       noFriends: {
         fontSize: 20, 
@@ -127,7 +121,9 @@ export default function FriendsPage({ navigation, route }) {
       noFriendsContainer: {
         width: windowWidth * 0.7, 
         justifyContent: 'center', 
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'absolute', 
+        top: windowHeight * .35,
       },
     });
 
@@ -147,13 +143,15 @@ export default function FriendsPage({ navigation, route }) {
               Friends
             </Header>
             {
-              friends.length != 0 &&
+              // friends.length != 0 &&
               <View style={styles.flatListContainer}>
                 <FlatList
                   data={friends}
                   keyExtractor={item => item.user_id}
                   renderItem={renderCards}
                   contentContainerStyle={styles.friendCard}
+                  refreshing={false}
+                  onRefresh={getFriends}
                 />
               </View>
             } 

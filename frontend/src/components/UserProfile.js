@@ -15,7 +15,12 @@ import { UserContext } from 'contexts/UserContext';
  * 
  * @param { username } username       the user's username
  */
-export default function UserProfile({ routeName, profilePicture, userFirstLast, username }) {
+export default function UserProfile({ 
+  routeName, 
+  profilePicture, 
+  userFirstLast, 
+  username 
+}) {
 
   const userFirstLastDummy = userFirstLast;
   const usernameDummy = username;
@@ -33,6 +38,7 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
 
   const styles = StyleSheet.create({
     container: {
+      display: "flex",
       overflow: 'hidden',
       alignItems: 'center',
       justifyContent: 'center',
@@ -70,10 +76,9 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
   });
 
   return (
-      <View style={[styles.container, { display: "flex" }]}>
+      <View style={styles.container}>
           <Image
               source={{ uri: profilePicture }}
-              // source={profilePicture}
               style={styles.profilePicStyle}
           />
           <Text style={styles.userFirstLastStyle}>

@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { EBGaramond_500Medium, EBGaramond_800ExtraBold } from '@expo-google-fonts/eb-garamond';
+import { Montserrat_300Light } from '@expo-google-fonts/montserrat';
+import React, { useState, useContext, useRef } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -8,6 +10,7 @@ import {
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import AppStyles from '../AppStyles';
+import { UserContext } from '../contexts/UserContext';
 
 
 /**
@@ -15,11 +18,13 @@ import AppStyles from '../AppStyles';
  * counts. 
  */
 export default function StreakPanel({ mode }) {
-  const [streakCount, setStreakCount] = useState(3);
-  const [hugCount, setHugCount] = useState(5);
+  // const [streakCount, setStreakCount] = useState(3);
+  // const [hugCount, setHugCount] = useState(5);
   const [expanded, setExpanded] = useState(false);
-  const height = useRef(new Animated.Value(80)).current;
+  const width = useRef(new Animated.Value(50)).current;
   const fade = useRef(new Animated.Value(0)).current;
+  const { userData } = useContext(UserContext);
+  const { hugCount, streakCount } = userData.userData;
 
   const color = {
     light: 'black',
@@ -32,23 +37,20 @@ export default function StreakPanel({ mode }) {
   };
 
   function handlePress() {
+    
     setExpanded(!expanded);
-    console.log('StreakPanel 36', height, expanded);
-    if (height < 81 && expanded) {
-      console.log('fixing');
+    if (width < 51 && expanded) {
       setExpanded(false);
     }
     if (expanded) {
-      console.log('collapse');
       collapse();
     } else {
-      console.log('expand');
       expand();
     }
   }
 
   function expand() {
-    Animated.spring(height, {
+    Animated.spring(width, {
       toValue: 160,
       useNativeDriver: false,
     }).start();
@@ -60,8 +62,8 @@ export default function StreakPanel({ mode }) {
   }
 
   function collapse() {
-    Animated.spring(height, {
-      toValue: 80,
+    Animated.spring(width, {
+      toValue: 50,
       useNativeDriver: false,
     }).start();
     Animated.timing(fade, {
@@ -75,44 +77,49 @@ export default function StreakPanel({ mode }) {
     container: {
       display: 'flex',
       margin: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, .5)',
+      borderRadius: 30,
+      shadowColor: '#000',
+      shadowOffset: { height: 2, width: 1 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,  
+      elevation: 2,
     },
     streakContainer: {
       display: 'flex',
-      width: 250,
-      backgroundColor: mode == 'light' ? 'white' : 'rgba(0,0,0,0.6)',
       borderRadius: 20,
+    },
+    textContainer: {
+      width: 80,
+      marginHorizontal: 20,
     },
     innerStreakContainer: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center',
+      justifyContent: 'space-between',
       alignItems: 'center',
-      paddingTop: 13,
+      padding: 10,
+      width: 130,
     },
     image: {
-      width: 50, 
-      height: 50,
-      marginRight: 15,
+      width: 30, 
+      height: 30,
+      marginBottom: 5,
     },
     hugImage: {
       marginRight: '10%',
     },
     counts: {
-      fontSize: 30,
-      color: color[mode],
+      fontSize: 20,
+      color: '#FFF',
     },
     footer: {
       height: 100,
-      flexDirection: 'row',
       alignItems: 'center',
     },
     emojiGroupContainer: {
-      flexDirection: 'row',
       alignItems: 'center',
-      marginLeft: 10,
-      marginRight: 10,
+      justifyContent: 'center',  
     }
   });
   
@@ -121,10 +128,8 @@ export default function StreakPanel({ mode }) {
       <TouchableWithoutFeedback
         onPress={handlePress}
       >
-
-        <Animated.View style={[{height: height}, styles.streakContainer]}>
-
-          <View style={[styles.innerStreakContainer, { padding: 0 }]}>
+        <Animated.View style={{ width: width, ...styles.streakContainer}}>
+          <View style={styles.innerStreakContainer}>
             <View style={styles.emojiGroupContainer}>
               <Image
                 source={images.streakEmoji}
@@ -134,7 +139,16 @@ export default function StreakPanel({ mode }) {
                 {streakCount}
               </Text>
             </View>
+            <Animated.View opacity={fade}>
+              <View style={styles.textContainer}>
+                <Text style={{color: '#FFF', fontSize: 18,}}>
+                  Days in a row with 4 Hugs
+                </Text>
+              </View>
+            </Animated.View>
+          </View>
 
+          <View style={styles.innerStreakContainer}> 
             <View style={styles.emojiGroupContainer}>
               <Image
                 source={images.hugEmoji}
@@ -144,28 +158,15 @@ export default function StreakPanel({ mode }) {
                 {hugCount}
               </Text>
             </View>
+            <Animated.View opacity={fade}>
+              <View style={styles.textContainer}>
+                <Text style={{fontSize: 18, color: '#FFF'}}>
+                  Hugs Today
+                </Text>
+              </View>
+            </Animated.View>
           </View>
-
-          <Animated.View
-            opacity={fade}
-            style={styles.footer}
-          >
-            <View style={{width: 80, marginLeft: 33.5,}}>
-              <Text style={{textAlign: 'center', fontSize: 18,}}>
-                Days in a row with 4 Hugs
-              </Text>
-            </View>
-
-            <View style={{width: 50, marginLeft: 38.5,}}>
-              <Text style={{fontSize: 18, textAlign: 'center'}}>
-                Hugs Today
-              </Text>
-            </View>
-            
-          </Animated.View>
-          
         </Animated.View>
-
       </TouchableWithoutFeedback>
     </View>
   );

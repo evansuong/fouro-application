@@ -6,7 +6,7 @@ import MainNavPage from './src/pages/main_nav/MainNavPage';
 import OtherUserProfilePage from './src/pages/off-nav/OtherUserProfilePage';
 import CorkboardPage from './src/pages/off-nav/CorkboardPage';
 import HugInfoPage from './src/pages/off-nav/HugInfoPage';
-import UserProfilePage from './src/pages/off-nav/UserProfilePage'
+import UserProfilePage from './src/pages/off-nav/UserProfilePage';
 
 import LoginPage from './src/pages/onboarding/LoginPage';
 import LaunchPage from './src/pages/onboarding/LaunchPage';
@@ -23,7 +23,7 @@ import CreateHugPage from './src/pages/off-nav/CreateHugPage';
 import CatchHugPage from './src/pages/off-nav/CatchHugPage';
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
 import UserContextProvider from './src/contexts/UserContext'; 
-import { useFonts } from 'expo-font'
+import { useFonts } from 'expo-font';
 import { 
   EBGaramond_400Regular,
   EBGaramond_500Medium,
@@ -33,16 +33,13 @@ import {
   Montserrat_400Regular,
   Montserrat_500Medium,
   Montserrat_600SemiBold
-} from '@expo-google-fonts/montserrat'
-import SearchPage from './src/pages/off-nav/SearchPage';
+} from '@expo-google-fonts/montserrat';
 import HugSearchPage from './src/pages/off-nav/HugSearchPage';
 
 
 export default function App() {
   const Stack = createStackNavigator();
 
-  const [mainNavPageTitle, setMainNavPageTitle] = useState("Main");
-  // console.log('apprendered')
   let [fontsLoaded] = useFonts({
     EBGaramond_400Regular,
     EBGaramond_500Medium,

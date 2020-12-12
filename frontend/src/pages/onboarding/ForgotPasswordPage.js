@@ -18,10 +18,9 @@ import CustomTextField from 'components/CustomTextField';
 import LinkedButton from 'components/LinkedButton';
 // Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
+import Header from 'components/Header';
 
-
-
-export default function ForgotPasswordPage({ navigation }) {
+export default function ForgotPasswordPage({ navigation, route }) {
   // States
   const [emailField, setEmailField] = useState('');
   const [startUp, setStartUp] = useState(true);
@@ -29,6 +28,7 @@ export default function ForgotPasswordPage({ navigation }) {
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const fade = useRef(new Animated.Value(0)).current;
+  const routeName = route.name;
 
   useEffect(() => {
     if (startUp) {
@@ -123,36 +123,41 @@ export default function ForgotPasswordPage({ navigation }) {
   });
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      Keyboard.dismiss();
-      console.log('dismissed keyboard');
-    }}>
-      <Animated.View opacity={fade} style={styles.container}>
-        <ImageBackground
-          source={BackgroundImg}
-          style={styles.backgroundImage}
-        >
-          <View style={styles.whiteBox}>
-            <CustomTextField 
-              titleText='Email' 
-              placeholder='e.g., abc123@gmail.com'
-              setField={setEmailField}
-              required={true}
-            />
+    <>
+      <Header 
+        navigation={navigation} 
+        routeName={routeName} 
+        onMainNav={false}
+      />
+      
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Animated.View opacity={fade} style={styles.container}>
+          <ImageBackground
+            source={BackgroundImg}
+            style={styles.backgroundImage}
+          >
+            <View style={styles.whiteBox}>
+              <CustomTextField 
+                titleText='Email' 
+                placeholder='e.g., abc123@gmail.com'
+                setField={setEmailField}
+                required={true}
+              />
 
-            {
-              checkFilled() && 
-              <View style={{marginTop: 10,}}>
-                <LinkedButton
-                  text='SEND RESET LINK'
-                  color='#FB7250'
-                  onPress={() => submitHandler()}
-                />
-              </View>
-            }
-          </View>
-        </ImageBackground>
-      </Animated.View>
-    </TouchableWithoutFeedback>
+              {
+                checkFilled() && 
+                <View style={{marginTop: 10,}}>
+                  <LinkedButton
+                    text='SEND RESET LINK'
+                    color='#FB7250'
+                    onPress={() => submitHandler()}
+                  />
+                </View>
+              }
+            </View>
+          </ImageBackground>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+    </>
   );
 }
