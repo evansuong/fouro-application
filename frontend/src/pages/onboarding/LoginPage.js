@@ -86,6 +86,7 @@ export default function LoginPage({ navigation, route }) {
   const processLoginResponse = async (response) => {
     if (response.status) {
       const { status, data } = await ReadAPI.getUserProfile(response.data);
+      console.log('processed', status, data);
       if (status) {
         dispatch({
           type: "SET_USER_DATA",

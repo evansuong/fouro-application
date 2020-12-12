@@ -156,7 +156,6 @@ export default function CatchHugPage({ navigation, route }) {
         width: windowWidth / 4,
         height: windowWidth / 4,
         borderRadius: 50,
-        marginLeft: windowWidth / 14,
       },
       friendInfoContainer: {
         flexDirection: 'row',
