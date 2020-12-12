@@ -6,7 +6,7 @@ import MainNavPage from './src/pages/main_nav/MainNavPage';
 import OtherUserProfilePage from './src/pages/off-nav/OtherUserProfilePage';
 import CorkboardPage from './src/pages/off-nav/CorkboardPage';
 import HugInfoPage from './src/pages/off-nav/HugInfoPage';
-import UserProfilePage from './src/pages/off-nav/UserProfilePage'
+import UserProfilePage from './src/pages/off-nav/UserProfilePage';
 
 import LoginPage from './src/pages/onboarding/LoginPage';
 import LaunchPage from './src/pages/onboarding/LaunchPage';
@@ -14,6 +14,7 @@ import SignupPage from './src/pages/onboarding/SignupPage';
 import PicUploadPage from './src/pages/onboarding/PicUploadPage';
 import NamePage from './src/pages/onboarding/NamePage';
 import WelcomePage from './src/pages/onboarding/WelcomePage';
+import ForgotPasswordPage from './src/pages/onboarding/ForgotPasswordPage';
 import ResetPasswordPage from './src/pages/off-nav/ResetPasswordPage';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -22,7 +23,7 @@ import CreateHugPage from './src/pages/off-nav/CreateHugPage';
 import CatchHugPage from './src/pages/off-nav/CatchHugPage';
 import { DimensionContextProvider } from './src/contexts/DimensionContext';
 import UserContextProvider from './src/contexts/UserContext'; 
-import { useFonts } from 'expo-font'
+import { useFonts } from 'expo-font';
 import { 
   EBGaramond_400Regular,
   EBGaramond_500Medium,
@@ -32,16 +33,13 @@ import {
   Montserrat_400Regular,
   Montserrat_500Medium,
   Montserrat_600SemiBold
-} from '@expo-google-fonts/montserrat'
-import SearchPage from './src/pages/off-nav/SearchPage';
+} from '@expo-google-fonts/montserrat';
 import HugSearchPage from './src/pages/off-nav/HugSearchPage';
 
 
 export default function App() {
   const Stack = createStackNavigator();
 
-  const [mainNavPageTitle, setMainNavPageTitle] = useState("Main");
-  // console.log('apprendered')
   let [fontsLoaded] = useFonts({
     EBGaramond_400Regular,
     EBGaramond_500Medium,
@@ -60,12 +58,13 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator 
               style={styles.appContainer}
+              initialRouteName='Launch Page'
               /** 
                * comment out the line below when you need the header for 
               /* going back to the previous screen. Leave it to see what 
               /* the app will actually look like
               * */
-              screenOptions={{ headerShown: false }}
+              screenOptions={{ headerShown: false, gestureEnabled: false }}
             >
               <Stack.Screen 
                 name="Main Nav Page" 
@@ -126,6 +125,10 @@ export default function App() {
               <Stack.Screen
                 name='Search Page'
                 component={HugSearchPage}/>
+
+              <Stack.Screen
+                name='Forgot Password'
+                component={ForgotPasswordPage}/>
               
             </Stack.Navigator>
           </NavigationContainer>    

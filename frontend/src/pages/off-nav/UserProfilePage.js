@@ -17,7 +17,7 @@ export default function UserProfilePage({ navigation, route }) {
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext);
-  const { isLightTheme } = userData;
+  const isLightTheme = true;
   // Misc
   const topMarginSize = windowWidth * 0.1;
   const settingMarginTopBottom = windowWidth * 0.03;
@@ -34,8 +34,7 @@ export default function UserProfilePage({ navigation, route }) {
 
   const fetchUserData = async () => {
     const { status, data } = 
-      await ReadAPI.getUserProfile(userData.currentUser.uid);
-    // console.log(status, data);
+      await ReadAPI.getUserProfile(userData.uid);
     if (status) {
       setFetchedUser(data);
     } else {
@@ -53,12 +52,20 @@ export default function UserProfilePage({ navigation, route }) {
     button: {
       backgroundColor: 'orange',
       height: buttonHeight,
-      width: windowWidth - buttonMargin,
-      borderRadius: 10,
+      width: windowWidth * .8,
+      borderRadius: 30,
       alignItems: 'center',
       justifyContent: 'center',
       margin: buttonMargin,
       marginBottom: windowHeight / 20,
+      shadowColor: '#000',
+      shadowOffset: {
+          width: 5,
+          height: 6,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 3,
+      elevation: 14,
     },
     buttonText: {
       color: 'white',
@@ -69,6 +76,12 @@ export default function UserProfilePage({ navigation, route }) {
       backgroundColor: isLightTheme ? '#EEE' : '#000',
       display: "flex", 
       alignItems: "center"
+    },
+    profileContainer: {
+      flex: 1, 
+      flexDirection: 'column', 
+      justifyContent: 'space-between', 
+      alignItems: 'center',
     }
   });
 
@@ -100,7 +113,11 @@ export default function UserProfilePage({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <Header routeName={routeName} navigation={navigation} onMainNav={false} />
+      <Header 
+        routeName={routeName} 
+        navigation={navigation} 
+        onMainNav={false} 
+      />
 
       <View style={{ marginTop: topMarginSize }}>
         <UserProfile
@@ -110,7 +127,7 @@ export default function UserProfilePage({ navigation, route }) {
           username={fetchedUser.username}
         />
 
-        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View style={styles.profileContainer}>
           {/* Settings section */}
           <View style={styles.settingsContainer}>
             <Setting

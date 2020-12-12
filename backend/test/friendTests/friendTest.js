@@ -1,4 +1,5 @@
 let Friends = require("../../model/Friends");
+const admin = require("firebase-admin");
 
 async function testAdd() {
   Friends.FriendsAPI.addFriend(
@@ -42,5 +43,15 @@ async function testFriendProfile() {
   );
   console.log(test);
 }
-testFriendProfile();
-//testAdd();
+function testUpdateHugCount() {
+  let dateInMillis = Math.floor(Date.now() / 1000);
+  Friends.FriendsAPI.updateHugCount(
+    "example@email.com",
+    "otherguy@email.com",
+    new admin.firestore.Timestamp(dateInMillis, 0)
+  );
+}
+//testFriendProfile();
+testAdd();
+
+//testUpdateHugCount();

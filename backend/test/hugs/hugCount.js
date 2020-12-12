@@ -15,10 +15,21 @@ try {
 //console.log(test);
 
 let death = [test, test, test];
+let hi = [];
 
+/*
 Hugs.HugsAPI.createHug(
   "example@email.com",
   "otherguy@email.com",
   "Sup Dude",
   death
 );
+*/
+
+Hugs.UpdateHugAPI.respondToHug(
+  "otherguy@email.com",
+  "BSn6aZURanRdzSJGyNdb",
+  "IT WORKS",
+  death
+);
+//Hugs.UpdateHugAPI.updateUserHugCount("hug1");

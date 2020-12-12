@@ -2,9 +2,7 @@
 
 ## Setup
 
-1.  Install [node.js](https://nodejs.org/en/)
-
-2.  Configure Firebase Service Account
+1.  Configure Firebase Admin SDK Service Account
 
     1. Go to the Firebase Project and click Settings > Project Settings
 
@@ -14,7 +12,7 @@
 
     4. **IMPORTANT**: Rename the file to `serviceAccountKey.json`
 
-3.  Install Node dependencies
+2.  Install Node dependencies
 
         npm install
 
@@ -23,4 +21,3 @@
 1.  Run the sever
 
         npm run server
-

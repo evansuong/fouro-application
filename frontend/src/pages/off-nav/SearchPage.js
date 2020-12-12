@@ -10,8 +10,8 @@ import {
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 // Contexts
-import { DimensionContext } from '../../contexts/DimensionContext';
-import { UserContext } from '../../contexts/UserContext';
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
 import { ReadAPI } from '../../API';
 
 
@@ -55,124 +55,146 @@ const testStrangerData = [
 
 
 export default function SearchPage({ input, navigation }) {
-    // States
-    const [userList, setUserList] = useState([]);
-    const [searchFriends, setSearchFriends] = useState(true);
-    // Contexts
-    const { windowWidth, windowHeight } = useContext(DimensionContext);
-    const { userData } = useContext(UserContext);
-    const { isLightTheme, currentUser } = userData;
-    const { uid } = currentUser;
-    const Tab = createMaterialTopTabNavigator();
+  // States
+  const [userList, setUserList] = useState([]);
+  const [searchFriends, setSearchFriends] = useState(true);
+  // Contexts
+  const { windowWidth, windowHeight } = useContext(DimensionContext);
+  const { userData } = useContext(UserContext);
+  const { isLightTheme, uid } = userData;
+  const Tab = createMaterialTopTabNavigator();
 
-
-    // setUserList(testStrangerData.filter(user => user.username === input ))
-    // setUserList(testFriendData.filter(user => user.name === input ))
-
-    function search() {
-        if (searchFriends) {
-            ReadAPI.searchFriends(uid, input).then(response => setUserList(response.data.friends))
-        } else {
-            ReadAPI.searchUsers(uid, input).then(response => setUserList([response.data.user]))
+  function search() {
+    if (searchFriends) {
+      ReadAPI.searchFriends(uid, input).then(response => {
+          setUserList(response.data.friends)
         }
+      )
+    } else {
+      ReadAPI.searchUsers(uid, input).then(response => {
+        if (response.data.user.length != 0) {
+          setUserList([response.data.user])
+        }
+      }
+      )
     }
+  }
+  
+  useEffect(() => {
+    if (input === '') {
+      setUserList([]);
+    } else {
+      search();
+    }
+  }, [input, searchFriends])
 
-    console.log('here')
-    
-    useEffect(() => {
-        if (input === '') {
-            setUserList([])
-        } else {
-            search()
-        }
-    }, [input, searchFriends])
+  function searchStrangersList({ route }) {
+    useFocusEffect(() => {
+      setSearchFriends(false);
+    })
 
-    function searchStrangersList({ route }) {
-
-        useFocusEffect(() => {
-            setSearchFriends(false)
-        })
-
-        function viewStranger(userData) {
-            navigation.navigate('Friend Profile', { data: Object.assign({}, { otheruser_id: userData.user_id, profile_pic: userData.pfp, ...userData })});
-        }
-
-        let textColor = isLightTheme ? '#000' : '#FFF';
-        let borderColor = isLightTheme ? '#FFF' : '#555';
-        let backgroundColor = isLightTheme ? '#FFF' : '#333'
-        console.log(userData.image)
-
-        return (
-            userList[0] ? 
-            <ScrollView style={{ backgroundColor: backgroundColor }}>
-                {userList.map(userData => (
-                    <TouchableOpacity key={userData.user_id} onPress={() => viewStranger(userData)}>
-                        <View style={{...styles.userCard, borderBottomColor: borderColor}}>
-                            <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.profile_pic }}/> 
-                            <Text style={{...styles.userText, color: textColor}}>{userData.name}</Text>
-                        </View>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView> : <></>
+    function viewStranger(userData) {
+      navigation.navigate('Friend Profile', 
+      { 
+        data: Object.assign(
+          {}, 
+          { 
+            otheruser_id: userData.user_id, 
+            profile_pic: userData.pfp, ...userData 
+          }
         )
+      });
     }
 
-    function searchFriendList({ route }) {
-
-        useFocusEffect(() => {
-            setSearchFriends(true)
-        })
-
-        function viewUser(userData) {
-            navigation.navigate('Friend Profile', { data: Object.assign({}, { otheruser_id: userData.user_id, profile_pic: userData.pfp, ...userData })})
-        }
-
-        let textColor = isLightTheme ? '#000' : '#FFF';
-        let borderColor = isLightTheme ? '#FFF' : '#555';
-        let backgroundColor = isLightTheme ? '#FFF' : '#333'
-
-        return (
-            userList && userList.length > 0 ?
-            <ScrollView style={{backgroundColor: backgroundColor}}>
-            {userList.map(userData => (
-                <TouchableOpacity key={userData.user_id} onPress={() => viewUser(userData)}>
-                    <View style={{...styles.userCard, borderBottomColor: borderColor }}>
-                        <Image style={{ width: windowWidth / 10, height: windowWidth / 10, ...styles.profPic }} source={{ uri: userData.profile_pic }}/> 
-                        <Text style={{...styles.userText, color: textColor }}>{userData.name}</Text>
-                    </View>
-                </TouchableOpacity>
-            ))}
-            </ScrollView> : <></>
-        )
-    }
-
-    let backgroundColor = isLightTheme ? '#FFF' : '#rgb(40, 40, 40)';
-
-
+    let textColor = isLightTheme ? '#000' : '#FFF';
+    let borderColor = isLightTheme ? '#FFF' : '#555';
+    let backgroundColor = isLightTheme ? '#FFF' : '#333'
 
     return (
-        <View style={{ width: windowWidth / 1.1, height: windowHeight / 1.4 }}>
-            <Tab.Navigator 
-                style={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
-                tabBarOptions={{
-                    activeTintColor: isLightTheme ? 'purple' : '#E57777',
-                    style: { backgroundColor: backgroundColor },
-                    indicatorStyle: { 
-                        backgroundColor: isLightTheme ? 'purple' : '#E57777',
-                    }
-                }}>
-                <Tab.Screen name="Friends" component={searchFriendList}/>
-                <Tab.Screen name="Users" component={searchStrangersList}/>
-            </Tab.Navigator>
-        </View>
+      userList.length > 0 && userList[0] ? 
+      <ScrollView style={{ backgroundColor: backgroundColor }}>
+        {userList.map(userData => {
+          return (
+          <TouchableOpacity 
+            key={userData.user_id} 
+            onPress={() => viewStranger(userData)}
+          >
+            <View style={{
+              ...styles.userCard, 
+              borderBottomColor: borderColor
+            }}>
+              <Image 
+                style={styles.profPic} 
+                source={{ uri: userData.profile_pic }}
+              /> 
+              <Text style={{
+                ...styles.userText, 
+                color: textColor
+              }}>
+                {userData.name}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )})}
+      </ScrollView> : <></>
     )
-}
+  }
 
+  function searchFriendList({ route }) {
+      useFocusEffect(() => {
+          setSearchFriends(true)
+      })
 
+      function viewUser(userData) {
+          navigation.navigate('Friend Profile', 
+          { 
+            data: Object.assign(
+              {}, 
+              { 
+                otheruser_id: userData.user_id, 
+                profile_pic: userData.pfp, 
+                ...userData 
+              }
+            )
+          })
+      }
 
+      let textColor = isLightTheme ? '#000' : '#FFF';
+      let borderColor = isLightTheme ? '#FFF' : '#555';
+      let backgroundColor = isLightTheme ? '#FFF' : '#333'
 
+      return (
+          userList && userList.length > 0 ?
+          <ScrollView style={{backgroundColor: backgroundColor}}>
+          {userList.map(userData => (
+              <TouchableOpacity 
+                key={userData.user_id} 
+                onPress={() => viewUser(userData)}
+              >
+                  <View style={{
+                    ...styles.userCard, 
+                    borderBottomColor: borderColor 
+                  }}>
+                      <Image 
+                        style={styles.profPic} 
+                        source={{ uri: userData.profile_pic }}
+                      /> 
+                      <Text style={{
+                        ...styles.userText, 
+                        color: textColor 
+                      }}>
+                        {userData.name}
+                      </Text>
+                  </View>
+              </TouchableOpacity>
+          ))}
+          </ScrollView> : <></>
+      )
+  }
 
-const styles = StyleSheet.create({
+  let backgroundColor = isLightTheme ? '#FFF' : '#rgb(40, 40, 40)';
+
+  const styles = StyleSheet.create({
     userCard: {
         padding: 10,
         borderBottomColor: '#BBB',
@@ -189,5 +211,39 @@ const styles = StyleSheet.create({
     },
     profPic: {
         borderRadius: 100,
+        width: windowWidth / 10, 
+        height: windowWidth / 10,
+    },
+    mainContainer: {
+      width: windowWidth / 1.1, 
+      height: windowHeight / 1.4
+    },
+    tabNavigator: {
+      borderBottomLeftRadius: 20, 
+      borderBottomRightRadius: 20
     }
-})
+  })
+
+    return (
+        <View style={styles.mainContainer}>
+            <Tab.Navigator 
+                style={styles.tabNavigator}
+                tabBarOptions={{
+                    activeTintColor: isLightTheme ? 'purple' : '#E57777',
+                    style: { backgroundColor: backgroundColor },
+                    indicatorStyle: { 
+                        backgroundColor: isLightTheme ? 'purple' : '#E57777',
+                    }
+                }}>
+                <Tab.Screen 
+                  name="Friends" 
+                  component={searchFriendList}
+                />
+                <Tab.Screen 
+                  name="Users" 
+                  component={searchStrangersList}
+                />
+            </Tab.Navigator>
+        </View>
+    )
+}

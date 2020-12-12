@@ -23,8 +23,8 @@ import BackgroundImg from 'assets/gradients/middle.png';
 
 export default function NamePage({ navigation, route }) {
   // States
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState('V');
+  const [lastName, setLastName] = useState('V');
   const [username, setUsername] = useState('');
   const [userExists, setUserExists] = useState(false);
   const [startUp, setStartUp] = useState(true);
@@ -32,7 +32,7 @@ export default function NamePage({ navigation, route }) {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
-  const { userData, dispatch } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   // Misc
   const fade = useRef(new Animated.Value(0)).current;
 
@@ -80,14 +80,14 @@ export default function NamePage({ navigation, route }) {
   const submitHandler = async () => {
     setSigningUp(true);
     let userToCreate = {
-      uid: userData.currentUser.uid,
+      uid: userData.uid,
       username: username.trim(),
       firstName: firstName.trim(),
       lastName: lastName.trim(),
     }
 
     let { status, data } = 
-      await CreateAPI.createUser(userData.currentUser.uid, userToCreate);
+      await CreateAPI.createUser(userData.uid, userToCreate);
     if (status && data.out) {
       setTimeout(() => {
         navigation.replace('Pic Upload Page');
@@ -95,7 +95,6 @@ export default function NamePage({ navigation, route }) {
     } else {
       setSigningUp(false);
       alert('That username is taken!');
-      console.log(data);
     }
   }
 
@@ -133,10 +132,7 @@ export default function NamePage({ navigation, route }) {
 
 
   return(
-    <TouchableWithoutFeedback onPress={() => {
-      Keyboard.dismiss();
-      console.log('dismissed keyboard')
-    }}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Animated.View opacity={fade} style={{flex: 1,}}>
         <ImageBackground
           source={BackgroundImg}

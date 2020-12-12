@@ -1,7 +1,10 @@
 let corkboard = require("../model/Corkboard");
 
 async function testBuildCorkboard() {
-  let test = await corkboard.CorkboardAPI.buildCorkboard("example@email.com");
+  let test = await corkboard.CorkboardAPI.buildCorkboard(
+    //"example@email.com"
+    "S8vFj9rMVSgFcqM9r1cFFQ1OZCw2"
+  );
   console.log(test);
 }
 

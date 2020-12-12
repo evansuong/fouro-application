@@ -26,7 +26,7 @@ export default function HugCard({ navigation, route, data, image }) {
   const hugCardWidth = windowWidth - 20;
   const hugImageWidth = image ? hugCardWidth / 2.5 : 0;
   const hugImageHeight = HUG_CARD_HEIGHT;
-  const hugDescWidth = hugCardWidth - hugImageWidth - 30;/// 1.5; //hugCardWidth - hugImageWidth
+  const hugDescWidth = hugCardWidth - hugImageWidth - 30;
   const nameFontSize = hugCardWidth * 0.05
 
   const styles = StyleSheet.create({
@@ -54,8 +54,6 @@ export default function HugCard({ navigation, route, data, image }) {
       backgroundColor: isLightTheme ? '#dddddd' : 'rgb(33, 30, 31)',
     },
     outerImageContainer: {
-      // marginRight: 10,
-      // marginTop: mode == 'light' ? HUG_CARD_HEIGHT / 30 : HUG_CARD_HEIGHT / 8,
       backgroundColor: 'pink', 
       height: HUG_CARD_HEIGHT,
     },
@@ -84,8 +82,6 @@ export default function HugCard({ navigation, route, data, image }) {
     textBodyContainer: {
         display: 'flex',
         justifyContent: 'space-between',
-        // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
-        // backgroundColor: 'purple',
         flexShrink: 1,
         width: hugCardWidth - hugImageWidth,
         flexDirection: 'row',
@@ -98,10 +94,6 @@ export default function HugCard({ navigation, route, data, image }) {
     textBodyContainerNoImg: {
       display: 'flex',
       justifyContent: 'space-between',
-      // backgroundColor: mode == 'dark' ? 'rgba(0,0,0,0.4)' : 'white',
-      // backgroundColor: 'yellow',
-      // height: HUG_CARD_HEIGHT - 40,
-      // flexShrink: 1,
       width: hugCardWidth - hugImageWidth,
       flexDirection: 'row',
       borderBottomLeftRadius: 10,
@@ -112,9 +104,6 @@ export default function HugCard({ navigation, route, data, image }) {
       marginLeft: SPACING_SMALL,
       width: hugDescWidth,
       overflow: 'hidden',
-      // flexShrink: 1,
-      // maxHeight: hugDescMaxHeight - 10,
-      // backgroundColor: 'yellow',
     },
     pinIcon: {
         borderRadius: 50,

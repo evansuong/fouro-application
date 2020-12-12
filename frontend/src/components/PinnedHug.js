@@ -36,11 +36,37 @@ export default function PinnedHug( { navigation, unpin, picture, date, friendNam
       pinned: true
     }
 
+    const styles = StyleSheet.create({
+      pinnedHug: {
+        backgroundColor: '#D4D4D4',
+        alignItems: 'center',
+        elevation: 4,
+        width: hugWidth, 
+        height: hugHeight, 
+        margin: margin,
+      },
+      hugImage: {
+        backgroundColor: 'white',
+        resizeMode: 'contain',
+        width: imgContainerWidth, 
+        height: imgContainerHeight,
+      },
+      metadata: {
+        display: "flex",
+        alignItems: 'center',
+        width: '100%'
+      },
+      text: {
+        color: '#454545',
+        fontSize: 13
+      }
+    })
+
     return(
       /* Hug */
       <TouchableOpacity
         onPress={() => navigation.navigate('Hug Info', { data: data })}
-        style={[styles.pinnedHug, { width: hugWidth, height: hugHeight, margin: margin }]}
+        style={styles.pinnedHug}
       >
         <Image
           source={randomPinIcon()}
@@ -48,34 +74,17 @@ export default function PinnedHug( { navigation, unpin, picture, date, friendNam
         />
         <Image
           source={{ uri: picture }} // was picture
-          style={[styles.hugImage, { width: imgContainerWidth, height: imgContainerHeight }]}
+          style={styles.hugImage}
         />
         {/* metadata */}
         <View style={styles.metadata}>
-          <Text style={styles.text}> { date } </Text>
-          <Text style={styles.text}> { friendName } </Text>
+          <Text style={styles.text}> 
+            { date } 
+          </Text>
+          <Text style={styles.text}> 
+            { friendName } 
+          </Text>
         </View>
       </TouchableOpacity>
     )
 }
-
-const styles = StyleSheet.create({
-    pinnedHug: {
-        backgroundColor: '#D4D4D4',
-        alignItems: 'center',
-        elevation: 4
-    },
-    hugImage: {
-        backgroundColor: 'white',
-        resizeMode: 'contain',
-    },
-    metadata: {
-        display: "flex",
-        alignItems: 'center',
-        width: '100%'
-    },
-    text: {
-        color: '#454545',
-        fontSize: 13
-    }
-})

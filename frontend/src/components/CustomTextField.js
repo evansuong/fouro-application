@@ -1,6 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, Text, View, TextInput, Platform } from 'react-native';
 import AppStyles from '../AppStyles'
+import { DimensionContext } from '../contexts/DimensionContext';
 
 
 // TODO: BROKEN. Check components that use this one to view comments.
@@ -11,7 +12,17 @@ import AppStyles from '../AppStyles'
  * @param {string} placeholder The input placeholder
  * @param {stateHook} setField The field to set in the parent component
  */
-export default function CustomTextField({ titleText, placeholder, setField, secureText=false, required=false, multiline=false }) {
+export default function CustomTextField({ 
+  titleText, 
+  placeholder, 
+  setField, 
+  secureText=false, 
+  required=false, 
+  multiline=false 
+}) {
+
+  const { platform } = useContext(DimensionContext)
+
   return (
     <View>
       <Text style={styles.onboardingText}>
@@ -27,6 +38,7 @@ export default function CustomTextField({ titleText, placeholder, setField, secu
         style={styles.onboardingInput}
         multiline={multiline}
         placeholder={placeholder}
+        keyboardType={platform === 'ios' ? 'ascii-capable' : 'visible-password'}
         secureTextEntry={secureText}
         onChangeText={(val) => setField(val)}
       />

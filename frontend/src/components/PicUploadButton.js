@@ -33,21 +33,21 @@ export default function PicUploadButton({ navigation, text, onPress }) {
 
   const styles = StyleSheet.create({
     buttonText: {
-      fontSize: 13,
+      fontSize: 14,
       textAlign: 'center',
+      fontWeight: '600',
       fontFamily: 'Montserrat_400Regular',
     },
     button: {
       display: 'flex',
-      marginTop: 20,
-      width: windowWidth / 2.2,
-      height: windowHeight / 10,
+      marginTop: windowWidth * .05,
+      width: windowWidth * .43,
+      height: windowWidth * .25,
       justifyContent: 'center',
       alignItems: 'center',
-      // Shadows do not work on rgba values
-      backgroundColor: '#ccc7c6',
-      borderRadius: 10,
+      backgroundColor: '#d4d4d4',
       shadowColor: '#000',
+      borderRadius: 10,
       shadowOffset: {
         width: 5,
         height: 5,

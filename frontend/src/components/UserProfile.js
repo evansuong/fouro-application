@@ -15,13 +15,19 @@ import { UserContext } from 'contexts/UserContext';
  * 
  * @param { username } username       the user's username
  */
-export default function UserProfile({ routeName, profilePicture, userFirstLast, username }) {
+export default function UserProfile({ 
+  routeName, 
+  profilePicture, 
+  userFirstLast, 
+  username 
+}) {
 
   const userFirstLastDummy = userFirstLast;
   const usernameDummy = username;
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
-  const { isLightTheme } = userData;
+  // const { isLightTheme } = userData;
+  const isLightTheme = true;
 
   const userInfoHeight = 
     routeName === 'User Profile Page' ? hp('30%') : hp('20%');
@@ -32,6 +38,7 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
 
   const styles = StyleSheet.create({
     container: {
+      display: "flex",
       overflow: 'hidden',
       alignItems: 'center',
       justifyContent: 'center',
@@ -54,14 +61,24 @@ export default function UserProfile({ routeName, profilePicture, userFirstLast, 
     usernameStyle: {
       fontSize: usernameFontSize,
       color: isLightTheme ? 'black' : '#EEE',
+    },
+    titleTextContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: windowWidth,
+    },
+    titleText: {
+      marginBottom: 40,
+      fontSize: 40,
+      fontFamily: 'Montserrat_500Medium',
+      textAlign: 'center',
     }
   });
 
   return (
-      <View style={[styles.container, { display: "flex" }]}>
+      <View style={styles.container}>
           <Image
               source={{ uri: profilePicture }}
-              // source={profilePicture}
               style={styles.profilePicStyle}
           />
           <Text style={styles.userFirstLastStyle}>

@@ -49,7 +49,7 @@ export default function ProfileSetupPage({ navigation, route }) {
 
   const callBackend = async () => {
     setUploading(true);
-    let base64 = uploadPic.base64;    
+    let base64 = uploadPic.base64;
     if (base64.length > MAX_UPLOAD_SIZE) {
       const compressFactor = MAX_UPLOAD_SIZE / base64.length;
       base64 = await getBase64WithImage(compressFactor);
@@ -57,29 +57,26 @@ export default function ProfileSetupPage({ navigation, route }) {
     const request = {
       blob: base64
     }
-    // console.log('after compression', request.blob.length);
     const { status, data } = 
       await UpdateAPI.uploadUserProfilePicture(
-        userData.currentUser.uid, request
+        userData.uid, request
       );
     if (!status) {
       Alert.alert('An error occurred. The image might have been too big!');
-      console.log(data);
+      setUploading(false);
     } else {
-      // console.log('data', data);
       await dispatchUser();
       navigation.replace('Welcome Page');
     }
   }
 
   const dispatchUser = async () => {
-    console.log('PicUpload 77', userData.currentUser.uid);
     const { status, data } = 
-        await ReadAPI.getUserProfile(userData.currentUser.uid);
+        await ReadAPI.getUserProfile(userData.uid);
     if (status) {
       dispatch({
-        type: 'SET_USER',
-        payload: data,
+        type: 'SET_USER_DATA',
+        payload: Object.assign({}, {...data, streakCount: 0, hugCount: 0})
       })
     } else {
       Alert.alert('Error retrieving profile data');
@@ -92,7 +89,12 @@ export default function ProfileSetupPage({ navigation, route }) {
     try {
       manipResult = await ImageManipulator.manipulateAsync(
         uploadPic.uri,
-        [{crop: {originX: ORIGINXY, originY: ORIGINXY, width: IMAGE_WIDTH, height: IMAGE_WIDTH}}],
+        [{crop: {
+          originX: ORIGINXY, 
+          originY: ORIGINXY, 
+          width: IMAGE_WIDTH, 
+          height: IMAGE_WIDTH
+        }}],
         {
           compress: compressFactor,
           format: ImageManipulator.SaveFormat.JPEG,
@@ -133,7 +135,6 @@ export default function ProfileSetupPage({ navigation, route }) {
   const pickFromGallery = async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (granted) {
-      // console.log('granted');
       let data = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [1,1],
@@ -143,7 +144,6 @@ export default function ProfileSetupPage({ navigation, route }) {
       })
       checkUpload(data); 
     } else {
-      // console.log('access denied');
       Alert.alert('You need to give up permission to work'); 
     }     
   }
@@ -151,7 +151,6 @@ export default function ProfileSetupPage({ navigation, route }) {
   const pickFromCamera = async () => {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA);
     if (granted) {
-      // console.log('granted');
       let data = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -162,7 +161,6 @@ export default function ProfileSetupPage({ navigation, route }) {
       })
       checkUpload(data); 
     } else {
-      // console.log('access denied');
       Alert.alert('You need to give up permission to work');
     }
   }
@@ -216,7 +214,9 @@ export default function ProfileSetupPage({ navigation, route }) {
               onPress={() => pickFromCamera()}
             />
             <Text style={styles.note}>
-              'Take a profile picture': Your profile picture will be taken from the tiny middle portion 
+              'Take a profile picture': 
+              Your profile picture will be taken from 
+              the tiny middle portion 
             </Text>
           </View>
 
@@ -261,9 +261,7 @@ const styles = StyleSheet.create({
     height: 75,
     justifyContent: 'center',
     alignItems: 'center',
-    // Shadows do not work on rgba values
     backgroundColor: '#ccc7c6',
-    // borderWidth: 1,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
