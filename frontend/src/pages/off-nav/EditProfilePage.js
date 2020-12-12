@@ -105,21 +105,18 @@ export default function EditProfilePage({ navigation, route }) {
         <CustomTextField
           titleText="First Name"
           setField={setFirstName}
-          secureText={true}
           required={true}
         />
         {/* New Password Input Field */}
         <CustomTextField
           titleText="Last Name"
           setField={setLastName}
-          secureText={true}
           required={true}
         />
         {/* New Password Confirmation Input Field */}
         <CustomTextField
           titleText="Username"
           setField={setUsername}
-          secureText={true}
           required={true}
         />
         {/* Error Messages */}

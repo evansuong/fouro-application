@@ -90,7 +90,7 @@ export default function LoginPage({ navigation, route }) {
       if (status) {
         dispatch({
           type: "SET_USER_DATA",
-          payload: Object.assign({}, {...data, streakCount: 3, hugCount: 4}),
+          payload: data,
         });
         dispatch({
           type: 'SET_UID',

@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/material-top-tabs';
 import { 
   getFocusedRouteNameFromRoute, 
+  useFocusEffect, 
   useIsFocused 
 } from '@react-navigation/native';
 // Contexts
@@ -35,6 +36,7 @@ export default function MainNavPage({ route }) {
     const tabWidth = windowWidth / 3;
     const tabHeight = tabWidth / 2.25;
     const r = getFocusedRouteNameFromRoute(route)
+
 
     useEffect(() => {
       if (typeof params !== 'undefined' && params.loggedIn !== 'undefined') {

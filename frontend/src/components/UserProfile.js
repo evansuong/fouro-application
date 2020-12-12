@@ -49,6 +49,7 @@ export default function UserProfile({
     profilePicStyle: {
       justifyContent: 'center',
       borderRadius: 100,
+      marginBottom: 15,
       resizeMode: 'contain',
       width: profPicWidth, 
       height: profPicWidth

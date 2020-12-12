@@ -114,7 +114,7 @@ export default function HugSearchPage({ navigation, route }) {
             borderBottomColor: '#e4e4e4',
             borderBottomWidth: 1,
             paddingHorizontal: windowWidth * .1,
-            paddingVertical: windowWidth * .01
+            paddingVertical: windowWidth * .02
         }
     })
 

@@ -1,6 +1,6 @@
 import { EBGaramond_500Medium, EBGaramond_800ExtraBold } from '@expo-google-fonts/eb-garamond';
 import { Montserrat_300Light } from '@expo-google-fonts/montserrat';
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -9,6 +9,7 @@ import {
   Animated
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ReadAPI } from '../API';
 import AppStyles from '../AppStyles';
 import { UserContext } from '../contexts/UserContext';
 
@@ -17,14 +18,17 @@ import { UserContext } from '../contexts/UserContext';
  * The streak panel to be showed in the home page with the hug and streak
  * counts. 
  */
-export default function StreakPanel({ mode }) {
+export default function StreakPanel(hugs) {
   // const [streakCount, setStreakCount] = useState(3);
   // const [hugCount, setHugCount] = useState(5);
   const [expanded, setExpanded] = useState(false);
   const width = useRef(new Animated.Value(50)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const { userData } = useContext(UserContext);
-  const { hugCount, streakCount } = userData.userData;
+  const [userCounts, setUserCounts] = useState({
+    hugCount: ' ',
+    streakCount: ' '
+  });
 
   const color = {
     light: 'black',
@@ -36,7 +40,39 @@ export default function StreakPanel({ mode }) {
     'hugEmoji': require('assets/hugEmoji.png')
   };
 
+  useEffect(() => {
+    ReadAPI.getUserCounts(userData.uid)
+    .then(response => {
+      if (response.status) {
+        setUserCounts({
+          hugCount: response.data.hugs,
+          streakCount: response.data.streaks
+        });
+      } else {
+        alert('something went wrong getting your streaks')
+      }
+    })
+  }, [hugs])
+
+  useEffect(() => {
+    
+  }, [])
+
   function handlePress() {
+
+    ReadAPI.getUserCounts(userData.uid)
+    .then(response => {
+      console.log(response)
+      if (response.status) {
+        console.log(response)
+        setUserCounts({
+          hugCount: response.data.hug,
+          streakCount: response.data.streak
+        });
+      } else {
+        alert('something went wrong getting your streaks')
+      }
+    })
     
     setExpanded(!expanded);
     if (width < 51 && expanded) {
@@ -98,7 +134,7 @@ export default function StreakPanel({ mode }) {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: 10,
+      padding: 9,
       width: 130,
     },
     image: {
@@ -136,7 +172,7 @@ export default function StreakPanel({ mode }) {
                 style={styles.image}
               />
               <Text style={styles.counts}>
-                {streakCount}
+                {userCounts.streakCount}
               </Text>
             </View>
             <Animated.View opacity={fade}>
@@ -155,7 +191,7 @@ export default function StreakPanel({ mode }) {
                 style={styles.image}
               />
               <Text style={[styles.counts, styles.hugCount]}>
-                {hugCount}
+                {userCounts.hugCount}
               </Text>
             </View>
             <Animated.View opacity={fade}>

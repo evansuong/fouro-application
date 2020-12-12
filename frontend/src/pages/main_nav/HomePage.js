@@ -222,7 +222,7 @@ export default function HomePage({ navigation, route }) {
       </TouchableWithoutFeedback>
 
       <View style={styles.streakContainer}>
-        <StreakPanel/> 
+        <StreakPanel hugs={hugArray.length}/> 
       </View>
 
       {/* Create Hug Button */}

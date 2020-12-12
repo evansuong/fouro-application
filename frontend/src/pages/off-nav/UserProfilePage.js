@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 // APIs
 import { ReadAPI } from '../../API';
 // Contexts
@@ -12,7 +12,7 @@ import UserProfile from "components/UserProfile";
 
 export default function UserProfilePage({ navigation, route }) {
   // States
-  const [fetchedUser, setFetchedUser] = useState({});
+  const [fetchedUser, setFetchedUser] = useState();
   const [startUp, setStartUp] = useState(true);
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
@@ -22,7 +22,7 @@ export default function UserProfilePage({ navigation, route }) {
   const topMarginSize = windowWidth * 0.1;
   const settingMarginTopBottom = windowWidth * 0.03;
   const buttonMargin = 10
-  const buttonHeight = 50
+  const buttonHeight = windowHeight * .07
   const routeName = route.name;
 
   useEffect(() => {
@@ -50,9 +50,9 @@ export default function UserProfilePage({ navigation, route }) {
       borderColor: "#D4D4D4",
     },
     button: {
-      backgroundColor: 'orange',
+      backgroundColor: '#E57777',
       height: buttonHeight,
-      width: windowWidth * .8,
+      width: windowWidth * .85,
       borderRadius: 30,
       alignItems: 'center',
       justifyContent: 'center',
@@ -70,18 +70,24 @@ export default function UserProfilePage({ navigation, route }) {
     buttonText: {
       color: 'white',
       fontSize: windowWidth * 0.05,
-      fontWeight: 'bold'
     },
     container: {
       backgroundColor: isLightTheme ? '#EEE' : '#000',
       display: "flex", 
-      alignItems: "center"
+      alignItems: "center",
+      fontFamily: 'Montserrat_500Medium',
     },
     profileContainer: {
       flex: 1, 
       flexDirection: 'column', 
       justifyContent: 'space-between', 
       alignItems: 'center',
+    },
+    loadingContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: windowHeight
     }
   });
 
@@ -111,57 +117,65 @@ export default function UserProfilePage({ navigation, route }) {
     }
   }
 
-  return (
-    <View style={styles.container}>
-      <Header 
-        routeName={routeName} 
-        navigation={navigation} 
-        onMainNav={false} 
-      />
-
-      <View style={{ marginTop: topMarginSize }}>
-        <UserProfile
-          routeName={"User Profile Page"}
-          profilePicture={fetchedUser.profile_pic}
-          userFirstLast={fetchedUser.name}
-          username={fetchedUser.username}
+  if (!fetchedUser) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size='large'/>
+      </View>
+    )
+  } else {
+    return (
+      <View style={styles.container}>
+        <Header 
+          routeName={routeName} 
+          navigation={navigation} 
+          onMainNav={false} 
         />
 
-        <View style={styles.profileContainer}>
-          {/* Settings section */}
-          <View style={styles.settingsContainer}>
-            <Setting
-              icon={require("assets/resetPassword.png")}
-              text="Reset Password"
-              onPress={goToResetPwdPage}
-              windowWidth={windowWidth}
-              windowHeight={windowHeight}
-            />
+        <View style={{ marginTop: topMarginSize }}>
+          <UserProfile
+            routeName={"User Profile Page"}
+            profilePicture={fetchedUser.profile_pic}
+            userFirstLast={fetchedUser.name}
+            username={fetchedUser.username}
+          />
 
-            <Setting
-              icon={require("assets/deleteAccount.png")}
-              text="Delete Account"
-              textColor="red"
-              windowWidth={windowWidth}
-              windowHeight={windowHeight}
-            />
-
-            <Setting
-              icon={require("assets/deleteAccount.png")}
-              text="Toggle Theme"
-              textColor="black"
-              onPress={toggleTheme}
-              windowWidth={windowWidth}
-              windowHeight={windowHeight}
+          <View style={styles.profileContainer}>
+            {/* Settings section */}
+            <View style={styles.settingsContainer}>
+              <Setting
+                icon={require("assets/resetPassword.png")}
+                text="Reset Password"
+                onPress={goToResetPwdPage}
+                windowWidth={windowWidth}
+                windowHeight={windowHeight}
               />
+
+              <Setting
+                icon={require("assets/deleteAccount.png")}
+                text="Delete Account"
+                textColor="red"
+                windowWidth={windowWidth}
+                windowHeight={windowHeight}
+              />
+
+              <Setting
+                icon={require("assets/sun.png")}
+                text="Toggle Theme"
+                textColor="black"
+                onPress={toggleTheme}
+                windowWidth={windowWidth}
+                windowHeight={windowHeight}
+                />
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={() => logOut()}>
+              <Text style={styles.buttonText}>LOG OUT</Text>
+            </TouchableOpacity>
+
           </View>
-
-          <TouchableOpacity style={styles.button} onPress={() => logOut()}>
-            <Text style={styles.buttonText}>LOG OUT</Text>
-          </TouchableOpacity>
-
         </View>
       </View>
-    </View>
-  );
+    );
+  }
 }

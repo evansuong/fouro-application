@@ -37,7 +37,6 @@ import {
   Montserrat_500Medium,
   Montserrat_600SemiBold
 } from '@expo-google-fonts/montserrat';
-import HugSearchPage from './src/pages/off-nav/HugSearchPage';
 
 
 export default function App() {

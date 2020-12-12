@@ -38,9 +38,10 @@ export default function CustomTextField({
         style={styles.onboardingInput}
         multiline={multiline}
         placeholder={placeholder}
-        keyboardType={platform === 'ios' ? 'ascii-capable' : 'visible-password'}
+        keyboardType='ascii-capable'
         secureTextEntry={secureText}
         onChangeText={(val) => setField(val)}
+        autoCapitalize='none'
       />
     </View>
   );

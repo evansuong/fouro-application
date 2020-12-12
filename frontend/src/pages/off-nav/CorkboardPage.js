@@ -90,10 +90,9 @@ export default function CorkboardPage({ navigation, route }) {
         height: windowHeight,
       },
       noPinnedHugs: {
-        fontSize: 20, 
+        fontSize: 25, 
         fontFamily: 'Montserrat_400Regular',
         textAlign: 'center',
-        color: 'white'
       },
       noPinnedHugsContainer: {
         marginTop: windowHeight * 0.1,
