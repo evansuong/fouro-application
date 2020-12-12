@@ -37,6 +37,9 @@ export default function MainNavPage({ route }) {
     const tabHeight = tabWidth / 2.25;
     const r = getFocusedRouteNameFromRoute(route)
 
+    useFocusEffect(() => {
+      console.log(r)
+    })
 
     useEffect(() => {
       if (typeof params !== 'undefined' && params.loggedIn !== 'undefined') {

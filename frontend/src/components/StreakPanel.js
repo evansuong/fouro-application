@@ -30,11 +30,6 @@ export default function StreakPanel(hugs) {
     streakCount: ' '
   });
 
-  const color = {
-    light: 'black',
-    dark: 'white',
-  }
-
   const images = {
     'streakEmoji': require('assets/fireEmoji.png'),
     'hugEmoji': require('assets/hugEmoji.png')
@@ -59,20 +54,6 @@ export default function StreakPanel(hugs) {
   }, [])
 
   function handlePress() {
-
-    ReadAPI.getUserCounts(userData.uid)
-    .then(response => {
-      console.log(response)
-      if (response.status) {
-        console.log(response)
-        setUserCounts({
-          hugCount: response.data.hug,
-          streakCount: response.data.streak
-        });
-      } else {
-        alert('something went wrong getting your streaks')
-      }
-    })
     
     setExpanded(!expanded);
     if (width < 51 && expanded) {
