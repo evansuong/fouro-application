@@ -74,7 +74,8 @@ export default function LoginPage({ navigation, route }) {
 
   const submitHandler = async () => {
     setLoggingIn(true);
-    let response = await AuthAPI.loginUser(emailField.trim(), passwordField.trim())
+    let response = 
+      await AuthAPI.loginUser(emailField.trim(), passwordField.trim())
     processLoginResponse(response);
   }
 
@@ -85,13 +86,11 @@ export default function LoginPage({ navigation, route }) {
   const processLoginResponse = async (response) => {
     if (response.status) {
       const { status, data } = await ReadAPI.getUserProfile(response.data);
-      console.log('LoginPage 82', response.data);
       if (status) {
         dispatch({
           type: "SET_USER_DATA",
           payload: Object.assign({}, {...data, streakCount: 3, hugCount: 4}),
         });
-        console.log(response.data)
         dispatch({
           type: 'SET_UID',
           payload: response.data,
@@ -99,7 +98,6 @@ export default function LoginPage({ navigation, route }) {
         navigation.navigate('Main Nav Page', { loggedIn: true });
       } else {
         Alert.alert('An error occurred');
-        console.log(data);
       }
     } else {
       setLoggingIn(false);
@@ -169,7 +167,11 @@ export default function LoginPage({ navigation, route }) {
   if (userData.uid) {
     return (
       <>
-        <Header navigation={navigation} routeName={routeName} onMainNav={false}/>
+        <Header 
+          navigation={navigation} 
+          routeName={routeName} 
+          onMainNav={false}
+        />
         <Animated.View opacity={fade} style={styles.container}>
           <ImageBackground
             source={BackgroundImg}
@@ -187,12 +189,13 @@ export default function LoginPage({ navigation, route }) {
   } else {
     return (
       <>
-        <Header navigation={navigation} routeName={routeName} onMainNav={false}/>
+        <Header 
+          navigation={navigation} 
+          routeName={routeName} 
+          onMainNav={false}
+        />
 
-        <TouchableWithoutFeedback onPress={() => {
-          Keyboard.dismiss();
-          console.log('dismissed keyboard');
-        }}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <Animated.View opacity={fade} style={styles.container}>
             <ImageBackground
               source={BackgroundImg}

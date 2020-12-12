@@ -7,13 +7,12 @@ import { DimensionContext } from 'contexts/DimensionContext';
 import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import Header from 'components/Header';
-import PinnedHug from 'components/PinnedHug'
+import PinnedHug from 'components/PinnedHug';
 // Images/Assets
-const corkboardImg = require('assets/corkboard.jpg')
-const trashCanImg = require('assets/trashCan.png')
+const corkboardImg = require('assets/corkboard.jpg');
 
 function showTrashCan() {
-    console.log("long press")
+    console.log("CorkboardPage 15 long press")
 }
 
 /*------- testing --------*/
@@ -61,7 +60,6 @@ export default function CorkboardPage({ navigation, route }) {
     const load = async () => {
       if (startUp) {
         await fetchCorkboard();
-        // setPinnedHugs(hugList);
         setStartUp(false);
       }
       setTimeout(() => {
@@ -73,7 +71,6 @@ export default function CorkboardPage({ navigation, route }) {
 
     const fetchCorkboard = async () => {
       const { status, data } = await ReadAPI.buildCorkboard(userData.uid);
-      console.log('CorkboardPage 66', status, data);
       if (status) {
         setPinnedHugs(data.hugsList);
       } else {
@@ -87,9 +84,9 @@ export default function CorkboardPage({ navigation, route }) {
 
     const styles = StyleSheet.create({
       corkboardImage: {
-          position: 'absolute',
-          resizeMode: 'contain',
-          zIndex: 0
+        position: 'absolute',
+        resizeMode: 'contain',
+        zIndex: 0
       },
       noPinnedHugs: {
         fontSize: 20, 
@@ -103,6 +100,10 @@ export default function CorkboardPage({ navigation, route }) {
         justifyContent: 'center', 
         alignItems: 'center'
       },
+      contentContainerStyle: {
+        paddingBottom: margin, 
+        paddingTop: margin + windowWidth * 0.2
+      }
     })
 
     return (
@@ -111,32 +112,30 @@ export default function CorkboardPage({ navigation, route }) {
                 source={corkboardImg}
                 style={styles.corkboardImage}
             />
-            <Header routeName={routeName} navigation={navigation} onMainNav={false}/>
+            <Header 
+              routeName={routeName} 
+              navigation={navigation} 
+              onMainNav={false}
+            />
 
             {/* Hugs list as a grid */}
             {
               pinnedHugs && !pinnedHugs.empty &&
               <FlatList
-                  // data={testData}
-                  data={pinnedHugs}
-                  keyExtractor={item => item.hug_ref}
-                  renderItem={({ item }) => (
-                        <PinnedHug
-                          navigation={navigation}
-                          unpin={showTrashCan}
-                          // picture={hug.item.picture}
-                          // date={hug.item.date}
-                          // friendName={hug.item.friendName}
-                          picture={item.image}
-                          date={item.dateTime}
-                          friendName={item.friendName}
-                          id={item.hug_ref}
-                      />
-                  )}
-                  contentContainerStyle={{
-                    paddingBottom: margin, paddingTop: margin + windowWidth * 0.2
-                  }}
-                  numColumns={2}
+                data={pinnedHugs}
+                keyExtractor={item => item.hug_ref}
+                renderItem={({ item }) => (
+                  <PinnedHug
+                    navigation={navigation}
+                    unpin={showTrashCan}
+                    picture={item.image}
+                    date={item.dateTime}
+                    friendName={item.friendName}
+                    id={item.hug_ref}
+                  />
+                )}
+                contentContainerStyle={styles.contentContainerStyle}
+                numColumns={2}
               />
             }
             {

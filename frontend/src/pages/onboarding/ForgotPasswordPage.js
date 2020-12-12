@@ -124,11 +124,13 @@ export default function ForgotPasswordPage({ navigation, route }) {
 
   return (
     <>
-      <Header navigation={navigation} routeName={routeName} onMainNav={false}/>
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        console.log('dismissed keyboard');
-      }}>
+      <Header 
+        navigation={navigation} 
+        routeName={routeName} 
+        onMainNav={false}
+      />
+      
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <Animated.View opacity={fade} style={styles.container}>
           <ImageBackground
             source={BackgroundImg}

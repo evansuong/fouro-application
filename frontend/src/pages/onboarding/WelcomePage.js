@@ -59,23 +59,42 @@ export default function QuestionPage({ navigation }) {
       marginHorizontal: 25, 
       padding: 10, 
       fontSize: 15,
+    },
+    outerContainer: {
+      height: '100%'
+    },
+    sliderContainer: {
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      marginBottom: 40,
+    },
+    sliderStyle: {
+      width: 200, 
+      height: 40,
+    },
+    scrollViewContainer: {
+      paddingBottom: 10
     }
   });
 
   return (
-    <View style={{height: '100%'}}>
+    <View style={styles.outerContainer}>
       
       {/* gradient background */}
       <View style={styles.background}>
-                <LinearGradient
-                    colors={['#FFFFFF','#FFFFFF']}
-                    start={[0.9, 0.1]}
-                    end={[0.1, 0.7]}
-                    style={styles.linearGradient}
-                />
+        <LinearGradient
+            colors={['#FFFFFF','#FFFFFF']}
+            start={[0.9, 0.1]}
+            end={[0.1, 0.7]}
+            style={styles.linearGradient}
+        />
       </View>
       
-      <ScrollView bounces="false">
+      <ScrollView 
+        bounces="false" 
+        contentContainerStyle={styles.scrollViewContainer}
+      >
         <Text style={styles.title}>
           Welcome to Fouro!
         </Text>
@@ -115,9 +134,9 @@ export default function QuestionPage({ navigation }) {
           </Text>
         </View>
 
-        <View vertical={true} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 40 }}>
+        <View vertical={true} style={styles.sliderContainer}>
           <Slider
-              style={{width: 200, height: 40,}}
+              style={styles.sliderStyle}
               value={value}
               onValueChange={(value) => setValue( value )}
               minimumValue={1}
@@ -130,21 +149,14 @@ export default function QuestionPage({ navigation }) {
         </View>
         
 
-        {/* Merely for navigation purposes. 
-        Remove when designing questions. */}
         <View style={styles.navigationButton}>
           <LinkedButton
-            justifyContent='center'
-            display='flex'
-            alignItems='center'
             navigation={navigation}
             link='Main Nav Page'
             text='Get Started!'
             color='#FFC24A'
           />
         </View>
-        {/* Merely for navigation purposes. 
-        Remove when designing questions. */}
       </ScrollView>
     </View>
   );

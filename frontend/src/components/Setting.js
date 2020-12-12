@@ -17,8 +17,7 @@ export default function Setting({
   windowWidth,
   windowHeight,
 }) {
-  // onPress
-
+  
   const settingMarginSides = windowWidth * 0.05;
   const settingMarginTopBottom = windowWidth * 0.03;
   const descMargin = windowWidth * 0.03;

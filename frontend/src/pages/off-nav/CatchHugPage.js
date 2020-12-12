@@ -45,7 +45,13 @@ export default function CatchHugPage({ navigation, route }) {
     const { userData } = useContext(UserContext);
     const { uid } = userData;
     // Misc
-    const { friendId, friendName, friendUsername, friendPfp, hugId } = route.params.data;
+    const { 
+      friendId, 
+      friendName, 
+      friendUsername, 
+      friendPfp, 
+      hugId 
+    } = route.params.data;
 
     const routeName = route.name;
     const validExtensions = ['jpeg', 'jpg'];
@@ -54,7 +60,6 @@ export default function CatchHugPage({ navigation, route }) {
     const pickFromGallery = async () => {
       const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (granted) {
-        console.log('granted');
         let data = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
@@ -64,7 +69,6 @@ export default function CatchHugPage({ navigation, route }) {
         })
         await checkUpload(data); 
       } else {
-        console.log('access denied');
         Alert.alert('You need to give permission to upload a picture!');
       }
     }
@@ -73,7 +77,6 @@ export default function CatchHugPage({ navigation, route }) {
       if (data.cancelled) {
         Alert.alert('Image upload was canceled')
       } else {
-        // console.log('CatchHug Length', data.base64.length);
         const arr = data.uri.split('.');
         const fileExtension = arr[arr.length - 1];
         const validExtension = validExtensions.includes(fileExtension);
@@ -81,9 +84,6 @@ export default function CatchHugPage({ navigation, route }) {
           Alert.alert(`Accepted image types are ${validExtensions}`);
         } else {
           const compressedBase64 = await compressImage(data);
-          // console.log('Compress Base64', compressedBase64.length);
-          // console.log('CatchHug 82', totalChars);
-          // console.log('CatchHugHug 83', compressedBase64.length + totalChars);
           if (compressedBase64.length + totalChars < MAX_UPLOAD_SIZE) {
             setTotalChars(prevTotalChars => 
               prevTotalChars + compressedBase64.length
@@ -101,14 +101,12 @@ export default function CatchHugPage({ navigation, route }) {
       let base64 = data.base64;    
       if (base64.length > MAX_UPLOAD_SIZE) {
         const compressFactor = MAX_UPLOAD_SIZE / base64.length;
-        // console.log('CreateHugPage 54', compressFactor);
         base64 = await getBase64WithImage(data, compressFactor);
       }
       return base64;
     }
 
     const getBase64WithImage = async (data, compressFactor) => {
-      // console.log('CatchHug 111', data.base64.length);
       const manipResult = await ImageManipulator.manipulateAsync(
         data.uri,
         [],
@@ -118,7 +116,6 @@ export default function CatchHugPage({ navigation, route }) {
           base64: true
         }
       )
-      // console.log(manipResult.base64.length);
       return `data:image/jpeg;base64,${manipResult.base64}`;
     }
 
@@ -181,8 +178,6 @@ export default function CatchHugPage({ navigation, route }) {
         marginTop: windowHeight / 80,
       },
       backgroundImg: {
-        // flex: 1,
-        // justifyContent: 'center',
         height: windowHeight,
         resizeMode: 'cover',
       },
@@ -215,16 +210,26 @@ export default function CatchHugPage({ navigation, route }) {
         fontSize: 18,
         textAlign: 'center',
       },
+      images: {
+        width: windowWidth / 3, 
+        height: windowWidth / 3, 
+        marginTop: 10, 
+        marginLeft: 10,
+      }
     });
 
     return (
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        console.log('dismissed keyboard')
-      }}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View>
-          <Header routeName={routeName} navigation={navigation} onMainNav={false}/>            
-          <ImageBackground source={BackgroundImg} style={styles.backgroundImg}>
+          <Header 
+            routeName={routeName} 
+            navigation={navigation} 
+            onMainNav={false}
+          />            
+          <ImageBackground 
+            source={BackgroundImg} 
+            style={styles.backgroundImg}
+          >
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.headerText}>
@@ -274,17 +279,19 @@ export default function CatchHugPage({ navigation, route }) {
               {/* Images Array */}
               <View style={styles.picContainer}>
                 <ScrollView horizontal={true}>
-                  <View onStartShouldSetResponder={() => true} style={{flexDirection: 'row'}}>
+                  <View 
+                    onStartShouldSetResponder={() => true} 
+                    style={{flexDirection: 'row'}}
+                  >
                   {images.map((item) => (
                     <Image
                       key={item.uri}
-                      source={isEmpty(item) || item.cancelled ? profilePic : {uri: `${item.uri}`}}
-                      style={{
-                        width: windowWidth / 3, 
-                        height: windowWidth / 3, 
-                        marginTop: 10, 
-                        marginLeft: 10,
-                      }}
+                      source={isEmpty(item) || item.cancelled ? 
+                        profilePic 
+                        : 
+                        {uri: `${item.uri}`}
+                      }
+                      style={styles.images}
                     />
                   ))}
                   </View>

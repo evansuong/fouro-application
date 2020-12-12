@@ -1,15 +1,17 @@
 /**
- * Author: Rickesh Khilnani, Alex Chow 
- * 
- * References:
- * https://stackoverflow.com/questions/40665370/react-native-what-is-a-proper-way-to-pass-style-as-props-when-using-spread-ope
- * https://stackoverflow.com/questions/53647304/elevation-in-react-native 
+ * Author: Rickesh Khilnani, Alex Chow
  */
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { 
+  StyleSheet, 
+  View, 
+  Text, 
+  Image, 
+  TouchableOpacity 
+} from 'react-native';
 // Contexts
-import { DimensionContext } from '../contexts/DimensionContext'
-import { UserContext } from '../contexts/UserContext';
+import { DimensionContext } from '../contexts/DimensionContext';
+import { UserContext } from '../contexts/UserContext';;
 /**
  * A single friend card to be used in the list of friends on the friends
  * page
@@ -28,8 +30,6 @@ export default function FriendCard(props) {
 
   const { navigation, height, width, friendData } = props;
   const { color, name, profile_pic, username, user_id } = friendData;
-
-  // console.log(profile_pic)
 
   const { windowWidth, windowHeight } = useContext(DimensionContext)
   const pfpWidth = windowWidth * 0.11
@@ -66,14 +66,10 @@ export default function FriendCard(props) {
       alignItems: 'center',
       borderRadius: 100,
       backgroundColor: isLightTheme ? color : 'rgb(40, 40, 40)',
-  
-      /* iOS shadow*/
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.5,
       shadowRadius: 2,
-  
-      /* Android shadow */
       elevation: 4
     },
     pfp: {
@@ -93,6 +89,13 @@ export default function FriendCard(props) {
       justifyContent: 'space-between', 
       alignItems: 'center', 
       minHeight: pfpWidth + 10,
+    },
+    outerView: {
+      flex: 1, 
+      flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      minHeight: pfpWidth + 10
     }
   });
 
@@ -114,7 +117,7 @@ export default function FriendCard(props) {
       activeOpacity={.9}
     >
 
-    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: pfpWidth + 10 }}>
+    <View style={styles.outerView}>
 
         {/* profile picture */}
         <View style={styles.pfpContainer}>

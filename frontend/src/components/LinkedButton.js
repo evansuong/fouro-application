@@ -34,7 +34,6 @@ export default function LinkedButton({ navigation, link, text, color, onPress })
     cursor: 'pointer',
   }
 
-  //comment
   function handlePressIn() {
     Animated.spring(animatedValue, {
       toValue: 0.95,
@@ -53,8 +52,6 @@ export default function LinkedButton({ navigation, link, text, color, onPress })
       setTimeout(() => {
         navigation.navigate(link);
       }, 50)
-    } else {
-      // console.log('no navigation specified');
     }
   }
 

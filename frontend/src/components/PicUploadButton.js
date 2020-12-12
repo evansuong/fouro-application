@@ -33,18 +33,18 @@ export default function PicUploadButton({ navigation, text, onPress }) {
 
   const styles = StyleSheet.create({
     buttonText: {
-      fontSize: 18,
+      fontSize: 14,
       textAlign: 'center',
       fontWeight: '600',
+      fontFamily: 'Montserrat_400Regular',
     },
     button: {
       display: 'flex',
-      marginTop: windowHeight * .1,
+      marginTop: windowWidth * .05,
       width: windowWidth * .43,
-      height: windowHeight * .13,
+      height: windowWidth * .25,
       justifyContent: 'center',
       alignItems: 'center',
-      // Shadows do not work on rgba values
       backgroundColor: '#d4d4d4',
       shadowColor: '#000',
       borderRadius: 10,
@@ -66,7 +66,7 @@ export default function PicUploadButton({ navigation, text, onPress }) {
     >
       <Animated.View style={[styles.button, animatedStyle]}>
         <Text style={styles.buttonText}>
-          {"+ " +text}
+          {text}
         </Text>
       </Animated.View>
     </TouchableWithoutFeedback>

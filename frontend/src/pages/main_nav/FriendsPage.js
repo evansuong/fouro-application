@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -7,21 +7,21 @@ import {
   FlatList, 
   Image, 
   Alert
-} from 'react-native'
+} from 'react-native';
 // APIs
-import { ReadAPI } from '../../API'
+import { ReadAPI } from '../../API';
 // Contexts
-import { DimensionContext } from 'contexts/DimensionContext'
-import { UserContext } from 'contexts/UserContext'
+import { DimensionContext } from 'contexts/DimensionContext';
+import { UserContext } from 'contexts/UserContext';
 // Custom Components
-import FriendCard from 'components/FriendCard'
-import Header from 'components/Header'
-import SearchPage from '../off-nav/SearchPage'
+import FriendCard from 'components/FriendCard';
+import Header from 'components/Header';
 // Images/Assets
-import AppStyles from '../../AppStyles'
-import gradient from 'assets/gradients/left.png'
-import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native'
-// const gradient = require('assets/gradients/left.png');
+import AppStyles from '../../AppStyles';
+import gradient from 'assets/gradients/left.png';
+import { 
+  getFocusedRouteNameFromRoute 
+} from '@react-navigation/native';
 
 
 
@@ -68,8 +68,6 @@ export default function FriendsPage({ navigation, route }) {
 
     async function getFriends() {
         const { status, data } = await ReadAPI.getFriends(uid);
-        console.log('fetching friends');
-
         if (status) {
           if (data.friends.length != friends.length) {
             setFriends(data.friends);
@@ -84,14 +82,12 @@ export default function FriendsPage({ navigation, route }) {
     }, [])   
   
     const renderCards = friend => {
-        // console.log(friend)
-        return  <FriendCard
-                    friendData={friend.item}
-                    // friendData={...friend}
-                    navigation={navigation}
-                    height={windowHeight / 15}
-                    width={windowWidth - 40}
-                />        
+      return  <FriendCard
+                friendData={friend.item}
+                navigation={navigation}
+                height={windowHeight / 15}
+                width={windowWidth - 40}
+              />        
     }
 
     const styles = StyleSheet.create({
@@ -125,7 +121,9 @@ export default function FriendsPage({ navigation, route }) {
       noFriendsContainer: {
         width: windowWidth * 0.7, 
         justifyContent: 'center', 
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'absolute', 
+        top: windowHeight * .35,
       },
     });
 
@@ -159,7 +157,7 @@ export default function FriendsPage({ navigation, route }) {
             } 
             {
               friends.length == 0 &&
-              <View style={{...styles.noFriendsContainer, position: 'absolute', top: windowHeight * .35, alignSelf: 'center' }}>
+              <View style={styles.noFriendsContainer}>
                 <Text style={[
                   styles.noFriends, 
                   {transform: [{ rotate: '90deg'}], fontSize: 50}

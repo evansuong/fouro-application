@@ -20,8 +20,6 @@ const FADE_ANIMATION_DURATION_MS = 300;
 const VISIBLE = 1;
 const HIDDEN = 0;
 
-// console.log(Platform.OS)
-
 /**
  */
 export default function NotificationCard({ notificationData, isFocused, handleAccept, handleDecline }) {
@@ -94,7 +92,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             onPress: () => console.log('NotifCard 83 Cancel Pressed')
           },
           {
-            text: 'Ye',
+            text: 'Yes',
             onPress: () => processDeletion()
           }
         ]
@@ -102,7 +100,6 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
     }
 
     function processDeletion() {
-      console.log('Notif Card 199', notification_id);
       handleDisappear();
       handleDecline(notification_id, notification_id);
     }
