@@ -6,6 +6,7 @@ import {
   Animated, 
   Image, 
   TouchableOpacity,
+  Alert,
 } from 'react-native'
 import { call } from 'react-native-reanimated';
 import { DimensionContext } from '../contexts/DimensionContext';
@@ -19,14 +20,20 @@ const FADE_ANIMATION_DURATION_MS = 300;
 const VISIBLE = 1;
 const HIDDEN = 0;
 
-console.log(Platform.OS)
-
 /**
  */
 export default function NotificationCard({ notificationData, isFocused, handleAccept, handleDecline }) {
 
     // prop destructuring: { notification type, user that generated notif, sender pp, notification id }
-    const { callback_id, date_time, friendName, friendPfp, friend_username, notification_id, type } = notificationData;  
+    const { 
+      callback_id, 
+      date_time, 
+      friendName, 
+      friendPfp, 
+      friend_username, 
+      notification_id, 
+      type 
+    } = notificationData;  
     // hold whether or not this panel is expanded or not
     const [expanded, setExpanded] = useState(false);
 
@@ -66,10 +73,35 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
 
     function handleDisappear() {
       Animated.timing(marginL, {
-        toValue: windowWidth * 1.3,
+        toValue: windowWidth * 2,
         duration: 500,
         useNativeDriver: false,
       }).start();
+    }
+
+    function handleConfirmAlert() {
+      Alert.alert(
+        'Confirm Delete', 
+        type == 'friend' ? 
+          `Are you sure you want to reject the friend request from ${friendName}?`
+          :
+          `Are you sure you want to drop the hug request from ${friendName}?`,
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('NotifCard 83 Cancel Pressed')
+          },
+          {
+            text: 'Yes',
+            onPress: () => processDeletion()
+          }
+        ]
+      )
+    }
+
+    function processDeletion() {
+      handleDisappear();
+      handleDecline(notification_id, notification_id);
     }
 
     // expand animation definition
@@ -114,8 +146,10 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
             display: 'flex', 
             backgroundColor: backgroundColor,
             marginVertical: windowWidth / 75,
-            marginRight: windowWidth / 75,
-            marginLeft: marginL ? marginL : windowWidth / 75,
+            // marginRight: windowWidth / 75,
+            marginLeft: marginL,
+            // marginRight: marginL ? marginL : windowWidth / 75,
+            // marginLeft: windowWidth / 75,
             width: windowWidth / 1.1,
         }}>
             <TouchableOpacity onPress={handlePress} activeOpacity={1.0}>
@@ -195,10 +229,7 @@ export default function NotificationCard({ notificationData, isFocused, handleAc
                             {/* decline button */}
                             <TouchableOpacity 
                                 disabled={!expanded} 
-                                onPress={() => {
-                                  handleDisappear();
-                                  handleDecline(callback_id, notification_id);
-                                }}
+                                onPress={() => handleConfirmAlert()}
                             >
                                 <Animated.View 
                                     style={{ 

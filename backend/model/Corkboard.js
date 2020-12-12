@@ -13,28 +13,31 @@ const users = db.collection("users");
 
 function convertDate(date) {
   const dateStr = date.toString();
-  const dateArr = dateStr.split(' ');
+  const dateArr = dateStr.split(" ");
   let hours = date.getHours();
   let minutes = date.getMinutes();
-  let ampm = hours >= 12 ? 'pm' : 'am';
+  let ampm = hours >= 12 ? "pm" : "am";
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? '0'+minutes : minutes;
-  let strTime = hours + ':' + minutes + ampm;
-  return `${dateArr[0]} ${dateArr[1]} ${dateArr[2]} ${dateArr[3]} ${strTime}`
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  let strTime = hours + ":" + minutes + ampm;
+  return `${dateArr[0]} ${dateArr[1]} ${dateArr[2]} ${dateArr[3]} ${strTime}`;
 }
 
 const CorkboardAPI = {
-  /* Get all pinned Hugs
-   * @param : user id
+  /**
+   * Get all pinned Hugs
+   * @param {string} user id
    * @return {JSON} of all pinned hugs lists
    */
   buildCorkboard: async function (uid) {
     let hugPromises = []; // hug promises
     let pinnedHugsList = []; // all pinned hugs as JSON objects
     let pinnedHugsref = users.doc(uid).collection("user_hugs");
+
     const pinnedSnapshot = await pinnedHugsref
       .orderBy("date_time", "desc")
+      .where("completed", "==", true) // Added secondary check
       .where("pinned", "==", true)
       .get();
 
@@ -79,36 +82,68 @@ const CorkboardAPI = {
 };
 
 const PinAPI = {
-  /* Changes the pinned field to be true
+  /**
+   * Changes the pinned field to be true
    * @param userid and user hug id
    * @return none
    */
   pinHugToCorkboard: async function (uid, userHugId) {
     try {
-      await users.doc(uid).collection('user_hugs').doc(userHugId).update({
+      await users.doc(uid).collection("user_hugs").doc(userHugId).update({
         pinned: true,
-      })
-      return { out: true }
-    } catch(err) {
-      console.log('Corkboard 82', err);
-      return { out: false }
+      });
+      return { out: true };
+    } catch (err) {
+      console.log("Corkboard 82", err);
+      return { out: false };
     }
   },
-  /* Changes the pinned field to be false
+
+  /**
+   * Changes the pinned field to be false
    * @param user id and user hug id
    * @return none
    */
   unpinHugFromCorkboard: async function (uid, userHugId) {
     try {
-      console.log(uid, userHugId);
-      await users.doc(uid).collection('user_hugs').doc(userHugId).update({
+      // console.log(uid, userHugId);
+      await users.doc(uid).collection("user_hugs").doc(userHugId).update({
         pinned: false,
-      })
-      return { out: true }
-    } catch(err) {
-      console.log('Corkboard.js 82', err);
-      return { out: false }
+      });
+      return { out: true };
+    } catch (err) {
+      console.log("Corkboard.js 82", err);
+      return { out: false };
     }
+  },
+
+  /**
+   * Returns the hug's pinned parameter
+   * @param {*} uid
+   * @param {*} hug_id
+   */
+  isPinned: async function (uid, hug_id) {
+    var pinned = false;
+    await users
+      .doc(uid)
+      .collection("user_hugs")
+      .doc(hug_id)
+      .get()
+      .then(async function (hugDoc) {
+        if (hugDoc.exists) {
+          // sets pinned
+          pinned = hugDoc.get("pinned");
+        } else {
+          pinned = false;
+        }
+      })
+      .catch((error) => {
+        // sets pinned to false if error
+        pinned = false;
+      });
+
+    console.log("pinned: " + pinned);
+    return { pinned: pinned };
   },
 };
 

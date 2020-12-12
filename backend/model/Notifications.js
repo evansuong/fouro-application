@@ -20,46 +20,31 @@ const NotificationsAPI = {
    */
   getNotifications: async function (uid) {
     let notifications = [];
-    let exist = true;
 
-    // Check notifications exist
-    var notificationCollection = await users
+    const notificationSnapshot = await users
       .doc(uid)
       .collection("notifications")
-      .get()
-      .then((sub) => {
-        if (sub.docs.length == 0) {
-          // console.log("Notifications 32 subcollection does not exist");
-          exist = false;
-        }
-      });
+      .orderBy("date_time", "desc")
+      .get();
 
     // No notification collection
-    if (!exist) {
-      return { notifs: [] };
-    }
-
-    notificationCollection = await users.doc(uid).collection("notifications");
-    const notificationSnapshot = await notificationCollection
-      .orderBy("date_time", "desc")
-      .get(); //sort notifications by date/time
     if (notificationSnapshot.empty) {
-      // console.log("Notifications 47 No matching documents.");
       return { notifs: notifications };
     }
-    //get all the notification_id's
+
+    // get all the notification_id's
     let notificationData = [];
     notificationSnapshot.forEach((doc) => {
       notificationData = [...notificationData, doc];
     });
 
-    let newUser = {}; //JSON object of user who sent notification
+    let notif = {}; //JSON object of user who sent notification
     for (let i = 0; i < notificationData.length; i++) {
       const userId = await notificationData[i].get("user_ref").id;
       const userResponse = await UsersAPI.getUserProfile(userId);
       //if the notification type is a hug
       if ((await notificationData[i].get("type")) == "hug") {
-        newUser = {
+        notif = {
           friendName: userResponse.name,
           friend_username: userResponse.username,
           date_time: notificationData[i].get("date_time").toDate().toString(),
@@ -70,7 +55,7 @@ const NotificationsAPI = {
         };
         //if the notification type is a friend
       } else {
-        newUser = {
+        notif = {
           friendName: userResponse.name,
           friend_username: userResponse.username,
           date_time: notificationData[i].get("date_time").toDate().toString(),
@@ -81,7 +66,7 @@ const NotificationsAPI = {
         };
       }
       //push the users notification
-      notifications.push(newUser);
+      notifications.push(notif);
     }
     //wrapped in json
     return { notifs: notifications };
@@ -91,18 +76,21 @@ const NotificationsAPI = {
    * @param: user id and request id
    * @return none
    */
-  deleteNotification: function (uid, requestId) {
+  deleteNotification: async function (uid, requestId) {
+    console.log("deleting");
     var notificationCollection = users.doc(uid).collection("notifications");
-    // if (!notificationCollection.exists) {
-    //   console.log("Notifications 97 No such document");
-    // }
-    var user_request_id = notificationCollection.doc(requestId);
 
-    if (user_request_id.get("type") == "hug") {
-      HugsAPI.dropHug(uid, requestId, user_request_id.get("hug_ref"));
+    var userRequestRef = notificationCollection.doc(requestId);
+    var notificationType = await userRequestRef.get("type");
+
+    if (notificationType == "hug") {
+      const hugId = await userRequestRef.get("hug_ref").id;
+      await HugsAPI.dropHug(uid, hugId);
     }
 
-    user_request_id.delete().then();
+    await userRequestRef.delete();
+
+    return { out: true };
   },
 };
 
@@ -136,7 +124,7 @@ const RequestsAPI = {
   sendHugRequest: async function (user_id, friend_id, hug_id) {
     // Gets the time that the notification is sent
     let dateInSeconds = Math.floor(Date.now() / 1000);
-    var dateTime = await new admin.firestore.Timestamp(dateInSeconds, 0);
+    var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
 
     const newHugCollectionRef = users
       .doc(friend_id)

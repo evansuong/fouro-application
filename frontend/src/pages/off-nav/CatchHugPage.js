@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -8,11 +8,14 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Alert,
-  ImageBackground
+  ImageBackground,
+  ActivityIndicator
 } from 'react-native';
 // Expo Imports
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import * as ImageManipulator from 'expo-image-manipulator';
+
 // APIs
 import { CreateAPI } from '../../API';
 // Contexts
@@ -30,87 +33,114 @@ import profilePic from 'assets/profilePic.jpg';
 
 
 // TODO: Remove FriendName and FriendPic parameters
-export default function CatchHugPage({ navigation, route, friendPic }) {
+export default function CatchHugPage({ navigation, route }) {
     // States
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
+    const [base64Strings, setBase64Strings] = useState([]);
+    const [totalChars, setTotalChars] = useState(0);
+    const [callingBackend, setCallingBackend] = useState(false);
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
+    const { uid } = userData;
     // Misc
-    const { friendPfp, friend_username, friendName, notification_id, callback_id } = route.params.data;
-    console.log(route.params.data)
-    // console.log('in catch hug page:', route.params.data)
+    const { 
+      friendId, 
+      friendName, 
+      friendUsername, 
+      friendPfp, 
+      hugId,
+      notification_id,
+      clearFunction, 
+    } = route.params.data;
+
     const routeName = route.name;
-
-    const callBackend = async () => {
-      try {
-        console.log('userData: ', userData);
-        let base64Strings = [];
-        for (let image of images) {
-          const base64 = await getBase64WithImage(image);
-          base64Strings.push(base64);
-        }
-        request = {
-          hugId: callback_id,
-          message: message,
-          blobs: base64Strings
-        }
-        // const response = await CreateAPI.respondToHug(userData.uid, request);
-        const response = await CreateAPI.respondToHug('temp', request);
-        console.log('response', response);
-        Alert.alert('Hug created!');
-        navigation.navigate('Home Page');
-      } catch (err) {
-        Alert.alert('Hug creation failed. Please try again.')
-      }
-    }
-
-    const getBase64WithImage = async (uploadPic) => {
-      // console.log('before compression', uploadPic.base64.length);
-      const manipResult = await ImageManipulator.manipulateAsync(
-        uploadPic.uri,
-        [],
-        {
-          compress: 0.1,
-          format: ImageManipulator.SaveFormat.JPEG,
-          base64: true
-        }
-      )
-      // console.log('after compression', manipResult`.base64.length);
-      return `data:image/jpeg;base64,${manipResult}`;
-    }
-  
-    const checkUpload = (data) => {
-      const arr = data.uri.split('.');
-      const fileExtension = arr[arr.length - 1];
-      const validExtension = validExtensions.includes(fileExtension);
-      if (!validExtension) {
-        Alert.alert(`Accepted image types are ${validExtensions}`);
-      } else if (images.length > 3) {
-        Alert.alert('Max limit of uploads reached');
-      } else if (data.cancelled) {
-        Alert.alert('Image upload cancelled');
-      } else if (data.cancelled == false) {
-        setUploadPic(data);
-      }
-    }
+    const validExtensions = ['jpeg', 'jpg'];
+    const MAX_UPLOAD_SIZE = 100000;
 
     const pickFromGallery = async () => {
       const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (granted) {
-        console.log('granted');
         let data = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [1,1],
           quality: 0.5,
+          base64: true
         })
-        checkUpload(data);
+        await checkUpload(data); 
       } else {
-        console.log('access denied');
         Alert.alert('You need to give permission to upload a picture!');
       }
+    }
+    
+    const checkUpload = async (data) => {
+      if (data.cancelled) {
+        Alert.alert('Image upload was canceled')
+      } else {
+        const arr = data.uri.split('.');
+        const fileExtension = arr[arr.length - 1];
+        const validExtension = validExtensions.includes(fileExtension);
+        if (!validExtension) {
+          Alert.alert(`Accepted image types are ${validExtensions}`);
+        } else {
+          const compressedBase64 = await compressImage(data);
+          if (compressedBase64.length + totalChars < MAX_UPLOAD_SIZE) {
+            setTotalChars(prevTotalChars => 
+              prevTotalChars + compressedBase64.length
+            );
+            setBase64Strings(prevStrings => [...prevStrings, compressedBase64]);
+            setImages(prevImages => [...prevImages, data]);
+          } else {
+            Alert.alert('You\'ve exceeded the limit of 100KB/hug');
+          }
+        }
+      }
+    }
+
+    const compressImage = async (data) => {
+      let base64 = data.base64;    
+      if (base64.length > MAX_UPLOAD_SIZE) {
+        const compressFactor = MAX_UPLOAD_SIZE / base64.length;
+        base64 = await getBase64WithImage(data, compressFactor);
+      }
+      return base64;
+    }
+
+    const getBase64WithImage = async (data, compressFactor) => {
+      const manipResult = await ImageManipulator.manipulateAsync(
+        data.uri,
+        [],
+        {
+          compress: compressFactor,
+          format: ImageManipulator.SaveFormat.JPEG,
+          base64: true
+        }
+      )
+      return `data:image/jpeg;base64,${manipResult.base64}`;
+    }
+
+    const callBackend = async () => {
+      setCallingBackend(true);
+      const request = {
+        hugId: hugId,
+        message: message,
+        base64: base64Strings
+      }
+      const { status, data } = 
+        await CreateAPI.respondToHug(uid, request);
+
+      setTimeout(() => {
+        setCallingBackend(false);
+        clearFunction(notification_id);
+        navigation.navigate('Main Nav Page');
+        if (status) {
+          Alert.alert(`Hugged ${friendName} back!`);
+        } else {
+          Alert.alert('Error catching hug.');
+        }
+      }, 3000);          
     }
 
     const isEmpty = (obj) => {
@@ -119,7 +149,6 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
 
     const styles = StyleSheet.create({
       mainContainer: {
-        // marginTop: windowHeight / 8,
         overflow: 'hidden',
         height: windowHeight / 1.45,
       },
@@ -127,7 +156,6 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
         width: windowWidth / 4,
         height: windowWidth / 4,
         borderRadius: 50,
-        marginLeft: windowWidth / 14,
       },
       friendInfoContainer: {
         flexDirection: 'row',
@@ -143,7 +171,8 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
         width: windowWidth / 1.8,
       },
       friendText: {
-        fontSize: 15,
+        fontSize: 16,
+        fontFamily: 'Montserrat_400Regular'
       },
       picContainer: {
         width: windowWidth,
@@ -152,8 +181,6 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
         marginTop: windowHeight / 80,
       },
       backgroundImg: {
-        // flex: 1,
-        // justifyContent: 'center',
         height: windowHeight,
         resizeMode: 'cover',
       },
@@ -173,17 +200,56 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
         fontSize: 14,
         fontFamily: 'Montserrat_600SemiBold',
         width: windowWidth / 1.2
-      }
+      },
+      textContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+      },
+      uploadingText: {
+        color: 'green',
+        fontSize: 18,
+        textAlign: 'center',
+      },
+      images: {
+        width: windowWidth / 3, 
+        height: windowWidth / 3, 
+        marginTop: 10, 
+        marginLeft: 10,
+        borderRadius: 10,
+        borderColor: '#FFF',
+        borderWidth: 3,
+      },
+      profilePicContainer: {
+        borderColor: '#FFF',
+        borderWidth: 3,
+        borderRadius: 100,
+        marginLeft: windowWidth * .05,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
+      },
     });
 
     return (
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        console.log('dismissed keyboard')
-      }}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View>
-          <Header routeName={routeName} navigation={navigation} onMainNav={false}/>            
-          <ImageBackground source={BackgroundImg} style={styles.backgroundImg}>
+          <Header 
+            routeName={routeName} 
+            navigation={navigation} 
+            onMainNav={false}
+          />            
+          <ImageBackground 
+            source={BackgroundImg} 
+            style={styles.backgroundImg}
+          >
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.headerText}>
@@ -199,13 +265,15 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
               {/* Friend Info */}
               <View style={{alignItems: 'center',}}>
                 <View style={styles.friendInfoContainer}>
-                  <Image
-                    source={{ uri: friendPfp }}
-                    style={styles.profilePic}
-                  />
+                  <View style={styles.profilePicContainer}> 
+                    <Image
+                      source={{ uri: friendPfp }}
+                      style={styles.profilePic}
+                    />
+                  </View>
                   <View style={styles.friendTextContainer}>
                     <Text style={styles.friendText}>
-                      {friend_username}
+                      {friendUsername}
                     </Text>
                   </View>
                 </View>
@@ -233,17 +301,19 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
               {/* Images Array */}
               <View style={styles.picContainer}>
                 <ScrollView horizontal={true}>
-                  <View onStartShouldSetResponder={() => true} style={{flexDirection: 'row'}}>
+                  <View 
+                    onStartShouldSetResponder={() => true} 
+                    style={{flexDirection: 'row'}}
+                  >
                   {images.map((item) => (
                     <Image
                       key={item.uri}
-                      source={isEmpty(item) || item.cancelled ? profilePic : {uri: `${item.uri}`}}
-                      style={{
-                        width: windowWidth / 3, 
-                        height: windowWidth / 3, 
-                        marginTop: 10, 
-                        marginLeft: 10,
-                      }}
+                      source={isEmpty(item) || item.cancelled ? 
+                        profilePic 
+                        : 
+                        {uri: `${item.uri}`}
+                      }
+                      style={styles.images}
                     />
                   ))}
                   </View>
@@ -252,15 +322,26 @@ export default function CatchHugPage({ navigation, route, friendPic }) {
             </View>
 
             {
-              images.length > 0 && message.length > 0 &&
+              images.length > 0 && 
+              message.length > 0 &&
+              !callingBackend &&
               <View>
                 <LinkedButton
-                  navigation={navigation}
-                  link='Main Nav Page'
                   text='SEND HUG'
                   color='#FB7250'
                   onPress={() => callBackend()}
                 />
+              </View>
+            }
+            {
+              callingBackend &&
+              <View style={styles.textContainer}>
+                <Text style={styles.uploadingText}>
+                  Catching Hug...
+                </Text>
+                <View style={{marginRight: 10,}}>
+                  <ActivityIndicator />
+                </View>
               </View>
             }
           </ImageBackground>

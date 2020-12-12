@@ -1,6 +1,9 @@
-import { getFocusedRouteNameFromRoute, NavigationHelpersContext } from '@react-navigation/native';
+import { 
+  getFocusedRouteNameFromRoute, 
+  NavigationHelpersContext 
+} from '@react-navigation/native';
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, LogBox } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
 import MaskedView from '@react-native-masked-view/masked-view';
@@ -24,7 +27,7 @@ const corkboardIconDark = require('assets/corkboard-icon-dark.png');
 const dotsIcon = require('assets/dots-icon.png');
 const dotsIconDark = require('assets/dots-icon-dark.png');
 
-
+LogBox.ignoreAllLogs()
 
 // function formats button data into an object 
 function buildButtonProps(name, icon, onPress) {
@@ -101,14 +104,26 @@ function RemoveFriendButton(navigation, isLightTheme) {
 
 
 
-export function HeaderButton({ name, icon, onPress, onMainNav, isLightTheme }) {
+export function HeaderButton({ 
+  name, 
+  icon, 
+  onPress, 
+  onMainNav, 
+  isLightTheme 
+}) {
     const { windowWidth, windowHeight } = useContext(DimensionContext);
 
     let width = windowWidth / 8.5;
     
     const styles = name === 'expanded search' ? {
         btnContainer: {
-            backgroundColor: isLightTheme ? "#FFFFFF22" : onMainNav ? 'rgba(0, 0, 0, .2)' : 'rgba(0, 0, 0, .4)', 
+            backgroundColor: isLightTheme ? 
+              "#FFFFFF22" 
+              : 
+              onMainNav ? 
+                'rgba(0, 0, 0, .2)' 
+                : 
+                'rgba(0, 0, 0, .4)', 
             borderRadius: 100,
             height: windowWidth / 8.5,
             width: windowWidth / 1.1,
@@ -123,7 +138,13 @@ export function HeaderButton({ name, icon, onPress, onMainNav, isLightTheme }) {
         }
     } : {
         btnContainer: {
-            backgroundColor: isLightTheme ? "transparent" : onMainNav ? 'rgba(0, 0, 0, .2)' : 'rgba(0, 0, 0, .4)', 
+            backgroundColor: isLightTheme ? 
+              "transparent" 
+              : 
+              onMainNav ? 
+                'rgba(0, 0, 0, .2)' 
+                : 
+                'rgba(0, 0, 0, .4)', 
             borderRadius: 100,
             height: windowWidth / 8.5,
             width: width,
@@ -166,8 +187,13 @@ export default function Header(props) {
 
     // collection of headerbuttons to render based on the page
     const headerButtons = {
-        'Friends': searching ? [ExitSearchButton(disableSearch, isLightTheme)] : ['', SearchButton(enableSearch, isLightTheme)],
-        'Hug Feed': [ProfileButton(navigation, isLightTheme), CorkboardButton(navigation, isLightTheme)],
+        'Friends': searching ? 
+          [ExitSearchButton(disableSearch, isLightTheme)] 
+          : 
+          ['', SearchButton(enableSearch, isLightTheme)],
+        'Hug Feed': 
+          [ProfileButton(navigation, isLightTheme), 
+          CorkboardButton(navigation, isLightTheme)],
         'Notification': '',
         'User Profile Page': [EditButton(navigation, isLightTheme)],
         'Friend Profile': '',
@@ -190,12 +216,25 @@ export default function Header(props) {
         buttons = headerButtons[routeName]
     // update to render off nav header
     } else if (routeName) {
-        buttons = [BackButton(navigation, isLightTheme), ...headerButtons[routeName]]
+        buttons = 
+          [BackButton(navigation, isLightTheme),
+          ...headerButtons[routeName]]
     }
 
 
     // styling
-    let backgroundColor = searching ? 'rgba(255, 255, 255, .85)': onMainNav ? (isLightTheme ? "transparent" : 'rgba(0, 0, 0, .6)') : 'transparent';
+    let backgroundColor = searching ? 
+      'rgba(255, 255, 255, .85)'
+      : 
+      onMainNav ? 
+        (
+          isLightTheme ? 
+          "transparent" 
+          : 
+          'rgba(0, 0, 0, .6)'
+        ) 
+        : 
+        'transparent';
     let borderRadius = searching ? 20 : 100;
 
     const styles = StyleSheet.create({
@@ -218,7 +257,13 @@ export default function Header(props) {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: searching ? isLightTheme ? '#FFF' : 'rgb(40, 40, 40)' : 'transparent',
+            backgroundColor: searching ? 
+            isLightTheme ? 
+              '#FFF' 
+              : 
+              'rgb(40, 40, 40)' 
+            : 
+            'transparent',
             width: windowWidth / 1.1,
             padding: searching ? 0 : 4,
             paddingTop: searching ? 15 : 4,
@@ -252,7 +297,11 @@ export default function Header(props) {
         <View style={styles.headerContainer}>
             <View style={styles.header}>
                 {buttons && buttons[0] !== ''? 
-                    <HeaderButton isLightTheme={isLightTheme} {...buttons[0]} onMainNav={onMainNav}/> 
+                    <HeaderButton 
+                      isLightTheme={isLightTheme} 
+                      {...buttons[0]} 
+                      onMainNav={onMainNav}
+                    /> 
                     : 
                     <View style={styles.filler}/>
                 }
@@ -262,24 +311,40 @@ export default function Header(props) {
                         style={styles.input}
                         onChangeText={(val) => setSearchInput(val)}
                         autoCapitalize='none'
+                        placeholder="search username"
                     />
                     :
                     <View style={styles.titleContainer}>
-                        <Text style={styles.title}>{buttons && buttons.length > 2 ? <></> : props.children}</Text>
+                        <Text style={styles.title}>
+                          {
+                            buttons && buttons.length > 2 ? 
+                            <></> 
+                            : 
+                            props.children
+                          }
+                        </Text>
                     </View>
                 }
-                {buttons && buttons.length > 1 && buttons[1] !== '' ? 
-                    <HeaderButton isLightTheme={isLightTheme} {...buttons[1]} onMainNav={onMainNav}/> 
-                    : 
-                    searching ? 
-                    <></>
-                    :
-                    <View style={styles.filler}/>
+                {
+                  buttons && buttons.length > 1 && buttons[1] !== '' ? 
+                  <HeaderButton 
+                    isLightTheme={isLightTheme} 
+                    {...buttons[1]} 
+                    onMainNav={onMainNav}
+                  /> 
+                  : 
+                  searching ? 
+                  <></>
+                  :
+                  <View style={styles.filler}/>
                 }
                 
             </View>
             {searching &&
-                <SearchPage navigation={navigation} input={searchInput}></SearchPage> 
+                <SearchPage 
+                  navigation={navigation} 
+                  input={searchInput}>
+                </SearchPage> 
             }
         </View>
     )

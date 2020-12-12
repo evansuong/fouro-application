@@ -6,14 +6,12 @@ import { DimensionContext } from 'contexts/DimensionContext';
 import LinkedButton from 'components/LinkedButton';
 // Assets/Images
 import fouroLogo from 'assets/fouro_logo.png';
+import backgroundImg from 'assets/fouro_background.png';
 
 
 export default function LaunchPage({ navigation }) {
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
-  // Misc
-  const roundedWidth = Math.round(windowWidth / 100) * 100;
-  const roundedHeight = Math.round(windowHeight / 100) * 100;
 
   const styles = StyleSheet.create({
     container: {
@@ -23,7 +21,6 @@ export default function LaunchPage({ navigation }) {
       flex: 1,
       justifyContent: 'flex-end',
       marginBottom: windowWidth * 0.2,
-      // backgroundColor: 'pink'
     },
     logo: {
       width: windowWidth * 0.75,
@@ -36,18 +33,19 @@ export default function LaunchPage({ navigation }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    backgroundImage: {
+      position: 'absolute', 
+      width: '100%', 
+      height: '100%',
     }
   })
 
   return (
     <View style={styles.container}>
-      {/* <ImageBackground 
-        source={background}
-        style={{position: 'absolute', width: '100%', height: '100%'}}
-      > */}
       <ImageBackground
-        source={{ uri: `https://picsum.photos/${roundedWidth}/${roundedHeight}`}}
-        style={{position: 'absolute', width: '100%', height: '100%'}}
+        source={backgroundImg}
+        style={styles.backgroundImage}
       >
         {/* logo */}
         <View style={styles.logoContainer}>

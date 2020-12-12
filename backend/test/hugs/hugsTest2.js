@@ -1,4 +1,4 @@
-const Hugs = require("../../model/Hugs2");
+const Hugs = require("../../model/Hugs");
 
 async function testDeleteImage(httpURL) {
     await Hugs.HugsAPI.deleteImage(httpURL);

@@ -25,8 +25,9 @@ import Header from '../../components/Header';
 
 
 export default function SignupPage({ navigation, route }) {
+  // States
   const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('');
+  const [passwordField, setPasswordField] = useState('gggggg');
   const [passwordConfirmField, setPasswordConfirmField] = useState('');
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
@@ -82,17 +83,14 @@ export default function SignupPage({ navigation, route }) {
     const emailFieldTrim = emailField.trim();
     const passwordFieldTrim = passwordField.trim();
     const passwordConfirmFieldTrim = passwordConfirmField.trim();
-    console.log(emailFieldTrim, passwordFieldTrim, passwordConfirmFieldTrim);
     
     let { status, data } = 
       await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
-    // console.log(data, status);
     if (status) {
       processSignupResponse(data, status);
     } else {
       setSigningUp(false);
       Alert.alert('Error. Maybe a user with that email already exists?');
-      console.log(data);
     }
   }
 
@@ -192,13 +190,13 @@ export default function SignupPage({ navigation, route }) {
   });
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      Keyboard.dismiss();
-      console.log('dismissed keyboard');
-    }}>
-      
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Animated.View opacity={fade} style={styles.container}>
-      <Header navigation={navigation} routeName={routeName} onMainNav={false} />
+        <Header 
+          navigation={navigation} 
+          routeName={routeName} 
+          onMainNav={false} 
+        />
 
         <ImageBackground source={BackgroundImg} style={styles.backgroundImg}>
           <View style={styles.titleTextContainer}>
@@ -243,7 +241,7 @@ export default function SignupPage({ navigation, route }) {
               !checkEmailValid() &&
               <View style={styles.textContainer}>
                 <Text style={styles.errorText}>
-                  Email is badly formatted!
+                  Email format is incorrect!
                 </Text>
               </View>
             }

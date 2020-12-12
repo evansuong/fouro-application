@@ -4,14 +4,14 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  PickerIOSItem,
-  LayoutAnimation,
+  RefreshControl,
+  FlatList,
   Image,
   Button,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { getFocusedRouteNameFromRoute, useFocusEffect } from "@react-navigation/native";
 // APIs
-import { CreateAPI, ReadAPI } from "../../API";
+import { CreateAPI, DeleteAPI, ReadAPI } from "../../API";
 // Contexts
 import { DimensionContext } from "contexts/DimensionContext";
 import { UserContext } from "contexts/UserContext";
@@ -110,21 +110,25 @@ export default function NotificationPage({ navigation, route }) {
     const { uid } = userData;
     const routeName = route.name;
     
-    // check whether the user is on the page (true) or navigates away from the page (false)
+    // check whether the user is on the page (true) 
+    // or navigates away from the page (false)
     useFocusEffect(() => {
         setIsFocused(true)
         return () => {
            setIsFocused(false)
         }
-    }, []);  
+    }, []);
 
+    // add a filler item to move the list down
+    useEffect(() => {
+        getNotifications();
+    }, []);
    
 
     function getTimeElapsed(date_time) {
         let notifDate = new Date(date_time).getTime() / 1000
         let today = parseInt(new Date().getTime() / 1000)
         let t = Math.floor(parseInt(today - notifDate) / 86400);
-        console.log(t)
         if (t < 1) {
             return 'today'
         } else {
@@ -135,29 +139,32 @@ export default function NotificationPage({ navigation, route }) {
 
     function getNotifications() {
         ReadAPI.getNotifications(uid)
-            .then(response => {
-                let notifications = response.data.notifications.notifs;
-                notifications = notifications.map(notif => (
-                    Object.assign({}, {...notif, date_time: getTimeElapsed(notif.date_time)})
-                ));
-                setNotifications(notifications)
-            })
+        .then(response => {
+          let notifications = response.data.notifications.notifs;
+          notifications = notifications.map(notif => {
+            return Object.assign(
+              {}, 
+              {...notif, date_time: getTimeElapsed(notif.date_time)}
+            )
+          });
+          setNotifications(notifications)
+        })
     }
 
-    // add a filler item to move the list down
-    useEffect(() => {
-        getNotifications();
-    }, []);
-
     function catchHug(hugId, id) {
-        //console.log(id)
-        let data = notifications.filter((item) => item.callback_id === hugId)[0]
+        let data = 
+          notifications.filter((item) => item.callback_id === hugId)[0];
 
-        // data = Object.assign({}, {hug_id: data.call_id, ...data})
-        navigation.navigate('Catch Hug Page', { 
-            page: 'hugInfo',
-            data: data,
+        navigation.navigate('Hug Info', { 
+            data: { 
+              hug_id: data.callback_id, 
+              notification_id: id, 
+              clearFunction: clearNotification,
+              pinned: false 
+            },
         })
+        // clearNotification(id)
+
         // signify hug as caught to the database
     }
 
@@ -167,11 +174,12 @@ export default function NotificationPage({ navigation, route }) {
     }
 
     function acceptFriendRequest(friendId, id) {
-        let friend = notifications.filter((item) => item.callback_id === friendId)[0]
+        let friend = 
+          notifications.filter((item) => item.callback_id === friendId)[0]
 
-        CreateAPI.addFriend(uid, friendId).then(response => console.log(response.status))
+        CreateAPI.addFriend(uid, friendId).then();
 
-        clearNotification(friendId)
+        clearNotification(id)
         let data = { 
             status: 'Friend', 
             profile_pic: friend.friendPfp,
@@ -194,65 +202,86 @@ export default function NotificationPage({ navigation, route }) {
 
     function clearNotification(id, type) {
         // turn this into a backend call that removes the notif
-        const newList = notifications.filter((item) => item.callback_id !== id);
+        DeleteAPI.deleteNotification(uid, id).then()
+        const newList = 
+          notifications.filter((item) => item.notification_id !== id);
         setTimeout(() => {
           setNotifications(newList);
-        }, 1000);
+        }, 400);
+    }
+
+    const renderCards = notification => {
+      let data = notification.item;
+      return (
+        data.type === 'friend' ? 
+        <NotificationCard 
+          key={data.notification_id} 
+          callId={data.friendId}
+          notificationData={data} 
+          isFocused={isFocused} 
+          handleAccept={acceptFriendRequest} 
+          handleDecline={declineFriendRequest} 
+        />
+        : data.type === 'f' ?
+        <View key={'filler'} style={styles.filler}></View>
+        :
+        <NotificationCard 
+          key={data.notification_id} 
+          callId={data.hugId}
+          notificationData={data} 
+          isFocused={isFocused} 
+          handleAccept={catchHug} 
+          handleDecline={dropHug} 
+        />
+      )
     }
 
     // notification list styles
     const styles = StyleSheet.create({
-        notificationList: {
-            marginHorizontal: 5,
-            display: 'flex',
-            flexShrink: 1,
-            alignItems: 'center',
-            marginTop: windowHeight * .14,
-        },
-        filler: {
-            height: windowHeight / 7,
-        }
+      notificationList: {
+        marginHorizontal: 5,
+        display: 'flex',
+        flexShrink: 1,
+        alignItems: 'center',
+        marginTop: windowHeight * .14,
+      },
+      filler: {
+        height: windowHeight / 7,
+      },
+      items: {
+        alignItems: 'center', 
+        paddingTop: 10, 
+        width: windowWidth * .95
+      }
     })  
    
     // map every notification entry to a notification panel element 
     return (
         <View style={AppStyles.navPageContainer}>
-            {/* background */}
-            <Image
-                source={gradient}
-                style={AppStyles.background}
+          {/* background */}
+          <Image
+              source={gradient}
+              style={AppStyles.background}
+          />
+          <Header 
+            routeName={routeName} 
+            navigation={navigation} 
+            onMainNav={true}
+          >
+            Notifications
+          </Header>
+      
+          <View style={styles.notificationList}>
+            {/* actual list */}
+            <FlatList
+              contentContainerStyle={styles.items}
+              data={notifications}
+              keyExtractor={item => item.callback_id}
+              onRefresh={getNotifications}
+              refreshing={false}
+              renderItem={renderCards}
             />
-            <Header routeName={routeName} navigation={navigation} onMainNav={true}>Notifications</Header>
-        
-
-            <View style={styles.notificationList}>
-                {/* actual list */}
-                
-                {notifications && <ScrollView scrollProps={{ showsVerticalScrollIndicator: false }}>
-                    {notifications && notifications.map(( data, index ) => {
-                        return (
-                            data.type === 'friend' ? 
-                            <NotificationCard 
-                                key={data.notification_id} 
-                                callId={data.friendId}
-                                notificationData={data} 
-                                isFocused={isFocused} 
-                                handleAccept={acceptFriendRequest} 
-                                handleDecline={declineFriendRequest} />
-                                : data.type === 'f' ?
-                            <View key={'filler'} style={styles.filler}></View>
-                                :
-                            <NotificationCard 
-                                key={data.notification_id} 
-                                callId={data.hugId}
-                                notificationData={data} 
-                                isFocused={isFocused} 
-                                handleAccept={catchHug} 
-                                handleDecline={dropHug} />
-                        )
-                    })}
-                </ScrollView>}
-            </View>                   
+          </View>                      
         </View>
     )
 } 

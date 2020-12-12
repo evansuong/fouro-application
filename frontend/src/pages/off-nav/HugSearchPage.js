@@ -57,6 +57,15 @@ export default function HugSearchPage({ navigation, route }) {
             width: windowWidth,
             display: 'flex',
             alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 2,
+            elevation: 4,
+            zIndex: 3,
         }, 
         pageContainer: {
             display: 'flex',
@@ -65,8 +74,8 @@ export default function HugSearchPage({ navigation, route }) {
             height: windowHeight,
         },
         header: {
-            height: windowHeight * .15,
-            backgroundColor: '#E57777',
+            height: windowHeight * .13,
+            backgroundColor: '#FCA661',
             width: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -76,6 +85,16 @@ export default function HugSearchPage({ navigation, route }) {
             fontSize: 25,
             fontWeight: 'bold',
             marginTop: windowHeight * .03,
+            color: 'white',
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 2,
+            elevation: 4,
+            zIndex: 3,
         },  
         text: {
             fontSize: 23,
@@ -101,28 +120,43 @@ export default function HugSearchPage({ navigation, route }) {
 
     return (
         <View style={styles.pageContainer}>
-            <Header navigation={navigation} routeName={routeName} onMainNav={false}/> 
+            <Header 
+              navigation={navigation} 
+              routeName={routeName} 
+              onMainNav={false}
+            /> 
             <View style={styles.header}>
-                <Text style={styles.headerText}>Add Hug Recipient</Text>
+                <Text style={styles.headerText}>
+                  Add Hug Recipient
+                </Text>
             </View>
             
             <View style={styles.inputContainer}>
                 <TextInput
-                    placeholder={'friend name: i.e. Firstname Lastname'}
-                    keyboardType='web-search' 
-                    style={styles.input}
-                    onChangeText={(val) => setInput(val)}
-                    autoCapitalize='none'
+                  placeholder={'friend name: i.e. Firstname Lastname'}
+                  keyboardType='web-search' 
+                  style={styles.input}
+                  onChangeText={(val) => setInput(val)}
+                  autoCapitalize='none'
                 />
             </View>
           
             {friends && friends.length > 0 ?
                 <ScrollView>
                     {friends.map(friend => (
-                        <TouchableOpacity style={styles.friendContainer} key={friend.user_id} onPress={() => handlePress(friend)}>
-                            <Image style={styles.image} source={{ uri: friend.profile_pic }} />
+                        <TouchableOpacity 
+                          style={styles.friendContainer} 
+                          key={friend.user_id} 
+                          onPress={() => handlePress(friend)}
+                        >
+                            <Image 
+                              style={styles.image} 
+                              source={{ uri: friend.profile_pic }} 
+                            />
                             <View>
-                                <Text style={styles.text}>{friend.name}</Text>
+                                <Text style={styles.text}>
+                                  {friend.name}
+                                </Text>
                             </View>
                         </TouchableOpacity>
                     ))}

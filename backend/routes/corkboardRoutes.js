@@ -14,63 +14,76 @@ router.use(cors());
 
 function checkBody(req, res, next) {
   if (Object.keys(req.body).length == 0) {
-    res.status(400).send('Missing JSON request body');
+    res.status(400).send("Missing JSON request body");
     return;
   }
   next();
 }
 
-
-//Routes
-// TODO: NOT TESTED
+// Routes
 router.get("/buildCorkboard/:id", async (req, res) => {
   const uid = req.params.id;
-  // console.log('corkboardRoutes 28', uid);
+  console.log("corkboardRoutes 28", uid);
 
   try {
     const response = await CorkboardAPI.buildCorkboard(uid);
-    // console.log('corkboardRoutes 32', response);
-    res.status(200).json({ hugList: response });
-  } catch(err) {
+    console.log(response);
+    res.status(200).json(response);
+  } catch (err) {
     res.status(400).send(`An error occurred: ${err}`);
   }
 });
 
-// TODO: NOT TESTED
 router.put("/pin/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { hug_id } = req.body;
 
-  console.log('corkboardRoutes 43', uid, hug_id);
+  console.log("corkboardRoutes 43", uid, hug_id);
 
   if (!hug_id) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
       const response = await PinAPI.pinHugToCorkboard(uid, hug_id);
       res.status(200).json(response);
-    } catch(err) {
+    } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }
   }
 });
 
-// TODO: NOT TESTED
 router.put("/unpin/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { hug_id } = req.body;
 
-  console.log('corkboardRoutes 63', uid, hug_id);
+  console.log("corkboardRoutes 63", uid, hug_id);
 
   if (!hug_id) {
-    res.status(400).send('Request has missing fields');
+    res.status(400).send("Request has missing fields");
     return;
   } else {
     try {
       const response = await PinAPI.unpinHugFromCorkboard(uid, hug_id);
       res.status(200).json(response);
-    } catch(err) {
+    } catch (err) {
+      res.status(400).send(`An error occurred: ${err}`);
+    }
+  }
+});
+
+router.get("/getPinnedState/:id", async (req, res) => {
+  const uid = req.params.id;
+  const { hug_id } = req.body;
+
+  if (!hug_id) {
+    res.status(400).send("Request has missing fields");
+    return;
+  } else {
+    try {
+      const response = await PinAPI.isPinned(uid, hug_id);
+      res.status(200).json(response);
+    } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);
     }
   }
