@@ -17,7 +17,6 @@ export default function UserProfilePage({ navigation, route }) {
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext);
-  // const { isLightTheme } = userData;
   const isLightTheme = true;
   // Misc
   const topMarginSize = windowWidth * 0.1;
@@ -34,10 +33,8 @@ export default function UserProfilePage({ navigation, route }) {
   }, [])
 
   const fetchUserData = async () => {
-    console.log(userData.uid);
     const { status, data } = 
       await ReadAPI.getUserProfile(userData.uid);
-    // console.log(status, data);
     if (status) {
       setFetchedUser(data);
     } else {
@@ -79,6 +76,12 @@ export default function UserProfilePage({ navigation, route }) {
       backgroundColor: isLightTheme ? '#EEE' : '#000',
       display: "flex", 
       alignItems: "center"
+    },
+    profileContainer: {
+      flex: 1, 
+      flexDirection: 'column', 
+      justifyContent: 'space-between', 
+      alignItems: 'center',
     }
   });
 
@@ -110,7 +113,11 @@ export default function UserProfilePage({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <Header routeName={routeName} navigation={navigation} onMainNav={false} />
+      <Header 
+        routeName={routeName} 
+        navigation={navigation} 
+        onMainNav={false} 
+      />
 
       <View style={{ marginTop: topMarginSize }}>
         <UserProfile
@@ -120,7 +127,7 @@ export default function UserProfilePage({ navigation, route }) {
           username={fetchedUser.username}
         />
 
-        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View style={styles.profileContainer}>
           {/* Settings section */}
           <View style={styles.settingsContainer}>
             <Setting

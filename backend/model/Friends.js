@@ -304,6 +304,7 @@ const FriendSearchAPI = {
 
     let userFriendsRef = usersCollection.doc(userId).collection("friends");
 
+    let friends = [];
     let friendPromises = [];
     // Search through user's friends
     const friendsSnapshot = await userFriendsRef.get();
@@ -317,7 +318,6 @@ const FriendSearchAPI = {
       friendPromises.push(friendDoc.get("user_ref"));
     });
 
-    let friends = [];
     // Resolve Promises and get user documents
     for (let i = 0; i < friendPromises.length; i++) {
       // Get the actual userDoc from the friend stored reference
@@ -353,7 +353,7 @@ const FriendSearchAPI = {
     // No matches
     if (userSnapshot.empty) {
       console.log("No matching documents.");
-      return { user: "none" };
+      return { user: [] };
     }
     // Go through the snapshot
     userSnapshot.forEach((userDoc) => {

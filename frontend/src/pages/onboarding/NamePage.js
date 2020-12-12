@@ -95,7 +95,6 @@ export default function NamePage({ navigation, route }) {
     } else {
       setSigningUp(false);
       alert('That username is taken!');
-      console.log(data);
     }
   }
 
@@ -133,10 +132,7 @@ export default function NamePage({ navigation, route }) {
 
 
   return(
-    <TouchableWithoutFeedback onPress={() => {
-      Keyboard.dismiss();
-      console.log('dismissed keyboard')
-    }}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Animated.View opacity={fade} style={{flex: 1,}}>
         <ImageBackground
           source={BackgroundImg}

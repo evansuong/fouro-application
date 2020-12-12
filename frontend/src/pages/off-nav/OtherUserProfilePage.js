@@ -4,7 +4,8 @@ import { View,
   StyleSheet, 
   FlatList, 
   TouchableOpacity, 
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import OptionsMenu from "react-native-options-menu";
 // Contexts
@@ -48,7 +49,11 @@ function buildTestData(name, text, img, id) {
 
 
 
-export default function OtherUserProfilePage({ navigation, route, setFriendPage }) {
+export default function OtherUserProfilePage({ 
+  navigation, 
+  route, 
+  setFriendPage 
+}) {
     // States
     const [hugs, setHugs] = useState();
     const [status, setStatus] = useState();
@@ -58,34 +63,36 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     const { isLightTheme, uid } = userData;
     // Misc
     const routeName = route.name;
-    const dotsIconDark = require('assets/dots-icon-dark.png');
-    // destruct route parameterU
     const { data } = route.params;
     const { otheruser_id, name, username, profile_pic, updatePage } = data;
+    const dotsIconDark = require('assets/dots-icon-dark.png');
+    const isStranger = status !== 'friend' ? true : false;
+    const isPending = status === 'pending' ? true : false;
+    const topMarginSize = windowWidth * 0.1;
 
-    // TODO: replace with a call to getFriendStatus to get the status as a string
-    //       e.g., "stranger", "friend", "pending"
-
-    // console.log('from other user profile page:', data)
-    // console.log("OTHERUSERPROFILEPAGE70", status)
+    useEffect(() => {
+      getUserStatus();
+      getSharedHugs();
+    }, [otheruser_id]);
 
     function getSharedHugs() {
-        // console.log('quering')
-        ReadAPI.getFriendProfile(uid, otheruser_id).then(response => console.log(response.data));
-        // setHugs(ReadAPI.getFriendProfile(uid, otheruser_id))
+      setHugs(ReadAPI.getFriendProfile(uid, otheruser_id));
     }
 
     function getUserStatus() {
-        // console.log('getting user status')
-        // console.log(otheruser_id)
-        setTimeout(() => {
-            ReadAPI.getFriendStatus(uid, otheruser_id).then(response => setStatus(response.data.status));
-        }, 500);
+      setTimeout(() => {
+        ReadAPI.getFriendStatus(uid, otheruser_id)
+        .then(response => 
+          setStatus(response.data.status)
+        );
+      }, 500);
     }
 
     function sendFriendRequest() {
-        // console.log("UID", uid)
-        CreateAPI.sendFriendRequest(uid, otheruser_id).then(response => console.log(response.status));
+      CreateAPI.sendFriendRequest(uid, otheruser_id)
+      .then(response => 
+        console.log('OtherUser 85', response.status)
+      );
     }
 
     /**
@@ -93,44 +100,28 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
      * removeFriend(user_id) method in Friends Page and navigates back.
      */
     function removeFriendFromList() {
-        // removeFriend(user_id
-        DeleteAPI.removeFriend(uid, otheruser_id).then(response => { if (!response.status) { alert('cannot remove friend') }});
-        getUserStatus();
+      DeleteAPI.removeFriend(uid, otheruser_id)
+      .then(response => {
+        if (!response.status) { 
+          Alert.alert('cannot remove friend'); 
+        }
+      });
+      getUserStatus();
     }
 
-    useEffect(() => {
-        getUserStatus();
-        getSharedHugs();
-    }, [otheruser_id]);
-
-    // TODO CHANGE THIS
-    const isStranger = status !== 'friend' ? true : false;
-    const isPending = status === 'pending' ? true : false;
-    
-    // TODO: replace with getFriendProfile to get all shared hugs
-    const friendProfile = { 
-        sharedHugs: [],
+    function cancelOption() {
+      console.log('OtherUser 109 Canceled');
     }
 
-    const topMarginSize = windowWidth * 0.1;
-
-    //const hugButtonWidth = windowWidth - 50;
-    //const hugButtonHeight = windowHeight / 8;
-
-    const renderHug = (( item ) => {
-        // console.log(item.item)
-        return(
-        <HugCard 
-            navigation={navigation}
-            data={item.item}
-            image={profile_pic}
-        />)}
+    const renderHug = (( item ) => 
+      <HugCard 
+        navigation={navigation}
+        data={item.item}
+        image={profile_pic}
+      />
     )
 
-   
-    // TODO: SHOULD BE ABLE TO UNDO A FRIEND REQUEST, ASK BACKEND ABOUT THAT
     function handleSendRequest() {
-      // backend call
       const firstName = name.split(' ')[0];
       Alert.alert(
         'Confirm Friend Request',
@@ -141,7 +132,7 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
             onPress: () => console.log('OtherUserProfile 141 Canceled'),
           },
           { 
-            text: 'Ye',
+            text: 'Yes',
             onPress: () => {
               setStatus('pending');
               sendFriendRequest();
@@ -152,176 +143,191 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
     }
 
     function handleCreateHug() {
-        navigation.navigate('Create Hug', { data: {
-            name: name,
-            profile_pic: profile_pic,
-            user_id: otheruser_id
-        } })
+      navigation.navigate('Create Hug', { data: {
+          name: name,
+          profile_pic: profile_pic,
+          user_id: otheruser_id
+      }})
     }
 
      
     const styles = StyleSheet.create({
-        userProfile: {
-            zIndex: -1,
-            marginTop: 20,
+      userProfile: {
+        zIndex: -1,
+        marginTop: 20,
+      },
+      sharedHugsTitleContainer: {
+        padding: 7,
+        alignItems: 'center',
+        borderStyle: 'solid',
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
+        borderWidth: 1,
+        borderColor: '#D4D4D4'
+      },
+      sharedHugsTitle: {
+        fontSize: 20,
+      },
+      sharedHugsContainer: {
+        alignItems: 'center',
+        paddingTop: 5,
+        paddingBottom: 10,
+      },
+      buttonStyle: {
+        width: windowWidth * .8,
+        height: windowHeight * .07,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 100,
+      },
+      activeButton: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 5,
+          height: 6,
         },
-        sharedHugsTitleContainer: {
-            // marginTop: 5,
-            padding: 7,
-            alignItems: 'center',
-            borderStyle: 'solid',
-            borderLeftWidth: 0,
-            borderRightWidth: 0,
-            borderWidth: 1,
-            borderColor: '#D4D4D4'
-        },
-        sharedHugsTitle: {
-            fontSize: 20,
-        },
-        sharedHugsContainer: {
-            alignItems: 'center',
-            paddingTop: 5,
-            paddingBottom: 10,
-        },
-        buttonStyle: {
-            width: windowWidth * .8,
-            height: windowHeight * .07,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 100,
-        },
-        activeButton: {
-            shadowColor: '#000',
-            shadowOffset: {
-                width: 5,
-                height: 6,
-            },
-            shadowOpacity: 0.22,
-            shadowRadius: 3,
-            elevation: 14,
-        }, 
-        hugButtonStyle: {
-            alignItems: 'center',
-            borderRadius: 20,
-            margin: 10,
-            width: windowWidth / 1.2, 
-            height: 40,
-            justifyContent: 'center',
-            marginBottom: 30,
-        },
-        pendingButtonStyle: {
-            backgroundColor: '#999999',
-            alignItems: 'center',
-            borderRadius: 20,
-            margin: 10,
-            width: windowWidth / 1.2, 
-            height: 40, 
-            alignItems: 'center', 
-            justifyContent: 'center'
-        },
-        sendFriendRequestButtonStyle: {
-            alignItems: 'center',
-            borderRadius: 30,
-            margin: 10,
-            width: windowWidth / 1.2, 
-            height: windowHeight * .065, 
-            alignItems: 'center', 
-            justifyContent: 'center'
-        },
-        friendSharedHugs: {
-            display: "flex", 
-            flexShrink: 1,
-        },
-        generalText: {
-          fontSize: 20, 
-          color: 'white', 
-          justifyContent: 'center'
-        },
-        buttonContainer: {
-            width: windowWidth,
-            display: 'flex',
-            alignItems: 'center',
-            bottom: windowHeight * .07,
-            height: windowWidth / 20,
-            position: 'absolute',
-            zIndex: 4,
-        },
-        button: {
-            width: windowWidth * 0.8, 
-        },
-        btnImage: {
-            width: windowWidth / 15,
-            height: windowWidth / 15,
-            resizeMode: 'contain'
-        },
-        menuBtn: {
-            position: 'absolute',
-            top: windowHeight / 20 + 5,
-            right: 20,
-            // backgroundColor: 'pink',
-            zIndex: 6,
-            padding: 10,
-            borderRadius: 100,
-        }
+        shadowOpacity: 0.22,
+        shadowRadius: 3,
+        elevation: 14,
+      }, 
+      hugButtonStyle: {
+        alignItems: 'center',
+        borderRadius: 20,
+        margin: 10,
+        width: windowWidth / 1.2, 
+        height: 40,
+        justifyContent: 'center',
+        marginBottom: 30,
+      },
+      pendingButtonStyle: {
+        backgroundColor: '#999999',
+        alignItems: 'center',
+        borderRadius: 20,
+        margin: 10,
+        width: windowWidth / 1.2, 
+        height: 40, 
+        alignItems: 'center', 
+        justifyContent: 'center'
+      },
+      sendFriendRequestButtonStyle: {
+        alignItems: 'center',
+        borderRadius: 30,
+        margin: 10,
+        width: windowWidth / 1.2, 
+        height: windowHeight * .065, 
+        alignItems: 'center', 
+        justifyContent: 'center'
+      },
+      friendSharedHugs: {
+        display: "flex", 
+        flexShrink: 1,
+      },
+      generalText: {
+        fontSize: 20, 
+        color: 'white', 
+        justifyContent: 'center'
+      },
+      buttonContainer: {
+        width: windowWidth,
+        display: 'flex',
+        alignItems: 'center',
+        bottom: windowHeight * .07,
+        height: windowWidth / 20,
+        position: 'absolute',
+        zIndex: 4,
+      },
+      button: {
+        width: windowWidth * 0.8, 
+      },
+      btnImage: {
+        width: windowWidth / 15,
+        height: windowWidth / 15,
+        resizeMode: 'contain'
+      },
+      menuBtn: {
+        position: 'absolute',
+        top: windowHeight / 20 + 5,
+        right: 20,
+        zIndex: 6,
+        padding: 10,
+        borderRadius: 100,
+      },
+      outerContainer: {
+        height: '100%', 
+        display: "flex", 
+        backgroundColor: 'white', 
+        alignItems: 'center'
+      },
+      loadingContainer: {
+        flex: 1, 
+        resizeMode: 'cover', 
+        justifyContent: 'center'
+      }
     });
     
-        let sharedHugsContainer = 
-            <View style={styles.sharedHugsTitleContainer}>
-                <Text style={styles.sharedHugsTitle}>
-                  Shared Hugs
-                </Text>
-            </View>
-        let sharedHugsFlatList = 
-            <FlatList
-              contentContainerStyle={styles.sharedHugsContainer}
-              data={hugs}
-              renderItem={renderHug}
-              keyExtractor={(item) => item.hug_id}
-            />
-        let hugButton = 
-            <TouchableOpacity 
-            style={{
-                    backgroundColor: '#FB7250',        
-                    ...styles.buttonStyle, 
-                    ...styles.activeButton,
-                }}
-                onPress={handleCreateHug}
-            >
-                <Text style={styles.generalText}>
-                    Hug
-                </Text>
-        </TouchableOpacity>
-            
-        let sendFriendRequestButton = 
-            <TouchableOpacity 
-                style={{
-                    backgroundColor: '#FCA661',
-                    ...styles.buttonStyle,
-                    ...styles.activeButton,
-                }}
-                onPress={handleSendRequest}
-            >
-                <Text style={styles.generalText}>
-                  Send Friend Request
-                </Text>
-            </TouchableOpacity>
+    let sharedHugsContainer = 
+      <View style={styles.sharedHugsTitleContainer}>
+        <Text style={styles.sharedHugsTitle}>
+          Shared Hugs
+        </Text>
+      </View>
 
-        let pendingButton = 
-            <TouchableOpacity 
-                style={{
-                    backgroundColor: '#999',
-                    ...styles.buttonStyle,
-                }}
-                activeOpacity={1}
-            >
-                <Text style={styles.generalText}>
-                    Request Pending
-                </Text>
-            </TouchableOpacity>
+    let sharedHugsFlatList = 
+      <FlatList
+        contentContainerStyle={styles.sharedHugsContainer}
+        data={hugs}
+        renderItem={renderHug}
+        keyExtractor={(item) => item.hug_id}
+      />
+
+    let hugButton = 
+      <TouchableOpacity 
+        style={{
+          backgroundColor: '#FB7250',        
+          ...styles.buttonStyle, 
+          ...styles.activeButton,
+        }}
+        onPress={handleCreateHug}
+      >
+        <Text style={styles.generalText}>
+          Hug
+        </Text>
+      </TouchableOpacity>
+        
+    let sendFriendRequestButton = 
+      <TouchableOpacity 
+        style={{
+          backgroundColor: '#FCA661',
+          ...styles.buttonStyle,
+          ...styles.activeButton,
+        }}
+        onPress={handleSendRequest}
+      >
+        <Text style={styles.generalText}>
+          Send Friend Request
+        </Text>
+      </TouchableOpacity>
+
+    let pendingButton = 
+      <TouchableOpacity 
+        style={{
+          backgroundColor: '#999',
+          ...styles.buttonStyle,
+        }}
+        activeOpacity={1}
+      >
+        <Text style={styles.generalText}>
+          Request Pending
+        </Text>
+      </TouchableOpacity>
         
     
-    let button = isStranger ? (isPending ? pendingButton : sendFriendRequestButton) : hugButton;
+    let button = isStranger ? 
+      (isPending ? pendingButton : sendFriendRequestButton) 
+      : 
+      hugButton;
+
     let containerStyle = {}
    
     if(isStranger) {
@@ -330,9 +336,15 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
         containerStyle = { position: 'absolute', bottom: 0 }
     }
 
-    return (
-// TODO: add loading screen while we are querying backend
-        hugs ? <View style={{ height: '100%', display: "flex", backgroundColor: 'white', alignItems: 'center' }}>
+    if (!hugs || !status) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size='large'/>
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.outerContainer}>
 
             {
                 !isStranger &&
@@ -341,12 +353,16 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
                 <OptionsMenu
                     button={dotsIconDark}
                     buttonStyle={styles.btnImage}
-                    options={["remove friend"]}
-                    actions={[removeFriendFromList]} />
+                    options={['Remove Friend', 'Cancel']}
+                    actions={[removeFriendFromList, cancelOption]} />
                 </View>
             }
 
-            <Header routeName={routeName} navigation={navigation} onMainNav={false} />
+            <Header 
+              routeName={routeName} 
+              navigation={navigation} 
+              onMainNav={false} 
+            />
 
             <View style={styles.userProfile, {marginTop:topMarginSize}}>
                 {/* user profile information */}
@@ -371,8 +387,7 @@ export default function OtherUserProfilePage({ navigation, route, setFriendPage 
             <View style={styles.buttonContainer}>
               {button}
             </View>
-            
-            
-        </View> : <></>
-    )
+        </View>
+      )
+    }
 }

@@ -1,14 +1,18 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { StyleSheet, Image, Alert } from 'react-native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { useIsFocused } from '@react-navigation/native';
+import { View, StyleSheet, Image, Alert } from 'react-native';
+import { 
+  createMaterialTopTabNavigator 
+} from '@react-navigation/material-top-tabs';
+import { 
+  getFocusedRouteNameFromRoute, 
+  useIsFocused 
+} from '@react-navigation/native';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
 // Pages
 import FriendsPage from './FriendsPage';
 import NotificationPage from './NotificationPage';
 import HomePage from './HomePage';
-import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native'
 
 
 // TODO: follow the gradient thing
@@ -48,69 +52,77 @@ export default function MainNavPage({ route }) {
     return (
         <>
             <Tab.Navigator
-                sceneContainerStyle={styles.tabScreen}
-                style={styles.tabNav}
-                tabBarPosition="bottom"
-                initialRouteName="Hug Feed"
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                      let icon;
-                      if (route.name === 'Hug Feed') {
-                        icon = focused ? homeFocused : homeBlurred
-                      } else if (route.name === 'Friends') {
-                        icon = focused ? friendsFocused : friendsBlurred
-                      } else if (route.name === 'Notifications') {
-                        icon = focused ? notifFocused : notifBlurred
-                      }
-
-                    //   setCurrentRoute(route.name)
-                      return <Image 
-                                source={icon}
-                                resizeMode='stretch'
-                                style={{
-                                    width: tabWidth,
-                                    height: tabHeight
-                                }}
-                            />
-                        },
-                    })}
-                    tabBarOptions={{
-                        showIcon: true,
-                        showLabel: false,
-                        iconStyle: {
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        },
-                        style: {
-                          backgroundColor: '#F38977'
-                        },
-                        indicatorStyle: {
-                          backgroundColor: 'transparent'
-                        }
+              sceneContainerStyle={styles.tabScreen}
+              style={styles.tabNav}
+              tabBarPosition="bottom"
+              initialRouteName="Hug Feed"
+              screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                  let icon;
+                  if (route.name === 'Hug Feed') {
+                    icon = focused ? homeFocused : homeBlurred
+                  } else if (route.name === 'Friends') {
+                    icon = focused ? friendsFocused : friendsBlurred
+                  } else if (route.name === 'Notifications') {
+                    icon = focused ? notifFocused : notifBlurred
+                  }
+                  
+                  return <Image 
+                    source={icon}
+                    resizeMode='stretch'
+                    style={{
+                        width: tabWidth,
+                        height: tabHeight
                     }}
-                    beforeRemove={() => console.log('remove')}
-                    style={{zIndex: -1}}
-                    >
-                <Tab.Screen name="Friends" component={FriendsPage}/>
-                <Tab.Screen name="Hug Feed" component={HomePage} />
-                <Tab.Screen name="Notifications" component={NotificationPage} />
+                  />
+                },
+              })}
+              tabBarOptions={{
+                showIcon: true,
+                showLabel: false,
+                iconStyle: {
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                },
+                style: {
+                  backgroundColor: '#F38977'
+                },
+                indicatorStyle: {
+                  backgroundColor: 'transparent'
+                }
+              }}
+              beforeRemove={() => console.log('remove')}
+              style={{zIndex: -1}}
+            >
+              <Tab.Screen 
+                name="Friends" 
+                component={FriendsPage}
+              />
+              <Tab.Screen 
+                name="Hug Feed" 
+                component={HomePage} 
+              />
+              <Tab.Screen 
+                name="Notifications" 
+                component={NotificationPage} 
+              />
             </Tab.Navigator>
         </>
     )
 }
 
 const styles = StyleSheet.create({
-    background: {
-        position: 'absolute',
-        width: '100%',
-    },
-    tabScreen: {
-        backgroundColor: 'transparent',
-        overflow: "visible",
-    },
-    container: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+  background: {
+    position: 'absolute',
+    width: '100%',
+  },
+  tabScreen: {
+    backgroundColor: 'transparent',
+    overflow: "visible",
+  },
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

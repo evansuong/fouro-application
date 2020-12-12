@@ -96,7 +96,11 @@ export default function ResetPasswordPage({ navigation, route }) {
   return (
     <View style={styles.formContainer}>
       
-      <Header routeName={routeName} navigation={navigation} onMainNav={false} />
+      <Header 
+        routeName={routeName} 
+        navigation={navigation} 
+        onMainNav={false} 
+      />
 
       <View style={{ width: '100%' }}>
         <Text style={styles.header}>

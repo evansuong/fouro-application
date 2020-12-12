@@ -12,7 +12,14 @@ import { DimensionContext } from '../contexts/DimensionContext';
  * @param {string} placeholder The input placeholder
  * @param {stateHook} setField The field to set in the parent component
  */
-export default function CustomTextField({ titleText, placeholder, setField, secureText=false, required=false, multiline=false }) {
+export default function CustomTextField({ 
+  titleText, 
+  placeholder, 
+  setField, 
+  secureText=false, 
+  required=false, 
+  multiline=false 
+}) {
 
   const { platform } = useContext(DimensionContext)
 

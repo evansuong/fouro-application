@@ -52,7 +52,6 @@ export default function CreateHugPage({ navigation, route }) {
     const pickFromGallery = async () => {
       const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (granted) {
-        console.log('granted');
         let data = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
@@ -60,10 +59,8 @@ export default function CreateHugPage({ navigation, route }) {
           quality: 0.5,
           base64: true
         })
-        // console.log(Object.keys(data));
         await checkUpload(data); 
       } else {
-        console.log('access denied');
         Alert.alert('You need to give permission to upload a picture!');
       }
     }
@@ -79,8 +76,6 @@ export default function CreateHugPage({ navigation, route }) {
           Alert.alert(`Accepted image types are ${validExtensions}`);
         } else {
           const compressedBase64 = await compressImage(data);
-          console.log('CreateHug 82', totalChars);
-          console.log('CreateHug 83', compressedBase64.length + totalChars);
           if (compressedBase64.length + totalChars < MAX_UPLOAD_SIZE) {
             setTotalChars(prevTotalChars => 
               prevTotalChars + compressedBase64.length
@@ -98,7 +93,6 @@ export default function CreateHugPage({ navigation, route }) {
       let base64 = data.base64;    
       if (base64.length > MAX_UPLOAD_SIZE) {
         const compressFactor = MAX_UPLOAD_SIZE / base64.length;
-        console.log('CreateHugPage 54', compressFactor);
         base64 = await getBase64WithImage(data, compressFactor);
       }
       return base64;
@@ -127,12 +121,24 @@ export default function CreateHugPage({ navigation, route }) {
       const { status, data } = 
         await CreateAPI.createHug(userData.uid, request);
       
-      setTimeout(() => {
+      setTimeout(async () => {
         setCallingBackend(false);
         navigation.navigate('Main Nav Page');
         if (status) {
-          const firstName = name.split(' ')[0]
-          Alert.alert(`Hug sent to ${firstName}!`);
+          const hugRequest = {
+            friend_id: user_id,
+            hug_id: data.out,
+          }
+
+          // TODO: WAIT FOR TERRY'S BACKEND PUSH. THEN UNCOMMENT>
+          // const { hugStatus, hugData } = 
+          //   await CreateAPI.sendHugRequest(userData.uid, hugRequest);
+          // if (hugStatus) {
+            const firstName = name.split(' ')[0]
+            Alert.alert(`Hug sent to ${firstName}!`);
+          // } else {
+          //   Alert.alert('Hug created, but could not send notification.')
+          // }
         } else {
           Alert.alert('Error creating hug.');
         }
@@ -163,7 +169,6 @@ export default function CreateHugPage({ navigation, route }) {
             width: 0,
             height: 2,
         },
-
         shadowOpacity: 0.3,
         shadowRadius: 2,
         elevation: 4,
@@ -181,7 +186,8 @@ export default function CreateHugPage({ navigation, route }) {
         width: windowWidth / 1.8,
       },
       friendText: {
-        fontSize: 20,
+        fontSize: 16,
+        fontFamily: 'Montserrat_400Regular'
       },
       picContainer: {
         width: windowWidth,
@@ -194,6 +200,10 @@ export default function CreateHugPage({ navigation, route }) {
         borderRadius: 10,
         borderColor: '#FFF',
         borderWidth: 3,
+        width: windowWidth / 3, 
+        height: windowWidth / 3, 
+        marginTop: 10, 
+        marginLeft: 10,
       },  
       backgroundImg: {
         height: windowHeight,
@@ -248,10 +258,7 @@ export default function CreateHugPage({ navigation, route }) {
     });
 
     return (
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        console.log('dismissed keyboard')
-      }}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View>
           <Header 
             routeName={routeName} 
@@ -322,13 +329,7 @@ export default function CreateHugPage({ navigation, route }) {
                       source={isEmpty(item) || item.cancelled ? 
                         profilePic : {uri: `${item.uri}`}
                       }
-                      style={{
-                        width: windowWidth / 3, 
-                        height: windowWidth / 3, 
-                        marginTop: 10, 
-                        marginLeft: 10,
-                        ...styles.pics
-                      }}
+                      style={styles.pics}
                     />
                   ))}
                   </View>

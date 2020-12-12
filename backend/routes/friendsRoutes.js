@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const cors = require("cors");
 const { FriendsAPI, FriendSearchAPI } = require("../model/Friends");
+const { ViewHugAPI } = require('../model/Hugs');
 
 router.use(
   express.urlencoded({
@@ -92,7 +93,7 @@ router.get("/getFriendProfile/:id,:friendId", async (req, res) => {
     return;
   } else {
     try {
-      let response = await FriendsAPI.getFriendProfile(uid, friendId);
+      let response = await ViewHugAPI.getSharedHugs(uid, friendId);
       res.status(200).json(response);
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const server = 'http://192.168.4.66:3000';
+const server = 'http://192.168.1.234:3000';
 
 const onAccept = (res, response) => {
   // console.log('API 6 accepting');
@@ -42,7 +42,6 @@ export const ReadAPI = {
   },
   getNotifications: async function (uid) {
     let response = {};
-    // console.log(uid)
     await axios
       .get(`${server}/notifications/getNotifications/${uid}`)
       .then((res) => onAccept(res, response))
@@ -100,7 +99,7 @@ export const ReadAPI = {
     return response;
   },
   searchFriends: async function (uid, name) {
-    //TODO
+    //TODO: ?
     // request: { name }
     let response = {};
     await axios
@@ -271,8 +270,6 @@ export const DeleteAPI = {
   },
   removeFriend: async function (uid, request) {
     // request: { friendId }
-    // console.log('request', request)
-    // console.log('asdfasdfasdf')
     let response = {};
     await axios({
       method: "delete",

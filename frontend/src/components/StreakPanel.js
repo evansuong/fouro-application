@@ -25,8 +25,6 @@ export default function StreakPanel({ mode }) {
   const fade = useRef(new Animated.Value(0)).current;
   const { userData } = useContext(UserContext);
   const { hugCount, streakCount } = userData.userData;
-  console.log("COUNTS STREAKPANEL28", hugCount, streakCount)
-  // let hugCount, streakCount = 5;
 
   const color = {
     light: 'black',
@@ -41,22 +39,17 @@ export default function StreakPanel({ mode }) {
   function handlePress() {
     
     setExpanded(!expanded);
-    console.log('StreakPanel 36', width, expanded);
     if (width < 51 && expanded) {
-      console.log('fixing');
       setExpanded(false);
     }
     if (expanded) {
-      console.log('collapse');
       collapse();
     } else {
-      console.log('expand');
       expand();
     }
   }
 
   function expand() {
-    console.log('EXPANDING')
     Animated.spring(width, {
       toValue: 160,
       useNativeDriver: false,
@@ -69,7 +62,6 @@ export default function StreakPanel({ mode }) {
   }
 
   function collapse() {
-    console.log('COLLAPSING')
     Animated.spring(width, {
       toValue: 50,
       useNativeDriver: false,

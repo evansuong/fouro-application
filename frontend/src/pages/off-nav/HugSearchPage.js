@@ -120,28 +120,43 @@ export default function HugSearchPage({ navigation, route }) {
 
     return (
         <View style={styles.pageContainer}>
-            <Header navigation={navigation} routeName={routeName} onMainNav={false}/> 
+            <Header 
+              navigation={navigation} 
+              routeName={routeName} 
+              onMainNav={false}
+            /> 
             <View style={styles.header}>
-                <Text style={styles.headerText}>Add Hug Recipient</Text>
+                <Text style={styles.headerText}>
+                  Add Hug Recipient
+                </Text>
             </View>
             
             <View style={styles.inputContainer}>
                 <TextInput
-                    placeholder={'friend name: i.e. Firstname Lastname'}
-                    keyboardType='web-search' 
-                    style={styles.input}
-                    onChangeText={(val) => setInput(val)}
-                    autoCapitalize='none'
+                  placeholder={'friend name: i.e. Firstname Lastname'}
+                  keyboardType='web-search' 
+                  style={styles.input}
+                  onChangeText={(val) => setInput(val)}
+                  autoCapitalize='none'
                 />
             </View>
           
             {friends && friends.length > 0 ?
                 <ScrollView>
                     {friends.map(friend => (
-                        <TouchableOpacity style={styles.friendContainer} key={friend.user_id} onPress={() => handlePress(friend)}>
-                            <Image style={styles.image} source={{ uri: friend.profile_pic }} />
+                        <TouchableOpacity 
+                          style={styles.friendContainer} 
+                          key={friend.user_id} 
+                          onPress={() => handlePress(friend)}
+                        >
+                            <Image 
+                              style={styles.image} 
+                              source={{ uri: friend.profile_pic }} 
+                            />
                             <View>
-                                <Text style={styles.text}>{friend.name}</Text>
+                                <Text style={styles.text}>
+                                  {friend.name}
+                                </Text>
                             </View>
                         </TouchableOpacity>
                     ))}
