@@ -1,4 +1,4 @@
-# CSE 110 Project: fouro-application
+# CSE 110 Project: Fouro
 
 Fouro is an iOS/Android application that allows you to send virtual hugs to friends and feel close
 and connected to others. Fouro will help remind you to reach out to friends you haven't connected with
@@ -64,6 +64,17 @@ F - Firebase
 5.  Install Expo Client on your iOS/Android device
 
 6.  Scan the Expo QR code with your camera
+
+7.  Copy your computer IP address from the Expo Link (looks something like this, between the second "/" and ":")
+
+        exp://192.168.1.46:19000
+              ^          ^
+
+8.  Paste your computer IP in [./frontend/src/API.js](./frontend/src/API.js) on line 3:
+
+        const server = "http://<YOUR-IP-HERE>:3000";
+
+# Development
 
 ## Pulling changes
 

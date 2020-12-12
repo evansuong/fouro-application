@@ -8,7 +8,6 @@ global.XMLHttpRequest = require("xhr2");
 
 // Import
 const Users = require("./Users");
-const Notifications = require("./Notifications");
 const Friends = require("./Friends");
 
 // Firestore
@@ -138,7 +137,7 @@ const HugsAPI = {
       .set({
         completed: false,
         date_time: dateTime, //dateTime is an actual DateTime object (timestamp?)
-        friend_ref: users.doc(friendId),
+        friend_ref: users.doc(currentUser),
         hug_ref: topLevelHug, //Use the ref to the top level hug ^^
         pinned: false,
       })
@@ -152,50 +151,37 @@ const HugsAPI = {
         console.error("Error adding document: ", error);
       });
 
-    // Create a hug request
-    await Notifications.RequestsAPI.sendHugRequest(
-      currentUser,
-      friendId,
-      topLevelHug.id
-    );
-
     return { out: topLevelHug.id };
   },
 
   // hugId is the global hug.
-  dropHug: async function (currentUser, requestId, hugId) {
+  dropHug: async function (currentUser, hugId) {
     // Set current user
     var currUser = users.doc(currentUser);
     // Set ref for top level hug
-    var topLevelHug = hugs.doc(hugId);
-    const topLevelHugQuery = await topLevelHug.get();
-    const topLevelHugData = topLevelHugQuery.data();
-    const friendId = topLevelHugData.sender_ref.id;
-    // delete requestId
-    await users
-      .doc(currUser.id)
-      .collection("notifications")
-      .doc(requestId)
-      .delete();
-    // // delete the receiever's hug
-    const hugRef = await hugs.doc(hugId).get("sender_ref");
-    await users.doc(currUser.id).collection("user_hugs").doc(hugId).delete();
-    // delete the sender's hug
-    await users.doc(friendId).collection("user_hugs").doc(hugId).delete();
-    await users.doc(hugRef.id).delete();
-    // Remove hug images from storage
 
+    const topLevelHugRef = hugs.doc(hugId);
+    const topLevelHug = await topLevelHugRef.get();
+    const topLevelHugData = topLevelHug.data();
+    const friendId = topLevelHugData.sender_ref.id;
+
+    // delete currentUser and friend user_hug reference
+    await currUser.collection("user_hugs").doc(hugId).delete();
+    await users.doc(friendId).collection("user_hugs").doc(hugId).delete();
+
+    // Remove hug images from storage
     // TODO: Loop through each element in the images array of hugId
-    const hugSnapshot = await hugs.doc(hugId).get("images");
-    const { images } = hugSnapshot.data();
-    for (let i = 0; i < images.length; i++) {
+    for (let i = 0; i < topLevelHugData.images.length; i++) {
       // Every time we get another HTTPS URL from images, we need to make an httpsReference
       // Create a reference from a HTTPS URL
-      const httpsReference = await storage.refFromURL(images[i]);
+      const httpsReference = await storage.refFromURL(
+        topLevelHugData.images[i]
+      );
       await httpsReference.delete();
     }
+
     // Delete the global hug document
-    await topLevelHug.delete();
+    await topLevelHugRef.delete();
 
     return { out: true };
   },
@@ -289,8 +275,6 @@ const UpdateHugAPI = {
       let currUserRef = users.doc(currentUser);
       // Set the date of the hug (also used to ID image)
       let dateInMillis = Date.now();
-      let dateInSeconds = Math.floor(dateInMillis / 1000);
-      let dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
       // Create a unique image ID
       let imageRef = `hug_images/${hugId}/${dateInMillis}`;
       // Set a var to an array of the downloadURLs
@@ -350,7 +334,6 @@ const UpdateHugAPI = {
       // Update User Hug Counts
       this.updateUserHugCount(hugId);
       // Update both users' hug dates
-      console.log("hi");
       Friends.FriendsAPI.updateFriendHugDate(
         currentUser,
         hugData.sender_ref.id,
@@ -365,7 +348,6 @@ const UpdateHugAPI = {
 };
 
 const ViewHugAPI = {
-  // TODO: MAKE SURE OUTPUTS STRING JSON
   getHugById: async function (hugId) {
     var fullHugInfo = {};
     // Set the hugData
@@ -404,16 +386,13 @@ const ViewHugAPI = {
     } else {
       console.log("Hugs 347 No such document!");
     }
-    // console.log(fullHugInfo.sender_description);
+
     return fullHugInfo;
   },
 
   // Gets all hugs from the currently logged in user
-  // TODO: not sure how to use the paginated data "next"
-  // TODO: delete one of the versions. not sure how to return multiple docs?
   getUserHugs: async function (currentUser) {
-    // GET ALL VERSION
-
+    // Unpaginated
     var results = [];
     const userHugsQuery = await users
       .doc(currentUser)

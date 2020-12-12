@@ -4,9 +4,6 @@ var admin = require("firebase-admin");
 var firebase = require("../firebase/admin");
 require("firebase/firestore");
 
-// Backend function imports
-const Hugs = require("./Hugs");
-
 // Firestore
 const db = firebase.firestore();
 const usersCollection = db.collection("users");
@@ -251,15 +248,6 @@ const FriendsAPI = {
   },
 
   /**
-   * Get all shared hugs between user and friend
-   * @param {string} userId
-   * @param {string} friendId
-   */
-  getFriendProfile: async function (userId, friendId) {
-    return await Hugs.ViewHugAPI.getSharedHugs(userId, friendId);
-  },
-
-  /**
    * Update Friend Hug Counts to be used for Friend list sorting
    * @param {string} user1
    * @param {string} user2
@@ -340,10 +328,23 @@ const FriendSearchAPI = {
    * @param {string} userId
    * @param {string} query
    */
-  searchUsers: async function (query) {
+  searchUsers: async function (userId, query) {
     // Clean and format input query
     let usernameQuery = query.trim();
     usernameQuery = usernameQuery.toLowerCase();
+
+    let username;
+    await usersCollection
+      .doc(userId)
+      .get()
+      .then(function (userDoc) {
+        username = userDoc.get("username");
+      });
+
+    // Check if self
+    if (query === username) {
+      return { user: [] };
+    }
 
     let user;
     // Get all user matches in firestore

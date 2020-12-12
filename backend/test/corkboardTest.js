@@ -21,4 +21,17 @@ async function testUnPinHug() {
     console.log(test);
 }
 */
-testBuildCorkboard();
+//testBuildCorkboard();
+
+async function testIsPinned() {
+  let test = await corkboard.PinAPI.isPinned("example@email.com", "hug2");
+  console.log(test);
+
+  test = await corkboard.PinAPI.isPinned(
+    "example@email.com",
+    "ZzWRpPFQ7dqwmecA2Qvm"
+  );
+  console.log(test);
+}
+
+testIsPinned();
