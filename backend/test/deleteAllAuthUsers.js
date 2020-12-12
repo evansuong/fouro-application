@@ -42,22 +42,5 @@ async function main() {
       console.log("Error deleting users:", error);
     });
 }
-function something() {
-  const admin = require("../firebase/admin");
-  admin.auth().createUser({
-    email: "evanjserrano@gmail.com",
-    password: "password",
-    uid: "evanjserrano",
-  });
-}
 
-//something();
-
-const Users = require("../model/Users");
-
-Users.UsersAPI.createNewUser(
-  "evanjserrano",
-  "evanjserrano1",
-  "Evan",
-  "Serrano"
-);
+// main();
