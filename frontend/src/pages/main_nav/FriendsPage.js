@@ -56,17 +56,18 @@ import {
 
 export default function FriendsPage({ navigation, route, refresh }) {
     // States
-    const [startUp, setStartUp] = useState(true);
+    const [backendCalled, setBackendCalled] = useState(false);
     const [friends, setFriends] = useState([]);
-    const [friendsPage, setFriendsPage] = useState(false);
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     const { uid } = userData;
 
     async function getFriends() {
-      console.log('getting friends friendspgae 71')
+        setBackendCalled(!backendCalled);
+        console.log('getting friends friendspgae 71')
         const { status, data } = await ReadAPI.getFriends(uid);
+        console.log('FriendsPage 71 opmdpwm', status, data);
         if (status) {
           if (data.friends.length != friends.length) {
             setFriends(data.friends);
@@ -81,12 +82,13 @@ export default function FriendsPage({ navigation, route, refresh }) {
     }, [refresh])   
   
     const renderCards = friend => {
+      console.log('FriendsPage 86 ininwa', friends);
       return  <FriendCard
                 friendData={friend.item}
                 navigation={navigation}
                 height={windowHeight / 15}
                 width={windowWidth - 40}
-              />        
+              />
     }
 
     const styles = StyleSheet.create({
@@ -147,10 +149,16 @@ export default function FriendsPage({ navigation, route, refresh }) {
                 <FlatList
                   data={friends}
                   keyExtractor={item => item.user_id}
-                  renderItem={renderCards}
+                  renderItem={friend => <FriendCard
+                    friendData={friend.item}
+                    navigation={navigation}
+                    height={windowHeight / 15}
+                    width={windowWidth - 40}
+                  />}
                   contentContainerStyle={styles.friendCard}
                   refreshing={false}
                   onRefresh={getFriends}
+                  extraData={friends}
                 />
               </View>
             } 
