@@ -92,7 +92,7 @@ router.put("/updateUserProfile/:id", checkBody, async (req, res) => {
     res.status(400).send('All required fields are null');
     return;
   } else {
-    const response = UsersAPI.updateUserProfile(
+    const response = await UsersAPI.updateUserProfile(
       uid, username, firstName, lastName
     )
     if (response.out) {
