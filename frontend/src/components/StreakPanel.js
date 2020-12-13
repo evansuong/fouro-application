@@ -49,10 +49,6 @@ export default function StreakPanel(hugs) {
     })
   }, [hugs])
 
-  useEffect(() => {
-    
-  }, [])
-
   function handlePress() {
     
     setExpanded(!expanded);
