@@ -46,8 +46,9 @@ export default function CreateHugPage({ navigation, route }) {
     // Misc
     const { name, profile_pic, user_id, username } = route.params.data;
     const routeName = route.name;
-    const validExtensions = ['jpeg', 'jpg'];
+    const validExtensions = ['jpeg', 'jpg', 'png'];
     const MAX_UPLOAD_SIZE = 100000;
+    const WIDTH_FACTOR = 0.4;
 
     const pickFromGallery = async () => {
       const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -56,7 +57,7 @@ export default function CreateHugPage({ navigation, route }) {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [1,1],
-          quality: 0.5,
+          quality: 1,
           base64: true
         })
         await checkUpload(data); 
@@ -93,23 +94,26 @@ export default function CreateHugPage({ navigation, route }) {
       let base64 = data.base64;    
       if (base64.length > MAX_UPLOAD_SIZE) {
         const compressFactor = MAX_UPLOAD_SIZE / base64.length;
-        base64 = await getBase64WithImage(data, compressFactor);
+        base64 = await getBase64WithImage(data);
       }
       return base64;
     }
 
-    const getBase64WithImage = async (data, compressFactor) => {
+    const getBase64WithImage = async (data) => {
       const manipResult = await ImageManipulator.manipulateAsync(
         data.uri,
-        [],
+        [{resize: { 
+          width: data.width * WIDTH_FACTOR,
+          height: data.height * WIDTH_FACTOR, 
+        }}],
         {
-          compress: compressFactor,
+          compress: 0.9,
           format: ImageManipulator.SaveFormat.JPEG,
           base64: true
         }
       )
       return `data:image/jpeg;base64,${manipResult.base64}`;
-      }
+    }
 
     const callBackend = async () => {
       setCallingBackend(true);
@@ -120,13 +124,6 @@ export default function CreateHugPage({ navigation, route }) {
       }
       const { status, data } = 
         await CreateAPI.createHug(userData.uid, request);
-      // if (status) {
-      //   let hugId = data.out
-      //   CreateAPI.sendHugRequest(userData.uid, {
-      //     friend_id: request.friendId,
-      //     hug_id: hugId,
-      //   }).then((response) => console.log(response))
-      // }
       
       setTimeout(async () => {
         setCallingBackend(false);
@@ -135,8 +132,6 @@ export default function CreateHugPage({ navigation, route }) {
             friend_id: user_id,
             hug_id: data.out,
           }
-
-          // TODO: WAIT FOR TERRY'S BACKEND PUSH. THEN UNCOMMENT>
           const { hugStatus, hugData } = 
             await CreateAPI.sendHugRequest(userData.uid, hugRequest);
           console.log('CreateHug 143', hugStatus, hugData);
