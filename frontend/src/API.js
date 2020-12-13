@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const server = "http://192.168.4.66:3000";
+const server = "http://192.168.1.234:3000";
 
 const onAccept = (res, response) => {
   // console.log('API 6 accepting');
@@ -233,9 +233,10 @@ export const UpdateAPI = {
     return response;
   },
   forgotPassword: async function (request) {
+    console.log('API 229', request);
     let response = {};
     await axios
-      .put(`${server}/account/forgetPassword`, request)
+      .put(`${server}/account/forgotPassword`, request)
       .then((res) => onAccept(res, response))
       .catch((err) => onReject(err, response));
     return response;

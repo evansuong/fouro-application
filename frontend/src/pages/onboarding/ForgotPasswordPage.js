@@ -58,7 +58,7 @@ export default function ForgotPasswordPage({ navigation, route }) {
 
   const submitHandler = async () => {
     const { status, data } = 
-      await UpdateAPI.forgotPassword({ request: emailField });
+      await UpdateAPI.forgotPassword({ email: emailField });
     if (status) {
       Alert.alert(`Reset password link sent to ${emailField}`);
     } else {

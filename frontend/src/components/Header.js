@@ -148,6 +148,7 @@ export default function Header(props) {
         'Search Page': '',
         'Hug Search Page': '',
         'Edit Profile Page': '',
+        'Forgot Password': '',
     };
 
     // setting button list for header 
