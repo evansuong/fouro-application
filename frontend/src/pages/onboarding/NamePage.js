@@ -163,7 +163,7 @@ export default function NamePage({ navigation, route }) {
             {
               checkFilled() &&
               !signingUp &&
-              <View style={{marginTop: 20,}}>
+              <View style={{ marginTop: 20 }}>
                 <LinkedButton
                   text='NEXT'
                   color='#FFC24A'

@@ -14,7 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { DimensionContext } from 'contexts/DimensionContext';
 import { UserContext } from 'contexts/UserContext';
 import { ReadAPI } from '../../API';
-import Header from '../../components/Header';
+import Header from 'components/Header';
 
 
 
@@ -56,10 +56,12 @@ const testStrangerData = [
 
 
 
-export default function SearchPage({ input, navigation }) {
+export default function SearchPage({ navigation }) {
   // States
   const [userList, setUserList] = useState([]);
   const [searchFriends, setSearchFriends] = useState(true);
+  const [searchInput, setSearchInput] = useState('');
+
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
@@ -68,27 +70,26 @@ export default function SearchPage({ input, navigation }) {
 
   function search() {
     if (searchFriends) {
-      ReadAPI.searchFriends(uid, input).then(response => {
+      ReadAPI.searchFriends(uid, searchInput).then(response => {
           setUserList(response.data.friends)
         }
       )
     } else {
-      ReadAPI.searchUsers(uid, input).then(response => {
+      ReadAPI.searchUsers(uid, searchInput).then(response => {
         if (response.data.user.length != 0) {
           setUserList([response.data.user])
         }
-      }
-      )
+      })
     }
   }
   
   useEffect(() => {
-    if (input === '') {
+    if (searchInput === '') {
       setUserList([]);
     } else {
       search();
     }
-  }, [input, searchFriends])
+  }, [searchInput, searchFriends])
 
   function searchStrangersList({ route }) {
     useFocusEffect(() => {
@@ -114,13 +115,6 @@ export default function SearchPage({ input, navigation }) {
 
     return (
       <View>
-        <Header navigation={navigation} routeName={'Search Page'} onMainNav={false}/>
-        <TextInput
-          keyboardType='web-search' 
-          onChangeText={(val) => setSearchInput(val)}
-          autoCapitalize='none'
-          placeholder="search username"
-        />
         {userList.length > 0 && userList[0] ? 
         <ScrollView style={{ backgroundColor: backgroundColor }}>
           {userList.map(userData => {
@@ -226,24 +220,52 @@ export default function SearchPage({ input, navigation }) {
         height: windowWidth / 10,
     },
     mainContainer: {
-      width: windowWidth / 1.1, 
-      height: windowHeight / 1.4
+      marginTop: windowHeight * .13,
+      width: windowWidth,
+      height: windowHeight * .9,
     },
     tabNavigator: {
-      borderBottomLeftRadius: 20, 
-      borderBottomRightRadius: 20
+      backgroundColor: '#E57777',
+    },
+    inputContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    },  
+    input: {
+      position: 'absolute',
+      height: windowHeight * .06,
+      width: windowWidth * .8,
+      zIndex: 100,
+      backgroundColor: '#FFF',
+      borderRadius: 10,
+      top: windowHeight * .06,
+      right: windowWidth * .05,
+      paddingHorizontal: 20,
+    },
+    body: {
+      height: windowHeight / 1.4,
+      marginTop: windowHeight * .14,
     }
   })
 
     return (
-        <View style={styles.mainContainer}>
+        <View style={{ backgroundColor: '#E57777' }}>
+          <Header navigation={navigation} routeName={'Search Page'} onMainNav={false}/>
+          <TextInput
+              keyboardType='web-search' 
+              onChangeText={(val) => setSearchInput(val)}
+              autoCapitalize='none'
+              placeholder="search username"
+              style={styles.input}
+            />
+          <View style={styles.mainContainer}>
             <Tab.Navigator 
-                style={styles.tabNavigator}
                 tabBarOptions={{
-                    activeTintColor: isLightTheme ? 'purple' : '#E57777',
-                    style: { backgroundColor: backgroundColor },
+                    activeTintColor: '#FFF',
+                    style: styles.tabNavigator,
                     indicatorStyle: { 
-                        backgroundColor: isLightTheme ? 'purple' : '#E57777',
+                        backgroundColor: '#FFF',
                     }
                 }}>
                 <Tab.Screen 
@@ -255,6 +277,7 @@ export default function SearchPage({ input, navigation }) {
                   component={searchStrangersList}
                 />
             </Tab.Navigator>
+          </View>
         </View>
     )
 }

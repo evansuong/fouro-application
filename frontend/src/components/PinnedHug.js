@@ -44,6 +44,11 @@ export default function PinnedHug( { navigation, unpin, picture, date, friendNam
         width: hugWidth, 
         height: hugHeight, 
         margin: margin,
+        shadowColor: '#000',
+        shadowOffset: { height: 2, width: 1 },
+        shadowOpacity: 0.5,
+        shadowRadius: 5,  
+        elevation: 2,
       },
       hugImage: {
         backgroundColor: 'white',

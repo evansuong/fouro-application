@@ -114,6 +114,7 @@ router.post("/sendFriendRequest/:id", checkBody, async (req, res) => {
 router.post("/sendHugRequest/:id", checkBody, async (req, res) => {
   const uid = req.params.id;
   const { friend_id, hug_id } = req.body;
+
   if (!uid || !friend_id || !hug_id) {
     res.status(400).send('Request has missing fields');
     return;
@@ -130,6 +131,7 @@ router.post("/sendHugRequest/:id", checkBody, async (req, res) => {
         return;
       }
       const response = await RequestsAPI.sendHugRequest(uid, friend_id, hug_id);
+      console.log('Notif Route 134', response);
       res.status(200).json({ response: response.out });
     } catch (err) {
       res.status(400).send(`An error occurred: ${err}`);

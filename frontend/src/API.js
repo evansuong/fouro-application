@@ -3,15 +3,15 @@ import axios from "axios";
 const server = "http://192.168.1.234:3000";
 
 const onAccept = (res, response) => {
-  // console.log('API 6 accepting');
-  // console.log('API 7', response);
+  console.log('API 6 accepting');
+  console.log('API 7', response);
   response.status = true;
   response.data = res.data;
 };
 
 const onReject = (err, response) => {
-  // console.log('API 12 rejecting');
-  // console.log('API 13', response);
+  console.log('API 12 rejecting');
+  console.log('API 13', response);
   console.log(err.code);
   console.log(err.message);
   console.log(err.stack);
@@ -233,9 +233,10 @@ export const UpdateAPI = {
     return response;
   },
   forgotPassword: async function (request) {
+    console.log('API 229', request);
     let response = {};
     await axios
-      .put(`${server}/account/forgetPassword`, request)
+      .put(`${server}/account/forgotPassword`, request)
       .then((res) => onAccept(res, response))
       .catch((err) => onReject(err, response));
     return response;
