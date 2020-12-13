@@ -73,9 +73,6 @@ function CorkboardButton(navigation, isLightTheme) {
     return buildButtonProps('corkboard', icon, onPress);
 }
 
-
-
-
 export function HeaderButton({ 
   name, 
   icon, 
@@ -127,7 +124,6 @@ export default function Header(props) {
     
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const { routeName, navigation, onMainNav } = props;
-    console.log('header 130', routeName, onMainNav)
 
     const { userData } = useContext(UserContext);
     const { isLightTheme } = userData;
@@ -202,17 +198,15 @@ export default function Header(props) {
             width: windowWidth / 8.5,
             height: windowWidth / 8.5,
         },
-        searchPage: {
-            display: 'flex',
-            flexDirection: 'column',
-        },
         input: {
             backgroundColor: isLightTheme ? '#EEE' : '#333',
             width: windowWidth / 1.5,
             height: windowWidth / 10,
             borderRadius: 5, 
         },
-    });        
+    });    
+    
+    console.log(buttons)
     
     // return new header
     return (

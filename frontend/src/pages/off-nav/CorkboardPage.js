@@ -107,8 +107,6 @@ export default function CorkboardPage({ navigation, route }) {
       contentContainerStyle: {
         paddingBottom: margin, 
         paddingTop: margin + windowWidth * 0.2,
-        width: windowWidth * .9,
-        height: windowHeight * .9,
       },
       loadingContainer: {
         flex: 1, 
