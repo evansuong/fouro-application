@@ -23,6 +23,7 @@ export default function CustomTextField({
 }) {
 
   const { platform } = useContext(DimensionContext)
+  let keyType = platform === 'ios' ? 'ascii-capable' : secureText ? 'ascii-capable' : 'password-visible'
 
   return (
     <View>
@@ -40,7 +41,7 @@ export default function CustomTextField({
         multiline={multiline}
         defaultValue={defaultValue}
         placeholder={placeholder}
-        keyboardType='ascii-capable'
+        keyboardType={keyType}
         secureTextEntry={secureText}
         onChangeText={(val) => setField(val)}
         autoCapitalize='none'

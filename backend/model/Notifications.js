@@ -126,10 +126,13 @@ const RequestsAPI = {
     // Gets the time that the notification is sent
     let dateInSeconds = Math.floor(Date.now() / 1000);
     var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);
+    console.log(user_id, friend_id, hug_id)
 
     const newHugCollectionRef = users
       .doc(friend_id)
       .collection("notifications");
+
+    console.log('made it past 132')
 
     const newHug = {
       type: "hug",
@@ -137,7 +140,9 @@ const RequestsAPI = {
       date_time: dateTime,
       user_ref: users.doc(user_id), // sender
     };
+    console.log('made it past 140')
     await newHugCollectionRef.add(newHug);
+    console.log('last aprt')
     return { out: true };
   },
 };

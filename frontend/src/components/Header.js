@@ -16,8 +16,6 @@ const editIconDark = require('assets/edit-icon-dark.png');
 const corkboardIcon = require('assets/corkboard-icon.png');
 const corkboardIconDark = require('assets/corkboard-icon-dark.png');
 
-LogBox.ignoreAllLogs()
-
 // function formats button data into an object 
 function buildButtonProps(name, icon, onPress) {
     return {
@@ -140,6 +138,7 @@ export default function Header(props) {
         'Catch Hug Page': '',
         'Corkboard': '',
         'Hug Info': '',
+        'Forgot Password': '',
         'Reset Password Page': '',
         'Pic Upload Page': '',
         'Login Page': '',
@@ -163,7 +162,7 @@ export default function Header(props) {
     }
 
     // styling
-    let borderRadius = 20;
+    let borderRadius = 100;
 
     const styles = StyleSheet.create({
         headerContainer: {
@@ -172,7 +171,7 @@ export default function Header(props) {
             marginTop: windowHeight / 20,
             position: 'absolute',
             zIndex: 5,
-            backgroundColor: isLightTheme ? 'transparent' : 'rgba(0, 0, 0, .5)',
+            backgroundColor: isLightTheme ? 'transparent' : onMainNav ? 'rgba(0, 0, 0, .5)' : 'transparent',
             borderRadius: borderRadius,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 2 },

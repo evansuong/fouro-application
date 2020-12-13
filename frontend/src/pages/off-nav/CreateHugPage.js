@@ -124,7 +124,6 @@ export default function CreateHugPage({ navigation, route }) {
       }
       const { status, data } = 
         await CreateAPI.createHug(userData.uid, request);
-      
       setTimeout(async () => {
         setCallingBackend(false);
         if (status) {

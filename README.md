@@ -48,29 +48,32 @@ F - Firebase
 2.  Install [Expo](https://docs.expo.io/) CLI:
 
         npm install -g expo-cli
+        
+3. Clone the repository
 
-3.  Setup backend dependencies and run server
+        git clone https://github.com/evansuong/fouro-application
+
+4.  Setup backend dependencies and run server
 
         cd backend
         npm install
         npm run server
 
-4.  Open a new terminal and install dependencies in frontend:
+5.  Open a new terminal and install dependencies in frontend:
 
         cd frontend
         npm install
         npm start
 
-5.  Install Expo Client on your iOS/Android device
+6.  Install Expo Client on your iOS/Android device
 
-6.  Scan the Expo QR code with your camera
+7.  Scan the Expo QR code with your camera
 
-7.  Copy your computer IP address from the Expo Link (looks something like this, between the second "/" and ":")
+8.  Copy your computer IP address from the Expo Link (looks something like this, between the second "/" and ":")
 
-        exp://192.168.1.46:19000
-              ^          ^
+        exp://<YOUR-IP-ADDRESS:19000
 
-8.  Paste your computer IP in [./frontend/src/API.js](./frontend/src/API.js) on line 3:
+9.  Paste your computer IP in [./frontend/src/API.js](./frontend/src/API.js) on line 3:
 
         const server = "http://<YOUR-IP-HERE>:3000";
 

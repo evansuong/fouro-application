@@ -9,12 +9,13 @@ import {
   TextInput,
 } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { useFocusEffect } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute, useFocusEffect } from '@react-navigation/native';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
 import { UserContext } from 'contexts/UserContext';
 import { ReadAPI } from '../../API';
 import Header from 'components/Header';
+import { set } from 'react-native-reanimated';
 
 
 
@@ -56,17 +57,28 @@ const testStrangerData = [
 
 
 
-export default function SearchPage({ navigation }) {
+export default function SearchPage({ navigation, route }) {
   // States
   const [userList, setUserList] = useState([]);
   const [searchFriends, setSearchFriends] = useState(true);
   const [searchInput, setSearchInput] = useState('');
+  const [placeholder, setPlaceHolder] = useState('');
 
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData } = useContext(UserContext);
   const { isLightTheme, uid } = userData;
   const Tab = createMaterialTopTabNavigator();
+
+  useFocusEffect(() => {
+    let routeName = getFocusedRouteNameFromRoute(route);
+    if (routeName === "Users") {
+      setPlaceHolder('search username (i.e. fourouser)')
+    } else {
+      setPlaceHolder('search name (i.e. First Last)')
+    }
+  })
+
 
   function search() {
     if (searchFriends) {
@@ -226,6 +238,13 @@ export default function SearchPage({ navigation }) {
     },
     tabNavigator: {
       backgroundColor: '#E57777',
+      shadowColor: '#000',
+      shadowOffset: {
+          height: 1,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 2,
     },
     inputContainer: {
       display: 'flex',
@@ -253,10 +272,10 @@ export default function SearchPage({ navigation }) {
         <View style={{ backgroundColor: '#E57777' }}>
           <Header navigation={navigation} routeName={'Search Page'} onMainNav={false}/>
           <TextInput
-              keyboardType='web-search' 
+              keyboardType='ascii-capable' 
               onChangeText={(val) => setSearchInput(val)}
               autoCapitalize='none'
-              placeholder="search username"
+              placeholder={placeholder}
               style={styles.input}
             />
           <View style={styles.mainContainer}>

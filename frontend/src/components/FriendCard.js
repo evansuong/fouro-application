@@ -27,7 +27,7 @@ import { UserContext } from '../contexts/UserContext';;
  * @param {string} navigation           The navigation prop for React Native navigation
  */
 export default function FriendCard(props) {
-  const [stateColor, setStateColor] = useState(color);
+  const [cardColor, setCardColor] = useState(color);
 
   const { navigation, height, width, friendData } = props;
   const { color, name, profile_pic, username, user_id } = friendData;
@@ -42,7 +42,7 @@ export default function FriendCard(props) {
 
   useEffect(() => {
     console.log('FriendCard 41', color);
-    setStateColor(color);
+    setCardColor(color);
   }, [color])
 
   const styles = StyleSheet.create({
@@ -76,7 +76,6 @@ export default function FriendCard(props) {
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 100,
-      backgroundColor: isLightTheme ? color : 'rgb(40, 40, 40)',
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.5,
@@ -113,7 +112,10 @@ export default function FriendCard(props) {
   return (
     /* the card itself */
     <TouchableOpacity 
-      style={styles.friendCardContainer}
+      style={{ 
+        ...styles.friendCardContainer, 
+        backgroundColor: isLightTheme ? cardColor : 'rgb(40, 40, 40)' 
+      }}
       onPress={() => { 
         navigation.navigate("Friend Profile", 
           { data: {

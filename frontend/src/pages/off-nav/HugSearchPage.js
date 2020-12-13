@@ -98,7 +98,7 @@ export default function HugSearchPage({ navigation, route }) {
             borderBottomWidth: 1,
             paddingHorizontal: windowWidth * .1,
             paddingVertical: windowWidth * .02
-        }
+        },
     })
 
     return (
@@ -110,7 +110,7 @@ export default function HugSearchPage({ navigation, route }) {
             />
             
             <TextInput
-              keyboardType='web-search' 
+              keyboardType='ascii-capable'
               onChangeText={(val) => setInput(val)}
               autoCapitalize='none'
               placeholder="search username"
@@ -118,6 +118,7 @@ export default function HugSearchPage({ navigation, route }) {
             />
           
             <View style={{ backgroundColor: '#FFF', marginTop: windowHeight * .15 }}>
+
                 {friends && friends.length > 0 ?
                 <ScrollView>
                     {friends.map(friend => (
