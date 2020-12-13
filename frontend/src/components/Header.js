@@ -1,16 +1,8 @@
-import { 
-  getFocusedRouteNameFromRoute, 
-  NavigationHelpersContext 
-} from '@react-navigation/native';
+
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, StyleSheet, Image, LogBox } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { LinearGradient } from 'expo-linear-gradient';
-import { TextInput } from 'react-native-paper';
-import SearchPage from '../pages/off-nav/SearchPage';
-import { set } from 'react-native-reanimated';
 import { UserContext } from '../contexts/UserContext';
  
 
@@ -24,8 +16,6 @@ const editIcon = require('assets/edit-icon.png');
 const editIconDark = require('assets/edit-icon-dark.png');
 const corkboardIcon = require('assets/corkboard-icon.png');
 const corkboardIconDark = require('assets/corkboard-icon-dark.png');
-const dotsIcon = require('assets/dots-icon.png');
-const dotsIconDark = require('assets/dots-icon-dark.png');
 
 LogBox.ignoreAllLogs()
 
@@ -51,23 +41,13 @@ function BackButton(navigation, isLightTheme) {
     return buildButtonProps('back', icon, onPress);
 }
 
-function ExitSearchButton(navigation, isLightTheme) {
-    function onPress() {
-        navigation()
-    }
-    let icon = isLightTheme ? backIconDark : backIcon;
-    return buildButtonProps('search', icon, onPress);    
-}
-
 function SearchButton(navigation, isLightTheme) {
     function onPress() {
-        navigation()
+        navigation.navigate('Search Page')
     }
     let icon = isLightTheme ? searchIconDark : searchIcon;
     return buildButtonProps('search', icon, onPress);    
 }
-
-
 
 function ProfileButton(navigation, isLightTheme) {
     function onPress() {
@@ -91,14 +71,6 @@ function CorkboardButton(navigation, isLightTheme) {
     }
     let icon = isLightTheme ? corkboardIconDark : corkboardIcon;
     return buildButtonProps('corkboard', icon, onPress);
-} 
-
-function RemoveFriendButton(navigation, isLightTheme) {
-    function onPress() {
-        alert('remove friend button pressed')
-    }
-    let icon = isLightTheme ? dotsIconDark : dotsIcon;
-    return buildButtonProps('remove', icon, onPress);
 }
 
 
@@ -115,28 +87,7 @@ export function HeaderButton({
 
     let width = windowWidth / 8.5;
     
-    const styles = name === 'expanded search' ? {
-        btnContainer: {
-            backgroundColor: isLightTheme ? 
-              "#FFFFFF22" 
-              : 
-              onMainNav ? 
-                'rgba(0, 0, 0, .2)' 
-                : 
-                'rgba(0, 0, 0, .4)', 
-            borderRadius: 100,
-            height: windowWidth / 8.5,
-            width: windowWidth / 1.1,
-            display: 'flex', 
-            justifyContent: 'right', 
-            alignItems: 'center',
-        },
-        btnImage: {
-            width: windowWidth / 15,
-            height: windowWidth / 15,
-            overflow: 'visible',
-        }
-    } : {
+    const styles = {
         btnContainer: {
             backgroundColor: isLightTheme ? 
               "transparent" 
@@ -176,21 +127,14 @@ export default function Header(props) {
     
     const { windowWidth, windowHeight } = useContext(DimensionContext)
     const { routeName, navigation, onMainNav } = props;
-    const [searching, setSearching] = useState(false);
-    const [searchInput, setSearchInput] = useState();
+    console.log('header 130', routeName, onMainNav)
 
     const { userData } = useContext(UserContext);
     const { isLightTheme } = userData;
 
-    function enableSearch() { setSearching(true) }
-    function disableSearch() { setSearching(false) }
-
     // collection of headerbuttons to render based on the page
     const headerButtons = {
-        'Friends': searching ? 
-          [ExitSearchButton(disableSearch, isLightTheme)] 
-          : 
-          ['', SearchButton(enableSearch, isLightTheme)],
+        'Friends': ['', SearchButton(navigation, isLightTheme)],
         'Hug Feed': 
           [ProfileButton(navigation, isLightTheme), 
           CorkboardButton(navigation, isLightTheme)],
@@ -221,21 +165,8 @@ export default function Header(props) {
           ...headerButtons[routeName]]
     }
 
-
     // styling
-    let backgroundColor = searching ? 
-      'rgba(255, 255, 255, .85)'
-      : 
-      onMainNav ? 
-        (
-          isLightTheme ? 
-          "transparent" 
-          : 
-          'rgba(0, 0, 0, .6)'
-        ) 
-        : 
-        'transparent';
-    let borderRadius = searching ? 20 : 100;
+    let borderRadius = 20;
 
     const styles = StyleSheet.create({
         headerContainer: {
@@ -244,7 +175,7 @@ export default function Header(props) {
             marginTop: windowHeight / 20,
             position: 'absolute',
             zIndex: 5,
-            backgroundColor: backgroundColor,
+            backgroundColor: isLightTheme ? 'transparent' : 'rgba(0, 0, 0, .5)',
             borderRadius: borderRadius,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 2 },
@@ -257,17 +188,8 @@ export default function Header(props) {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: searching ? 
-            isLightTheme ? 
-              '#FFF' 
-              : 
-              'rgb(40, 40, 40)' 
-            : 
-            'transparent',
             width: windowWidth / 1.1,
-            padding: searching ? 0 : 4,
-            paddingTop: searching ? 15 : 4,
-            paddingHorizontal: searching ? 15 : 4,
+            padding: 4,
             borderTopRightRadius: borderRadius,
             borderTopLeftRadius: borderRadius,
         },
@@ -305,26 +227,19 @@ export default function Header(props) {
                     : 
                     <View style={styles.filler}/>
                 }
-                {searching ?
-                    <TextInput
-                        keyboardType='web-search' 
-                        style={styles.input}
-                        onChangeText={(val) => setSearchInput(val)}
-                        autoCapitalize='none'
-                        placeholder="search username"
-                    />
-                    :
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}>
-                          {
-                            buttons && buttons.length > 2 ? 
-                            <></> 
-                            : 
-                            props.children
-                          }
-                        </Text>
-                    </View>
-                }
+            
+                    
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>
+                        {
+                        buttons && buttons.length > 2 ? 
+                        <></> 
+                        : 
+                        props.children
+                        }
+                    </Text>
+                </View>
+                
                 {
                   buttons && buttons.length > 1 && buttons[1] !== '' ? 
                   <HeaderButton 
@@ -333,19 +248,10 @@ export default function Header(props) {
                     onMainNav={onMainNav}
                   /> 
                   : 
-                  searching ? 
-                  <></>
-                  :
                   <View style={styles.filler}/>
                 }
                 
             </View>
-            {searching &&
-                <SearchPage 
-                  navigation={navigation} 
-                  input={searchInput}>
-                </SearchPage> 
-            }
         </View>
     )
 }

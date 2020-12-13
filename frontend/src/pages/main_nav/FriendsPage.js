@@ -63,10 +63,9 @@ export default function FriendsPage({ navigation, route, refresh }) {
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     const { userData } = useContext(UserContext);
     const { uid } = userData;
-    const routeName = route.name;
-    const r = getFocusedRouteNameFromRoute(route)
 
     async function getFriends() {
+      console.log('getting friends friendspgae 71')
         const { status, data } = await ReadAPI.getFriends(uid);
         if (status) {
           if (data.friends.length != friends.length) {
@@ -79,7 +78,7 @@ export default function FriendsPage({ navigation, route, refresh }) {
 
     useEffect(() => {
       getFriends();
-    }, [])   
+    }, [refresh])   
   
     const renderCards = friend => {
       return  <FriendCard
@@ -136,7 +135,7 @@ export default function FriendsPage({ navigation, route, refresh }) {
             />
             <View style={{height: windowWidth * 0.27 }}/>
             <Header 
-              routeName={routeName} 
+              routeName={'Friends'} 
               navigation={navigation} 
               onMainNav={true}
             >

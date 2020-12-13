@@ -52,7 +52,7 @@ export default function HugInfoPage({ navigation, route }) {
   // Misc
   const routeName = route.name;
   const { data } = route.params;
-  let { hug_id, notification_id, clearFunction, pinned } = data;
+  let { hug_id, notification_id, clearFunction } = data;
   // sizing
   const textContainerWidth = windowWidth / 1.1;
   const textWidth = textContainerWidth / 1.3;
@@ -61,15 +61,14 @@ export default function HugInfoPage({ navigation, route }) {
     windowHeight * 0.05 : StatusBar.currentHeight
 
   useEffect(() => {
-
-    if (startUp) {
-      setStartUp(false);
-      fetchUserData();
-      fetchEventData();
-    }
-  }, []);
-
+    fetchUserData();
+    fetchEventData();
+    fetchPinnedState();
+  }, [])
+  
+  
   const fetchUserData = async () => {
+    console.log('hug info page 71 fetching user data')
     const { status, data } = 
       await ReadAPI.getUserProfile(userData.uid);
     if (status) {
@@ -80,17 +79,31 @@ export default function HugInfoPage({ navigation, route }) {
   }
 
   const fetchEventData = async () => {
+    console.log('hug info page 82 fetching event data')
     let { status, data } = 
       await ReadAPI.getHugById(userData.uid, hug_id);
     if (status) {
       setImage(data.images[0])
       data.images = data.images.slice(1, data.images.length);
       setFetchedHug(data);
-      setPinnedButton(pinned)
     } else {
       Alert.alert('Something went wrong when retrieving hug info');
     }
   }
+
+  async function fetchPinnedState() {
+    console.log('hug info page 95 fetching pin state')
+    let { status, data } = 
+      await ReadAPI.getHugPinnedState(userData.uid, hug_id);
+    console.log("fetching pinned state", data)
+    if (status) {
+      setPinnedButton(data.pinned)
+    } else {
+      Alert.alert('Something went wrong when retrieving hug info');
+    }
+  }
+
+
 
   async function pinHug() {
     if(!pinnedButton) {

@@ -5,7 +5,8 @@ import {
   StyleSheet, 
   Image, 
   ScrollView, 
-  TouchableOpacity 
+  TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
@@ -13,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { DimensionContext } from 'contexts/DimensionContext';
 import { UserContext } from 'contexts/UserContext';
 import { ReadAPI } from '../../API';
+import Header from '../../components/Header';
 
 
 
@@ -111,32 +113,41 @@ export default function SearchPage({ input, navigation }) {
     let backgroundColor = isLightTheme ? '#FFF' : '#333'
 
     return (
-      userList.length > 0 && userList[0] ? 
-      <ScrollView style={{ backgroundColor: backgroundColor }}>
-        {userList.map(userData => {
-          return (
-          <TouchableOpacity 
-            key={userData.user_id} 
-            onPress={() => viewStranger(userData)}
-          >
-            <View style={{
-              ...styles.userCard, 
-              borderBottomColor: borderColor
-            }}>
-              <Image 
-                style={styles.profPic} 
-                source={{ uri: userData.profile_pic }}
-              /> 
-              <Text style={{
-                ...styles.userText, 
-                color: textColor
+      <View>
+        <Header navigation={navigation} routeName={'Search Page'} onMainNav={false}/>
+        <TextInput
+          keyboardType='web-search' 
+          onChangeText={(val) => setSearchInput(val)}
+          autoCapitalize='none'
+          placeholder="search username"
+        />
+        {userList.length > 0 && userList[0] ? 
+        <ScrollView style={{ backgroundColor: backgroundColor }}>
+          {userList.map(userData => {
+            return (
+            <TouchableOpacity 
+              key={userData.user_id} 
+              onPress={() => viewStranger(userData)}
+            >
+              <View style={{
+                ...styles.userCard, 
+                borderBottomColor: borderColor
               }}>
-                {userData.name}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )})}
-      </ScrollView> : <></>
+                <Image 
+                  style={styles.profPic} 
+                  source={{ uri: userData.profile_pic }}
+                /> 
+                <Text style={{
+                  ...styles.userText, 
+                  color: textColor
+                }}>
+                  {userData.name}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )})}
+        </ScrollView> : <></>}
+      </View>
     )
   }
 

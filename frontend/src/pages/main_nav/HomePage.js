@@ -53,7 +53,7 @@ function buildTestData(name, text, img, id) {
 
 
 
-export default function HomePage({ navigation, route }) {
+export default function HomePage({ navigation, route, refresh }) {
   // States
   const [expanded, setExpanded] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
@@ -71,12 +71,10 @@ export default function HomePage({ navigation, route }) {
 
   useEffect(() => {
     fetchHugs();
-  }, [])
-
-
-  console.log('homepage refreshing 76')
+  }, [refresh])
 
   const fetchHugs = async () => {
+    console.log('fetching hugs homepage80')
     const { status, data } = 
       await ReadAPI.getUserHugs(userData.uid);
     if (status) {
@@ -89,7 +87,7 @@ export default function HomePage({ navigation, route }) {
   function handlePress() {
     setExpanded(!expanded);
     if (expanded) {
-      navigation.navigate('Search Page');
+      navigation.navigate('Hug Search Page');
       collapse();
     } else {
       expand();
@@ -193,7 +191,7 @@ export default function HomePage({ navigation, route }) {
       />
 
       <Header 
-        routeName={routeName} 
+        routeName={'Hug Feed'} 
         navigation={navigation} 
         onMainNav={true}
       >

@@ -16,6 +16,7 @@ import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import Header from 'components/Header';
 import PinnedHug from 'components/PinnedHug';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 // Images/Assets
 const corkboardImg = require('assets/corkboard.jpg');
 
@@ -59,19 +60,15 @@ export default function CorkboardPage({ navigation, route }) {
     // Misc
     const routeName = route.name;
     const margin = windowWidth * 0.03;
+    let isFocused = useIsFocused();
 
     useEffect(() => {
-      load();
-    }, [])
 
-    const load = async () => {
-      if (startUp) {
-        await fetchCorkboard();
-        setStartUp(false);
-      }
-    }
+      fetchCorkboard();
+    }, [isFocused])
 
     const fetchCorkboard = async () => {
+      console.log('fetching corkboard 70')
       const { status, data } = await ReadAPI.buildCorkboard(userData.uid);
       if (status) {
         // console.log('CorkboardPage 82', data);
@@ -82,6 +79,13 @@ export default function CorkboardPage({ navigation, route }) {
     }
 
     const styles = StyleSheet.create({
+      post: {
+        shadowColor: '#000',
+        shadowOffset: { height: 2, width: 1 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,  
+        elevation: 2,
+      },
       corkboardImage: {
         position: 'absolute',
         resizeMode: 'contain',
@@ -102,7 +106,9 @@ export default function CorkboardPage({ navigation, route }) {
       },
       contentContainerStyle: {
         paddingBottom: margin, 
-        paddingTop: margin + windowWidth * 0.2
+        paddingTop: margin + windowWidth * 0.2,
+        width: windowWidth * .9,
+        height: windowHeight * .9,
       },
       loadingContainer: {
         flex: 1, 
@@ -119,7 +125,7 @@ export default function CorkboardPage({ navigation, route }) {
       )
     } else {
       return (
-        <View style={{ alignItems: 'center'}}>
+        <View style={{ ...styles.post, alignItems: 'center'}}>
             <Image
                 source={corkboardImg}
                 style={styles.corkboardImage}
@@ -136,6 +142,8 @@ export default function CorkboardPage({ navigation, route }) {
               <FlatList
                 data={pinnedHugs}
                 keyExtractor={item => item.hug_ref}
+                refreshing={false}
+                onRefresh={fetchCorkboard}
                 renderItem={({ item }) => (
                   <PinnedHug
                     navigation={navigation}

@@ -125,8 +125,12 @@ export default function App() {
                 component={CatchHugPage}/>
 
               <Stack.Screen
-                name='Search Page'
+                name='Hug Search Page'
                 component={HugSearchPage}/>
+
+              <Stack.Screen
+                name='Search Page'
+                component={SearchPage}/>
 
               <Stack.Screen
                 name='Edit Profile Page'
