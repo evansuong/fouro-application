@@ -84,7 +84,7 @@ export default function SearchPage({ navigation }) {
   }
   
   useEffect(() => {
-    if (input === '') {
+    if (searchInput === '') {
       setUserList([]);
     } else {
       search();

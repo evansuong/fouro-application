@@ -90,8 +90,10 @@ export default function StreakPanel(hugs) {
     container: {
       display: 'flex',
       margin: 10,
+      marginBottom: 0,
+      paddingVertical: 5,
       backgroundColor: 'rgba(0, 0, 0, .5)',
-      borderRadius: 30,
+      borderRadius: 25,
       shadowColor: '#000',
       shadowOffset: { height: 2, width: 1 },
       shadowOpacity: 0.5,
@@ -100,18 +102,19 @@ export default function StreakPanel(hugs) {
     },
     streakContainer: {
       display: 'flex',
-      borderRadius: 20,
+      borderRadius: 12,
     },
     textContainer: {
-      width: 80,
+      width: 85,
       marginHorizontal: 20,
     },
     innerStreakContainer: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: 9,
+      alignItems: 'flex-start',
+      padding: 5,
+      paddingLeft: 10,
       width: 130,
     },
     image: {
@@ -133,7 +136,7 @@ export default function StreakPanel(hugs) {
     emojiGroupContainer: {
       alignItems: 'center',
       justifyContent: 'center',  
-    }
+    },
   });
   
   return (
@@ -142,24 +145,6 @@ export default function StreakPanel(hugs) {
         onPress={handlePress}
       >
         <Animated.View style={{ width: width, ...styles.streakContainer}}>
-          <View style={styles.innerStreakContainer}>
-            <View style={styles.emojiGroupContainer}>
-              <Image
-                source={images.streakEmoji}
-                style={styles.image}
-              />
-              <Text style={styles.counts}>
-                {userCounts.streakCount}
-              </Text>
-            </View>
-            <Animated.View opacity={fade}>
-              <View style={styles.textContainer}>
-                <Text style={{color: '#FFF', fontSize: 18,}}>
-                  Days in a row with 4 Hugs
-                </Text>
-              </View>
-            </Animated.View>
-          </View>
 
           <View style={styles.innerStreakContainer}> 
             <View style={styles.emojiGroupContainer}>
@@ -175,6 +160,25 @@ export default function StreakPanel(hugs) {
               <View style={styles.textContainer}>
                 <Text style={{fontSize: 18, color: '#FFF'}}>
                   Hugs Today
+                </Text>
+              </View>
+            </Animated.View>
+          </View>
+
+          <View style={styles.innerStreakContainer}>
+            <View style={styles.emojiGroupContainer}>
+              <Image
+                source={images.streakEmoji}
+                style={styles.image}
+              />
+              <Text style={styles.counts}>
+                {userCounts.streakCount}
+              </Text>
+            </View>
+            <Animated.View opacity={fade}>
+              <View style={styles.textContainer}>
+                <Text style={{color: '#FFF', fontSize: 18,}}>
+                  Days in a row with 4 Hugs
                 </Text>
               </View>
             </Animated.View>

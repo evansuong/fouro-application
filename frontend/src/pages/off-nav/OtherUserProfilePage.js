@@ -122,7 +122,7 @@ export default function OtherUserProfilePage({
       <HugCard 
         navigation={navigation}
         data={item.item}
-        image={profile_pic}
+        image={item.item.image}
       />
     )
 

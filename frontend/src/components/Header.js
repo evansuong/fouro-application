@@ -145,6 +145,7 @@ export default function Header(props) {
         'Login Page': '',
         'Signup Page': '',
         'Search Page': '',
+        'Hug Search Page': '',
         'Edit Profile Page': '',
     };
 
@@ -205,7 +206,6 @@ export default function Header(props) {
         },
     });    
     
-    console.log(buttons)
     
     // return new header
     return (
