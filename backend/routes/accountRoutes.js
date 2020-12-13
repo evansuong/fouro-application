@@ -42,7 +42,9 @@ router.delete("/deleteAccount/:id", async (req, res) => {
 
 // VERIFIED
 router.put('/forgotPassword', async (req, res) => {
+  console.log('Account route 45 in route');
   const { email } = req.body;
+  console.log('Account route 46', email);
   let response = await ManageAccountAPI.forgotPassword(email);
   if (response.out) {
     res.status(200).json(response);

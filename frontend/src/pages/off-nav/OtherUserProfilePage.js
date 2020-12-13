@@ -118,8 +118,8 @@ export default function OtherUserProfilePage({
       console.log('OtherUser 109 Canceled');
     }
 
-    const renderHug = (( item ) => 
-      <HugCard 
+    const renderHug = (( item ) =>
+       <HugCard 
         navigation={navigation}
         data={item.item}
         image={item.item.image}
