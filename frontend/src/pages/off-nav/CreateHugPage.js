@@ -201,7 +201,6 @@ export default function CreateHugPage({ navigation, route }) {
         height: windowHeight * .25,
         overflow: 'hidden',
         marginTop: windowHeight * .05,
-
       },
       pics: {
         borderRadius: 10,

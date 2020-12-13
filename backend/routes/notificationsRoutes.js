@@ -111,9 +111,9 @@ router.post("/sendFriendRequest/:id", checkBody, async (req, res) => {
 });
 
 // VERIFIED
-router.post("/sendHugRequest/:id", checkBody, async (req, res) => {
+router.post("/sendHugRequest/:id,:hugId", checkBody, async (req, res) => {
   const uid = req.params.id;
-  const { friend_id, hug_id } = req.body;
+  const friend_id = req.params.hugId;
   if (!uid || !friend_id || !hug_id) {
     res.status(400).send('Request has missing fields');
     return;

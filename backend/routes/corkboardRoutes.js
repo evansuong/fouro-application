@@ -72,10 +72,9 @@ router.put("/unpin/:id", checkBody, async (req, res) => {
   }
 });
 
-router.get("/getPinnedState/:id", async (req, res) => {
+router.get("/getPinnedState/:id,:hugId", async (req, res) => {
   const uid = req.params.id;
-  const { hug_id } = req.body;
-
+  const hug_id = req.params.hugId
   if (!hug_id) {
     res.status(400).send("Request has missing fields");
     return;
