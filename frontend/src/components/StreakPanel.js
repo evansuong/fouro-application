@@ -95,7 +95,7 @@ export default function StreakPanel(hugs) {
       margin: 10,
       marginBottom: 0,
       paddingVertical: 5,
-      backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .5)' : 'rgba(15, 15, 15, .9)', 
+      backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .6)' : 'rgba(15, 15, 15, .9)', 
       borderRadius: 25,
       shadowColor: '#000',
       shadowOffset: { height: 2, width: 1 },

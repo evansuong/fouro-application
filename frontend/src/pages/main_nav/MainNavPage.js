@@ -42,13 +42,10 @@ export default function MainNavPage({ navigation, route }) {
 
   useFocusEffect(() => {
     if(!isFocused) {
-      setRefresh(!refresh)
+      // setRefresh(!refresh)
       console.log("refresh mainnavpage46", refresh)
     }
   })
-
-  
-  
 
   useEffect(() => {
     if (typeof params !== 'undefined' && params.loggedIn !== 'undefined') {
@@ -60,9 +57,6 @@ export default function MainNavPage({ navigation, route }) {
       }
     }
   }, [isFocused])
-
-
-
   
   return (
     <>
@@ -86,8 +80,8 @@ export default function MainNavPage({ navigation, route }) {
               source={icon}
               resizeMode='stretch'
               style={{
-                  width: tabWidth,
-                  height: tabHeight
+                width: tabWidth,
+                height: tabHeight
               }}
             />
           },
