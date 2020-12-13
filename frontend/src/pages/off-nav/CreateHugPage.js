@@ -120,17 +120,16 @@ export default function CreateHugPage({ navigation, route }) {
       }
       const { status, data } = 
         await CreateAPI.createHug(userData.uid, request);
-      if (status) {
-        let hugId = data.out
-        CreateAPI.sendHugRequest(userData.uid, {
-          friend_id: request.friendId,
-          hug_id: hugId,
-        }).then((response) => console.log(response))
-      }
+      // if (status) {
+      //   let hugId = data.out
+      //   CreateAPI.sendHugRequest(userData.uid, {
+      //     friend_id: request.friendId,
+      //     hug_id: hugId,
+      //   }).then((response) => console.log(response))
+      // }
       
       setTimeout(async () => {
         setCallingBackend(false);
-        navigation.navigate('Main Nav Page');
         if (status) {
           const hugRequest = {
             friend_id: user_id,
@@ -138,17 +137,20 @@ export default function CreateHugPage({ navigation, route }) {
           }
 
           // TODO: WAIT FOR TERRY'S BACKEND PUSH. THEN UNCOMMENT>
-          // const { hugStatus, hugData } = 
-          //   await CreateAPI.sendHugRequest(userData.uid, hugRequest);
-          // if (hugStatus) {
+          const { hugStatus, hugData } = 
+            await CreateAPI.sendHugRequest(userData.uid, hugRequest);
+          console.log('CreateHug 143', hugStatus, hugData);
+          if (hugStatus) {
             const firstName = name.split(' ')[0]
             Alert.alert(`Hug sent to ${firstName}!`);
-          // } else {
-          //   Alert.alert('Hug created, but could not send notification.')
-          // }
+          } else {
+            Alert.alert('Hug created, but could not send notification.')
+          }
         } else {
           Alert.alert('Error creating hug.');
         }
+        
+        navigation.navigate('Main Nav Page');
       }, 1000);
     }
 
