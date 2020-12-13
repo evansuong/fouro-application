@@ -134,7 +134,7 @@ export default function CreateHugPage({ navigation, route }) {
           const { hugStatus, hugData } = 
             await CreateAPI.sendHugRequest(userData.uid, hugRequest);
           console.log('CreateHug 143', hugStatus, hugData);
-          if (hugStatus) {
+          if (status) {
             const firstName = name.split(' ')[0]
             Alert.alert(`Hug sent to ${firstName}!`);
           } else {
