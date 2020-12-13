@@ -49,7 +49,7 @@ F - Firebase
 
         npm install -g expo-cli
         
-3. Clone the Repository
+3. Clone the repository
 
         git clone https://github.com/evansuong/fouro-application
 
