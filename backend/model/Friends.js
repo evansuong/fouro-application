@@ -14,9 +14,9 @@ const COLOR2 = "#FC6C58"; // > 10 days
 const COLOR3 = "#FA7D5D"; // > 7 days
 const COLOR4 = "#F88E63"; // > 5 days
 const COLOR5 = "#F69D68"; // > 4 days
-const COLOR6 = "#EFBA7C"; // > 3 days
-const COLOR7 = "#EFCF7C"; // > 2 days
-const COLOR8 = "#EFD67C"; // < 2 days
+const COLOR6 = "#FBBA7C"; // > 3 days
+const COLOR7 = "#F7C748"; // > 2 days
+const COLOR8 = "#F9D94C"; // < 2 days
 
 // Time Constants
 const SECOND = 1000;

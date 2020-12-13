@@ -17,8 +17,6 @@ const editIconDark = require('assets/edit-icon-dark.png');
 const corkboardIcon = require('assets/corkboard-icon.png');
 const corkboardIconDark = require('assets/corkboard-icon-dark.png');
 
-LogBox.ignoreAllLogs()
-
 // function formats button data into an object 
 function buildButtonProps(name, icon, onPress) {
     return {
