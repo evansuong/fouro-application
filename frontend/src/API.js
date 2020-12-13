@@ -24,6 +24,13 @@ export const ReadAPI = {
     console.log("in axios");
     return axios.get(`${server}/users/testRoute`);
   },
+  getHugPinnedState: async function (uid, hugId) {
+    let response = {};
+    await axios.get(`${server}/corkboard/getPinnedState/${uid},${hugId}`)
+    .then((res) => onAccept(res, response))
+    .catch((err) => onReject(err, response));
+    return response;
+  },
   getUserProfile: async function (uid) {
     let response = {};
     await axios

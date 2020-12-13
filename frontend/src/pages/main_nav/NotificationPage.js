@@ -98,7 +98,7 @@ const gradient = require("assets/gradients/right.png");
 
 
 
-export default function NotificationPage({ navigation, route }) {
+export default function NotificationPage({ navigation, route, refresh }) {
     // States
     // stores whether the user is on this page (true) or not (false)
     const [isFocused, setIsFocused] = useState(false)
@@ -122,7 +122,7 @@ export default function NotificationPage({ navigation, route }) {
     // add a filler item to move the list down
     useEffect(() => {
         getNotifications();
-    }, []);
+    }, [refresh]);
    
 
     function getTimeElapsed(date_time) {
@@ -138,6 +138,7 @@ export default function NotificationPage({ navigation, route }) {
 
 
     function getNotifications() {
+        console.log('getting notifciations notificationpage 141')
         ReadAPI.getNotifications(uid)
         .then(response => {
           let notifications = response.data.notifications.notifs;
@@ -264,7 +265,7 @@ export default function NotificationPage({ navigation, route }) {
               style={AppStyles.background}
           />
           <Header 
-            routeName={routeName} 
+            routeName={'Notifications'} 
             navigation={navigation} 
             onMainNav={true}
           >
