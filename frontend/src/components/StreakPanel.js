@@ -25,6 +25,7 @@ export default function StreakPanel(hugs) {
   const width = useRef(new Animated.Value(50)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const { userData } = useContext(UserContext);
+  const { isLightTheme } = userData;
   const [userCounts, setUserCounts] = useState({
     hugCount: 0,
     streakCount: 0
@@ -86,13 +87,15 @@ export default function StreakPanel(hugs) {
     }).start();
   }
 
+  let textColor = isLightTheme ? '#FFF' : '#DDD';
+
   const styles = StyleSheet.create({
     container: {
       display: 'flex',
       margin: 10,
       marginBottom: 0,
       paddingVertical: 5,
-      backgroundColor: 'rgba(0, 0, 0, .5)',
+      backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .6)' : 'rgba(15, 15, 15, .9)', 
       borderRadius: 25,
       shadowColor: '#000',
       shadowOffset: { height: 2, width: 1 },
@@ -127,7 +130,7 @@ export default function StreakPanel(hugs) {
     },
     counts: {
       fontSize: 20,
-      color: '#FFF',
+      color: textColor,
     },
     footer: {
       height: 100,
@@ -138,6 +141,7 @@ export default function StreakPanel(hugs) {
       justifyContent: 'center',  
     },
   });
+
   
   return (
     <View style={styles.container}>
@@ -158,7 +162,7 @@ export default function StreakPanel(hugs) {
             </View>
             <Animated.View opacity={fade}>
               <View style={styles.textContainer}>
-                <Text style={{fontSize: 18, color: '#FFF'}}>
+                <Text style={{fontSize: 18, color: textColor}}>
                   Hugs Today
                 </Text>
               </View>

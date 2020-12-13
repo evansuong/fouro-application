@@ -169,7 +169,7 @@ export default function HomePage({ navigation, route, refresh }) {
     },
     createHugText: {
       fontSize: 20,
-      color: '#FFF',
+      color: isLightTheme ? '#FFF' : '#DDD',
     },
     background: {
       position: 'absolute',
@@ -225,7 +225,7 @@ export default function HomePage({ navigation, route, refresh }) {
         <Animated.View style={{
           ...styles.createHugButtonContainer, 
           width:width, 
-          backgroundColor: 'rgba(0, 0, 0, .5)', 
+          backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .5)' : 'rgba(15, 15, 15, .9)', 
           padding: padding, 
           paddingLeft: paddingLeft 
         }}>

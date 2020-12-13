@@ -67,11 +67,8 @@ export default function FriendsPage({ navigation, route, refresh }) {
         setBackendCalled(!backendCalled);
         console.log('getting friends friendspgae 71')
         const { status, data } = await ReadAPI.getFriends(uid);
-        console.log('FriendsPage 71 opmdpwm', status, data);
         if (status) {
-          if (data.friends.length != friends.length) {
-            setFriends(data.friends);
-          }
+          setFriends(data.friends);
         } else {
           Alert.alert('Something went wrong when retreiving friends list');
         }
@@ -158,7 +155,6 @@ export default function FriendsPage({ navigation, route, refresh }) {
                   contentContainerStyle={styles.friendCard}
                   refreshing={false}
                   onRefresh={getFriends}
-                  extraData={friends}
                 />
               </View>
             } 
