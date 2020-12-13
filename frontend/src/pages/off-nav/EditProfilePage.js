@@ -187,7 +187,7 @@ export default function EditProfilePage({ navigation, route }) {
       Alert.alert('An error occurred. The image might have been too big!');
       setUploading(false);
     } else {
-      // console.log('EditProfile 187 Image Uploaded');
+      console.log('EditProfile 187 Image Uploaded');
     }
   }
 
