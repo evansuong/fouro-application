@@ -18,7 +18,6 @@ import { ReadAPI, UpdateAPI } from '../../API';
 // Contexts
 import { UserContext } from 'contexts/UserContext';
 // Custom Components
-import Header from 'components/Header';
 import PicUploadButton from 'components/PicUploadButton';
 import LinkedButton from 'components/LinkedButton';
 // Images/Assets
@@ -36,9 +35,10 @@ export default function ProfileSetupPage({ navigation, route }) {
   // Misc
   const fade = useRef(new Animated.Value(0)).current;
   const routeName = route.name;
-  const IMAGE_WIDTH = 1000;
+  const validExtensions = ['jpeg', 'jpg', 'png'];
   const MAX_UPLOAD_SIZE = 100000;
-  const validExtensions = ['jpeg', 'jpg'];
+  const LARGE_IMAGE_THRESHOLD = 1500000;
+  let WIDTH_FACTOR = 0.4;
 
   useEffect(() => {
     if (startUp) {
@@ -52,7 +52,7 @@ export default function ProfileSetupPage({ navigation, route }) {
     let base64 = uploadPic.base64;
     if (base64.length > MAX_UPLOAD_SIZE) {
       const compressFactor = MAX_UPLOAD_SIZE / base64.length;
-      base64 = await getBase64WithImage(compressFactor);
+      base64 = await getBase64WithImage();
     }
     const request = {
       blob: base64
@@ -83,39 +83,26 @@ export default function ProfileSetupPage({ navigation, route }) {
     }
   }
 
-  const getBase64WithImage = async (compressFactor) => {
-    const ORIGINXY = uploadPic.height / 3;
-    let manipResult;
-    try {
-      manipResult = await ImageManipulator.manipulateAsync(
-        uploadPic.uri,
-        [{crop: {
-          originX: ORIGINXY, 
-          originY: ORIGINXY, 
-          width: IMAGE_WIDTH, 
-          height: IMAGE_WIDTH
-        }}],
-        {
-          compress: compressFactor,
-          format: ImageManipulator.SaveFormat.JPEG,
-          base64: true
-        }
-      )
-    } catch {
-      try {
-        manipResult = await ImageManipulator.manipulateAsync(
-          uploadPic.uri,
-          [],
-          {
-            compress: 0.1,
-            format: ImageManipulator.SaveFormat.JPEG,
-            base64: true
-          }
-        )
-      } catch {
-        Alert.alert('Image dimensions might be incorrect!');
-      }
+  const getBase64WithImage = async () => {
+    let compressFactor = 0.9;
+    if (uploadPic.base64.length > LARGE_IMAGE_THRESHOLD) {
+      compressFactor = 0.4;
+      WIDTH_FACTOR = 0.3;
     }
+    console.log('PicUpload b4 Compress', uploadPic.base64.length);
+    const manipResult = await ImageManipulator.manipulateAsync(
+      uploadPic.uri,
+      [{resize: { 
+        width: uploadPic.width * WIDTH_FACTOR,
+        height: uploadPic.height * WIDTH_FACTOR, 
+      }}],
+      {
+        compress: compressFactor,
+        format: ImageManipulator.SaveFormat.JPEG,
+        base64: true
+      }
+    )
+    console.log('PicUpload after Compress', manipResult.base64.length);
     return `data:image/jpeg;base64,${manipResult.base64}`;
   }
 
@@ -138,11 +125,10 @@ export default function ProfileSetupPage({ navigation, route }) {
       let data = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [1,1],
-        maxWidth: IMAGE_WIDTH,
-        maxHeight: IMAGE_WIDTH,
+        quality: 1,
         base64: true
       })
-      checkUpload(data); 
+      await checkUpload(data); 
     } else {
       Alert.alert('You need to give up permission to work'); 
     }     
@@ -155,11 +141,10 @@ export default function ProfileSetupPage({ navigation, route }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1,1],
-        maxWidth: IMAGE_WIDTH,
-        maxHeight: IMAGE_WIDTH,
+        quality: 1,
         base64: true
       })
-      checkUpload(data); 
+      await checkUpload(data); 
     } else {
       Alert.alert('You need to give up permission to work');
     }
@@ -213,11 +198,6 @@ export default function ProfileSetupPage({ navigation, route }) {
               text='Take a profile picture'
               onPress={() => pickFromCamera()}
             />
-            <Text style={styles.note}>
-              'Take a profile picture': 
-              Your profile picture will be taken from 
-              the tiny middle portion 
-            </Text>
           </View>
 
           {/* Conditional Submit */}

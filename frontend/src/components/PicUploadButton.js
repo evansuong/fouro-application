@@ -7,7 +7,13 @@ import {
 } from 'react-native';
 import { DimensionContext } from 'contexts/DimensionContext';
 
-export default function PicUploadButton({ navigation, text, onPress }) {
+export default function PicUploadButton({ 
+  navigation, 
+  text, 
+  onPress, 
+  width, 
+  height 
+}) {
   const [animatedValue, newAnimatedValue] = useState(new Animated.Value(1));
   const {windowWidth, windowHeight} = useContext(DimensionContext);
 
@@ -41,8 +47,8 @@ export default function PicUploadButton({ navigation, text, onPress }) {
     button: {
       display: 'flex',
       marginTop: windowWidth * .05,
-      width: windowWidth * .43,
-      height: windowWidth * .25,
+      width: width ? width : windowWidth * .43,
+      height: height ? height : windowWidth * .25,
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: '#d4d4d4',

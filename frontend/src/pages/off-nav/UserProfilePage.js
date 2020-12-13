@@ -151,13 +151,13 @@ export default function UserProfilePage({ navigation, route }) {
                 windowHeight={windowHeight}
               />
 
-              <Setting
+              {/* <Setting
                 icon={require("assets/deleteAccount.png")}
                 text="Delete Account"
                 textColor="red"
                 windowWidth={windowWidth}
                 windowHeight={windowHeight}
-              />
+              /> */}
 
               <Setting
                 icon={require("assets/sun.png")}

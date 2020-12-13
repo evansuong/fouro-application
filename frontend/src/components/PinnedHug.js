@@ -51,7 +51,7 @@ export default function PinnedHug( { navigation, unpin, picture, date, friendNam
         elevation: 2,
       },
       hugImage: {
-        backgroundColor: 'white',
+        backgroundColor: '#D4D4D4',
         resizeMode: 'contain',
         width: imgContainerWidth, 
         height: imgContainerHeight,
