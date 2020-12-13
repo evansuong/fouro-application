@@ -73,19 +73,14 @@ export default function HomePage({ navigation, route }) {
     fetchHugs();
   }, [])
 
+
+  console.log('homepage refreshing 76')
+
   const fetchHugs = async () => {
     const { status, data } = 
       await ReadAPI.getUserHugs(userData.uid);
     if (status) {
       setHugArray(data.userHugs);
-      let streakCount = data.userHugs.length > 0 ? 1 : 0;
-      dispatch({
-        type: "INCREMENT_STREAK_COUNT",
-        payload: {
-          streakCount: streakCount,
-          hugCount: data.userHugs.length
-        }
-      })
     } else {
       Alert.alert('Something went wrong when fetching hugs');
     }

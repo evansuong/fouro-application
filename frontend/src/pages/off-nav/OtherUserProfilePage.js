@@ -73,10 +73,15 @@ export default function OtherUserProfilePage({
     useEffect(() => {
       getUserStatus();
       getSharedHugs();
-    }, [otheruser_id]);
+    }, []);
 
     function getSharedHugs() {
-      setHugs(ReadAPI.getFriendProfile(uid, otheruser_id));
+      ReadAPI.getFriendProfile(uid, otheruser_id)
+      .then(response => {
+          if(response.status) {
+              setHugs(response.data.sharedHugs)
+          }
+      });
     }
 
     function getUserStatus() {

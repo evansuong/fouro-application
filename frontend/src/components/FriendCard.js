@@ -47,7 +47,12 @@ export default function FriendCard(props) {
       borderRadius: 100,
       width: pfpWidth + 5,
       height: pfpWidth + 5,
-      backgroundColor: isLightTheme ? 'pink' : color,
+      backgroundColor: isLightTheme ? 'transparent' : color,
+      shadowColor: '#000',
+      shadowOffset: { width: 1, height: 1 },
+      shadowOpacity: 0.5,
+      shadowRadius: 1,
+      elevation: 2,
     },
     pfpContainer2: {
       marginRight: 20,
@@ -55,7 +60,7 @@ export default function FriendCard(props) {
       alignItems: 'center',
       borderRadius: 100,
       width: 40,
-      height: 40
+      height: 40,
     },
     friendCardContainer: {
       display: 'flex',
@@ -95,7 +100,7 @@ export default function FriendCard(props) {
       flexDirection: 'row', 
       justifyContent: 'space-between', 
       alignItems: 'center', 
-      minHeight: pfpWidth + 10
+      minHeight: pfpWidth + 10,
     }
   });
 

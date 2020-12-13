@@ -17,10 +17,11 @@ import HomePage from './HomePage';
 
 
 // TODO: follow the gradient thing
-export default function MainNavPage({ route }) {
+export default function MainNavPage({ navigation, route }) {
     const Tab = createMaterialTopTabNavigator();
     // States
     const [fromLogin, setFromLogin] = useState(false);
+    const [refresh, setRefresh] = useState(false);
     // Contexts
     const { windowWidth, windowHeight } = useContext(DimensionContext);
     // Images/Assets
@@ -38,8 +39,14 @@ export default function MainNavPage({ route }) {
     const r = getFocusedRouteNameFromRoute(route)
 
     useFocusEffect(() => {
-      console.log(r)
+      if(!isFocused) {
+        setRefresh(!refresh)
+        console.log("refresh mainnavpage46", refresh)
+      }
     })
+
+    
+    
 
     useEffect(() => {
       if (typeof params !== 'undefined' && params.loggedIn !== 'undefined') {
@@ -51,6 +58,7 @@ export default function MainNavPage({ route }) {
         }
       }
     }, [isFocused])
+
 
 
     

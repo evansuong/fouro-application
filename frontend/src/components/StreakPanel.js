@@ -26,8 +26,8 @@ export default function StreakPanel(hugs) {
   const fade = useRef(new Animated.Value(0)).current;
   const { userData } = useContext(UserContext);
   const [userCounts, setUserCounts] = useState({
-    hugCount: ' ',
-    streakCount: ' '
+    hugCount: 0,
+    streakCount: 0
   });
 
   const images = {
@@ -40,18 +40,14 @@ export default function StreakPanel(hugs) {
     .then(response => {
       if (response.status) {
         setUserCounts({
-          hugCount: response.data.hugs,
-          streakCount: response.data.streaks
+          hugCount: response.data.hug,
+          streakCount: response.data.streak
         });
       } else {
         alert('something went wrong getting your streaks')
       }
     })
-  }, [hugs])
-
-  useEffect(() => {
-    
-  }, [])
+  }, [hugs.hugs])
 
   function handlePress() {
     

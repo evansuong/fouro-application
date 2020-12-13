@@ -54,7 +54,7 @@ import {
 /*------- end of testing --------*/
 
 
-export default function FriendsPage({ navigation, route }) {
+export default function FriendsPage({ navigation, route, refresh }) {
     // States
     const [startUp, setStartUp] = useState(true);
     const [friends, setFriends] = useState([]);
