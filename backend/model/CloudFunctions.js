@@ -2,7 +2,6 @@
 // This will be manually called to "simulate" the dawn of a new day (12AM)
 var firebase = require("../firebase/admin");
 require("firebase/firestore");
-require("firebase/auth");
 
 const { HugCountAPI } = require("./Users");
 
@@ -15,7 +14,7 @@ const secondsInDay = 86400;
 const pstOffset = 28800;
 
 // constant for loop speed
-const minuteinMS = 60000; 
+const minuteinMS = 60 * 1000;
 
 // helper function for resetting each user's hug count and streak
 async function resetUserHugCount(snapshot) {
@@ -58,9 +57,13 @@ async function dailyReset() {
      */
     if(resetYet == false && afterMidnight) {
         console.log("Resetting user hug counts...");
-        let usersQuery = usersCollection.get();
 
-        await usersQuery.forEach(resetUserHugCount);
+        let userDocs = await usersCollection.get();
+        let usersArr = await userDocs.docs;
+
+        for (i = 0; i < usersArr.length; i++) {
+            resetUserHugCount(usersArr[i]);
+        }
 
         resetYet = true;
     }
@@ -81,5 +84,5 @@ async function dailyReset() {
 }
 
 console.log("Running reset hug count script...");
-console.log("This script will reset users\' hug counts at midnight PST, and will check the time in 1-minute intervals.");
+console.log("This script will reset users\' hug counts at midnight PST, and will check the time in 1-minute intervals.\n");
 setInterval(dailyReset, minuteinMS);
