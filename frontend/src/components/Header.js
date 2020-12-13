@@ -4,7 +4,6 @@ import { View, Text, StyleSheet, Image, LogBox } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
 import { UserContext } from '../contexts/UserContext';
- 
 
 const backIcon = require('assets/back-icon.png');
 const backIconDark = require('assets/back-icon-dark.png');
@@ -63,7 +62,7 @@ function EditButton(navigation, isLightTheme) {
     }
     let icon = isLightTheme ? editIconDark : editIcon;
     return buildButtonProps('edit', icon, onPress);
-} 
+}
 
 function CorkboardButton(navigation, isLightTheme) {
     function onPress() {
