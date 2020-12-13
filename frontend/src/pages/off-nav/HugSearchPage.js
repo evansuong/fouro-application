@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, TextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { TextInput } from 'react-native-paper';
 import { ReadAPI } from '../../API';
 import Header from '../../components/Header';
 import { DimensionContext } from '../../contexts/DimensionContext';
@@ -48,30 +47,22 @@ export default function HugSearchPage({ navigation, route }) {
 
     const styles = StyleSheet.create({
         input: {
-            backgroundColor: '#EEE',
-            width: windowWidth,
-            height: windowWidth * .1,
-            borderRadius: 5, 
+            position: 'absolute',
+            height: windowHeight * .06,
+            width: windowWidth * .75,
+            zIndex: 100,
+            backgroundColor: '#FFF',
+            borderRadius: 10,
+            top: windowHeight * .06,
+            right: windowWidth * .05,
+            paddingHorizontal: 20,
         },
-        inputContainer: {
-            width: windowWidth,
-            display: 'flex',
-            alignItems: 'center',
-            shadowColor: '#000',
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 2,
-            elevation: 4,
-            zIndex: 3,
-        }, 
         pageContainer: {
             display: 'flex',
             alignItems: 'center',
             width: windowWidth,
             height: windowHeight,
+            backgroundColor: '#E57777'
         },
         header: {
             height: windowHeight * .13,
@@ -86,14 +77,6 @@ export default function HugSearchPage({ navigation, route }) {
             fontWeight: 'bold',
             marginTop: windowHeight * .03,
             color: 'white',
-            shadowColor: '#000',
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 2,
-            elevation: 4,
             zIndex: 3,
         },  
         text: {
@@ -124,38 +107,32 @@ export default function HugSearchPage({ navigation, route }) {
               navigation={navigation} 
               routeName={routeName} 
               onMainNav={false}
-            /> 
-            <View style={styles.header}>
-                <Text style={styles.headerText}>
-                  Add Hug Recipient
-                </Text>
-            </View>
+            />
             
-            <View style={styles.inputContainer}>
-                <TextInput
-                  placeholder={'friend name: i.e. Firstname Lastname'}
-                  keyboardType='web-search' 
-                  style={styles.input}
-                  onChangeText={(val) => setInput(val)}
-                  autoCapitalize='none'
-                />
-            </View>
+            <TextInput
+              keyboardType='web-search' 
+              onChangeText={(val) => setInput(val)}
+              autoCapitalize='none'
+              placeholder="search username"
+              style={styles.input}
+            />
           
-            {friends && friends.length > 0 ?
+            <View style={{ backgroundColor: '#FFF', marginTop: windowHeight * .15 }}>
+                {friends && friends.length > 0 ?
                 <ScrollView>
                     {friends.map(friend => (
                         <TouchableOpacity 
-                          style={styles.friendContainer} 
-                          key={friend.user_id} 
-                          onPress={() => handlePress(friend)}
+                            style={styles.friendContainer} 
+                            key={friend.user_id} 
+                            onPress={() => handlePress(friend)}
                         >
                             <Image 
-                              style={styles.image} 
-                              source={{ uri: friend.profile_pic }} 
+                                style={styles.image} 
+                                source={{ uri: friend.profile_pic }} 
                             />
                             <View>
                                 <Text style={styles.text}>
-                                  {friend.name}
+                                    {friend.name}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -163,7 +140,9 @@ export default function HugSearchPage({ navigation, route }) {
                 </ScrollView>
                 :
                 <></>
-            }
+                }
+            </View>
+            
         </View>
     )
 }
