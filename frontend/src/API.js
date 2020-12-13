@@ -1,6 +1,10 @@
 import axios from "axios";
 
+<<<<<<< HEAD
 const server = "http://192.168.1.234:3000";
+=======
+const server = "http://192.168.0.18:3000";
+>>>>>>> cdadf9bf3d61a7a2cf98d2341956503682acaa32
 
 const onAccept = (res, response) => {
   console.log('API 6 accepting');
