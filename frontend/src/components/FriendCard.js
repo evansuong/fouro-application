@@ -27,6 +27,7 @@ import { UserContext } from '../contexts/UserContext';;
  * @param {string} navigation           The navigation prop for React Native navigation
  */
 export default function FriendCard(props) {
+  const [stateColor, setStateColor] = useState(color);
 
   const { navigation, height, width, friendData } = props;
   const { color, name, profile_pic, username, user_id } = friendData;
@@ -37,7 +38,12 @@ export default function FriendCard(props) {
   const friendColor = { backgroundColor: color }
   const containerDimensions = { width: width, height: height }
   const { userData } = useContext(UserContext);
-  const { isLightTheme } = userData;  
+  const { isLightTheme } = userData;
+
+  useEffect(() => {
+    console.log('FriendCard 41', color);
+    setStateColor(color);
+  }, [color])
 
   const styles = StyleSheet.create({
     pfpContainer: {

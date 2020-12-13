@@ -120,7 +120,6 @@ export default function CreateHugPage({ navigation, route }) {
       }
       const { status, data } = 
         await CreateAPI.createHug(userData.uid, request);
-      console.log(data)
       if (status) {
         let hugId = data.out
         CreateAPI.sendHugRequest(userData.uid, {
