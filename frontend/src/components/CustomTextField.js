@@ -15,7 +15,8 @@ import { DimensionContext } from '../contexts/DimensionContext';
 export default function CustomTextField({ 
   titleText, 
   placeholder, 
-  setField, 
+  setField,
+  defaultValue='',
   secureText=false, 
   required=false, 
   multiline=false 
@@ -38,6 +39,7 @@ export default function CustomTextField({
       <TextInput 
         style={styles.onboardingInput}
         multiline={multiline}
+        defaultValue={defaultValue}
         placeholder={placeholder}
         keyboardType={keyType}
         secureTextEntry={secureText}

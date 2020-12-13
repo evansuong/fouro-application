@@ -2,17 +2,19 @@
 // This will be manually called to "simulate" the dawn of a new day (12AM)
 var firebase = require("../firebase/admin");
 require("firebase/firestore");
-require("firebase/auth");
 
 const { HugCountAPI } = require("./Users");
 
+const db = firebase.firestore();
 const usersCollection = db.collection("users");
 
+// constants for calculating the time
 var resetYet = false;
 const secondsInDay = 86400;
 const pstOffset = 28800;
 
-
+// constant for loop speed
+const minuteinMS = 60 * 1000;
 
 // helper function for resetting each user's hug count and streak
 async function resetUserHugCount(snapshot) {
@@ -34,11 +36,13 @@ async function resetUserHugCount(snapshot) {
     await userDocRef.update(hugvars);
 }
 
-
-
+/*
+ * Function that checks whether it is time for hug_count reset.
+ * Called once every minute.
+ */
 async function dailyReset() {
     
-    // check if Date.now is past midnight PST (most of our target demo is west coast) AND resetYet is false.
+    // calculate current time
     let dateInMillis = Date.now();
     let dateInSeconds = Math.floor(dateInMillis / 1000) - pstOffset;
 
@@ -46,27 +50,39 @@ async function dailyReset() {
     let beforeMidnight = dateInSeconds % secondsInDay >= secondsInDay / 2;
     let afterMidnight = dateInSeconds % secondsInDay >= 0 && !beforeMidnight;
 
-    // case where hug counts have not yet been reset and it's past midnight
+    /* 
+     * case where hug counts have not yet been reset and it's past midnight => time to reset!
+     *  - set resetYet to true to prevent further resets from 0 -> 12
+     *  - iterate through each user and reset their hug counts, and streaks if applicable
+     */
     if(resetYet == false && afterMidnight) {
-        let usersQuery = usersCollection.get();
+        console.log("Resetting user hug counts...");
 
-        await usersQuery.forEach(resetUserHugCount);
+        let userDocs = await usersCollection.get();
+        let usersArr = await userDocs.docs;
 
-        // set resetYet to true
+        for (i = 0; i < usersArr.length; i++) {
+            resetUserHugCount(usersArr[i]);
+        }
+
         resetYet = true;
     }
 
+    /* 
+     * case where hug counts have not yet been reset and it's past noon => get ready for reset!
+     *  - set resetYet to false to prepare the script for the midnight reset
+     */
     if(resetYet == true && beforeMidnight) {
+        console.log("Priming for reset...");
         resetYet = false;
     }
 
+    /*
+     * for debugging - print a line at each iteration
+     */
+    //console.log("...");
 }
 
-
-dailyReset();
-
-
-
-
-// Export the module
-//module.exports = { CloudFunctionsAPI }; // awaiting to be filled
+console.log("Running reset hug count script...");
+console.log("This script will reset users\' hug counts at midnight PST, and will check the time in 1-minute intervals.\n");
+setInterval(dailyReset, minuteinMS);

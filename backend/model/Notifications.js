@@ -122,6 +122,7 @@ const RequestsAPI = {
    * @return true
    */
   sendHugRequest: async function (user_id, friend_id, hug_id) {
+    console.log('Notif 125', friend_id, hug_id);
     // Gets the time that the notification is sent
     let dateInSeconds = Math.floor(Date.now() / 1000);
     var dateTime = new admin.firestore.Timestamp(dateInSeconds, 0);

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -8,7 +8,7 @@ import {
   ScrollView
 } from "react-native";
 // APIs
-import AuthAPI from '../../authentication/Authentication';
+import { ReadAPI, UpdateAPI } from '../../API';
 // Contexts
 import { DimensionContext } from 'contexts/DimensionContext';
 import { UserContext } from 'contexts/UserContext';
@@ -19,6 +19,7 @@ import Header from "components/Header"
 
 export default function EditProfilePage({ navigation, route }) {
   // States
+  const [fetchedUser, setFetchedUser] = useState();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -32,6 +33,9 @@ export default function EditProfilePage({ navigation, route }) {
   const routeName = route.name
 
   // TODO: use useEffect to init the fields with current user info
+  useEffect(() => {
+    fetchUserData();
+  }, [])
 
   function firstNameEmpty() {
     return firstName === "";
@@ -51,11 +55,44 @@ export default function EditProfilePage({ navigation, route }) {
     !usernameEmpty()
   }
 
-  function reset() {
-    Alert.alert('(NOT SET UP) Reset button pressed!');
-    // const { status, data } = 
-    //   await AuthAPI.changePassword(userData.uid, newPassword);
-    // navigation.replace('User Profile Page');
+  const fetchUserData = async () => {
+    const { status, data } = 
+      await ReadAPI.getUserProfile(userData.uid);
+    if (status) {
+      setFetchedUser(data);
+      const [ userFirstName, userLastName ] = data.name.split(" ");
+      setFirstName(userFirstName)
+      setLastName(userLastName)
+      setUsername(data.username)
+    } else {
+      Alert.alert('Something went wrong when fetching user data');
+    }
+  }
+
+  // function edit() {
+  //   // if(verifyUserInputs()) {
+  //       postUserProfile
+  //   // }
+  // }
+
+  const edit = async () => {
+    const request = {
+      username: username,
+      firstName: firstName,
+      lastName: lastName
+    }
+    const { status, data } = 
+      await UpdateAPI.updateUserProfile(userData.uid, request);
+    if(status) {
+      Alert.alert("Profile updated!")
+      console.log(data)
+    } else {
+      Alert.alert("Something went wrong while updating profile.")
+    }
+  }
+
+  function verifyUserInputs() {
+    // TODO: verify alphanumeric chars for username
   }
 
   const styles = StyleSheet.create({
@@ -105,18 +142,21 @@ export default function EditProfilePage({ navigation, route }) {
         <CustomTextField
           titleText="First Name"
           setField={setFirstName}
+          defaultValue={firstName}
           required={true}
         />
         {/* New Password Input Field */}
         <CustomTextField
           titleText="Last Name"
           setField={setLastName}
+          defaultValue={lastName}
           required={true}
         />
         {/* New Password Confirmation Input Field */}
         <CustomTextField
           titleText="Username"
           setField={setUsername}
+          defaultValue={username}
           required={true}
         />
         {/* Error Messages */}
@@ -144,14 +184,14 @@ export default function EditProfilePage({ navigation, route }) {
       </View>
       
 
-      {/* Confirmation/Reset Button */}
+      {/* Confirmation/Edit Button */}
       <TouchableOpacity
         style={styles.button}
         disabled={!fieldsValid()}
-        onPress={() => reset()}
+        onPress={() => edit()}
       >
         <Text style={styles.buttonText}>
-          RESET
+          CHANGE
         </Text>
       </TouchableOpacity>
     </View>
