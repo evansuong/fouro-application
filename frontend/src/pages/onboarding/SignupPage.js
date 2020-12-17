@@ -1,34 +1,33 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  TouchableWithoutFeedback, 
+import React, { useState, useEffect, useContext, useRef } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
   Keyboard,
   Animated,
   ImageBackground,
   ActivityIndicator,
   Alert,
-} from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+} from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 // APIs
-import AuthAPI from '../../authentication/Authentication';
+import AuthAPI from "../../authentication/Authentication";
 // Contexts
-import { UserContext } from '../../contexts/UserContext';
-import { DimensionContext } from '../../contexts/DimensionContext';
+import { UserContext } from "../../contexts/UserContext";
+import { DimensionContext } from "../../contexts/DimensionContext";
 // Custom Components
-import CustomTextField from 'components/CustomTextField';
-import LinkedButton from 'components/LinkedButton';
+import CustomTextField from "components/CustomTextField";
+import LinkedButton from "components/LinkedButton";
 // Images
-import BackgroundImg from 'assets/gradients/middle.png';
-import Header from '../../components/Header';
-
+import BackgroundImg from "assets/gradients/middle.png";
+import Header from "../../components/Header";
 
 export default function SignupPage({ navigation, route }) {
   // States
-  const [emailField, setEmailField] = useState('');
-  const [passwordField, setPasswordField] = useState('gggggg');
-  const [passwordConfirmField, setPasswordConfirmField] = useState('');
+  const [emailField, setEmailField] = useState("");
+  const [passwordField, setPasswordField] = useState("gggggg");
+  const [passwordConfirmField, setPasswordConfirmField] = useState("");
   const [signingUp, setSigningUp] = useState(false);
   const [mounted, setMounted] = useState(true);
   const [userExists, setUserExists] = useState(false);
@@ -41,7 +40,7 @@ export default function SignupPage({ navigation, route }) {
   const routeName = route.name;
   const isFocused = useIsFocused();
   const fade = useRef(new Animated.Value(0)).current;
-  const validEmailSuffixes = ['com', 'gov', 'edu', 'net', 'org'];
+  const validEmailSuffixes = ["com", "gov", "edu", "net", "org"];
 
   useEffect(() => {
     if (startUp) {
@@ -50,14 +49,14 @@ export default function SignupPage({ navigation, route }) {
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => {
         setKeyboardVisible(true);
       }
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         setKeyboardVisible(false);
       }
@@ -67,8 +66,8 @@ export default function SignupPage({ navigation, route }) {
       setSigningUp(false);
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
-    }
-  }, [])
+    };
+  }, []);
 
   const fadeIn = () => {
     Animated.timing(fade, {
@@ -76,23 +75,25 @@ export default function SignupPage({ navigation, route }) {
       duration: 1000,
       useNativeDriver: false,
     }).start();
-  }
+  };
 
   const submitHandler = async () => {
     setSigningUp(true);
     const emailFieldTrim = emailField.trim();
     const passwordFieldTrim = passwordField.trim();
     const passwordConfirmFieldTrim = passwordConfirmField.trim();
-    
-    let { status, data } = 
-      await AuthAPI.registerUser(emailField.trim(), passwordField.trim());
+
+    let { status, data } = await AuthAPI.registerUser(
+      emailField.trim(),
+      passwordField.trim()
+    );
     if (status) {
       processSignupResponse(data, status);
     } else {
       setSigningUp(false);
-      Alert.alert('Error. Maybe a user with that email already exists?');
+      Alert.alert("Error. Maybe a user with that email already exists?");
     }
-  }
+  };
 
   const processSignupResponse = (data, status) => {
     if (status) {
@@ -102,22 +103,23 @@ export default function SignupPage({ navigation, route }) {
         payload: data,
       });
       setTimeout(() => {
-        navigation.replace('Name Page');
+        navigation.replace("Name Page");
       }, 500);
     } else {
       setSigningUp(false);
       alert(data);
     }
-  }
+  };
 
   const checkLength = () => {
     if (passwordField.length < 6) {
-      return false
+      return false;
     }
     return true;
-  }
+  };
 
   const checkEmailValid = () => {
+    /*
     let topLevelDomain;
     const dotNum = (emailField.match(/\./g) || []).length;
     if (dotNum == 1) {
@@ -128,74 +130,77 @@ export default function SignupPage({ navigation, route }) {
       emailField.slice(-1) !== '.' && 
       (emailField.match(/\@/g) || []).length == 1 &&
       validEmailSuffixes.includes(topLevelDomain);
-  }
+      */
+    return emailField.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
 
   const checkEmailFilled = () => {
-    return emailField !== '' && emailField.length >= 5;
-  }
+    return emailField !== "" && emailField.length >= 5;
+  };
 
   const checkPasswordFilled = () => {
-    return passwordField !== '' && 
-      passwordConfirmField !== '';
-  }
+    return passwordField !== "" && passwordConfirmField !== "";
+  };
 
   const passwordMatch = () => {
     return passwordField === passwordConfirmField;
-  }
+  };
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1
+      flex: 1,
     },
     errorText: {
-      color: 'red',
+      color: "red",
       fontSize: 18,
-      textAlign: 'center',
+      textAlign: "center",
       marginTop: 20,
     },
     signingText: {
-      color: 'green',
+      color: "green",
       fontSize: 18,
-      textAlign: 'center',
+      textAlign: "center",
     },
     textContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
       marginTop: 20,
     },
     backgroundImg: {
       flex: 1,
-      resizeMode: 'cover',
-      justifyContent: 'center',
+      resizeMode: "cover",
+      justifyContent: "center",
     },
     titleTextContainer: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: windowWidth
+      alignItems: "center",
+      justifyContent: "center",
+      width: windowWidth,
     },
     titleText: {
       marginBottom: 40,
       fontSize: 40,
-      fontFamily: 'Montserrat_500Medium'
+      fontFamily: "Montserrat_500Medium",
     },
     whiteBox: {
-      backgroundColor: 'rgba(255,255,255,0.2)',
+      backgroundColor: "rgba(255,255,255,0.2)",
       paddingBottom: 20,
       marginLeft: 20,
       marginRight: 20,
       marginBottom: isKeyboardVisible ? windowHeight / 3 : 0,
-    }
+    },
   });
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Animated.View opacity={fade} style={styles.container}>
-        <Header 
-          navigation={navigation} 
-          routeName={routeName} 
-          onMainNav={false} 
+        <Header
+          navigation={navigation}
+          routeName={routeName}
+          onMainNav={false}
         />
 
         <ImageBackground source={BackgroundImg} style={styles.backgroundImg}>
@@ -203,89 +208,73 @@ export default function SignupPage({ navigation, route }) {
             <Text style={styles.titleText}>Welcome</Text>
           </View>
           <View style={styles.whiteBox}>
-            <CustomTextField 
-              titleText='Email' 
-              placeholder='e.g., abc123@gmail.com'
+            <CustomTextField
+              titleText="Email"
+              placeholder="e.g., abc123@gmail.com"
               setField={setEmailField}
               required={true}
             />
 
             <CustomTextField
-              titleText='Password'
-              placeholder='Password'
+              titleText="Password"
+              placeholder="Password"
               setField={setPasswordField}
               secureText={true}
               required={true}
             />
 
             <CustomTextField
-              titleText='Password Confirmation'
-              placeholder='Password'
+              titleText="Password Confirmation"
+              placeholder="Password"
               setField={setPasswordConfirmField}
               secureText={true}
               required={true}
             />
 
-
-            {
-              checkPasswordFilled() &&
-              !checkLength() &&
+            {checkPasswordFilled() && !checkLength() && (
               <View style={styles.textContainer}>
                 <Text style={styles.errorText}>
                   Your password must be at least 6 characters long!
                 </Text>
               </View>
-            }
-            {
-              checkEmailFilled() && 
-              !checkEmailValid() &&
+            )}
+            {checkEmailFilled() && !checkEmailValid() && (
               <View style={styles.textContainer}>
-                <Text style={styles.errorText}>
-                  Email format is incorrect!
-                </Text>
+                <Text style={styles.errorText}>Email format is incorrect!</Text>
               </View>
-            }
-            {
+            )}
+            {checkPasswordFilled() && !passwordMatch() && (
+              <View style={styles.textContainer}>
+                <Text style={styles.errorText}>Passwords do not match!</Text>
+              </View>
+            )}
+            {checkEmailFilled() &&
               checkPasswordFilled() &&
-              !passwordMatch() &&
-              <View style={styles.textContainer}>
-                <Text style={styles.errorText}>
-                  Passwords do not match!
-                </Text>
-              </View>
-            }
-            {  
-              checkEmailFilled() &&
-              checkPasswordFilled() && 
               checkEmailValid() &&
-              passwordMatch() && 
+              passwordMatch() &&
               checkLength() &&
-              !signingUp &&
-              <View style={{marginTop: 20,}}>
-                <LinkedButton
-                  text='NEXT'
-                  color='#FFC24A'
-                  onPress={() => submitHandler()}
-                />
-              </View>
-            }
-            {
-              userExists &&
+              !signingUp && (
+                <View style={{ marginTop: 20 }}>
+                  <LinkedButton
+                    text="NEXT"
+                    color="#FFC24A"
+                    onPress={() => submitHandler()}
+                  />
+                </View>
+              )}
+            {userExists && (
               <View style={styles.textContainer}>
                 <Text style={styles.errorText}>
                   There already exists a user with that email!
                 </Text>
               </View>
-            }
-            {
-              signingUp &&
+            )}
+            {signingUp && (
               <View style={styles.textContainer}>
-                <Text style={styles.signingText}>
-                  Gathering Data...
-                </Text>
+                <Text style={styles.signingText}>Gathering Data...</Text>
                 <ActivityIndicator />
               </View>
-            }
+            )}
           </View>
         </ImageBackground>
       </Animated.View>
