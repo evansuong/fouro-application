@@ -110,7 +110,7 @@ const UsersAPI = {
           };
         } else {
           // no data under uid
-          console.log('Users 111: user is null');
+          console.log("Users 111: user is null");
           userProfile = null;
         }
       })
@@ -298,8 +298,6 @@ const HugCountAPI = {
     var hug_count = (await json).hug;
     var streak_count = (await json).streak;
     var success = false;
-
-    var userDocRef = usersCollection.doc(uid);
 
     // failed to retrieve hug count
     if (hug_count == null || streak_count == null) {
