@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "fouro-application",
-    "slug": "fouro-application",
+    "name": "Fouro",
+    "slug": "fouro",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -30,12 +30,15 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.teamcafe.fouro"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Fouro is an iOS/Android application that allows you to send virtual hugs to friends and feel close and connected to others. Fouro will help remind you to reach out to friends you haven't connected with in a while as well as serve as a platform to share and store memories together. Send and receive hugs with friends and stay socially connected to loved ones around you!\n",
+    "githubUrl": "https://github.com/evansuong/fouro-application"
   }
 }

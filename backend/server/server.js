@@ -40,9 +40,11 @@ app.use("/notifications", notifications);
 app.use("/users", users);
 
 // Cron - Cloud Function usage
-cron.schedule("0 0 0 * * *", function () {
-  // Run at 00:00:00
-  logger.warn("It's 00:00. Resetting all user hug counts :)");
+cron.schedule("0 0 8 * * *", function () {
+  // Run at 00:00:00 (00:00 PST) == (08:00 UTC)
+  let d = new Date(Date.now());
+  let timeString = d.toTimeString();
+  logger.warn(`It's ${timeString}. Resetting all user hug counts :)`);
   CloudFunctionsAPI.resetUserHugCounts();
 });
 
