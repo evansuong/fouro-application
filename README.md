@@ -1,9 +1,11 @@
 # CSE 110 Project: Fouro
 
-Fouro is an iOS/Android application that allows you to send virtual hugs to friends and feel close
+Fouro is an iOS/Android application that allows you to share virtual hugs to friends and feel close
 and connected to others. Fouro will help remind you to reach out to friends you haven't connected with
 in a while as well as serve as a platform to share and store memories together. Send and receive hugs
 with friends and stay socially connected to loved ones around you!
+
+Demo Video: [CSE 110 FA20 Fouro by CAFE](https://www.youtube.com/watch?v=egIZaEZksE8&feature=youtu.be)
 
 ## Team Care and Friendship Everyday (CAFE)
 
