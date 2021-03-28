@@ -89,7 +89,7 @@ export function HeaderButton({
               onMainNav ? 
                 'rgba(0, 0, 0, .2)' 
                 : 
-                'rgba(0, 0, 0, .4)', 
+                'rgba(0, 0, 0, .4)',
             borderRadius: 100,
             height: windowWidth / 8.5,
             width: width,
