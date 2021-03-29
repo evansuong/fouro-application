@@ -141,21 +141,21 @@ export default function NamePage({ navigation, route }) {
           <View style={styles.whiteBox}>
             <CustomTextField 
               titleText='First Name' 
-              placeholder='Darth'
+              placeholder=''
               setField={setFirstName}
               required={true}
             />
 
             <CustomTextField 
               titleText='Last Name' 
-              placeholder='Vader'
+              placeholder=''
               setField={setLastName}
               required={true}
             />
 
             <CustomTextField 
               titleText='Username' 
-              placeholder='Imposter'
+              placeholder=''
               setField={setUsername}
               required={true}
             />
@@ -183,7 +183,7 @@ export default function NamePage({ navigation, route }) {
               signingUp &&
               <View style={styles.textContainer}>
                 <Text style={styles.signingText}>
-                  SSN Retrieved...
+                  Loading...
                 </Text>
                 <ActivityIndicator />
               </View>

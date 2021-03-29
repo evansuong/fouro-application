@@ -209,15 +209,17 @@ export default function CreateHugPage({ navigation, route }) {
       },  
       backgroundImg: {
         height: windowHeight,
-        resizeMode: 'cover',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
-        elevation: 4,
+        resizeMode: 'contain',
+        zIndex: 0,
+        position: 'absolute'
+        // shadowColor: '#000',
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 2,
+        // },
+        // shadowOpacity: 0.3,
+        // shadowRadius: 2,
+        // elevation: 4,
       },
       header: {
         width: windowWidth,
@@ -262,16 +264,21 @@ export default function CreateHugPage({ navigation, route }) {
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View>
-          <Header 
-            routeName={routeName} 
-            navigation={navigation} 
-            onMainNav={false}
-          />            
+          
           <ImageBackground 
             source={BackgroundImg} 
             style={styles.backgroundImg}
           >
             {/* Header */}
+            {/* View centers the Header */}
+            <View style={{alignItems: 'center'}}>
+              <Header 
+                routeName={routeName} 
+                navigation={navigation} 
+                onMainNav={false}
+              />
+            </View>
+
             <View style={styles.header}>
               <Text style={styles.headerText}>
                 Create Hug
