@@ -209,17 +209,15 @@ export default function CreateHugPage({ navigation, route }) {
       },  
       backgroundImg: {
         height: windowHeight,
-        resizeMode: 'contain',
-        zIndex: 0,
-        position: 'absolute'
-        // shadowColor: '#000',
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 2,
-        // },
-        // shadowOpacity: 0.3,
-        // shadowRadius: 2,
-        // elevation: 4,
+        resizeMode: 'cover',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
       },
       header: {
         width: windowWidth,
@@ -271,7 +269,7 @@ export default function CreateHugPage({ navigation, route }) {
           >
             {/* Header */}
             {/* View centers the Header */}
-            <View style={{alignItems: 'center'}}>
+            <View style={{alignItems: 'center', backgroundColor: 'pink'}}>
               <Header 
                 routeName={routeName} 
                 navigation={navigation} 

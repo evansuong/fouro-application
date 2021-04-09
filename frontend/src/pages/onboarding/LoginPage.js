@@ -27,10 +27,8 @@ import Header from 'components/Header'
 
 export default function LoginPage({ navigation, route }) {
   // States
-  const [emailField, setEmailField] = useState('rikhilna@gmail.com');
-  // const [emailField, setEmailField] = useState('Alex@mail.com');
-  // const [passwordField, setPasswordField] = useState('password');
-  const [passwordField, setPasswordField] = useState('gggggg');
+  const [emailField, setEmailField] = useState(''); // rikhilna@gmail.com
+  const [passwordField, setPasswordField] = useState(''); // gggggg
   const [loggingIn, setLoggingIn] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
