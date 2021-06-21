@@ -243,9 +243,9 @@ export default function EditProfilePage({ navigation, route }) {
       justifyContent: 'center'
     },
     profilePicContainer: {
+      display: 'flex',
       alignItems: 'center',
       width: windowWidth,
-      height: windowHeight / 4,
       marginTop: 20,
     },
     profilePicture: {
@@ -261,6 +261,7 @@ export default function EditProfilePage({ navigation, route }) {
       marginBottom: windowWidth * 0.2,
     },
     uploadButtons: {
+      display: 'flex',
       flexDirection: 'row',
     }
   });
@@ -286,6 +287,34 @@ export default function EditProfilePage({ navigation, route }) {
             <Text style={styles.header}>
               Edit Profile
             </Text>
+            <View style={styles.profilePicContainer}>
+              <Image
+                source={!uploadPic || uploadPic.cancelled ? 
+                  {uri: profilePic} : {uri: `${uploadPic.uri}`}
+                }
+                style={styles.profilePicture}
+              />
+
+              <View style={styles.uploadButtons}>
+                <View style={{marginRight: 10,}}>
+                  <PicUploadButton
+                    text='Choose a profile picture'
+                    onPress={() => pickFromGallery()}
+                    width={windowWidth * 0.3}
+                    height={windowWidth * 0.2}
+                  />
+                </View>
+                <View style={{marginLeft: 10,}}>
+                  <PicUploadButton
+                    text='Take a profile picture'
+                    onPress={() => pickFromCamera()}
+                    width={windowWidth * 0.3}
+                    height={windowWidth * 0.2}
+                  />
+                </View>
+              </View>
+            </View>
+            <View>
             {/* Old Password Input Field */}
             <CustomTextField
               titleText="First Name"
@@ -307,6 +336,7 @@ export default function EditProfilePage({ navigation, route }) {
               defaultValue={username}
               required={true}
             />
+            </View>
             {/* Error Messages */}
             <View style={{ marginLeft: 20 }}>
               {
@@ -327,34 +357,7 @@ export default function EditProfilePage({ navigation, route }) {
                   Username must not be empty.
                 </Text>
               }
-            </View>
-            <View style={styles.profilePicContainer}>
-              <Image
-                source={!uploadPic || uploadPic.cancelled ? 
-                  {uri: profilePic} : {uri: `${uploadPic.uri}`}
-                }
-                style={styles.profilePicture}
-              />
-
-              <View style={styles.uploadButtons}>
-                <View style={{marginRight: 10,}}>
-                  <PicUploadButton
-                    text='Choose a profile picture'
-                    onPress={() => pickFromGallery()}
-                    width={windowWidth * 0.3}
-                    height={windowWidth * 0.3}
-                  />
-                </View>
-                <View style={{marginLeft: 10,}}>
-                  <PicUploadButton
-                    text='Take a profile picture'
-                    onPress={() => pickFromCamera()}
-                    width={windowWidth * 0.3}
-                    height={windowWidth * 0.3}
-                  />
-                </View>
-              </View>
-            </View>
+            </View>            
           </View>
           
 
