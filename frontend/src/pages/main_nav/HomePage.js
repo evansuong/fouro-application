@@ -155,12 +155,18 @@ export default function HomePage({ navigation, route, refresh }) {
       display: 'flex',
       justifyContent: 'space-evenly',
       alignItems: 'center',
-      
-      shadowColor: '#000',
-      shadowOffset: { height: 2, width: 1 },
-      shadowOpacity: 0.5,
-      shadowRadius: 2,  
-      elevation: 2,
+      ...Platform.select({
+        ios: {
+          shadowColor: '#000',
+          shadowOffset: { height: 2, width: 1 },
+          shadowOpacity: 0.5,
+          shadowRadius: 2,  
+          elevation: 2,
+        },
+        android: {
+          elevation: 0,
+        },
+      }),
     },
     streakContainer: {
       position: 'absolute',
@@ -225,7 +231,7 @@ export default function HomePage({ navigation, route, refresh }) {
         <Animated.View style={{
           ...styles.createHugButtonContainer, 
           width:width, 
-          backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .5)' : 'rgba(15, 15, 15, .9)', 
+          backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .6)' : 'rgba(15, 15, 15, .9)', 
           padding: padding, 
           paddingLeft: paddingLeft 
         }}>
