@@ -283,7 +283,7 @@ export default function EditProfilePage({ navigation, route }) {
             onMainNav={false} 
           />
 
-          <View style={{ width: '100%' }}>
+          <ScrollView style={{ width: '100%' }}>
             <Text style={styles.header}>
               Edit Profile
             </Text>
@@ -358,7 +358,7 @@ export default function EditProfilePage({ navigation, route }) {
                 </Text>
               }
             </View>            
-          </View>
+          </ScrollView>
           
 
           {/* Confirmation/Edit Button */}
