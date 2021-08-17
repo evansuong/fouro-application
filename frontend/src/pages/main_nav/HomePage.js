@@ -143,6 +143,10 @@ export default function HomePage({ navigation, route, refresh }) {
     )
   }
 
+  const func = () => {
+    console.log("yooooo");
+  }
+
   const styles = StyleSheet.create({
     createHugButtonContainer: {
       flexDirection: 'row',
@@ -207,22 +211,35 @@ export default function HomePage({ navigation, route, refresh }) {
       <View style={{marginTop: 100}}></View>
 
       {/* Hug Cards */}
-      <TouchableWithoutFeedback
-        onPress={() => dismissCreateButton()}
-      >
-        <FlatList
-          contentContainerStyle={styles.flatListContainer}
-          data={hugArray}
-          keyExtractor={ item => item.hug_id}
-          renderItem={renderCards}
-          onRefresh={fetchHugs}
-          refreshing={false}
-        />
-      </TouchableWithoutFeedback>
+      <FlatList
+        contentContainerStyle={styles.flatListContainer}
+        data={hugArray}
+        keyExtractor={ item => item.hug_id}
+        renderItem={renderCards}
+        onRefresh={fetchHugs}
+        refreshing={false}
+      />
 
       <View style={styles.streakContainer}>
         <StreakPanel hugs={hugArray.length}/> 
       </View>
+
+      {
+        expanded ?
+        <TouchableWithoutFeedback
+        onPress={dismissCreateButton}>
+          <View
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            zIndex: 100,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: 600,
+            height: 800,}}
+          ></View>
+        </TouchableWithoutFeedback> : <></>
+      }
 
       {/* Create Hug Button */}
       <TouchableWithoutFeedback
@@ -233,7 +250,8 @@ export default function HomePage({ navigation, route, refresh }) {
           width:width, 
           backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .6)' : 'rgba(15, 15, 15, .9)', 
           padding: padding, 
-          paddingLeft: paddingLeft 
+          paddingLeft: paddingLeft, 
+          zIndex: 101
         }}>
           <Text style={styles.createHugText}>
             +
