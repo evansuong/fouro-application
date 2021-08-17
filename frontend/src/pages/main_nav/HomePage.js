@@ -143,10 +143,6 @@ export default function HomePage({ navigation, route, refresh }) {
     )
   }
 
-  const func = () => {
-    console.log("yooooo");
-  }
-
   const styles = StyleSheet.create({
     createHugButtonContainer: {
       flexDirection: 'row',
