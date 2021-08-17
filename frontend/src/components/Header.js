@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, StyleSheet, Image, LogBox } from 'react-native'
+import { BackHandler } from 'react-native';
+import { View, Text, StyleSheet, Image, Alert } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DimensionContext } from '../contexts/DimensionContext';
 import { UserContext } from '../contexts/UserContext';
@@ -148,6 +149,33 @@ export default function Header(props) {
         'Edit Profile Page': '',
         'Forgot Password': '',
     };
+
+    useEffect(() => {
+        const backAction = () => {
+            const rootRoutes = new Set(['Hug Feed', 'Notifications', 'Friends']);
+            if(rootRoutes.has(routeName)) {
+                Alert.alert("Exit?", "Are you sure you want exit the app?", [
+                    {
+                        text: "Cancel",
+                        onPress: () => null,
+                        style: "cancel"
+                    },
+                    { text: "YES", onPress: () => BackHandler.exitApp() }
+                ]);
+            } else {
+                navigation.goBack();
+            }
+            return true;
+        }
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return () => { backHandler.remove() }
+    })
+    
 
     // setting button list for header 
     let buttons = []
