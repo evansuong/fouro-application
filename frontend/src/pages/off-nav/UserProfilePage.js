@@ -110,7 +110,7 @@ export default function UserProfilePage({ navigation, route }) {
       Alert.alert('Logged out!');
       navigation.reset({
         index: 0,
-        routes: [{name: 'Launch Page'}],
+        routes: [{name: 'Launch Page', params: { notInApp: true }}],
       });
     } else {
       Alert.alert('userData.userData is undefined. You\'re not logged in!');

@@ -25,11 +25,15 @@ import BackgroundImg from 'assets/gradients/middle.png';
 import Header from 'components/Header'
 import { KeyboardAvoidingView } from 'react-native';
 
-
 export default function LoginPage({ navigation, route }) {
+  const auths = [
+    { email: 'alex0091845@gmail.com', password: 'fouro123' },
+    { email: 'rikhilna@gmail.com', password: 'gggggg' }
+  ]
+  const authIndex = 0;
   // States
-  const [emailField, setEmailField] = useState('rikhilna@gmail.com'); // rikhilna@gmail.com
-  const [passwordField, setPasswordField] = useState('gggggg'); // gggggg
+  const [emailField, setEmailField] = useState(auths[authIndex].email);
+  const [passwordField, setPasswordField] = useState(auths[authIndex].password);
   const [loggingIn, setLoggingIn] = useState(false);
   const [startUp, setStartUp] = useState(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -178,11 +182,11 @@ export default function LoginPage({ navigation, route }) {
             source={BackgroundImg}
             style={styles.backgroundImage}
           >
-            <View style={styles.titleTextContainer}>
+            {/* <View style={styles.titleTextContainer}>
               <Text style={styles.titleText}>
                 You're already logged in!
               </Text>
-            </View>
+            </View> */}
           </ImageBackground>
         </Animated.View>
       </>

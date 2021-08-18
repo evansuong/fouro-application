@@ -10,6 +10,7 @@
   "dependencies": {
     "@expo-google-fonts/eb-garamond": "^0.1.0",
     "@expo-google-fonts/montserrat": "^0.1.0",
+    "@react-native-async-storage/async-storage": "^1.15.6",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/slider": "^3.0.3",
     "@react-native-masked-view/masked-view": "^0.2.0",
@@ -35,6 +36,7 @@
     "react-native-gesture-handler": "~1.7.0",
     "react-native-gridview": "^0.1.2",
     "react-native-image-resizer": "^1.4.1",
+    "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-options-menu": "^2.0.2",
     "react-native-paper": "^4.3.0",
     "react-native-reanimated": "~1.13.0",

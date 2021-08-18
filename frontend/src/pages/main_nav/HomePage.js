@@ -18,14 +18,11 @@ import { DimensionContext } from 'contexts/DimensionContext';
 import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import HugCard from 'components/HugCard';
-import Panel from 'components/StreakPanel';
 import Header from 'components/Header';
 import gradient from 'assets/gradients/middle.png';
-import { useFocusEffect } from '@react-navigation/native';
 import StreakPanel from '../../components/StreakPanel';
+
 // const gradient = require('assets/gradients/middle.png')
-
-
 
 /*------- testing --------*/
 
@@ -50,15 +47,10 @@ function buildTestData(name, text, img, id) {
 
 /*------- end of testing --------*/
 
-
-
-
 export default function HomePage({ navigation, route, refresh }) {
   // States
   const [expanded, setExpanded] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
   const [hugArray, setHugArray] = useState([]);
-  const [isFocused, setIsFocused] = useState();
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext);
@@ -67,7 +59,6 @@ export default function HomePage({ navigation, route, refresh }) {
   const width = useRef(new Animated.Value(60)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
-  const routeName = route.name;
 
   useEffect(() => {
     fetchHugs();
