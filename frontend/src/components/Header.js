@@ -92,7 +92,7 @@ export function HeaderButton({
                 : 
                 'rgba(0, 0, 0, .4)',
             borderRadius: 100,
-            height: windowWidth / 8.5,
+            height: width,
             width: width,
             display: 'flex', 
             justifyContent: 'center', 
@@ -101,7 +101,7 @@ export function HeaderButton({
         btnImage: {
             width: windowWidth / 15,
             height: windowWidth / 15,
-            overflow: 'visible',
+            resizeMode: 'contain',
         }
     }
   
@@ -232,6 +232,9 @@ export default function Header(props) {
             height: windowWidth / 10,
             borderRadius: 5, 
         },
+        headerButton: {
+            height: 0,
+        }
     });    
     
     
@@ -267,6 +270,7 @@ export default function Header(props) {
                     isLightTheme={isLightTheme} 
                     {...buttons[1]} 
                     onMainNav={onMainNav}
+                    style={styles.headerButton}
                   /> 
                   : 
                   <View style={styles.filler}/>
