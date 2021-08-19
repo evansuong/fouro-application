@@ -119,8 +119,8 @@ export default function HomePage({ navigation, route, refresh }) {
   }
 
   let backgroundColor = isLightTheme ? '#FB7250': 'rgba(0,0,0,0.5)';
-  let padding = expanded ? 15 : 0;
-  let paddingLeft = expanded ? 15 : '48%';
+  let padding = expanded ? '1%' : '6%';
+  let paddingLeft = expanded ? 0 : '50%';
 
   const renderCards = data => {
     let hugData = data.item;
@@ -144,7 +144,7 @@ export default function HomePage({ navigation, route, refresh }) {
       height: 60,
       color: 'white',
       display: 'flex',
-      justifyContent: 'space-evenly',
+      justifyContent: 'center',
       alignItems: 'center',
       ...Platform.select({
         ios: {
@@ -236,8 +236,8 @@ export default function HomePage({ navigation, route, refresh }) {
           ...styles.createHugButtonContainer, 
           width:width, 
           backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .6)' : 'rgba(15, 15, 15, .9)', 
-          padding: padding, 
-          paddingLeft: paddingLeft, 
+          paddingBottom: padding, 
+          paddingLeft: paddingLeft,
           zIndex: 101
         }}>
           <Text style={styles.createHugText}>
@@ -246,7 +246,7 @@ export default function HomePage({ navigation, route, refresh }) {
 
           <Animated.View opacity={fade}>
             <Text style={styles.createHugText}>
-              Create Hug
+              {" Create Hug"}
             </Text>
           </Animated.View>
         </Animated.View>
