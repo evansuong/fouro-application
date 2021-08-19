@@ -22,6 +22,7 @@ import LinkedButton from "components/LinkedButton";
 // Images
 import BackgroundImg from "assets/gradients/middle.png";
 import Header from "../../components/Header";
+import { KeyboardAvoidingView } from "react-native";
 
 export default function SignupPage({ navigation, route }) {
   // States
@@ -190,7 +191,7 @@ export default function SignupPage({ navigation, route }) {
       paddingBottom: 20,
       marginLeft: 20,
       marginRight: 20,
-      marginBottom: isKeyboardVisible ? windowHeight / 3 : 0,
+      // marginBottom: isKeyboardVisible ? windowHeight / 3 : 0,
     },
   });
 
@@ -204,78 +205,83 @@ export default function SignupPage({ navigation, route }) {
         />
 
         <ImageBackground source={BackgroundImg} style={styles.backgroundImg}>
-          <View style={styles.titleTextContainer}>
-            <Text style={styles.titleText}>Welcome</Text>
-          </View>
-          <View style={styles.whiteBox}>
-            <CustomTextField
-              titleText="Email"
-              placeholder="e.g., abc123@gmail.com"
-              setField={setEmailField}
-              required={true}
-            />
+          {!isKeyboardVisible && 
+            <View style={styles.titleTextContainer}>
+              <Text style={styles.titleText}>Welcome</Text>
+            </View>
+          }
+          <KeyboardAvoidingView
+            behavior="margin">
+            <View style={styles.whiteBox}>
+              <CustomTextField
+                titleText="Email"
+                placeholder="e.g., abc123@gmail.com"
+                setField={setEmailField}
+                required={true}
+              />
 
-            <CustomTextField
-              titleText="Password"
-              placeholder="Password"
-              setField={setPasswordField}
-              secureText={true}
-              required={true}
-            />
+              <CustomTextField
+                titleText="Password"
+                placeholder="Password"
+                setField={setPasswordField}
+                secureText={true}
+                required={true}
+              />
 
-            <CustomTextField
-              titleText="Password Confirmation"
-              placeholder="Password"
-              setField={setPasswordConfirmField}
-              secureText={true}
-              required={true}
-            />
+              <CustomTextField
+                titleText="Password Confirmation"
+                placeholder="Password"
+                setField={setPasswordConfirmField}
+                secureText={true}
+                required={true}
+              />
 
-            {checkPasswordFilled() && !checkLength() && (
-              <View style={styles.textContainer}>
-                <Text style={styles.errorText}>
-                  Your password must be at least 6 characters long!
-                </Text>
-              </View>
-            )}
-            {checkEmailFilled() && !checkEmailValid() && (
-              <View style={styles.textContainer}>
-                <Text style={styles.errorText}>Email format is incorrect!</Text>
-              </View>
-            )}
-            {checkPasswordFilled() && !passwordMatch() && (
-              <View style={styles.textContainer}>
-                <Text style={styles.errorText}>Passwords do not match!</Text>
-              </View>
-            )}
-            {checkEmailFilled() &&
-              checkPasswordFilled() &&
-              checkEmailValid() &&
-              passwordMatch() &&
-              checkLength() &&
-              !signingUp && (
-                <View style={{ marginTop: 20 }}>
-                  <LinkedButton
-                    text="NEXT"
-                    color="#FFC24A"
-                    onPress={() => submitHandler()}
-                  />
+              {checkPasswordFilled() && !checkLength() && (
+                <View style={styles.textContainer}>
+                  <Text style={styles.errorText}>
+                    Your password must be at least 6 characters long!
+                  </Text>
                 </View>
               )}
-            {userExists && (
-              <View style={styles.textContainer}>
-                <Text style={styles.errorText}>
-                  There already exists a user with that email!
-                </Text>
-              </View>
-            )}
-            {signingUp && (
-              <View style={styles.textContainer}>
-                <Text style={styles.signingText}>Gathering Data...</Text>
-                <ActivityIndicator />
-              </View>
-            )}
-          </View>
+              {checkEmailFilled() && !checkEmailValid() && (
+                <View style={styles.textContainer}>
+                  <Text style={styles.errorText}>Email format is incorrect!</Text>
+                </View>
+              )}
+              {checkPasswordFilled() && !passwordMatch() && (
+                <View style={styles.textContainer}>
+                  <Text style={styles.errorText}>Passwords do not match!</Text>
+                </View>
+              )}
+              {checkEmailFilled() &&
+                checkPasswordFilled() &&
+                checkEmailValid() &&
+                passwordMatch() &&
+                checkLength() &&
+                !signingUp && (
+                  <View style={{ marginTop: 20 }}>
+                    <LinkedButton
+                      text="NEXT"
+                      color="#FFC24A"
+                      onPress={() => submitHandler()}
+                    />
+                  </View>
+                )}
+              {userExists && (
+                <View style={styles.textContainer}>
+                  <Text style={styles.errorText}>
+                    There already exists a user with that email!
+                  </Text>
+                </View>
+              )}
+              {signingUp && (
+                <View style={styles.textContainer}>
+                  <Text style={styles.signingText}>Gathering Data...</Text>
+                  <ActivityIndicator />
+                </View>
+              )}
+            </View>
+          </KeyboardAvoidingView>
         </ImageBackground>
       </Animated.View>
     </TouchableWithoutFeedback>

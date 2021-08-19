@@ -1,6 +1,13 @@
 import axios from "axios";
 
-const server = "http://54.244.107.90:3000"; // AWS server
+// const server = "http://54.244.107.90:3000"; // AWS server
+
+// add your localhost servers here!
+const servers = {
+  "Alex": "http://192.168.0.18:3000",
+}
+
+const server = servers.Alex; // local server
 
 const onAccept = (res, response) => {
   // console.log('API 6 accepting');

@@ -1,6 +1,16 @@
 // SignUp used for signing up users into Firebase Authentication
 import firebase from "./config";
 import "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const storeAuth = async (auth) => {
+  try {
+    const jsonAuth = JSON.stringify(auth)
+    await AsyncStorage.setItem("auth", jsonAuth);
+  } catch (e) {
+    console.log("Error:", e);
+  }
+}
 
 const AuthAPI = {
   registerUser: async function (email, password) {
@@ -45,6 +55,7 @@ const AuthAPI = {
           data: firebase.auth().currentUser.uid,
           message: "success"
         }
+        storeAuth({email, password});
       })
       .catch(function (error) {
         loggedin = false;

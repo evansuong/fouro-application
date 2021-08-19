@@ -18,14 +18,11 @@ import { DimensionContext } from 'contexts/DimensionContext';
 import { UserContext } from 'contexts/UserContext';
 // Custom Components
 import HugCard from 'components/HugCard';
-import Panel from 'components/StreakPanel';
 import Header from 'components/Header';
 import gradient from 'assets/gradients/middle.png';
-import { useFocusEffect } from '@react-navigation/native';
 import StreakPanel from '../../components/StreakPanel';
+
 // const gradient = require('assets/gradients/middle.png')
-
-
 
 /*------- testing --------*/
 
@@ -50,15 +47,10 @@ function buildTestData(name, text, img, id) {
 
 /*------- end of testing --------*/
 
-
-
-
 export default function HomePage({ navigation, route, refresh }) {
   // States
   const [expanded, setExpanded] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
   const [hugArray, setHugArray] = useState([]);
-  const [isFocused, setIsFocused] = useState();
   // Contexts
   const { windowWidth, windowHeight } = useContext(DimensionContext);
   const { userData, dispatch } = useContext(UserContext);
@@ -67,7 +59,6 @@ export default function HomePage({ navigation, route, refresh }) {
   const width = useRef(new Animated.Value(60)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const animationDuration = 150;
-  const routeName = route.name;
 
   useEffect(() => {
     fetchHugs();
@@ -128,8 +119,8 @@ export default function HomePage({ navigation, route, refresh }) {
   }
 
   let backgroundColor = isLightTheme ? '#FB7250': 'rgba(0,0,0,0.5)';
-  let padding = expanded ? 15 : 0;
-  let paddingLeft = expanded ? 15 : '48%';
+  let padding = expanded ? '1%' : '6%';
+  let paddingLeft = expanded ? 0 : '50%';
 
   const renderCards = data => {
     let hugData = data.item;
@@ -153,7 +144,7 @@ export default function HomePage({ navigation, route, refresh }) {
       height: 60,
       color: 'white',
       display: 'flex',
-      justifyContent: 'space-evenly',
+      justifyContent: 'center',
       alignItems: 'center',
       ...Platform.select({
         ios: {
@@ -207,22 +198,35 @@ export default function HomePage({ navigation, route, refresh }) {
       <View style={{marginTop: 100}}></View>
 
       {/* Hug Cards */}
-      <TouchableWithoutFeedback
-        onPress={() => dismissCreateButton()}
-      >
-        <FlatList
-          contentContainerStyle={styles.flatListContainer}
-          data={hugArray}
-          keyExtractor={ item => item.hug_id}
-          renderItem={renderCards}
-          onRefresh={fetchHugs}
-          refreshing={false}
-        />
-      </TouchableWithoutFeedback>
+      <FlatList
+        contentContainerStyle={styles.flatListContainer}
+        data={hugArray}
+        keyExtractor={ item => item.hug_id}
+        renderItem={renderCards}
+        onRefresh={fetchHugs}
+        refreshing={false}
+      />
 
       <View style={styles.streakContainer}>
         <StreakPanel hugs={hugArray.length}/> 
       </View>
+
+      {
+        expanded ?
+        <TouchableWithoutFeedback
+        onPress={dismissCreateButton}>
+          <View
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            zIndex: 100,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: 600,
+            height: 800,}}
+          ></View>
+        </TouchableWithoutFeedback> : <></>
+      }
 
       {/* Create Hug Button */}
       <TouchableWithoutFeedback
@@ -232,8 +236,9 @@ export default function HomePage({ navigation, route, refresh }) {
           ...styles.createHugButtonContainer, 
           width:width, 
           backgroundColor: isLightTheme ? 'rgba(0, 0, 0, .6)' : 'rgba(15, 15, 15, .9)', 
-          padding: padding, 
-          paddingLeft: paddingLeft 
+          paddingBottom: padding, 
+          paddingLeft: paddingLeft,
+          zIndex: 101
         }}>
           <Text style={styles.createHugText}>
             +
@@ -241,7 +246,7 @@ export default function HomePage({ navigation, route, refresh }) {
 
           <Animated.View opacity={fade}>
             <Text style={styles.createHugText}>
-              Create Hug
+              {" Create Hug"}
             </Text>
           </Animated.View>
         </Animated.View>

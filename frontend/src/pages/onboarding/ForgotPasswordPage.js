@@ -19,6 +19,7 @@ import LinkedButton from 'components/LinkedButton';
 // Images/Assets
 import BackgroundImg from 'assets/gradients/middle.png';
 import Header from 'components/Header';
+import { KeyboardAvoidingView } from 'react-native';
 
 export default function ForgotPasswordPage({ navigation, route }) {
   // States
@@ -107,7 +108,7 @@ export default function ForgotPasswordPage({ navigation, route }) {
       paddingBottom: 30,
       marginLeft: 10,
       marginRight: 10,
-      marginBottom: isKeyboardVisible ? windowHeight / 4 : 0,
+      // marginBottom: isKeyboardVisible ? windowHeight / 4 : 0,
     },
     titleTextContainer: {
       alignItems: 'center',
@@ -136,25 +137,28 @@ export default function ForgotPasswordPage({ navigation, route }) {
             source={BackgroundImg}
             style={styles.backgroundImage}
           >
-            <View style={styles.whiteBox}>
-              <CustomTextField 
-                titleText='Email' 
-                placeholder='e.g., abc123@gmail.com'
-                setField={setEmailField}
-                required={true}
-              />
+            <KeyboardAvoidingView
+              behavior="margin">
+              <View style={styles.whiteBox}>
+                <CustomTextField 
+                  titleText='Email' 
+                  placeholder='e.g., abc123@gmail.com'
+                  setField={setEmailField}
+                  required={true}
+                />
 
-              {
-                checkFilled() && 
-                <View style={{marginTop: 10,}}>
-                  <LinkedButton
-                    text='SEND RESET LINK'
-                    color='#FB7250'
-                    onPress={() => submitHandler()}
-                  />
-                </View>
-              }
-            </View>
+                {
+                  checkFilled() && 
+                  <View style={{marginTop: 10,}}>
+                    <LinkedButton
+                      text='SEND RESET LINK'
+                      color='#FB7250'
+                      onPress={() => submitHandler()}
+                    />
+                  </View>
+                }
+              </View>
+            </KeyboardAvoidingView>
           </ImageBackground>
         </Animated.View>
       </TouchableWithoutFeedback>
